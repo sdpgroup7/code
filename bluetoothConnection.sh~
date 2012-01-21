@@ -1,7 +1,0 @@
-#! /bin/sh
-
-cd /group/teaching/sdp/sdp7
-
-source .bashrc
-
-nxjbrowse
