@@ -1,3 +1,5 @@
 #! /bin/sh
 
-echo "Starting Bluetooth configuration..."
+source /group/teaching/sdp/sdp7/.bashrc
+
+nxjbrowse
