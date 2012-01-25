@@ -40,6 +40,8 @@ public class Vision {
             thresholdsGUI = new ControlGUI(thresholdsState, worldState, pitchConstants);
             thresholdsGUI.initGUI();
             
+            
+            
         } catch (V4L4JException e) {
             e.printStackTrace();
         } catch (Exception e) {

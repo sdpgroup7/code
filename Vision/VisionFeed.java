@@ -1,8 +1,11 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.awt.Point;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -23,7 +26,7 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
  *
  * @author s0840449
  */
-public class VisionFeed extends WindowAdapter {
+public class VisionFeed extends WindowAdapter implements MouseListener{
     private VideoDevice videoDev;
     private JLabel label;
     private JFrame windowFrame;
@@ -65,6 +68,11 @@ public class VisionFeed extends WindowAdapter {
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         initGUI();
     }
+    
+    public void mouseExited(MouseEvent e){}
+    public void mouseEntered(MouseEvent e){}
+    public void mouseClicked(MouseEvent e){}
+    public void mouseReleased(MouseEvent e){}
 
      /**
      * Initialises a FrameGrabber object with the given parameters.
@@ -123,8 +131,13 @@ public class VisionFeed extends WindowAdapter {
         windowFrame.addWindowListener(this);
         windowFrame.setVisible(true);
         windowFrame.setSize(width, height);
+        windowFrame.addMouseListener(this);
     }
-
+    
+    public void mousePressed(MouseEvent e){
+        Point mouseCoOrds = e.getPoint();
+        System.out.println(mouseCoOrds.x + " " + mouseCoOrds.y);
+    }
     /**
      * Catches the window closing event, so that we can free up resources
      * before exiting.
