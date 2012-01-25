@@ -12,7 +12,7 @@ interface VisualMethods{
 
 //Priority 2 - Needed to have any sort of success
 
-	Vector2 getDistanceToSide(); //finds distance to specified side
+	Vector2 getDistanceToSide(); //finds distance to nearest side (specified maybe?)
 	Vector2 getBallVelocity(); //gets the velocity of the ball
 	Vector2 getOurVelocity(); //gets our velocity
 	Vector2 getOpponentVelocity(); //gets our opponents velocity

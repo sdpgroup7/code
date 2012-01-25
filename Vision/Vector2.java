@@ -9,7 +9,7 @@ public class Vector2{
 	private int direction;
 	
 	public Vector2(){
-		this(0,0);
+		this(0,0); // Lol owl.
 	}
 
 	public Vector2(int magnitude, int direction){
