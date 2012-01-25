@@ -44,7 +44,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     private Color[] objects = new Color[5];
     private int objectIndex = 0;
     private BufferedImage frameImage;
-    private int[] temp = new int[9];
     //private int[] xDistortion;
     //private int[] yDistortion;
 
@@ -172,25 +171,32 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     
     public Color getColor(Point p, BufferedImage image){
         System.err.println("Point: (" + p.x + "," + p.y + ")");
-        /*
-        temp[0] = image.getRGB(p.x-1,p.y-1);
-        temp[1] = image.getRGB(p.x-1,p.y);
-        temp[2] = image.getRGB(p.x-1,p.y+1);
-        temp[3] = image.getRGB(p.x,p.y-1);
-        temp[4] = image.getRGB(p.x,p.y);
-        temp[5] = image.getRGB(p.x,p.y+1);
-        temp[6] = image.getRGB(p.x+1,p.y-1);
-        temp[7] = image.getRGB(p.x+1,p.y);
-        temp[8] = image.getRGB(p.x+1,p.y+1);
         
-        int avg = 0;
+        Color[] temp = new Color[9];
+        temp[0] = new Color(image.getRGB(p.x-1,p.y-1));
+        temp[1] = new Color(image.getRGB(p.x-1,p.y));
+        temp[2] = new Color(image.getRGB(p.x-1,p.y+1));
+        temp[3] = new Color(image.getRGB(p.x,p.y-1));
+        temp[4] = new Color(image.getRGB(p.x,p.y));
+        temp[5] = new Color(image.getRGB(p.x,p.y+1));
+        temp[6] = new Color(image.getRGB(p.x+1,p.y-1));
+        temp[7] = new Color(image.getRGB(p.x+1,p.y));
+        temp[8] = new Color(image.getRGB(p.x+1,p.y+1));
+        
+        int avgr = 0;
+		int avgg = 0;
+		int avgb = 0;
 
         for(int i = 0;i<9;i++){
-            avg += temp[i];
+            avgr += temp[i].getRed();
+			avgg += temp[i].getGreen();
+			avgb += temp[i].getBlue();
         }
-        avg = avg/9;
-        */
-        Color avgColor = new Color(image.getRGB(p.x,p.y));
+        avgr = avgr/9;
+		avgg = avgg/9;
+		avgb = avgb/9;
+
+        Color avgColor = new Color(avgr,avgg,avgb);
         System.err.println(avgColor);
         return avgColor;
     }
