@@ -37,6 +37,11 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     private WorldState worldState;
     private ThresholdsState thresholdsState;
     private PitchConstants pitchConstants;
+    private Point coords = new Point();
+    private boolean mouseClick = false;
+    private Color[] objects = new Color[5];
+    private int objectIndex = 0;
+    private BufferedImage frameImage;
     //private int[] xDistortion;
     //private int[] yDistortion;
 
@@ -67,11 +72,33 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         /* Initialise the GUI that displays the video feed. */
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         initGUI();
+        getColors();
+    }
+    
+    public void getClick(String message){
+        System.err.println(message);
+        int counter = 0;
+        while (!mouseClick) {
+            try{
+                Thread.sleep(100);
+            } catch (Exception e) {}
+        }
+        objects[objectIndex] = getColor(coords, frameImage);
+        objectIndex++;
+        mouseClick = false;
+    }
+    
+    public void getColors(){
+        getClick("Click the ball");
+        getClick("Click the yellow robot");
+        getClick("Click the blue robot");
+        getClick("Click a green plate");
+        getClick("Click a grey circle");
     }
     
     public void mouseExited(MouseEvent e){}
     public void mouseEntered(MouseEvent e){}
-    public void mouseClicked(MouseEvent e){}
+    public void mousePressed(MouseEvent e){}
     public void mouseReleased(MouseEvent e){}
 
      /**
@@ -108,7 +135,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
 
             public void nextFrame(VideoFrame frame) {
                 long before = System.currentTimeMillis();
-                BufferedImage frameImage = frame.getBufferedImage();
+                frameImage = frame.getBufferedImage();
                 frame.recycle();
                 processAndUpdateImage(frameImage, before);
             }
@@ -134,10 +161,18 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         windowFrame.addMouseListener(this);
     }
     
-    public void mousePressed(MouseEvent e){
+    public void mouseClicked(MouseEvent e){
         Point mouseCoOrds = e.getPoint();
-        System.out.println(mouseCoOrds.x + " " + mouseCoOrds.y);
+        mouseClick = true;
+        System.err.println("Click co-ordinates: " + mouseCoOrds.x + " " + mouseCoOrds.y);
     }
+    
+    public Color getColor(Point p, BufferedImage image){
+        Color c = new Color(image.getRGB(p.x, p.y));
+        System.err.println(c.toString());
+        return c;
+    }
+    
     /**
      * Catches the window closing event, so that we can free up resources
      * before exiting.
