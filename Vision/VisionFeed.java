@@ -180,7 +180,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     pixels, but you should try and click centrally in the object still.
     */
     public Color getColor(Point p, BufferedImage image){
-        
         Color[] temp = new Color[9];
         temp[0] = new Color(image.getRGB(p.x-1,p.y-1));
         temp[1] = new Color(image.getRGB(p.x-1,p.y));
@@ -209,8 +208,10 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         return avgColor;
     }
     
-    //can output the buffered image to disk.
+    //can output the buffered image to disk, currently will try and normalise it.
     public void writeImage(BufferedImage image, String fn){
+        NormaliseRGB norm = new NormaliseRGB();
+        image = norm.normalise(image);
         try {
             File outputFile = new File(fn);
             ImageIO.write(image, "png", outputFile);
