@@ -6,6 +6,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.awt.Point;
+import java.io.*;
+import javax.imageio.*;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -42,6 +44,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     private Color[] objects = new Color[5];
     private int objectIndex = 0;
     private BufferedImage frameImage;
+    private int[] temp = new int[9];
     //private int[] xDistortion;
     //private int[] yDistortion;
 
@@ -77,7 +80,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     
     public void getClick(String message){
         System.err.println(message);
-        int counter = 0;
+
         while (!mouseClick) {
             try{
                 Thread.sleep(100);
@@ -162,15 +165,41 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     }
     
     public void mouseClicked(MouseEvent e){
-        Point mouseCoOrds = e.getPoint();
+        coords = e.getPoint();
         mouseClick = true;
-        System.err.println("Click co-ordinates: " + mouseCoOrds.x + " " + mouseCoOrds.y);
+        System.err.println("Click co-ordinates: " + coords.x + " " + coords.y);
     }
     
     public Color getColor(Point p, BufferedImage image){
-        Color c = new Color(image.getRGB(p.x, p.y));
-        System.err.println(c.toString());
-        return c;
+        System.err.println("Point: (" + p.x + "," + p.y + ")");
+        /*
+        temp[0] = image.getRGB(p.x-1,p.y-1);
+        temp[1] = image.getRGB(p.x-1,p.y);
+        temp[2] = image.getRGB(p.x-1,p.y+1);
+        temp[3] = image.getRGB(p.x,p.y-1);
+        temp[4] = image.getRGB(p.x,p.y);
+        temp[5] = image.getRGB(p.x,p.y+1);
+        temp[6] = image.getRGB(p.x+1,p.y-1);
+        temp[7] = image.getRGB(p.x+1,p.y);
+        temp[8] = image.getRGB(p.x+1,p.y+1);
+        
+        int avg = 0;
+
+        for(int i = 0;i<9;i++){
+            avg += temp[i];
+        }
+        avg = avg/9;
+        */
+        Color avgColor = new Color(image.getRGB(p.x,p.y));
+        System.err.println(avgColor);
+        return avgColor;
+    }
+    
+    public void writeImage(BufferedImage image, String fn){
+        try {
+            File outputFile = new File(fn);
+            ImageIO.write(image, "png", outputFile);
+        } catch (Exception e) {}
     }
     
     /**
