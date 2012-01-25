@@ -4,10 +4,10 @@ public class ConstantsReuse {
 	private ConstantsReuse() {
 	}
 
-	public static String ROBOT_NAME = "Hacktar";
-	public static String ROBOT_MAC = "00:16:53:08:9F:AF";
+	public static final String ROBOT_NAME = "Hacktar";
+	public static final String ROBOT_MAC = "00:16:53:08:9F:AF";
 
-    public enum OpCodes {
+    public static enum OpCodes {
         DO_NOTHING,
         FORWARDS,
         BACKWARDS,
