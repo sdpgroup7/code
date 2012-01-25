@@ -44,6 +44,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     private Color[] objects = new Color[5];
     private int objectIndex = 0;
     private BufferedImage frameImage;
+	private ControlGUI thresholdGUI;
     //private int[] xDistortion;
     //private int[] yDistortion;
 
@@ -64,7 +65,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
      */
     public VisionFeed(String videoDevice, int width, int height, int channel, int videoStandard,
             int compressionQuality, WorldState worldState, ThresholdsState thresholdsState,
-            PitchConstants pitchConstants) throws V4L4JException {
+            PitchConstants pitchConstants, ControlGUI thresholdsGUI) throws V4L4JException {
 
         /* Set the state fields. */
         this.worldState = worldState;
@@ -74,10 +75,11 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         /* Initialise the GUI that displays the video feed. */
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         initGUI();
+		this.thresholdGUI = thresholdsGUI;
         getColors();
     }
     
-    public void getClick(String message){
+    public Color getClickColor(String message){
         System.err.println(message);
 
         while (!mouseClick) {
@@ -85,17 +87,16 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
                 Thread.sleep(100);
             } catch (Exception e) {}
         }
-        objects[objectIndex] = getColor(coords, frameImage);
-        objectIndex++;
-        mouseClick = false;
+		mouseClick = false;
+        return getColor(coords, frameImage);
     }
     
     public void getColors(){
-        getClick("Click the ball");
-        getClick("Click the yellow robot");
-        getClick("Click the blue robot");
-        getClick("Click a green plate");
-        getClick("Click a grey circle");
+        thresholdGUI.setBallValues(getClickColor("Click the ball"));
+        thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
+        thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
+        thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
+        thresholdGUI.setGreyValues(getClickColor("Click a grey circle"));
     }
     
     public void mouseExited(MouseEvent e){}

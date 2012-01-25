@@ -32,13 +32,17 @@ public class Vision {
         int compressionQuality = 80;
 
         try {
-            /* Create a new Vision object to serve the main vision window. */
-            VisionFeed feed = new VisionFeed(videoDevice, width, height, channel, videoStandard,
-                    compressionQuality, worldState, thresholdsState, pitchConstants);
-            
-            /* Create the Control GUI for threshold setting/etc. */
+
+			 /* Create the Control GUI for threshold setting/etc. */
             thresholdsGUI = new ControlGUI(thresholdsState, worldState, pitchConstants);
             thresholdsGUI.initGUI();
+
+
+            /* Create a new Vision object to serve the main vision window. */
+            VisionFeed feed = new VisionFeed(videoDevice, width, height, channel, videoStandard,
+                    compressionQuality, worldState, thresholdsState, pitchConstants,thresholdsGUI);
+            
+           
             
             
             

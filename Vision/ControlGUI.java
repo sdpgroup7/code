@@ -88,6 +88,147 @@ public class ControlGUI implements ChangeListener {
 	private RangeSlider green_r;
 	private RangeSlider green_g;
 	private RangeSlider green_b;
+
+	public final int THRESHOLD = 25;
+
+	public void setBlueValues(Color c){
+		setBlueValues(c.getRed(),c.getGreen(),c.getBlue());
+	}
+
+	public void setYellowValues(Color c){
+		setYellowValues(c.getRed(),c.getGreen(),c.getBlue());
+	}
+
+	public void setGreyValues(Color c){
+		setGreyValues(c.getRed(),c.getGreen(),c.getBlue());
+	}
+
+	public void setGreenValues(Color c){
+		setGreenValues(c.getRed(),c.getGreen(),c.getBlue());
+	}
+
+	public void setBallValues(Color c){
+		setBallValues(c.getRed(),c.getGreen(),c.getBlue());
+	}
+
+
+
+	public void setBlueValues(int r, int g, int b){
+
+		int rLower = r-THRESHOLD;
+		int rUpper = r+THRESHOLD;
+		int gLower = g-THRESHOLD;
+		int gUpper = g+THRESHOLD;
+		int bLower = b-THRESHOLD;
+		int bUpper = b+THRESHOLD;
+
+		if(rLower < 0) rLower = 0;
+		if(gLower < 0) gLower = 0;
+		if(bLower < 0) bLower = 0;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+
+		blue_r.setValue(rLower);
+		blue_r.setUpperValue(rUpper);
+		blue_g.setValue(gLower);
+		blue_g.setUpperValue(gUpper);
+		blue_b.setValue(bLower);
+		blue_b.setUpperValue(bUpper);
+
+	}
+
+	public void setYellowValues(int r, int g, int b){
+		int rLower = r-THRESHOLD;
+		int rUpper = r+THRESHOLD;
+		int gLower = g-THRESHOLD;
+		int gUpper = g+THRESHOLD;
+		int bLower = b-THRESHOLD;
+		int bUpper = b+THRESHOLD;
+
+		if(rLower < 0) rLower = 0;
+		if(gLower < 0) gLower = 0;
+		if(bLower < 0) bLower = 0;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+
+		yellow_r.setValue(rLower);
+		yellow_r.setUpperValue(rUpper);
+		yellow_g.setValue(gLower);
+		yellow_g.setUpperValue(gUpper);
+		yellow_b.setValue(bLower);
+		yellow_b.setUpperValue(bUpper);
+	}
+
+	public void setGreyValues(int r, int g, int b){
+		int rLower = r-THRESHOLD;
+		int rUpper = r+THRESHOLD;
+		int gLower = g-THRESHOLD;
+		int gUpper = g+THRESHOLD;
+		int bLower = b-THRESHOLD;
+		int bUpper = b+THRESHOLD;
+
+		if(rLower < 0) rLower = 0;
+		if(gLower < 0) gLower = 0;
+		if(bLower < 0) bLower = 0;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+
+		grey_r.setValue(rLower);
+		grey_r.setUpperValue(rUpper);
+		grey_g.setValue(gLower);
+		grey_g.setUpperValue(gUpper);
+		grey_b.setValue(bLower);
+		grey_b.setUpperValue(bUpper);
+	}
+
+	public void setGreenValues(int r, int g, int b){
+		int rLower = r-THRESHOLD;
+		int rUpper = r+THRESHOLD;
+		int gLower = g-THRESHOLD;
+		int gUpper = g+THRESHOLD;
+		int bLower = b-THRESHOLD;
+		int bUpper = b+THRESHOLD;
+
+		if(rLower < 0) rLower = 0;
+		if(gLower < 0) gLower = 0;
+		if(bLower < 0) bLower = 0;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+
+		green_r.setValue(rLower);
+		green_r.setUpperValue(rUpper);
+		green_g.setValue(gLower);
+		green_g.setUpperValue(gUpper);
+		green_b.setValue(bLower);
+		green_b.setUpperValue(bUpper);
+	}
+
+	public void setBallValues(int r, int g, int b){
+		int rLower = r-THRESHOLD;
+		int rUpper = r+THRESHOLD;
+		int gLower = g-THRESHOLD;
+		int gUpper = g+THRESHOLD;
+		int bLower = b-THRESHOLD;
+		int bUpper = b+THRESHOLD;
+
+		if(rLower < 0) rLower = 0;
+		if(gLower < 0) gLower = 0;
+		if(bLower < 0) bLower = 0;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+
+		ball_r.setValue(rLower);
+		ball_r.setUpperValue(rUpper);
+		ball_g.setValue(gLower);
+		ball_g.setUpperValue(gUpper);
+		ball_b.setValue(bLower);
+		ball_b.setUpperValue(bUpper);
+	}
 	
 	/**
 	 * Default constructor. 
