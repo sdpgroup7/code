@@ -31,7 +31,7 @@ public class Nxt_code implements Runnable, MoveListener {
 
 	// constants for the pilot class 
 	private static final float TRACK_WIDTH = (float) 14.5;
-	private static final float WHEEL_DIAMETER = (float) 8.4;
+	private static final float WHEEL_DIAMETER = (float) 81.6;
 
 	// NXT Opcodes
 	private final static int DO_NOTHING = 0X00;
