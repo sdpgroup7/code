@@ -71,7 +71,7 @@ public class RobotControl extends RobotDetails {
 				// send data when necessary
 				while (keepConnected) {
 					if (commandList.isEmpty()) {
-						sendToRobot(ConstantsReuse.OpCodes.DO_NOTHING);
+						sendToRobot(ConstantsReuse.OpCodes.DO_NOTHING.ordinal());
 					} else {
 						sendToRobot(commandList.remove());
 					}
@@ -194,7 +194,7 @@ public class RobotControl extends RobotDetails {
 	 */
 	public void moveForward() {
 		moving = true;
-		addCommand(ConstantsReuse.OpCodes.FORWARDS);
+		addCommand(ConstantsReuse.OpCodes.FORWARDS.ordinal());
 	}
 
 	/**
@@ -202,14 +202,14 @@ public class RobotControl extends RobotDetails {
 	 */
 	public void moveBackward() {
 		moving = true;
-		addCommand(CostantsReuse.OpCodes.BACKWARDS);
+		addCommand(ConstantsReuse.OpCodes.BACKWARDS.ordinal());
 	}
 
 	/**
 	 * Commands the robot to move back a little bit
 	 */
 	public void moveBackwardSlightly() {
-		addCommand(ConstantsResue.OpCodes.BACKWARDS_SLIGHTLY);
+		addCommand(ConstantsReuse.OpCodes.BACKWARDS_SLIGHTLY.ordinal());
 	}
 
 	/**
@@ -217,14 +217,14 @@ public class RobotControl extends RobotDetails {
 	 */
 	public void stop() {
 		moving = false;
-		addCommand(ConstantsReuse.OpCodes.STOP);
+		addCommand(ConstantsReuse.OpCodes.STOP.ordinal());
 	}
 
 	/**
 	 * Sets the speed of the motors to a given integer (900 is the max)
 	 */
 	public void changeSpeed(int to) {
-		int command = ConstantsReuse.OpCodes.CHANGE_SPEED | (to << 8);
+		int command = ConstantsReuse.OpCodes.CHANGE_SPEED.ordinal() | (to << 8);
 		currentSpeed = to;
 		addCommand(command);
 	}
@@ -234,7 +234,7 @@ public class RobotControl extends RobotDetails {
 	 */
 	public void kick() {
 		System.out.println("kick");
-		addCommand(ConstantsReuse.OpCodes.KICK);
+		addCommand(ConstantsReuse.OpCodes.KICK.ordinal());
 	}
 
 	/**
@@ -248,7 +248,7 @@ public class RobotControl extends RobotDetails {
 		if (radians < 0)
 			radians = (2 * Math.PI - radians);
 		if (radians != 0) {
-			int command = ConstantsReuse.OpCodes.ROTATE | ((int) Math.toDegrees(radians) << 8);
+			int command = ConstantsReuse.OpCodes.ROTATE.ordinal() | ((int) Math.toDegrees(radians) << 8);
 			addCommand(command);
 		}
 
@@ -264,7 +264,7 @@ public class RobotControl extends RobotDetails {
 		if (arcLeft)
 			radius += 1000;
 
-		int command = ConstantsReuse.OpCodes.ARC | (radius << 8);
+		int command = ConstantsReuse.OpCodes.ARC.ordinal() | (radius << 8);
 		addCommand(command);
 
 	}
@@ -273,7 +273,7 @@ public class RobotControl extends RobotDetails {
 	 * Commands steers the robot based on a given ratio
 	 */
 	public void steerWithRatio(float ratio) {
-		int command = ConstantsReuse.OpCodes.STEER_WITH_RATIO | ((int) ratio << 8);
+		int command = ConstantsReuse.OpCodes.STEER_WITH_RATIO.ordinal() | ((int) ratio << 8);
 		addCommand(command);
 	}
 
@@ -281,14 +281,14 @@ public class RobotControl extends RobotDetails {
 	 * Commands the robot to make a noise
 	 */
 	public void beep() {
-		addCommand(ConstantsReuse.OpCodes.BEEP);
+		addCommand(ConstantsReuse.OpCodes.BEEP.ordinal());
 	}
 
 	/**
 	 * Commands the robot to play a tune
 	 */
 	public void celebrate() {
-		addCommand(ConstantsReuse.OpCodes.CELEBRATE);
+		addCommand(ConstantsReuse.OpCodes.CELEBRATE.ordinal());
 	}
 
 	public void setConnected(boolean isConnected) {
