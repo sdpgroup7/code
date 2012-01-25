@@ -31,20 +31,21 @@ public class Nxt_code implements Runnable {
 	private static final float WHEEL_DIAMETER = (float) 81.6;
 
 	// NXT Opcodes
-	private final static int DO_NOTHING = 0X00;
-	private final static int FORWARDS = 0X01;
-	private final static int BACKWARDS = 0X02;
-	private final static int BACKWARDS_SLIGHTLY = 0X03;
-	private final static int STOP = 0X04;
-	private final static int CHANGE_SPEED = 0X05;
-	private final static int KICK = 0X06;
-	private final static int ROTATE = 0X07;
-	private final static int ARC = 0X08;
-
-	private final static int STEER_WITH_RATIO = 0X0E;
-	private final static int BEEP = 0X0F;
-	private final static int CELEBRATE = 0X10;
-	private final static int QUIT = 0X11;
+	private static enum OpCodes {
+        DO_NOTHING,
+        FORWARDS,
+        BACKWARDS,
+        BACKWARDS_SLIGHTLY,
+        STOP,
+        CHANGE_SPEED,
+        KICK,
+        ROTATE,
+        ARC,
+        STEER_WITH_RATIO,
+        BEEP,
+        CELEBRATE,
+        QUIT
+    }
 
 	public static void main(String[] args) throws Exception {
 
@@ -72,17 +73,17 @@ public class Nxt_code implements Runnable {
 				LCD.drawString("Connected!", 0, 2);
 
 				// begin reading commands
-				int n = DO_NOTHING;
-
-				while (n != QUIT) {
+				OpCodes n = OpCodes.DO_NOTHING;
+				
+				while (n != OpCodes.QUIT) {
 
 					// get the next command from the inputstream
 					byte[] byteBuffer = new byte[4];
 					is.read(byteBuffer);
-
-					n = byteArrayToInt(byteBuffer);
-					int opcode = ((n << 24) >> 24);
-
+					
+					int inp = byteArrayToInt(byteBuffer);
+					int opcode = ((inp << 24) >> 24);
+					n = OpCodes.values()[opcode];
 					LCD.drawString(String.valueOf(kicking), 0, 2);
 					// If everything is alright, LCD should read "falsected"
 					if (blocking) {
@@ -91,7 +92,7 @@ public class Nxt_code implements Runnable {
 						continue;
 					}
 					
-					switch (opcode) {
+					switch (n) {
 
 						case FORWARDS:
 							if (pilot.isMoving()) {
@@ -118,7 +119,7 @@ public class Nxt_code implements Runnable {
 							break;
 	
 						case CHANGE_SPEED:
-							pilot.setTravelSpeed((n >> 8));
+							pilot.setTravelSpeed((inp >> 8));
 							break;
 	
 						case KICK:
@@ -146,7 +147,7 @@ public class Nxt_code implements Runnable {
 	
 						case ROTATE:
 	
-							int rotateBy = n >> 8;
+							int rotateBy = inp >> 8;
 	
 							// if n > 360 change to negative (turn left)
 							if (rotateBy > 360) {
@@ -162,7 +163,7 @@ public class Nxt_code implements Runnable {
 	
 						case ARC:
 	
-							int arcRadius = n >> 8;
+							int arcRadius = inp >> 8;
 	
 							// if n > 1000 change to negative (turn left)
 							if (arcRadius > 1000) {
@@ -173,7 +174,7 @@ public class Nxt_code implements Runnable {
 	
 	
 						case STEER_WITH_RATIO:
-							pilot.steer(n >> 8);
+							pilot.steer(inp >> 8);
 							break;
 	
 						case BEEP:
