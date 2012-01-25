@@ -16,10 +16,14 @@ interface VisualMethods{
 	Vector2 getBallVelocity(); //gets the velocity of the ball
 	Vector2 getOurVelocity(); //gets our velocity
 	Vector2 getOpponentVelocity(); //gets our opponents velocity
+        Vector2 getDistanceToBall(); //find distance to ball
+        int whatDidWeHit();  //if you hit something we'll tell you what you hit, using a code 
 
 
 
 //Priority 3 - Could be useful
 
+        Bool didWeScore(); //Check whether the ball is in opponents goal (then victory celebration)
+        
 
 }
