@@ -79,6 +79,9 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         getColors();
     }
     
+    /*
+    Get the threshold values for the objects in the match i.e. ball.
+    */
     public Color getClickColor(String message){
         System.err.println(message);
 
@@ -91,6 +94,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         return getColor(coords, frameImage);
     }
     
+    //Set the sliders on the GUI, the messages are used to tell the user what to click
     public void getColors(){
         thresholdGUI.setBallValues(getClickColor("Click the ball"));
         thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
@@ -99,6 +103,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         thresholdGUI.setGreyValues(getClickColor("Click a grey circle"));
     }
     
+    //useless, had to be included because of the MouseEvent interface
     public void mouseExited(MouseEvent e){}
     public void mouseEntered(MouseEvent e){}
     public void mousePressed(MouseEvent e){}
@@ -164,14 +169,17 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         windowFrame.addMouseListener(this);
     }
     
+    //When the mouse has been clicked get the location.
     public void mouseClicked(MouseEvent e){
         coords = e.getPoint();
         mouseClick = true;
-        System.err.println("Click co-ordinates: " + coords.x + " " + coords.y);
     }
     
+    /*
+    Get the colour where the mouse was clicked.  Takes an average of the adjacent
+    pixels, but you should try and click centrally in the object still.
+    */
     public Color getColor(Point p, BufferedImage image){
-        System.err.println("Point: (" + p.x + "," + p.y + ")");
         
         Color[] temp = new Color[9];
         temp[0] = new Color(image.getRGB(p.x-1,p.y-1));
@@ -198,10 +206,10 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
 		avgb = avgb/9;
 
         Color avgColor = new Color(avgr,avgg,avgb);
-        System.err.println(avgColor);
         return avgColor;
     }
     
+    //can output the buffered image to disk.
     public void writeImage(BufferedImage image, String fn){
         try {
             File outputFile = new File(fn);
