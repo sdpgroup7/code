@@ -28,25 +28,6 @@ public class RobotControl extends RobotDetails {
 	public boolean askingToReset = false;
 	private volatile int currentSpeed = 0;
 
-	// NXT Opcodes
-	private final static int DO_NOTHING = 0X00;
-	private final static int FORWARDS = 0X01;
-	private final static int BACKWARDS = 0X02;
-	private final static int BACKWARDS_SLIGHTLY = 0X03;
-	private final static int STOP = 0X04;
-	private final static int CHANGE_SPEED = 0X05;
-	private final static int KICK = 0X06;
-	private final static int ROTATE = 0X07;
-	private final static int ARC = 0X08;
-	private final static int ADJUST_WHEEL_SPEEDS = 0X09;
-	private final static int LEFT_MOTOR_FORWARDS = 0X0A;
-	private final static int RIGHT_MOTOR_FORWARDS = 0X0B;
-	private final static int LEFT_MOTOR_BACKWARDS = 0X0C;
-	private final static int RIGHT_MOTOR_BACKWARDS = 0X0D;
-	private final static int STEER_WITH_RATIO = 0X0E;
-	private final static int BEEP = 0X0F;
-	private final static int CELEBRATE = 0X10;
-
 	/**
 	 * The constructor takes a boolean to indicate if the object should
 	 * communicate with NXT or the simulator.
@@ -90,7 +71,7 @@ public class RobotControl extends RobotDetails {
 				// send data when necessary
 				while (keepConnected) {
 					if (commandList.isEmpty()) {
-						sendToRobot(DO_NOTHING);
+						sendToRobot(ConstantsReuse.OpCodes.DO_NOTHING);
 					} else {
 						sendToRobot(commandList.remove());
 					}
@@ -213,7 +194,7 @@ public class RobotControl extends RobotDetails {
 	 */
 	public void moveForward() {
 		moving = true;
-		addCommand(FORWARDS);
+		addCommand(ConstantsReuse.OpCodes.FORWARDS);
 	}
 
 	/**
@@ -221,14 +202,14 @@ public class RobotControl extends RobotDetails {
 	 */
 	public void moveBackward() {
 		moving = true;
-		addCommand(BACKWARDS);
+		addCommand(CostantsReuse.OpCodes.BACKWARDS);
 	}
 
 	/**
 	 * Commands the robot to move back a little bit
 	 */
 	public void moveBackwardSlightly() {
-		addCommand(BACKWARDS_SLIGHTLY);
+		addCommand(ConstantsResue.OpCodes.BACKWARDS_SLIGHTLY);
 	}
 
 	/**
@@ -236,14 +217,14 @@ public class RobotControl extends RobotDetails {
 	 */
 	public void stop() {
 		moving = false;
-		addCommand(STOP);
+		addCommand(ConstantsReuse.OpCodes.STOP);
 	}
 
 	/**
 	 * Sets the speed of the motors to a given integer (900 is the max)
 	 */
 	public void changeSpeed(int to) {
-		int command = CHANGE_SPEED | (to << 8);
+		int command = ConstantsReuse.OpCodes.CHANGE_SPEED | (to << 8);
 		currentSpeed = to;
 		addCommand(command);
 	}
@@ -253,7 +234,7 @@ public class RobotControl extends RobotDetails {
 	 */
 	public void kick() {
 		System.out.println("kick");
-		addCommand(KICK);
+		addCommand(ConstantsReuse.OpCodes.KICK);
 	}
 
 	/**
@@ -267,7 +248,7 @@ public class RobotControl extends RobotDetails {
 		if (radians < 0)
 			radians = (2 * Math.PI - radians);
 		if (radians != 0) {
-			int command = ROTATE | ((int) Math.toDegrees(radians) << 8);
+			int command = ConstantsReuse.OpCodes.ROTATE | ((int) Math.toDegrees(radians) << 8);
 			addCommand(command);
 		}
 
@@ -283,73 +264,16 @@ public class RobotControl extends RobotDetails {
 		if (arcLeft)
 			radius += 1000;
 
-		int command = ARC | (radius << 8);
+		int command = ConstantsReuse.OpCodes.ARC | (radius << 8);
 		addCommand(command);
 
-	}
-
-	/**
-	 * This method is used for navigating along a path, it sets the speeds of
-	 * each motor independently. If a speed is negative, the motor is instructed
-	 * to move forward, else it is put in reverse.
-	 */
-	public void adjustWheelSpeeds(int speedOfLeftWheel, int speedOfRightWheel) {
-
-		System.out.println("adjustWheelpeeds " + speedOfLeftWheel + " "
-				+ speedOfRightWheel);
-
-		// set the values of the command
-		int command = ADJUST_WHEEL_SPEEDS
-				| ((int) Math.abs(speedOfLeftWheel) << 8)
-				| ((int) Math.abs(speedOfRightWheel) << 20);
-
-		// set the sign bit for the left wheel
-		if (speedOfLeftWheel < 0) {
-			command = command | (1 << 19);
-		}
-
-		// set the sign bit for the right wheel
-		if (speedOfRightWheel < 0) {
-			command = command | (1 << 31);
-		}
-
-		addCommand(command);
-
-	}
-
-	/**
-	 * Commands the robot to move its left motor forwards
-	 */
-	public void sweepRight() {
-		addCommand(LEFT_MOTOR_FORWARDS);
-	}
-
-	/**
-	 * Commands the robot to move its right motor forwards
-	 */
-	public void sweepLeft() {
-		addCommand(RIGHT_MOTOR_FORWARDS);
-	}
-
-	/**
-	 * Commands the robot to move its left motor backwards
-	 */
-	public void backupLeft() {
-		addCommand(LEFT_MOTOR_BACKWARDS);
-	}
-
-	/**
-	 * Commands the robot to move its right motor backwards
-	 */
-	public void backupRight() {
-		addCommand(RIGHT_MOTOR_BACKWARDS);
 	}
 
 	/**
 	 * Commands steers the robot based on a given ratio
 	 */
 	public void steerWithRatio(float ratio) {
-		int command = STEER_WITH_RATIO | ((int) ratio << 8);
+		int command = ConstantsReuse.OpCodes.STEER_WITH_RATIO | ((int) ratio << 8);
 		addCommand(command);
 	}
 
@@ -357,14 +281,14 @@ public class RobotControl extends RobotDetails {
 	 * Commands the robot to make a noise
 	 */
 	public void beep() {
-		addCommand(BEEP);
+		addCommand(ConstantsReuse.OpCodes.BEEP);
 	}
 
 	/**
 	 * Commands the robot to play a tune
 	 */
 	public void celebrate() {
-		addCommand(CELEBRATE);
+		addCommand(ConstantsReuse.OpCodes.CELEBRATE);
 	}
 
 	public void setConnected(boolean isConnected) {
