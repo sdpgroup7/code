@@ -123,7 +123,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
             } catch (Exception e) {}
         }
 		mouseClick = false;
-        return coords;
+        return correctPoint(coords);
 	}
     /*
     Get the threshold values for the objects in the match i.e. ball.
@@ -222,6 +222,10 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         mouseClick = true;
     }
     
+	public Point correctPoint(Point p){
+		return new Point(p.x-6,p.y-27);
+	}
+
     /*
     Get the colour where the mouse was clicked.  Takes an average of the adjacent
     pixels, but you should try and click centrally in the object still.
@@ -277,7 +281,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
 			//currently instead of cropping and stretching the image it simply draws on the borders of where it would crop to in blue
 			for(int x = 0;x<width;x++){
 				for(int y = 0;y<height;y++){
-					if((x == corners[0].x) || (y == corners[0].y) || (x == corners[3].x) || (y == corners[3].y)){
+					if((x == corners[0].x) || (y == corners[0].y) || (x == corners[2].x) || (y == corners[2].y)){
 						image.setRGB(x,y,(255 << 24) + 255);
 					}
 				}
@@ -291,11 +295,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
 					croppedImage.setRGB(i-corners[0].x,j-corners[1].y,image.getRGB(i,j));
 				}
 			}
-			BufferedImage resizedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g = resizedImage.createGraphics(); 
-			g.drawImage(croppedImage, 0, 0, width, height, null);
-			g.dispose();
-			return resizedImage;*/
+			return croppedImage;*/
 		} else {
 			return image;
 		}
