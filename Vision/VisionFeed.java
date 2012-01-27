@@ -259,6 +259,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
 		avgb = avgb/9;
 
         Color avgColor = new Color(avgr,avgg,avgb);
+        System.err.println(avgColor.toString());
         return avgColor;
     }
     
