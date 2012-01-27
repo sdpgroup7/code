@@ -33,7 +33,6 @@ public class RobotControl extends RobotDetails {
 	public void updateRobotDetails(RobotDetails me) {
 		coors = me.getCoors();
 		angle = me.getAngle();
-		updateRect();
 	}
 
 	/**
