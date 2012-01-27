@@ -612,10 +612,23 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
      *                      thresholds (and thus the pixel is part of the blue T),
      *                      false otherwise.
      */
+    
+    private int[] hsbValues(int r, int g, int b, int thresh){
+        float[] hsb = new float[3];
+        int[] hsbInt = new int[3];
+        Color.RGBtoHSB(r,g,b,hsb);
+        for(int i = 0; i < 3; i++){
+            hsbInt[i] = (int)hsb[i] + thresh;
+        }
+        return hsbInt;
+    }
+     
     private boolean isBlue(Color color, float[] hsbvals) {
-        return hsbvals[0] <= thresholdsState.getBlue_h_high() && hsbvals[0] >= thresholdsState.getBlue_h_low() &&
-        hsbvals[1] <= thresholdsState.getBlue_s_high() && hsbvals[1] >= thresholdsState.getBlue_s_low() &&
-        hsbvals[2] <= thresholdsState.getBlue_v_high() && hsbvals[2] >= thresholdsState.getBlue_v_low() &&
+        int[] hsbLow = hsbValues(thresholdsState.getBlue_r_low(),thresholdsState.getBlue_g_low(),thresholdsState.getBlue_b_low(), -25);
+        int[] hsbHigh = hsbValues(thresholdsState.getBlue_r_high(),thresholdsState.getBlue_g_high(),thresholdsState.getBlue_b_high(), 25);
+        return hsbvals[0] <= hsbHigh[0] && hsbvals[0] >= hsbLow[0] &&
+        hsbvals[1] <= hsbHigh[1] && hsbvals[1] >= hsbLow[1] &&
+        hsbvals[2] <= hsbHigh[2] && hsbvals[2] >= hsbLow[2] &&
         color.getRed() <= thresholdsState.getBlue_r_high() && color.getRed() >= thresholdsState.getBlue_r_low() &&
         color.getGreen() <= thresholdsState.getBlue_g_high() && color.getGreen() >= thresholdsState.getBlue_g_low() &&
         color.getBlue() <= thresholdsState.getBlue_b_high() && color.getBlue() >= thresholdsState.getBlue_b_low();
@@ -633,9 +646,13 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
      *                      false otherwise.
      */
     private boolean isYellow(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= thresholdsState.getYellow_h_high() && hsbvals[0] >= thresholdsState.getYellow_h_low() &&
-        hsbvals[1] <= thresholdsState.getYellow_s_high() &&  hsbvals[1] >= thresholdsState.getYellow_s_low() &&
-        hsbvals[2] <= thresholdsState.getYellow_v_high() &&  hsbvals[2] >= thresholdsState.getYellow_v_low() &&
+    
+        int[] hsbLow = hsbValues(thresholdsState.getYellow_r_low(),thresholdsState.getYellow_g_low(),thresholdsState.getYellow_b_low(), -25);
+        int[] hsbHigh = hsbValues(thresholdsState.getYellow_r_high(),thresholdsState.getYellow_g_high(),thresholdsState.getYellow_b_high(), 25);
+        
+        return hsbvals[0] <= hsbHigh[0] && hsbvals[0] >= hsbLow[0] &&
+        hsbvals[1] <= hsbHigh[1] && hsbvals[1] >= hsbLow[1] &&
+        hsbvals[2] <= hsbHigh[2] && hsbvals[2] >= hsbLow[2] &&
         colour.getRed() <= thresholdsState.getYellow_r_high() &&  colour.getRed() >= thresholdsState.getYellow_r_low() &&
         colour.getGreen() <= thresholdsState.getYellow_g_high() && colour.getGreen() >= thresholdsState.getYellow_g_low() &&
         colour.getBlue() <= thresholdsState.getYellow_b_high() && colour.getBlue() >= thresholdsState.getYellow_b_low();
@@ -653,9 +670,13 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
      *                      false otherwise.
      */
     private boolean isBall(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= thresholdsState.getBall_h_high() && hsbvals[0] >= thresholdsState.getBall_h_low() &&
-        hsbvals[1] <= thresholdsState.getBall_s_high() &&  hsbvals[1] >= thresholdsState.getBall_s_low() &&
-        hsbvals[2] <= thresholdsState.getBall_v_high() &&  hsbvals[2] >= thresholdsState.getBall_v_low() &&
+    
+        int[] hsbLow = hsbValues(thresholdsState.getBall_r_low(),thresholdsState.getBall_g_low(),thresholdsState.getBall_b_low(), -25);
+        int[] hsbHigh = hsbValues(thresholdsState.getBall_r_high(),thresholdsState.getBall_g_high(),thresholdsState.getBall_b_high(), 25);
+        
+        return hsbvals[0] <= hsbHigh[0] && hsbvals[0] >= hsbLow[0] &&
+        hsbvals[1] <= hsbHigh[1] && hsbvals[1] >= hsbLow[1] &&
+        hsbvals[2] <= hsbHigh[2] && hsbvals[2] >= hsbLow[2] &&
         colour.getRed() <= thresholdsState.getBall_r_high() &&  colour.getRed() >= thresholdsState.getBall_r_low() &&
         colour.getGreen() <= thresholdsState.getBall_g_high() && colour.getGreen() >= thresholdsState.getBall_g_low() &&
         colour.getBlue() <= thresholdsState.getBall_b_high() && colour.getBlue() >= thresholdsState.getBall_b_low();
@@ -673,9 +694,13 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
      *                      false otherwise.
      */
     private boolean isGrey(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= thresholdsState.getGrey_h_high() && hsbvals[0] >= thresholdsState.getGrey_h_low() &&
-        hsbvals[1] <= thresholdsState.getGrey_s_high() &&  hsbvals[1] >= thresholdsState.getGrey_s_low() &&
-        hsbvals[2] <= thresholdsState.getGrey_v_high() &&  hsbvals[2] >= thresholdsState.getGrey_v_low() &&
+    
+        int[] hsbLow = hsbValues(thresholdsState.getGrey_r_low(),thresholdsState.getGrey_g_low(),thresholdsState.getGrey_b_low(), -25);
+        int[] hsbHigh = hsbValues(thresholdsState.getGrey_r_high(),thresholdsState.getGrey_g_high(),thresholdsState.getGrey_b_high(), 25);
+        
+        return hsbvals[0] <= hsbHigh[0] && hsbvals[0] >= hsbLow[0] &&
+        hsbvals[1] <= hsbHigh[1] && hsbvals[1] >= hsbLow[1] &&
+        hsbvals[2] <= hsbHigh[2] && hsbvals[2] >= hsbLow[2] &&
         colour.getRed() <= thresholdsState.getGrey_r_high() &&  colour.getRed() >= thresholdsState.getGrey_r_low() &&
         colour.getGreen() <= thresholdsState.getGrey_g_high() && colour.getGreen() >= thresholdsState.getGrey_g_low() &&
         colour.getBlue() <= thresholdsState.getGrey_b_high() && colour.getBlue() >= thresholdsState.getGrey_b_low();
@@ -693,9 +718,13 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
      *                      false otherwise.
      */
     private boolean isGreen(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= thresholdsState.getGreen_h_high() && hsbvals[0] >= thresholdsState.getGreen_h_low() &&
-        hsbvals[1] <= thresholdsState.getGreen_s_high() &&  hsbvals[1] >= thresholdsState.getGreen_s_low() &&
-        hsbvals[2] <= thresholdsState.getGreen_v_high() &&  hsbvals[2] >= thresholdsState.getGreen_v_low() &&
+
+        int[] hsbLow = hsbValues(thresholdsState.getGreen_r_low(),thresholdsState.getGreen_g_low(),thresholdsState.getGreen_b_low(), -25);
+        int[] hsbHigh = hsbValues(thresholdsState.getGreen_r_high(),thresholdsState.getGreen_g_high(),thresholdsState.getGreen_b_high(), 25);
+        
+        return hsbvals[0] <= hsbHigh[0] && hsbvals[0] >= hsbLow[0] &&
+        hsbvals[1] <= hsbHigh[1] && hsbvals[1] >= hsbLow[1] &&
+        hsbvals[2] <= hsbHigh[2] && hsbvals[2] >= hsbLow[2] &&
         colour.getRed() <= thresholdsState.getGreen_r_high() &&  colour.getRed() >= thresholdsState.getGreen_r_low() &&
         colour.getGreen() <= thresholdsState.getGreen_g_high() && colour.getGreen() >= thresholdsState.getGreen_g_low() &&
         colour.getBlue() <= thresholdsState.getGreen_b_high() && colour.getBlue() >= thresholdsState.getGreen_b_low();

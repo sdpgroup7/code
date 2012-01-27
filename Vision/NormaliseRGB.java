@@ -3,6 +3,11 @@ import java.awt.Color;
 
 public class NormaliseRGB{
 
+    /*
+    Takes in an image and normalises the RGB values.
+    Probably wont use it as affects frame rate too much
+    */
+
     public BufferedImage normalise(BufferedImage image){
 		long start = System.currentTimeMillis();
         for (int i = 0; i < 640; i++){
