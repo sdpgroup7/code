@@ -107,6 +107,8 @@ public class ControlGUI implements ChangeListener {
 	private RangeSlider green_b;
 
 	public final int THRESHOLD = 25;
+	
+    private boolean penaltyToGame = false;
 
 	public void setBlueValues(Color c){
 		setBlueValues(c.getRed(),c.getGreen(),c.getBlue());
@@ -575,6 +577,21 @@ public class ControlGUI implements ChangeListener {
 		penaltyPanel.add(returnToGame);
 		penaltyPanel.add(penaltyAttackButton);
 		penaltyPanel.add(penaltyDefendButton);
+		
+		returnToGame.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    //Boolean value to be sent with function calls to strategy for penalties
+		    //letting them know whether they should continue playing or not after taking or saving penalty
+		    public void actionPerformed(ActionEvent e) {
+		        penaltyToGame = !(penaltyToGame);
+		        if (penaltyToGame) {
+		            System.err.println("Checked");
+		        } else {
+		            System.err.println("Unchecked");
+		        }
+		    }
+		});
 		
 		penaltyAttackButton.addActionListener(new ActionListener() {
 		    
