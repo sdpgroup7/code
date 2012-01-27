@@ -5,7 +5,7 @@
 
 	<!-- set properties for this build -->
 	<property environment="env" />
-	<property file="properties" />
+	<property name="nxj.home" value="/group/teaching/sdp/sdp7/lejos/lejos_nxj/" />
 	<property name="src" location="." />
 	<basename property="program" file="uk.ac.ed.inf.sdp2012.group7.robot.Nxt_code" />
 	<property name="binary" value="Nxt_code.nxj" />
