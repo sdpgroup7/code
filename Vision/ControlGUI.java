@@ -140,6 +140,9 @@ public class ControlGUI implements ChangeListener {
 		int gUpper = g+THRESHOLD;
 		int bLower = b-THRESHOLD;
 		int bUpper = b+THRESHOLD;
+		
+		float[] hsbHigh
+		float[] hsbLow
 
 		if(rLower < 0) rLower = 0;
 		if(gLower < 0) gLower = 0;

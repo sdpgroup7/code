@@ -612,6 +612,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
      *                      thresholds (and thus the pixel is part of the blue T),
      *                      false otherwise.
      */
+     
     private boolean isBlue(Color color, float[] hsbvals) {
         return hsbvals[0] <= thresholdsState.getBlue_h_high() && hsbvals[0] >= thresholdsState.getBlue_h_low() &&
         hsbvals[1] <= thresholdsState.getBlue_s_high() && hsbvals[1] >= thresholdsState.getBlue_s_low() &&
