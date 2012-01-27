@@ -25,7 +25,7 @@ public class Nxt_code implements Runnable {
 
 	// constants for the pilot class 
 	private static final float TRACK_WIDTH = (float) 14.6;
-	private static final float WHEEL_DIAMETER = (float) 81.6;
+	private static final float WHEEL_DIAMETER = (float) 8.16;
 
 	// NXT Opcodes
 	private static enum OpCodes {
@@ -47,7 +47,7 @@ public class Nxt_code implements Runnable {
 	public static void main(String[] args) throws Exception {
 
 		DifferentialPilot pilot = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, Motor.B,Motor.C, false);
-
+		
 		// start the sensor thread
 		new Thread(new Nxt_code(pilot)).start();
 
@@ -145,7 +145,7 @@ public class Nxt_code implements Runnable {
 						case ROTATE:
 	
 							int rotateBy = inp >> 8;
-	
+							os.write(rotateBy);
 							// if n > 360 change to negative (turn left)
 							if (rotateBy > 360) {
 								rotateBy = -(rotateBy - 360);
@@ -155,6 +155,7 @@ public class Nxt_code implements Runnable {
 							// until the rotation is complete
 							blocking = true;
 							pilot.rotate(rotateBy, false);
+							
 							blocking = false;
 							break;
 	
@@ -166,7 +167,7 @@ public class Nxt_code implements Runnable {
 							if (arcRadius > 1000) {
 								arcRadius = (arcRadius - 1000);
 							}
-							pilot.arcForward(arcRadius);
+							//pilot.arcForward(arcRadius);
 							break;
 	
 	
