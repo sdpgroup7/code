@@ -11,9 +11,6 @@ import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
 import lejos.robotics.navigation.DifferentialPilot;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
 /**
  * Code that runs on the NXT brick
  */
@@ -25,7 +22,7 @@ public class Nxt_code implements Runnable {
 	private static DifferentialPilot pilot;
 	private static volatile boolean blocking = false;
 	private static volatile boolean kicking = false;
-	private static Logger logger = Logger.getRootLogger();
+
 	// constants for the pilot class 
 	private static final float TRACK_WIDTH = (float) 14.6;
 	private static final float WHEEL_DIAMETER = (float) 81.6;
@@ -50,7 +47,7 @@ public class Nxt_code implements Runnable {
 	public static void main(String[] args) throws Exception {
 
 		DifferentialPilot pilot = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, Motor.B,Motor.C, false);
-		logger.setLevel((Level) Level.WARN);
+
 		// start the sensor thread
 		new Thread(new Nxt_code(pilot)).start();
 
@@ -131,7 +128,7 @@ public class Nxt_code implements Runnable {
 									try {
 										Thread.sleep(300);
 									} catch (InterruptedException e) {
-										logger.debug("Kick: interrupted during waiting", e);
+										System.err.println("Kick: interrupted during waiting: " + e.getMessage());
 									}
 									Motor.A.setSpeed(60);
 									Motor.A.rotate(60, true);
@@ -205,7 +202,7 @@ public class Nxt_code implements Runnable {
 			} catch (Exception e) {
 				LCD.clear();
 				LCD.drawString("EXCEPTION!", 0, 2);
-				logger.error("Something went wrong in the main thread.", e);
+				System.err.println("Something went wrong in the main thread: " + e.getMessage());
 			}
 		}
 
@@ -279,7 +276,7 @@ public class Nxt_code implements Runnable {
 				Thread.sleep(50);
 
 			} catch (Exception ex) {
-				logger.error("Something went wrong in the sensor thread.", ex);
+				System.err.println("Something went wrong in the sensor thread: " + ex.getMessage());
 			}
 
 		}
