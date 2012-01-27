@@ -63,7 +63,6 @@ public class RobotControl extends RobotDetails {
 					}
 					receiveFromRobot();
 
-					// Tools.rest(10);
 				}
 				// disconnect when we're done
 				disconnectFromRobot();
@@ -128,7 +127,7 @@ public class RobotControl extends RobotDetails {
 	 * Sends a command to the robot
 	 */
 	private void sendToRobot(int command) {
-		System.out.println("SENT "+command+" TO ROBOT");
+		//System.out.println("SENT "+command+" TO ROBOT");
 		comms.sendToRobot(command);
 	}
 
