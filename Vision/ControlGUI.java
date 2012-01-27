@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JCheckBox;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -46,6 +47,22 @@ public class ControlGUI implements ChangeListener {
 	/* Load/Save buttons. */
 	private JButton saveButton;
 	private JButton loadButton;
+	
+	/* Kick and drive buttons - for M1 but can change function as neccessary*/
+	private JButton kickButton;
+	private JButton driveButton;
+	
+	/*Locate Button*/
+	private JButton locateButton;
+	
+	/* Start and Stop Buttons */
+	private JButton startButton;
+	private JButton stopButton;
+	
+	/*Penalty mode buttons */
+	private JButton penaltyAttackButton;
+	private JButton penaltyDefendButton;
+	private JCheckBox returnToGame;
 	
 	/* Tabs. */
 	private JTabbedPane tabPane;
@@ -90,6 +107,8 @@ public class ControlGUI implements ChangeListener {
 	private RangeSlider green_b;
 
 	public final int THRESHOLD = 25;
+	
+    private boolean penaltyToGame = false;
 
 	public void setBlueValues(Color c){
 		setBlueValues(c.getRed(),c.getGreen(),c.getBlue());
@@ -489,6 +508,140 @@ public class ControlGUI implements ChangeListener {
 		
 		defaultPanel.add(saveLoadPanel);
 		
+		/*
+		The locate button is pressed to start the locating of the objects
+		and pitch boundaries
+		*/
+		
+		JPanel locatePanel = new JPanel();
+		
+		locateButton = new JButton("Locate Objects");
+		
+		locatePanel.add(locateButton);
+		locateButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //Call the methods to find and set the thresholds of the objects and locate the corners
+		        //Call to vision
+		        System.err.println("Run Location");
+		    }
+		});
+		    
+		
+		defaultPanel.add(locatePanel);
+		
+		/*
+		Buttons for starting and stopping the match, before starting you have
+		to have done locate.  Stop will be used for breaks in play etc.
+		*/
+		
+		JPanel startStopPanel = new JPanel();
+		
+		startButton = new JButton("Start Match");
+		stopButton = new JButton("Stop Match");
+		
+		startStopPanel.add(startButton);
+		startStopPanel.add(stopButton);
+		
+		startButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to strategy system for there start of match code
+		        System.err.println("Start Strategy");
+		    }
+		});
+		
+		stopButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to strategy to get them to stop what they are doing
+		        System.err.println("Stop the strategy");
+		    }
+		});
+		
+		defaultPanel.add(startStopPanel);
+		
+		/*
+		Penalty Mode buttons.  Stop button must be pressed first
+		*/
+		
+		JPanel penaltyPanel = new JPanel();
+		
+		penaltyAttackButton = new JButton("Penalty Shoot");
+		penaltyDefendButton = new JButton("Penalty Goalie");
+		returnToGame = new JCheckBox("Return to Game");
+		
+		penaltyPanel.add(returnToGame);
+		penaltyPanel.add(penaltyAttackButton);
+		penaltyPanel.add(penaltyDefendButton);
+		
+		returnToGame.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    //Boolean value to be sent with function calls to strategy for penalties
+		    //letting them know whether they should continue playing or not after taking or saving penalty
+		    public void actionPerformed(ActionEvent e) {
+		        penaltyToGame = !(penaltyToGame);
+		        if (penaltyToGame) {
+		            System.err.println("Checked");
+		        } else {
+		            System.err.println("Unchecked");
+		        }
+		    }
+		});
+		
+		penaltyAttackButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to strategy letting them know that bot is taking a penalty
+		        System.err.println("Penalty Attack");
+		    }
+		});
+		
+		penaltyDefendButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to strategy to let them know to prepare to save
+		        System.err.println("Goalie Mode");
+		    }
+		});
+		
+		defaultPanel.add(penaltyPanel);
+		
+		/*Currently Milestone 1 stuff - WILL CHANGE */
+		
+		JPanel misc = new JPanel();
+		
+		kickButton = new JButton("Kick");
+		driveButton = new JButton("Drive");
+		
+		misc.add(kickButton);
+		misc.add(driveButton);
+		
+		kickButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to control to activate kicker
+		        System.err.println("Kicked the Ball");
+		    }
+		});
+		
+		driveButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to control to drive forward
+		        System.err.println("Vroom vroom");
+		    }
+		});
+		
+		defaultPanel.add(misc);
 	}
 	
 	/**
