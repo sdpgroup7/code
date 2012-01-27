@@ -32,7 +32,7 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 
 
 
-//TODO: The points returned when we click are out somehow. Click on the ball for example and you can see that it returns the wrong colour
+//TODO: The points returned when we click are out somehow. Click on the ball for example and you can see that it returns the wrong colour - just called correctPoint in the choose colour bit, and it seems to have a done the job
 //		I verified this when I drew lines on the image as they were not in the place I clicked. 
 
 public class VisionFeed extends WindowAdapter implements MouseListener{
@@ -92,6 +92,11 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     
 
 	public void getCorners(){
+	
+	    /*
+	    Get the corners of the pitch by choosing the widest parts of the pitch in the horizontal
+	    and the vertical.  Gets bits not in the pitch because of distortion
+	    */
 		Point[] bulges = new Point[4];
 		System.err.println("By bulge we mean the part of the pitch (in green) which sticks out the most in the specified direction");
 		bulges[0] = getCorner("Click the top bulge");
@@ -113,7 +118,9 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
 		cornersSet = true;
 		
 	}
-
+    /*
+    just register the mouse click after being asked to by getCorner
+    */
 	public Point getCorner(String message){
 		System.err.println(message);
 
@@ -127,6 +134,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
 	}
     /*
     Get the threshold values for the objects in the match i.e. ball.
+    Registers the mouse clicks after being asked to by getColors
     */
     public Color getClickColor(String message){
         System.err.println(message);
@@ -219,9 +227,14 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     //When the mouse has been clicked get the location.
     public void mouseClicked(MouseEvent e){
         coords = e.getPoint();
+        System.err.println(coords.toString());
         mouseClick = true;
     }
     
+    /*
+    Corrects the points (working hypothesis currently is that they are
+    off due to distortion, may need slight calculation
+	*/
 	public Point correctPoint(Point p){
 		return new Point(p.x-6,p.y-27);
 	}
@@ -231,8 +244,9 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     pixels, but you should try and click centrally in the object still.
     */
     public Color getColor(Point p, BufferedImage image){
-
-		//writeImage(image,"test");
+        //writeImage(image,"test.png");
+        
+        p = correctPoint(p);
 
         Color[] temp = new Color[9];
         temp[0] = new Color(image.getRGB(p.x-1,p.y-1));
@@ -263,10 +277,10 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         return avgColor;
     }
     
-    //can output the buffered image to disk, currently will try and normalise it.
+    //can output the buffered image to disk, can normalise if neccessary
     public void writeImage(BufferedImage image, String fn){
-        NormaliseRGB norm = new NormaliseRGB();
-        image = norm.normalise(image);
+        //NormaliseRGB norm = new NormaliseRGB();
+        //image = norm.normalise(image);
         try {
             File outputFile = new File(fn);
             ImageIO.write(image, "png", outputFile);
