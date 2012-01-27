@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JCheckBox;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -46,6 +47,22 @@ public class ControlGUI implements ChangeListener {
 	/* Load/Save buttons. */
 	private JButton saveButton;
 	private JButton loadButton;
+	
+	/* Kick and drive buttons - for M1 but can change function as neccessary*/
+	private JButton kickButton;
+	private JButton driveButton;
+	
+	/*Locate Button*/
+	private JButton locateButton;
+	
+	/* Start and Stop Buttons */
+	private JButton startButton;
+	private JButton stopButton;
+	
+	/*Penalty mode buttons */
+	private JButton penaltyAttackButton;
+	private JButton penaltyDefendButton;
+	private JCheckBox returnToGame;
 	
 	/* Tabs. */
 	private JTabbedPane tabPane;
@@ -489,6 +506,61 @@ public class ControlGUI implements ChangeListener {
 		
 		defaultPanel.add(saveLoadPanel);
 		
+		/*
+		The locate button is pressed to start the locating of the objects
+		and pitch boundaries
+		*/
+		
+		JPanel locatePanel = new JPanel();
+		
+		locateButton = new JButton("Locate Objects");
+		
+		locatePanel.add(locateButton);
+		
+		defaultPanel.add(locatePanel);
+		
+		/*
+		Buttons for starting and stopping the match, before starting you have
+		to have done locate.  Stop will be used for breaks in play etc.
+		*/
+		
+		JPanel startStopPanel = new JPanel();
+		
+		startButton = new JButton("Start Match");
+		stopButton = new JButton("Stop Match");
+		
+		startStopPanel.add(startButton);
+		startStopPanel.add(stopButton);
+		
+		defaultPanel.add(startStopPanel);
+		
+		/*
+		Penalty Mode buttons.  Stop button must be pressed first
+		*/
+		
+		JPanel penaltyPanel = new JPanel();
+		
+		penaltyAttackButton = new JButton("Penalty Shoot");
+		penaltyDefendButton = new JButton("Penalty Goalie");
+		returnToGame = new JCheckBox("Return to Game");
+		
+		penaltyPanel.add(returnToGame);
+		penaltyPanel.add(penaltyAttackButton);
+		penaltyPanel.add(penaltyDefendButton);
+		
+		defaultPanel.add(penaltyPanel);
+		
+		/*Currently Milestone 1 stuff - WILL CHANGE */
+		
+		JPanel misc = new JPanel();
+		
+		kickButton = new JButton("Kick");
+		driveButton = new JButton("Drive");
+		
+		misc.add(kickButton);
+		misc.add(driveButton);
+		
+		defaultPanel.add(misc);
 	}
 	
 	/**
