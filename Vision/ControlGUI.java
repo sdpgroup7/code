@@ -516,6 +516,16 @@ public class ControlGUI implements ChangeListener {
 		locateButton = new JButton("Locate Objects");
 		
 		locatePanel.add(locateButton);
+		locateButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //Call the methods to find and set the thresholds of the objects and locate the corners
+		        //Call to vision
+		        System.err.println("Run Location");
+		    }
+		});
+		    
 		
 		defaultPanel.add(locatePanel);
 		
@@ -531,6 +541,24 @@ public class ControlGUI implements ChangeListener {
 		
 		startStopPanel.add(startButton);
 		startStopPanel.add(stopButton);
+		
+		startButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to strategy system for there start of match code
+		        System.err.println("Start Strategy");
+		    }
+		});
+		
+		stopButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to strategy to get them to stop what they are doing
+		        System.err.println("Stop the strategy");
+		    }
+		});
 		
 		defaultPanel.add(startStopPanel);
 		
@@ -548,6 +576,24 @@ public class ControlGUI implements ChangeListener {
 		penaltyPanel.add(penaltyAttackButton);
 		penaltyPanel.add(penaltyDefendButton);
 		
+		penaltyAttackButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to strategy letting them know that bot is taking a penalty
+		        System.err.println("Penalty Attack");
+		    }
+		});
+		
+		penaltyDefendButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to strategy to let them know to prepare to save
+		        System.err.println("Goalie Mode");
+		    }
+		});
+		
 		defaultPanel.add(penaltyPanel);
 		
 		/*Currently Milestone 1 stuff - WILL CHANGE */
@@ -559,6 +605,24 @@ public class ControlGUI implements ChangeListener {
 		
 		misc.add(kickButton);
 		misc.add(driveButton);
+		
+		kickButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to control to activate kicker
+		        System.err.println("Kicked the Ball");
+		    }
+		});
+		
+		driveButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to control to drive forward
+		        System.err.println("Vroom vroom");
+		    }
+		});
 		
 		defaultPanel.add(misc);
 	}
