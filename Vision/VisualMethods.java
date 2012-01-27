@@ -23,7 +23,7 @@ interface VisualMethods{
 
 //Priority 3 - Could be useful
 
-        Bool didWeScore(); //Check whether the ball is in opponents goal (then victory celebration)
+        boolean didWeScore(); //Check whether the ball is in opponents goal (then victory celebration)
         
 
 }

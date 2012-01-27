@@ -1,4 +1,4 @@
-import java.Math;
+import java.lang.Math;
 
 /**
  * Represents the position of an object, for example the ball or a robot.
