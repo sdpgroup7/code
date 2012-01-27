@@ -22,19 +22,10 @@ public class RobotControl extends RobotDetails {
 			ConstantsReuse.ROBOT_MAC);
 	private Queue<Integer> commandList = new LinkedList<Integer>();
 
-	private boolean connectToSimulator;
 	private boolean isConnected = false;
 	private boolean keepConnected = true;
 	public boolean askingToReset = false;
 	private volatile int currentSpeed = 0;
-
-	/**
-	 * The constructor takes a boolean to indicate if the object should
-	 * communicate with NXT or the simulator.
-	 */
-	public RobotControl(boolean connectToSimulator) {
-		this.connectToSimulator = connectToSimulator;
-	}
 
 	/**
 	 * This method updates the location and angle of the robot.
@@ -53,11 +44,7 @@ public class RobotControl extends RobotDetails {
 
 		// start up the connection
 		try {
-			if (connectToSimulator) {
-				//connectToSimulator();
-			} else {
-				connectToRobot();
-			}
+			connectToRobot();
 		} catch (IOException ex) {
 			System.err.println("Robot Connection Failed: ");
 			System.err.println(ex.toString());
@@ -80,12 +67,8 @@ public class RobotControl extends RobotDetails {
 					// Tools.rest(10);
 				}
 				// disconnect when we're done
-				if (connectToSimulator) {
-					disconnectFromSimulator();
-				} else {
-					disconnectFromRobot();
-				}
-
+				disconnectFromRobot();
+				
 			}
 		}).start();
 
@@ -108,19 +91,6 @@ public class RobotControl extends RobotDetails {
 		comms.openConnection();
 		setConnected(true);
 		beep();
-	}
-
-	/**
-	 * Disconnect from the simulator
-	 */
-	private void disconnectFromSimulator() {
-		try {
-			comms.closeConnection();
-			setConnected(false);
-		} catch (Exception e) {
-			System.err.println("Error Disconnecting from simulator");
-			System.err.println(e.toString());
-		}
 	}
 
 	/**
@@ -159,7 +129,7 @@ public class RobotControl extends RobotDetails {
 	 * Sends a command to the robot
 	 */
 	private void sendToRobot(int command) {
-		// System.out.println("SENT "+command+" TO ROBOT");
+		System.out.println("SENT "+command+" TO ROBOT");
 		comms.sendToRobot(command);
 	}
 
