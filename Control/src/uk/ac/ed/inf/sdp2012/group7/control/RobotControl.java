@@ -164,6 +164,15 @@ public class RobotControl extends RobotDetails {
 		moving = true;
 		addCommand(ConstantsReuse.OpCodes.FORWARDS.ordinal());
 	}
+	
+	/**
+	 * Commands the robot to move forward
+	 */
+	public void moveForward(int distance) {
+		moving = true;
+		int command = ConstantsReuse.OpCodes.FORWARDS_WITH_DISTANCE.ordinal() | (distance << 8);
+		addCommand(command);
+	}
 
 	/**
 	 * Commands the robot to move backward

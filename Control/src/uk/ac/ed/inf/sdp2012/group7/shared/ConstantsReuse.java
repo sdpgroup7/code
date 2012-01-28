@@ -19,7 +19,9 @@ public class ConstantsReuse {
         ARC,
         STEER_WITH_RATIO,
         BEEP,
-        CELEBRATE
+        CELEBRATE,
+        FORWARDS_WITH_DISTANCE,
+        QUIT
     }
 
 }

@@ -24,7 +24,7 @@ public class Nxt_code implements Runnable {
 	private static volatile boolean kicking = false;
 
 	// constants for the pilot class 
-	private static final float TRACK_WIDTH = (float) 14.6;
+	private static final float TRACK_WIDTH = (float) 15.0;
 	private static final float WHEEL_DIAMETER = (float) 8.16;
 
 	// NXT Opcodes
@@ -41,6 +41,7 @@ public class Nxt_code implements Runnable {
         STEER_WITH_RATIO,
         BEEP,
         CELEBRATE,
+        FORWARDS_WITH_DISTANCE,
         QUIT
     }
 
@@ -53,9 +54,10 @@ public class Nxt_code implements Runnable {
 
 		// set initial pilot variables to produce maximum speed
 		//pilot.regulateSpeed(true);
-		pilot.setTravelSpeed(pilot.getMaxTravelSpeed());
-		pilot.setRotateSpeed(pilot.getMaxRotateSpeed());
+		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()*0.4);
+		pilot.setRotateSpeed(pilot.getMaxRotateSpeed()*0.4);
 
+		
 		while (true) {
 			try {
 				// wait for a connection and open streams
@@ -95,6 +97,7 @@ public class Nxt_code implements Runnable {
 							if (pilot.isMoving()) {
 								break;
 							} else {
+
 								pilot.forward();
 								break;
 							}
@@ -117,6 +120,10 @@ public class Nxt_code implements Runnable {
 	
 						case CHANGE_SPEED:
 							pilot.setTravelSpeed((inp >> 8));
+							break;
+							
+						case FORWARDS_WITH_DISTANCE:
+							pilot.travel((inp >> 8));
 							break;
 	
 						case KICK:
@@ -167,7 +174,7 @@ public class Nxt_code implements Runnable {
 							if (arcRadius > 1000) {
 								arcRadius = (arcRadius - 1000);
 							}
-							//pilot.arcForward(arcRadius);
+							pilot.arcForward(arcRadius);
 							break;
 	
 	
