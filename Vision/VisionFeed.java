@@ -51,16 +51,16 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     private ControlGUI thresholdGUI;
     private static boolean buffersSet = false;
     private static Point mouseCo = new Point(0,0);
-    private int[] hsbLowBall = new int[3];
-    private int[] hsbHighBall = new int[3];
-    private int[] hsbLowBlue = new int[3];
-    private int[] hsbHighBlue = new int[3];
-    private int[] hsbLowYellow = new int[3];
-    private int[] hsbHighYellow = new int[3];
-    private int[] hsbLowGreen = new int[3];
-    private int[] hsbHighGreen = new int[3];
-    private int[] hsbLowGrey = new int[3];
-    private int[] hsbHighGrey = new int[3];
+    private float[] hsbLowBall = new float[3];
+    private float[] hsbHighBall = new float[3];
+    private float[] hsbLowBlue = new float[3];
+    private float[] hsbHighBlue = new float[3];
+    private float[] hsbLowYellow = new float[3];
+    private float[] hsbHighYellow = new float[3];
+    private float[] hsbLowGreen = new float[3];
+    private float[] hsbHighGreen = new float[3];
+    private float[] hsbLowGrey = new float[3];
+    private float[] hsbHighGrey = new float[3];
 
     /**
      * Default constructor.
@@ -572,14 +572,14 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
      *                      false otherwise.
      */
     
-    private int[] hsbValues(int r, int g, int b, int threshold){
+    private float[] hsbValues(int r, int g, int b, int threshold){
         float[] hsb = new float[3];
-        int[] hsbInt = new int[3];
+        //int[] hsbInt = new int[3];
         Color.RGBtoHSB(r,g,b,hsb);
         for(int i = 0; i < 3; i++){
-            hsbInt[i] = (int)hsb[i] + threshold;
+            hsb[i] += threshold;
         }
-        return hsbInt;
+        return hsb;
     }
      
     private boolean isBlue(Color color, float[] hsbvals) {
