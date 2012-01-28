@@ -32,10 +32,6 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
  */
 
 
-
-//TODO: The points returned when we click are out somehow. Click on the ball for example and you can see that it returns the wrong colour
-//        I verified this when I drew lines on the image as they were not in the place I clicked. 
-
 public class VisionFeed extends WindowAdapter implements MouseListener, MouseMotionListener {
     private VideoDevice videoDev;
     private JLabel label;
@@ -53,7 +49,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     private int objectIndex = 0;
     private BufferedImage frameImage;
     private ControlGUI thresholdGUI;
-    private static Point[] corners = new Point[4];
     private static boolean buffersSet = false;
     private static Point mouseCo = new Point(0,0);
     private int[] hsbLowBall = new int[3];
@@ -102,8 +97,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
 	public void getPoints(){
 	
 	    /*
-	    Get the corners of the pitch by choosing the widest parts of the pitch in the horizontal
-	    and the vertical.  Gets bits not in the pitch because of distortion
+	    Get the extremes of the pitch.
 	    */
 		System.err.println("By bulge we mean the part of the pitch (in green) which sticks out the most in the specified direction");
 		pitchConstants.setTopBuffer(getClickPoint("Click the top bulge").y);
@@ -111,16 +105,10 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
 		pitchConstants.setBottomBuffer(getClickPoint("Click the bottom bulge").y);
 		pitchConstants.setLeftBuffer(getClickPoint("Click the left bulge").x);
 
-		corners[0] = getClickPoint("Click the top left corner");
-		corners[1] = getClickPoint("Click the top right corner");
-		corners[2] = getClickPoint("Click the bottom right corner");
-		corners[3] = getClickPoint("Click the bottom left corner");
-
-		System.err.println("Corners:");
-		System.err.println(corners[0]);
-		System.err.println(corners[1]);
-		System.err.println(corners[2]);
-		System.err.println(corners[3]);
+		pitchConstants.setTopLeft(getClickPoint("Click the top left corner"));
+		pitchConstants.setTopRight(getClickPoint("Click the top right corner"));
+		pitchConstants.setBottomRight(getClickPoint("Click the bottom right corner"));
+		pitchConstants.setBottomLeft(getClickPoint("Click the bottom left corner"));
 
 		buffersSet = true;
 		
