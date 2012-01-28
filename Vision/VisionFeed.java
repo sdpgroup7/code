@@ -36,7 +36,9 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 public class VisionFeed extends WindowAdapter implements MouseListener, MouseMotionListener {
     private VideoDevice videoDev;
     private JLabel label;
+    private JLabel label1;
     private JFrame windowFrame;
+    private JFrame windowFrame1;
     private FrameGrabber frameGrabber;
     private Thread captureThread;
     private boolean stop;
@@ -221,9 +223,20 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         windowFrame.setVisible(true);
         //windowFrame.setSize(width, height);
         windowFrame.setSize(width+5, height+25);
+      //windowFrame.setSize(width, height);
+      
         //System.err.println("JFrame width,height: " + windowFrame.getSize().width + "," + windowFrame.getSize().height);
         windowFrame.addMouseListener(this);
         windowFrame.addMouseMotionListener(this);
+        
+        windowFrame1 = new JFrame("Vision Window1");
+        label1 = new JLabel();
+        windowFrame1.setSize(width+5, height+25);
+        windowFrame1.getContentPane().add(label1);
+        windowFrame1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        windowFrame1.addWindowListener(this);
+        windowFrame1.setVisible(true);
+        
     }
     
     //When the mouse has been clicked get the location.
@@ -511,13 +524,18 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         worldState.setYellowX(yellow.getX());
         worldState.setYellowY(yellow.getY());
         worldState.updateCounter();
-
+        
+        BufferedImage imageTr = getThresh(image,thresholdsState.getBall_r_low(),thresholdsState.getBall_r_high(),thresholdsState.getBall_g_low(),thresholdsState.getBall_g_high(),thresholdsState.getBall_b_low(),thresholdsState.getBall_b_high());
+        
         /* Draw the image onto the vision frame. */
         Graphics frameGraphics = label.getGraphics();
         Graphics imageGraphics = image.getGraphics();
+        Graphics frameGraphics1 = label1.getGraphics();
+        Graphics imageGraphics1= imageTr.getGraphics();
+        
 
         /* Only display these markers in non-debug mode. */
-        if (!(thresholdsState.isBall_debug() || thresholdsState.isBlue_debug()
+     /*   if (!(thresholdsState.isBall_debug() || thresholdsState.isBlue_debug()
                 || thresholdsState.isYellow_debug() || thresholdsState.isGreen_debug()
                 || thresholdsState.isGrey_debug())) {
             imageGraphics.setColor(Color.red);
@@ -529,7 +547,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
             imageGraphics.drawOval(yellow.getX()-15, yellow.getY()-15, 30,30);
             imageGraphics.setColor(Color.white);
 
-        }
+        }*/
 
         /* Used to calculate the FPS. */
         long after = System.currentTimeMillis();
@@ -539,6 +557,8 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         imageGraphics.setColor(Color.white);
         imageGraphics.drawString("FPS: " + fps, 15, 15);
         frameGraphics.drawImage(image, 0, 0, width, height, null);
+        imageGraphics1.setColor(Color.white);
+        frameGraphics1.drawImage(imageTr, 0, 0, width, height, null);
     }
 
     /**
@@ -876,15 +896,25 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
 
         return angle;
     }
+    /*
+     * TODO: Change method, hard-coded values  refine.. 
+     */
     public BufferedImage getThresh(BufferedImage img, int redL, int redH, int greenL, int greenH, int blueL, int blueH) { // Method to get thresholded image 
 
-    	BufferedImage threshed = new BufferedImage(width,height, 0);
+    	BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
     	Color c;
+    	int GB;// colours, refine 
     	
     	for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				c = new Color(img.getRGB(i,j));
-				if( (c.getRed()>redL) && (c.getRed() <= redH) && (c.getBlue()>blueL) && (c.getBlue() <=blueH) && (c.getGreen()>greenL) && (c.getGreen() <= greenH)){
+				if( (c.getRed()>145) && (c.getRed() <= 255) && (c.getBlue()>0) && (c.getBlue() <=100) && (c.getGreen()>0) && (c.getGreen() <= 100)){
+					threshed.setRGB(i, j, black.getRGB());
+				}
+				else if( (c.getRed()>155) && (c.getRed() <= 255) && (c.getBlue()>0) && (c.getBlue() <=150) && (c.getGreen()>155) && (c.getGreen() <= 255)){
+					threshed.setRGB(i, j, black.getRGB());
+				}
+				else if( (c.getRed()>0) && (c.getRed() <= 98) && (c.getBlue()>140) && (c.getBlue() <=255) && (c.getGreen()>130) && (c.getGreen() <= 165)){
 					threshed.setRGB(i, j, black.getRGB());
 				}
 				else{
