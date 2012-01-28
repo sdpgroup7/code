@@ -57,9 +57,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     private static boolean cornersSet = false;
     private static Point mouseCo = new Point(0,0);
 
-    //private int[] xDistortion;
-    //private int[] yDistortion;
-
     /**
      * Default constructor.
      *
@@ -154,10 +151,15 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     //Set the sliders on the GUI, the messages are used to tell the user what to click
     public void getColors(){
         thresholdGUI.setBallValues(getClickColor("Click the ball"));
+        
         thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
+        
         thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
+        
         thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
+        
         thresholdGUI.setGreyValues(getClickColor("Click a grey circle"));
+        
     }
     
     //useless, had to be included because of the MouseEvent interface
@@ -290,7 +292,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     }
 
     //crops the image based on the corner values and then stretches that back up to 640x480
-    private static BufferedImage stretchImage(BufferedImage image) {
+    private static BufferedImage markImage(BufferedImage image) {
         int width = 640;
         int height = 480;
         
@@ -317,15 +319,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
                 }
             }
             return image;
-    
-            /*BufferedImage croppedImage = new BufferedImage(corners[1].x - corners[0].x,corners[2].y - corners[1].y,BufferedImage.TYPE_INT_ARGB);
-            
-            for(int i = corners[0].x;i<corners[1].x;i++){
-                for(int j = corners[1].y;j<corners[2].y;j++){
-                    croppedImage.setRGB(i-corners[0].x,j-corners[1].y,image.getRGB(i,j));
-                }
-            }
-            return croppedImage;*/
+
         } else {
             return image;
         }
@@ -357,45 +351,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
      */
     public void processAndUpdateImage(BufferedImage image, long before) {
 
-        /*
-        //Lens distortion - not working fully
-        BufferedImage image = new BufferedImage(input.getWidth(), input.getHeight(), BufferedImage.TYPE_INT_RGB);
-
-
-        int centerX = 320;
-        int centerY = 240;
-        float k = (float) 0.006;
-
-        for (int i = 0; i < 480; i++) {
-            for (int j = 0; j < 640; j++) {
-                int x = (int) Math.floor(getRadialX(j, i, centerX, centerY, (float) Math.pow(k, 2)));
-                int y = (int) Math.floor(getRadialY(j, i, centerX, centerY, (float) Math.pow(k, 2)));
-
-                if (y >= 480) { y = 1; }
-                if (x >= 640) { x = 1; }
-                if (y < 0) { y = 1; }
-                if (x < 0) { x = 1; }
-
-                image.setRGB(j, i, input.getRGB(x, y));
-            }
-        }
-        */
-
-
-        /*
-        for (int i = 0; i < image.getHeight(); i++) {
-            for (int j = 0; j < image.getWidth(); j++) {
-                image.setRGB(j, i, input.getRGB(xDistortion[j], yDistortion[i]));
-                //image.setRGB(j, i, input.getRGB(j, i));
-            }
-        }
-        */
-
-
-        /*NormaliseRGB nrgb = new NormaliseRGB();
-        image = nrgb.normalise(image);*/
-
-        image = stretchImage(image);
+        image = markImage(image);
 
         int ballX = 0;
         int ballY = 0;
@@ -514,7 +470,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
             ball = new Position(worldState.getBallX(), worldState.getBallY());
         }
 
-        /* If we have only found a few 'Blue' pixels, chances are that the ball has not
+        /* If we have only found a few 'Blue' pixels, chances are that the blue bot has not
          * actually been detected. */
         if (numBluePos > 0) {
             blueX /= numBluePos;
@@ -527,7 +483,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
             blue = new Position(worldState.getBlueX(), worldState.getBlueY());
         }
 
-        /* If we have only found a few 'Yellow' pixels, chances are that the ball has not
+        /* If we have only found a few 'Yellow' pixels, chances are that the yellow bot has not
          * actually been detected. */
         if (numYellowPos > 0) {
             yellowX /= numYellowPos;
@@ -552,7 +508,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
             }
         } catch (NoAngleException e) {
             worldState.setBlueOrientation(worldState.getBlueOrientation());
-            System.out.println("Blue robot: " + e.getMessage());
         }
 
 
@@ -566,7 +521,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
             }
         } catch (NoAngleException e) {
             worldState.setYellowOrientation(worldState.getYellowOrientation());
-            System.out.println("Yellow robot: " + e.getMessage());
         }
 
 
@@ -596,15 +550,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
             imageGraphics.drawOval(yellow.getX()-15, yellow.getY()-15, 30,30);
             imageGraphics.setColor(Color.white);
 
-            /*
-            float ax = (float) Math.cos(worldState.getBlueOrientation());
-            float ay = (float) Math.sin(worldState.getBlueOrientation());
-            imageGraphics.drawLine(blue.getX(), blue.getY(), (int) (ax*70), (int) (ay*70));
-
-            ax = (float) Math.sin(worldState.getYellowOrientation());
-            ay = (float) Math.cos(worldState.getYellowOrientation());
-            imageGraphics.drawLine(yellow.getX(), yellow.getY(), (int) (ax*70), (int) (ay*70));
-            */
         }
 
         /* Used to calculate the FPS. */
@@ -999,29 +944,4 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
 
         return angle;
     }
-
-    /* Doesn't work */
-    /*
-    private void calculateDistortion() {
-        this.xDistortion = new int[640];
-        this.yDistortion = new int[480];
-
-        int centerX = 320;
-        int centerY = 240;
-        float k = (float) 0.01;
-
-        for (int i = 0; i < 480; i++) {
-            for (int j = 0; j < 640; j++) {
-                int x = (int) Math.floor(getRadialX(j, i, centerX, centerY, (float) Math.pow(k, 2)));
-                int y = (int) Math.floor(getRadialY(j, i, centerX, centerY, (float) Math.pow(k, 2)));
-
-                if (y >= 480) { y = 240; }
-                if (x >= 640) { x = 320; }
-
-                xDistortion[j] = x;
-                yDistortion[i] = y;
-            }
-        }
-    }
-    */
 }
