@@ -87,21 +87,95 @@ public class PitchConstants {
 	 * When scanning the pitch we look at pixels starting from 0 + topBuffer and 
 	 * 0 + leftBuffer, and then scan to pixels at 480 - bottomBuffer and 
 	 * 640 - rightBuffer. */
-	public int topBuffer;
-	public int bottomBuffer;
-	public int leftBuffer;
-	public int rightBuffer;
-	
+	private int topBuffer = 0;
+	private int bottomBuffer = 640;
+	private int leftBuffer = 0;
+	private int rightBuffer = 480;
+
+    private Point topLeft = new Point(0,0);
+    private Point topRight = new Point(640,0);
+    private Point bottomRight = new Point(640,480);
+    private Point bottomLeft = new Point(0,480);
+
+    
+    public Point getTopLeft(){
+        return this.topLeft;
+    }
+
+    public Point getTopRight(){
+        return this.topRight;
+    }
+
+    public Point getBottomLeft(){
+        return this.bottomLeft;
+    }
+
+    public Point getBottomRight(){
+        return this.bottomRight;
+    }
+
+    public void setTopLeft(Point p){
+        this.topLeft = p;
+    }
+
+    public void setTopRight(Point p){
+        this.topRight = p;
+    }
+
+    public void setBottomLeft(Point p){
+        this.bottomLeft = p;
+    }
+
+    public void setBottomRight(Point p){
+        this.bottomRight = p;
+    }
+
+    public int getTopBuffer(){
+        return this.topBuffer;
+    }
+
+    public int getRightBuffer(){
+        return this.rightBuffer;
+    }
+
+    public int getBottomBuffer(){
+        return this.bottomBuffer;
+    }
+
+    public int getLeftBuffer(){
+        return this.leftBuffer;
+    }
+
+    public void setTopBuffer(int value){
+        this.topBuffer = value;
+        System.err.println(Integer.toString(value));
+    }
+
+    public void setRightBuffer(int value){
+        this.rightBuffer = value;
+        System.err.println(Integer.toString(value));
+    }
+
+    public void setBottomBuffer(int value){
+        this.bottomBuffer = value;
+        System.err.println(Integer.toString(value));
+    }
+
+    public void setLeftBuffer(int value){
+        this.leftBuffer = value;
+        System.err.println(Integer.toString(value));
+    }
+
+
+
 	/**
 	 * Default constructor.
 	 * 
 	 * @param pitchNum		The pitch that we are on.
 	 */
 	public PitchConstants(int pitchNum) {
-		
 		/* Just call the setPitchNum method to load in the constants. */
 		setPitchNum(pitchNum);
-		
 	}
 	
 	/**
@@ -110,13 +184,9 @@ public class PitchConstants {
 	 * @param newPitchNum		The pitch number to use.
 	 */
 	public void setPitchNum(int newPitchNum) {
-		
 		assert (newPitchNum >= 0 && newPitchNum <= 1);
-		
 		this.pitchNum = newPitchNum;
-		
 		loadConstants("./constants/pitch" + pitchNum);
-		
 	}
 	
 	/**

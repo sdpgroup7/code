@@ -32,10 +32,6 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
  */
 
 
-
-//TODO: The points returned when we click are out somehow. Click on the ball for example and you can see that it returns the wrong colour
-//        I verified this when I drew lines on the image as they were not in the place I clicked. 
-
 public class VisionFeed extends WindowAdapter implements MouseListener, MouseMotionListener {
     private VideoDevice videoDev;
     private JLabel label;
@@ -46,15 +42,14 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     private int width, height;
     private WorldState worldState;
     private ThresholdsState thresholdsState;
-    private PitchConstants pitchConstants;
+    private static PitchConstants pitchConstants;
     private Point coords = new Point();
     private boolean mouseClick = false;
     private Color[] objects = new Color[5];
     private int objectIndex = 0;
     private BufferedImage frameImage;
     private ControlGUI thresholdGUI;
-    private static Point[] corners = new Point[4];
-    private static boolean cornersSet = false;
+    private static boolean buffersSet = false;
     private static Point mouseCo = new Point(0,0);
     private int[] hsbLowBall = new int[3];
     private int[] hsbHighBall = new int[3];
@@ -96,40 +91,32 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         initGUI();
         this.thresholdGUI = thresholdsGUI;
         getColors();
-        getCorners();
+        getPoints();
     }
     
-	public void getCorners(){
+	public void getPoints(){
 	
 	    /*
-	    Get the corners of the pitch by choosing the widest parts of the pitch in the horizontal
-	    and the vertical.  Gets bits not in the pitch because of distortion
+	    Get the extremes of the pitch.
 	    */
-		Point[] bulges = new Point[4];
 		System.err.println("By bulge we mean the part of the pitch (in green) which sticks out the most in the specified direction");
-		bulges[0] = getCorner("Click the top bulge");
-		bulges[1] = getCorner("Click the right bulge");
-		bulges[2] = getCorner("Click the bottom bulge");
-		bulges[3] = getCorner("Click the left bulge");
+		pitchConstants.setTopBuffer(getClickPoint("Click the top bulge").y);
+		pitchConstants.setRightBuffer(getClickPoint("Click the right bulge").x);
+		pitchConstants.setBottomBuffer(getClickPoint("Click the bottom bulge").y);
+		pitchConstants.setLeftBuffer(getClickPoint("Click the left bulge").x);
 
-		corners[0] = new Point(bulges[3].x,bulges[0].y);
-		corners[1] = new Point(bulges[1].x,bulges[0].y);
-		corners[2] = new Point(bulges[1].x,bulges[2].y);
-		corners[3] = new Point(bulges[3].x,bulges[2].y);
+		pitchConstants.setTopLeft(getClickPoint("Click the top left corner"));
+		pitchConstants.setTopRight(getClickPoint("Click the top right corner"));
+		pitchConstants.setBottomRight(getClickPoint("Click the bottom right corner"));
+		pitchConstants.setBottomLeft(getClickPoint("Click the bottom left corner"));
 
-		System.err.println("Corners:");
-		System.err.println(corners[0]);
-		System.err.println(corners[1]);
-		System.err.println(corners[2]);
-		System.err.println(corners[3]);
-
-		cornersSet = true;
+		buffersSet = true;
 		
 	}
     /*
-    just register the mouse click after being asked to by getCorner
+    just register the mouse click after being asked to by getClickPoint
     */
-	public Point getCorner(String message){
+	public Point getClickPoint(String message){
 		System.err.println(message);
 
         while (!mouseClick) {
@@ -317,26 +304,16 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         int width = 640;
         int height = 480;
         
-
-        /*if(!cornersSet){
-            for(int x = 0;x<width;x++){
-                for(int y = 0;y<height;y++){
-                    if((x == mouseCo.x) || (y == mouseCo.y)){
-                        image.setRGB(x,y,(255 << 24) + 255);
-                    }
-                }
-            }
-        }*/
-        if(cornersSet){
+        if(buffersSet){
             //currently instead of cropping and stretching the image it simply draws on the borders of where it would crop to in blue
             for(int x = 0;x<width;x++){
                 for(int y = 0;y<height;y++){
-                    if((x == corners[0].x) || (y == corners[0].y) || (x == corners[2].x) || (y == corners[2].y)){
+                    if((y == pitchConstants.getTopBuffer()) || (x == pitchConstants.getRightBuffer()) || (y == pitchConstants.getBottomBuffer()) || (x == pitchConstants.getLeftBuffer())){
                         image.setRGB(x,y,(255 << 24) + 255);
                     }
-                    if((x == mouseCo.x) || (y == mouseCo.y)){
+                    /*if((x == mouseCo.x) || (y == mouseCo.y)){
                         image.setRGB(x,y,(255 << 24) + 255);
-                    }
+                    }*/
                 }
             }
             return image;
@@ -393,17 +370,17 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         ArrayList<Integer> yellowXPoints = new ArrayList<Integer>();
         ArrayList<Integer> yellowYPoints = new ArrayList<Integer>();
 
-        int topBuffer = pitchConstants.topBuffer;
-        int bottomBuffer = pitchConstants.bottomBuffer;
-        int leftBuffer = pitchConstants.leftBuffer;
-        int rightBuffer = pitchConstants.rightBuffer;
+        int topBuffer = pitchConstants.getTopBuffer();
+        int bottomBuffer = pitchConstants.getBottomBuffer();
+        int leftBuffer = pitchConstants.getLeftBuffer();
+        int rightBuffer = pitchConstants.getRightBuffer();
 
         /* For every pixel within the pitch, test to see if it belongs to the ball,
          * the yellow T, the blue T, either green plate or a grey circle. */
-        for (int row = topBuffer; row < image.getHeight() - bottomBuffer; row++) {
+        for (int row = topBuffer; row < bottomBuffer; row++) {
 
-            for (int column = leftBuffer; column < image.getWidth() - rightBuffer; column++) {
-
+            for (int column = leftBuffer; column < rightBuffer; column++) {
+                //System.err.println("column,row = " + column + "," + row);
                 /* The RGB colours and hsv values for the current pixel. */
                 Color c = new Color(image.getRGB(column, row));
                 float hsbvals[] = new float[3];
@@ -582,7 +559,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         imageGraphics.drawString("FPS: " + fps, 15, 15);
         frameGraphics.drawImage(image, 0, 0, width, height, null);
     }
-z
+
     /**
      * Determines if a pixel is part of the blue T, based on input RGB colours
      * and hsv values.
