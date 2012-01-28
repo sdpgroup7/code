@@ -262,7 +262,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
 =======
         //writeImage(image,"test.png");
         
-        p = correctPoint(p);
 >>>>>>> 14080c0299fa7ddba0053432f13a5ce5224d689d
 
         Color[] temp = new Color[9];
