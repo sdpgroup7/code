@@ -33,11 +33,8 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 
 
 
-<<<<<<< HEAD
 //TODO: The points returned when we click are out somehow. Click on the ball for example and you can see that it returns the wrong colour
 //        I verified this when I drew lines on the image as they were not in the place I clicked. 
-=======
->>>>>>> 14080c0299fa7ddba0053432f13a5ce5224d689d
 
 public class VisionFeed extends WindowAdapter implements MouseListener, MouseMotionListener {
     private VideoDevice videoDev;
@@ -95,9 +92,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         getCorners();
     }
     
-
-<<<<<<< HEAD
-=======
 	public void getCorners(){
 	
 	    /*
@@ -130,7 +124,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     */
 	public Point getCorner(String message){
 		System.err.println(message);
->>>>>>> 14080c0299fa7ddba0053432f13a5ce5224d689d
 
         while (!mouseClick) {
             try{
@@ -242,7 +235,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     
     //When the mouse has been clicked get the location.
     public void mouseClicked(MouseEvent e){
-<<<<<<< HEAD
         coords = correctPoint(e.getPoint());
         mouseClick = true;
     }
@@ -250,20 +242,14 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     public Point correctPoint(Point p){
         return new Point(p.x-4,p.y-24);
     }
-=======
->>>>>>> 14080c0299fa7ddba0053432f13a5ce5224d689d
 
     /*
     Get the colour where the mouse was clicked.  Takes an average of the adjacent
     pixels, but you should try and click centrally in the object still.
     */
     public Color getColor(Point p, BufferedImage image){
-<<<<<<< HEAD
-=======
         //writeImage(image,"test.png");
-        
-        p = correctPoint(p);
->>>>>>> 14080c0299fa7ddba0053432f13a5ce5224d689d
+
 
         Color[] temp = new Color[9];
         temp[0] = new Color(image.getRGB(p.x-1,p.y-1));
