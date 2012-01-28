@@ -7,6 +7,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.awt.Point;
+import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
 import java.awt.Graphics2D;
@@ -51,17 +52,9 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     private ControlGUI thresholdGUI;
     private static boolean buffersSet = false;
     private static Point mouseCo = new Point(0,0);
-    private int[] hsbLowBall = new int[3];
-    private int[] hsbHighBall = new int[3];
-    private int[] hsbLowBlue = new int[3];
-    private int[] hsbHighBlue = new int[3];
-    private int[] hsbLowYellow = new int[3];
-    private int[] hsbHighYellow = new int[3];
-    private int[] hsbLowGreen = new int[3];
-    private int[] hsbHighGreen = new int[3];
-    private int[] hsbLowGrey = new int[3];
-    private int[] hsbHighGrey = new int[3];
 
+    private final Color black= new Color(0,0,0);
+    private final Color white = new Color(255,255,255);
     /**
      * Default constructor.
      *
@@ -90,98 +83,11 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         initGUI();
         this.thresholdGUI = thresholdsGUI;
-        getColors();
+        
         getPoints();
+        getColors();
     }
     
-	public void getPoints(){
-	
-	    /*
-	    Get the extremes of the pitch.
-	    */
-		System.err.println("By bulge we mean the part of the pitch (in green) which sticks out the most in the specified direction");
-		pitchConstants.setTopBuffer(getClickPoint("Click the top bulge").y);
-		pitchConstants.setRightBuffer(getClickPoint("Click the right bulge").x);
-		pitchConstants.setBottomBuffer(getClickPoint("Click the bottom bulge").y);
-		pitchConstants.setLeftBuffer(getClickPoint("Click the left bulge").x);
-
-		pitchConstants.setTopLeft(getClickPoint("Click the top left corner"));
-		pitchConstants.setTopRight(getClickPoint("Click the top right corner"));
-		pitchConstants.setBottomRight(getClickPoint("Click the bottom right corner"));
-		pitchConstants.setBottomLeft(getClickPoint("Click the bottom left corner"));
-
-		buffersSet = true;
-		
-	}
-    /*
-    just register the mouse click after being asked to by getClickPoint
-    */
-	public Point getClickPoint(String message){
-		System.err.println(message);
-
-        while (!mouseClick) {
-            try{
-                Thread.sleep(100);
-            } catch (Exception e) {}
-        }
-        mouseClick = false;
-        System.err.println(coords);
-        return coords;
-    }
-    /*
-    Get the threshold values for the objects in the match i.e. ball.
-    Registers the mouse clicks after being asked to by getColors
-    */
-    public Color getClickColor(String message){
-        System.err.println(message);
-
-        while (!mouseClick) {
-            try{
-                Thread.sleep(100);
-            } catch (Exception e) {}
-        }
-        mouseClick = false;
-        return getColor(coords, frameImage);
-    }
-
-    
-    //Set the sliders on the GUI, the messages are used to tell the user what to click
-    public void getColors(){
-        thresholdGUI.setBallValues(getClickColor("Click the ball"));
-        hsbLowBall = hsbValues(thresholdsState.getBall_r_low(),thresholdsState.getBall_g_low(),thresholdsState.getBall_b_low());
-        hsbHighBall = hsbValues(thresholdsState.getBall_r_high(),thresholdsState.getBall_g_high(),thresholdsState.getBall_b_high());
-        
-        thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
-        hsbLowYellow = hsbValues(thresholdsState.getYellow_r_low(),thresholdsState.getYellow_g_low(),thresholdsState.getYellow_b_low());
-        hsbHighYellow = hsbValues(thresholdsState.getYellow_r_high(),thresholdsState.getYellow_g_high(),thresholdsState.getYellow_b_high());
-        
-        thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
-        hsbLowBlue = hsbValues(thresholdsState.getBlue_r_low(),thresholdsState.getBlue_g_low(),thresholdsState.getBlue_b_low());
-        hsbHighBlue = hsbValues(thresholdsState.getBlue_r_high(),thresholdsState.getBlue_g_high(),thresholdsState.getBlue_b_high());
-        
-        thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
-        hsbLowGreen = hsbValues(thresholdsState.getGreen_r_low(),thresholdsState.getGreen_g_low(),thresholdsState.getGreen_b_low());
-        hsbHighGreen = hsbValues(thresholdsState.getGreen_r_high(),thresholdsState.getGreen_g_high(),thresholdsState.getGreen_b_high());
-
-        
-        thresholdGUI.setGreyValues(getClickColor("Click a grey circle"));
-        hsbLowGrey = hsbValues(thresholdsState.getGrey_r_low(),thresholdsState.getGrey_g_low(),thresholdsState.getGrey_b_low());
-        hsbHighGrey = hsbValues(thresholdsState.getGrey_r_high(),thresholdsState.getGrey_g_high(),thresholdsState.getGrey_b_high());
-        
-    }
-    
-    //useless, had to be included because of the MouseEvent interface
-    public void mouseExited(MouseEvent e){}
-    public void mouseEntered(MouseEvent e){}
-    public void mousePressed(MouseEvent e){}
-    public void mouseReleased(MouseEvent e){}
-    public void mouseMoved(MouseEvent e) {
-        mouseCo = correctPoint(e.getPoint());
-    }
-    public void mouseDragged(MouseEvent e) {
-        mouseCo = correctPoint(e.getPoint());
-    }
-
      /**
      * Initialises a FrameGrabber object with the given parameters.
      *
@@ -225,7 +131,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         width = frameGrabber.getWidth();
         height = frameGrabber.getHeight();
     }
-
+    
     /**
      * Creates the graphical interface components and initialises them
      */
@@ -243,18 +149,88 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         windowFrame.addMouseMotionListener(this);
     }
     
+    //useless, had to be included because of the MouseEvent interface
+    public void mouseExited(MouseEvent e){}
+    public void mouseEntered(MouseEvent e){}
+    public void mousePressed(MouseEvent e){}
+    public void mouseReleased(MouseEvent e){}
+    public void mouseMoved(MouseEvent e) {
+        mouseCo = correctPoint(e.getPoint());
+    }
+    public void mouseDragged(MouseEvent e) {
+        mouseCo = correctPoint(e.getPoint());
+    }
     //When the mouse has been clicked get the location.
     public void mouseClicked(MouseEvent e){
         coords = correctPoint(e.getPoint());
         mouseClick = true;
     }
     
+	public void getPoints(){
+	
+	    /*
+	    Get the extremes of the pitch.
+	    */
+		System.err.println("By bulge we mean the part of the pitch (in green) which sticks out the most in the specified direction");
+		pitchConstants.setTopBuffer(getClickPoint("Click the top bulge").y);
+		pitchConstants.setRightBuffer(getClickPoint("Click the right bulge").x);
+		pitchConstants.setBottomBuffer(getClickPoint("Click the bottom bulge").y);
+		pitchConstants.setLeftBuffer(getClickPoint("Click the left bulge").x);
+
+		pitchConstants.setTopLeft(getClickPoint("Click the top left corner"));
+		pitchConstants.setTopRight(getClickPoint("Click the top right corner"));
+		pitchConstants.setBottomRight(getClickPoint("Click the bottom right corner"));
+		pitchConstants.setBottomLeft(getClickPoint("Click the bottom left corner"));
+
+		buffersSet = true;
+		
+	}
+    /*
+    just register the mouse click after being asked to by getClickPoint
+    */
+	public Point getClickPoint(String message){
+		System.err.println(message);
+
+        while (!mouseClick) {
+            try{
+                Thread.sleep(100);
+            } catch (Exception e) {}
+        }
+        mouseClick = false;
+        System.err.println(coords);
+        return coords;
+    }
+    
+    //Set the sliders on the GUI, the messages are used to tell the user what to click
+    public void getColors(){
+        thresholdGUI.setBallValues(getClickColor("Click the ball"));
+        thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
+        thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
+        thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
+        thresholdGUI.setGreyValues(getClickColor("Click a grey circle"));
+    }
+    /*
+    Get the threshold values for the objects in the match i.e. ball.
+    Registers the mouse clicks after being asked to by getColors
+    */
+    public Color getClickColor(String message){
+        System.err.println(message);
+
+        while (!mouseClick) {
+            try{
+                Thread.sleep(100);
+            } catch (Exception e) {}
+        }
+        mouseClick = false;
+        return getColor(coords, frameImage);
+    }
+
     public Point correctPoint(Point p){
         return new Point(p.x-4,p.y-24);
     }
 
     /*
-    Get the colour where the mouse was clicked.  Takes an average of the adjacent
+    Get the color where the mouse was clicked.  Takes an average of the adjacent
     pixels, but you should try and click centrally in the object still.
     */
     public Color getColor(Point p, BufferedImage image){
@@ -323,7 +299,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         }
     }
 
-
     /**
      * Catches the window closing event, so that we can free up resources
      * before exiting.
@@ -381,23 +356,21 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
 
             for (int column = leftBuffer; column < rightBuffer; column++) {
                 //System.err.println("column,row = " + column + "," + row);
-                /* The RGB colours and hsv values for the current pixel. */
+                /* The RGB colors and hsv values for the current pixel. */
                 Color c = new Color(image.getRGB(column, row));
-                float hsbvals[] = new float[3];
-                Color.RGBtoHSB(c.getRed(), c.getBlue(), c.getGreen(), hsbvals);
 
                 /* Debug graphics for the grey circles and green plates.
                  * TODO: Move these into the actual detection. */
-                if (thresholdsState.isGrey_debug() && isGrey(c, hsbvals)) {
+                if (thresholdsState.isGrey_debug() && isGrey(c)) {
                     image.setRGB(column, row, 0xFFFF0099);
                 }
 
-                if (thresholdsState.isGreen_debug() && isGreen(c, hsbvals)) {
+                if (thresholdsState.isGreen_debug() && isGreen(c)) {
                     image.setRGB(column, row, 0xFFFF0099);
                 }
 
                 /* Is this pixel part of the Blue T? */
-                if (isBlue(c, hsbvals) ){
+                if (isBlue(c) ){
 
                     blueX += column;
                     blueY += row;
@@ -415,7 +388,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
                 }
 
                 /* Is this pixel part of the Yellow T? */
-                if (isYellow(c, hsbvals)) {
+                if (isYellow(c)) {
 
                     yellowX += column;
                     yellowY += row;
@@ -432,7 +405,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
                 }
 
                 /* Is this pixel part of the Ball? */
-                if (isBall(c, hsbvals)) {
+                if (isBall(c)) {
 
                     ballX += column;
                     ballY += row;
@@ -561,114 +534,95 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     }
 
     /**
-     * Determines if a pixel is part of the blue T, based on input RGB colours
+     * Determines if a pixel is part of the blue T, based on input RGB colors
      * and hsv values.
      *
-     * @param color         The RGB colours for the pixel.
+     * @param color         The RGB colors for the pixel.
      * @param hsbvals       The HSV values for the pixel.
      *
      * @return              True if the RGB and HSV values are within the defined
      *                      thresholds (and thus the pixel is part of the blue T),
      *                      false otherwise.
      */
-    
-    private int[] hsbValues(int r, int g, int b){
-        float[] hsb = new float[3];
-        int[] hsbInt = new int[3];
-        Color.RGBtoHSB(r,g,b,hsb);
-        for(int i = 0; i < 3; i++){
-            hsbInt[i] = (int)hsb[i];
-        }
-        return hsbInt;
-    }
+
      
-    private boolean isBlue(Color color, float[] hsbvals) {
-        return hsbvals[0] <= hsbHighBlue[0] && hsbvals[0] >= hsbLowBlue[0] &&
-        hsbvals[1] <= hsbHighBlue[1] && hsbvals[1] >= hsbLowBlue[1] &&
-        hsbvals[2] <= hsbHighBlue[2] && hsbvals[2] >= hsbLowBlue[2] &&
-        color.getRed() <= thresholdsState.getBlue_r_high() && color.getRed() >= thresholdsState.getBlue_r_low() &&
+    private boolean isBlue(Color color) {
+        return color.getRed() <= thresholdsState.getBlue_r_high() && color.getRed() >= thresholdsState.getBlue_r_low() &&
         color.getGreen() <= thresholdsState.getBlue_g_high() && color.getGreen() >= thresholdsState.getBlue_g_low() &&
         color.getBlue() <= thresholdsState.getBlue_b_high() && color.getBlue() >= thresholdsState.getBlue_b_low();
     }
 
     /**
-     * Determines if a pixel is part of the yellow T, based on input RGB colours
+     * Determines if a pixel is part of the yellow T, based on input RGB colors
      * and hsv values.
      *
-     * @param color         The RGB colours for the pixel.
+     * @param color         The RGB colors for the pixel.
      * @param hsbvals       The HSV values for the pixel.
      *
      * @return              True if the RGB and HSV values are within the defined
      *                      thresholds (and thus the pixel is part of the yellow T),
      *                      false otherwise.
      */
-    private boolean isYellow(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= hsbHighYellow[0] && hsbvals[0] >= hsbLowYellow[0] &&
-        hsbvals[1] <= hsbHighYellow[1] && hsbvals[1] >= hsbLowYellow[1] &&
-        hsbvals[2] <= hsbHighYellow[2] && hsbvals[2] >= hsbLowYellow[2] &&
-        colour.getRed() <= thresholdsState.getYellow_r_high() &&  colour.getRed() >= thresholdsState.getYellow_r_low() &&
+
+    private boolean isYellow(Color colour) {
+        return colour.getRed() <= thresholdsState.getYellow_r_high() &&  colour.getRed() >= thresholdsState.getYellow_r_low() &&
         colour.getGreen() <= thresholdsState.getYellow_g_high() && colour.getGreen() >= thresholdsState.getYellow_g_low() &&
         colour.getBlue() <= thresholdsState.getYellow_b_high() && colour.getBlue() >= thresholdsState.getYellow_b_low();
     }
 
     /**
-     * Determines if a pixel is part of the ball, based on input RGB colours
+     * Determines if a pixel is part of the ball, based on input RGB colors
      * and hsv values.
      *
-     * @param color         The RGB colours for the pixel.
+     * @param color         The RGB colors for the pixel.
      * @param hsbvals       The HSV values for the pixel.
      *
      * @return              True if the RGB and HSV values are within the defined
      *                      thresholds (and thus the pixel is part of the ball),
      *                      false otherwise.
      */
-    private boolean isBall(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= hsbHighBall[0] && hsbvals[0] >= hsbLowBall[0] &&
-        hsbvals[1] <= hsbHighBall[1] && hsbvals[1] >= hsbLowBall[1] &&
-        hsbvals[2] <= hsbHighBall[2] && hsbvals[2] >= hsbLowBall[2] &&
-        colour.getRed() <= thresholdsState.getBall_r_high() &&  colour.getRed() >= thresholdsState.getBall_r_low() &&
+
+    private boolean isBall(Color colour) {
+        return colour.getRed() <= thresholdsState.getBall_r_high() &&  colour.getRed() >= thresholdsState.getBall_r_low() &&
         colour.getGreen() <= thresholdsState.getBall_g_high() && colour.getGreen() >= thresholdsState.getBall_g_low() &&
         colour.getBlue() <= thresholdsState.getBall_b_high() && colour.getBlue() >= thresholdsState.getBall_b_low();
     }
 
     /**
-     * Determines if a pixel is part of either grey circle, based on input RGB colours
+     * Determines if a pixel is part of either grey circle, based on input RGB colors
      * and hsv values.
      *
-     * @param color         The RGB colours for the pixel.
+     * @param color         The RGB colors for the pixel.
      * @param hsbvals       The HSV values for the pixel.
      *
      * @return              True if the RGB and HSV values are within the defined
      *                      thresholds (and thus the pixel is part of a grey circle),
      *                      false otherwise.
      */
-    private boolean isGrey(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= hsbHighGrey[0] && hsbvals[0] >= hsbLowGrey[0] &&
-        hsbvals[1] <= hsbHighGrey[1] && hsbvals[1] >= hsbLowGrey[1] &&
-        hsbvals[2] <= hsbHighGrey[2] && hsbvals[2] >= hsbLowGrey[2] &&
-        colour.getRed() <= thresholdsState.getGrey_r_high() &&  colour.getRed() >= thresholdsState.getGrey_r_low() &&
+    private boolean isGrey(Color colour) {
+        return colour.getRed() <= thresholdsState.getGrey_r_high() &&  colour.getRed() >= thresholdsState.getGrey_r_low() &&
         colour.getGreen() <= thresholdsState.getGrey_g_high() && colour.getGreen() >= thresholdsState.getGrey_g_low() &&
         colour.getBlue() <= thresholdsState.getGrey_b_high() && colour.getBlue() >= thresholdsState.getGrey_b_low();
+
     }
 
     /**
-     * Determines if a pixel is part of either green plate, based on input RGB colours
+     * Determines if a pixel is part of either green plate, based on input RGB colors
      * and hsv values.
      *
-     * @param color         The RGB colours for the pixel.
+     * @param color         The RGB colors for the pixel.
      * @param hsbvals       The HSV values for the pixel.
      *
      * @return              True if the RGB and HSV values are within the defined
      *                      thresholds (and thus the pixel is part of a green plate),
      *                      false otherwise.
      */
-    private boolean isGreen(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= hsbHighGreen[0] && hsbvals[0] >= hsbLowGreen[0] &&
-        hsbvals[1] <= hsbHighGreen[1] && hsbvals[1] >= hsbLowGreen[1] &&
-        hsbvals[2] <= hsbHighGreen[2] && hsbvals[2] >= hsbLowGreen[2] &&
-        colour.getRed() <= thresholdsState.getGreen_r_high() &&  colour.getRed() >= thresholdsState.getGreen_r_low() &&
+
+    private boolean isGreen(Color colour) {
+        return colour.getRed() <= thresholdsState.getGreen_r_high() &&  colour.getRed() >= thresholdsState.getGreen_r_low() &&
         colour.getGreen() <= thresholdsState.getGreen_g_high() && colour.getGreen() >= thresholdsState.getGreen_g_low() &&
         colour.getBlue() <= thresholdsState.getGreen_b_high() && colour.getBlue() >= thresholdsState.getGreen_b_low();
+
     }
 
     /**
@@ -762,9 +716,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
                 int greyY = meanY - (int) (ay * i);
                 try {
                     Color c = new Color(image.getRGB(greyX, greyY));
-                    float hsbvals[] = new float[3];
-                    Color.RGBtoHSB(c.getRed(), c.getBlue(), c.getGreen(), hsbvals);
-                    if (isGrey(c, hsbvals)) {
+                    if (isGrey(c)) {
                         greyXPoints.add(greyX);
                         greyYPoints.add(greyY);
                     }
@@ -803,9 +755,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
             for (int y = (int) (backY-9); y < backY; y++) {
                 try {
                     Color c = new Color(image.getRGB(x, y));
-                    float hsbvals[] = new float[3];
-                    Color.RGBtoHSB(c.getRed(), c.getBlue(), c.getGreen(), hsbvals);
-                    if (isGreen(c, hsbvals)) {
+                    if (isGreen(c)) {
                         foundGreen++;
                         break;
                     }
@@ -826,9 +776,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
             for (int y = (int) (backY); y < backY+10; y++) {
                 try {
                     Color c = new Color(image.getRGB(x, y));
-                    float hsbvals[] = new float[3];
-                    Color.RGBtoHSB(c.getRed(), c.getBlue(), c.getGreen(), hsbvals);
-                    if (isGreen(c, hsbvals)) {
+                    if (isGreen(c)) {
                         foundGreen++;
                         break;
                     }
@@ -849,9 +797,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
             for (int y = (int) (backY-2); y < backY+3; y++) {
                 try {
                     Color c = new Color(image.getRGB(x, y));
-                    float hsbvals[] = new float[3];
-                    Color.RGBtoHSB(c.getRed(), c.getBlue(), c.getGreen(), hsbvals);
-                    if (isGreen(c, hsbvals)) {
+                    if (isGreen(c)) {
                         foundGreen++;
                         break;
                     }
@@ -871,9 +817,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
             for (int y = (int) (backY-2); y < backY+3; y++) {
                 try {
                     Color c = new Color(image.getRGB(x, y));
-                    float hsbvals[] = new float[3];
-                    Color.RGBtoHSB(c.getRed(), c.getBlue(), c.getGreen(), hsbvals);
-                    if (isGreen(c, hsbvals)) {
+                    if (isGreen(c)) {
                         foundGreen++;
                         break;
                     }
@@ -923,5 +867,23 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         }
 
         return angle;
+    }
+    public BufferedImage getThresh(BufferedImage img, int redL, int redH, int greenL, int greenH, int blueL, int blueH) { // Method to get thresholded image 
+
+    	BufferedImage threshed = new BufferedImage(width,height, 0);
+    	Color c;
+    	
+    	for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				c = new Color(img.getRGB(i,j));
+				if( (c.getRed()>redL) && (c.getRed() <= redH) && (c.getBlue()>blueL) && (c.getBlue() <=blueH) && (c.getGreen()>greenL) && (c.getGreen() <= greenH)){
+					threshed.setRGB(i, j, black.getRGB());
+				}
+				else{
+					threshed.setRGB(i, j, white.getRGB());
+				}
+			}
+		}
+    	return threshed;
     }
 }
