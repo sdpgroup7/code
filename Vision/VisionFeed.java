@@ -151,25 +151,25 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     //Set the sliders on the GUI, the messages are used to tell the user what to click
     public void getColors(){
         thresholdGUI.setBallValues(getClickColor("Click the ball"));
-        hsbLowBall = hsbValues(thresholdsState.getBall_r_low(),thresholdsState.getBall_g_low(),thresholdsState.getBall_b_low(), -25);
-        hsbHighBall = hsbValues(thresholdsState.getBall_r_high(),thresholdsState.getBall_g_high(),thresholdsState.getBall_b_high(), 25);
+        hsbLowBall = hsbValues(thresholdsState.getBall_r_low(),thresholdsState.getBall_g_low(),thresholdsState.getBall_b_low());
+        hsbHighBall = hsbValues(thresholdsState.getBall_r_high(),thresholdsState.getBall_g_high(),thresholdsState.getBall_b_high());
         
         thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
-        hsbLowYellow = hsbValues(thresholdsState.getYellow_r_low(),thresholdsState.getYellow_g_low(),thresholdsState.getYellow_b_low(), -25);
-        hsbHighYellow = hsbValues(thresholdsState.getYellow_r_high(),thresholdsState.getYellow_g_high(),thresholdsState.getYellow_b_high(), 25);
+        hsbLowYellow = hsbValues(thresholdsState.getYellow_r_low(),thresholdsState.getYellow_g_low(),thresholdsState.getYellow_b_low());
+        hsbHighYellow = hsbValues(thresholdsState.getYellow_r_high(),thresholdsState.getYellow_g_high(),thresholdsState.getYellow_b_high());
         
         thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
-        hsbLowBlue = hsbValues(thresholdsState.getBlue_r_low(),thresholdsState.getBlue_g_low(),thresholdsState.getBlue_b_low(), -25);
-        hsbHighBlue = hsbValues(thresholdsState.getBlue_r_high(),thresholdsState.getBlue_g_high(),thresholdsState.getBlue_b_high(), 25);
+        hsbLowBlue = hsbValues(thresholdsState.getBlue_r_low(),thresholdsState.getBlue_g_low(),thresholdsState.getBlue_b_low());
+        hsbHighBlue = hsbValues(thresholdsState.getBlue_r_high(),thresholdsState.getBlue_g_high(),thresholdsState.getBlue_b_high());
         
         thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
-        hsbLowGreen = hsbValues(thresholdsState.getGreen_r_low(),thresholdsState.getGreen_g_low(),thresholdsState.getGreen_b_low(), -25);
-        hsbHighGreen = hsbValues(thresholdsState.getGreen_r_high(),thresholdsState.getGreen_g_high(),thresholdsState.getGreen_b_high(), 25);
+        hsbLowGreen = hsbValues(thresholdsState.getGreen_r_low(),thresholdsState.getGreen_g_low(),thresholdsState.getGreen_b_low());
+        hsbHighGreen = hsbValues(thresholdsState.getGreen_r_high(),thresholdsState.getGreen_g_high(),thresholdsState.getGreen_b_high());
 
         
         thresholdGUI.setGreyValues(getClickColor("Click a grey circle"));
-        hsbLowGrey = hsbValues(thresholdsState.getGrey_r_low(),thresholdsState.getGrey_g_low(),thresholdsState.getGrey_b_low(), -25);
-        hsbHighGrey = hsbValues(thresholdsState.getGrey_r_high(),thresholdsState.getGrey_g_high(),thresholdsState.getGrey_b_high(), 25);
+        hsbLowGrey = hsbValues(thresholdsState.getGrey_r_low(),thresholdsState.getGrey_g_low(),thresholdsState.getGrey_b_low());
+        hsbHighGrey = hsbValues(thresholdsState.getGrey_r_high(),thresholdsState.getGrey_g_high(),thresholdsState.getGrey_b_high());
         
     }
     
@@ -575,12 +575,12 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
      *                      false otherwise.
      */
     
-    private int[] hsbValues(int r, int g, int b, int thresh){
+    private int[] hsbValues(int r, int g, int b){
         float[] hsb = new float[3];
         int[] hsbInt = new int[3];
         Color.RGBtoHSB(r,g,b,hsb);
         for(int i = 0; i < 3; i++){
-            hsbInt[i] = (int)hsb[i] + thresh;
+            hsbInt[i] = (int)hsb[i];
         }
         return hsbInt;
     }
