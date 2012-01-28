@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -33,9 +34,9 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 
 
 //TODO: The points returned when we click are out somehow. Click on the ball for example and you can see that it returns the wrong colour
-//		I verified this when I drew lines on the image as they were not in the place I clicked. 
+//        I verified this when I drew lines on the image as they were not in the place I clicked. 
 
-public class VisionFeed extends WindowAdapter implements MouseListener{
+public class VisionFeed extends WindowAdapter implements MouseListener, MouseMotionListener {
     private VideoDevice videoDev;
     private JLabel label;
     private JFrame windowFrame;
@@ -51,9 +52,10 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     private Color[] objects = new Color[5];
     private int objectIndex = 0;
     private BufferedImage frameImage;
-	private ControlGUI thresholdGUI;
-	private static Point[] corners = new Point[4];
-	private static boolean cornersSet = false;
+    private ControlGUI thresholdGUI;
+    private static Point[] corners = new Point[4];
+    private static boolean cornersSet = false;
+    private static Point mouseCo = new Point(0,0);
 
     //private int[] xDistortion;
     //private int[] yDistortion;
@@ -85,46 +87,47 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         /* Initialise the GUI that displays the video feed. */
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         initGUI();
-		this.thresholdGUI = thresholdsGUI;
-		getColors();
-		getCorners();
+        this.thresholdGUI = thresholdsGUI;
+        getColors();
+        getCorners();
     }
     
 
-	public void getCorners(){
-		Point[] bulges = new Point[4];
-		System.err.println("By bulge we mean the part of the pitch (in green) which sticks out the most in the specified direction");
-		bulges[0] = getCorner("Click the top bulge");
-		bulges[1] = getCorner("Click the right bulge");
-		bulges[2] = getCorner("Click the bottom bulge");
-		bulges[3] = getCorner("Click the left bulge");
+    public void getCorners(){
+        Point[] bulges = new Point[4];
+        System.err.println("By bulge we mean the part of the pitch (in green) which sticks out the most in the specified direction");
+        bulges[0] = getCorner("Click the top bulge");
+        bulges[1] = getCorner("Click the right bulge");
+        bulges[2] = getCorner("Click the bottom bulge");
+        bulges[3] = getCorner("Click the left bulge");
 
-		corners[0] = new Point(bulges[3].x,bulges[0].y);
-		corners[1] = new Point(bulges[1].x,bulges[0].y);
-		corners[2] = new Point(bulges[1].x,bulges[2].y);
-		corners[3] = new Point(bulges[3].x,bulges[2].y);
+        corners[0] = new Point(bulges[3].x,bulges[0].y);
+        corners[1] = new Point(bulges[1].x,bulges[0].y);
+        corners[2] = new Point(bulges[1].x,bulges[2].y);
+        corners[3] = new Point(bulges[3].x,bulges[2].y);
 
-		System.err.println("Corners:");
-		System.err.println(corners[0]);
-		System.err.println(corners[1]);
-		System.err.println(corners[2]);
-		System.err.println(corners[3]);
+        System.err.println("Corners:");
+        System.err.println(corners[0]);
+        System.err.println(corners[1]);
+        System.err.println(corners[2]);
+        System.err.println(corners[3]);
 
-		cornersSet = true;
-		
-	}
+        cornersSet = true;
+        
+    }
 
-	public Point getCorner(String message){
-		System.err.println(message);
+    public Point getCorner(String message){
+        System.err.println(message);
 
         while (!mouseClick) {
             try{
                 Thread.sleep(100);
             } catch (Exception e) {}
         }
-		mouseClick = false;
+        mouseClick = false;
+        System.err.println(correctPoint(coords));
         return correctPoint(coords);
-	}
+    }
     /*
     Get the threshold values for the objects in the match i.e. ball.
     */
@@ -136,7 +139,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
                 Thread.sleep(100);
             } catch (Exception e) {}
         }
-		mouseClick = false;
+        mouseClick = false;
         return getColor(coords, frameImage);
     }
 
@@ -155,6 +158,12 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     public void mouseEntered(MouseEvent e){}
     public void mousePressed(MouseEvent e){}
     public void mouseReleased(MouseEvent e){}
+    public void mouseMoved(MouseEvent e) {
+        mouseCo = correctPoint(e.getPoint());
+    }
+    public void mouseDragged(MouseEvent e) {
+        mouseCo = correctPoint(e.getPoint());
+    }
 
      /**
      * Initialises a FrameGrabber object with the given parameters.
@@ -168,8 +177,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
      *
      * @throws V4L4JException   If any parameter is invalid.
      */
-    private void initFrameGrabber(String videoDevice, int inWidth, int inHeight, int channel,
-            int videoStandard, int compressionQuality) throws V4L4JException {
+    private void initFrameGrabber(String videoDevice, int inWidth, int inHeight, int channel, int videoStandard, int compressionQuality) throws V4L4JException {
         videoDev = new VideoDevice(videoDevice);
 
         DeviceInfo deviceInfo = videoDev.getDeviceInfo();
@@ -179,8 +187,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         }
         ImageFormat imageFormat = deviceInfo.getFormatList().getNativeFormat(0);
 
-        frameGrabber = videoDev.getJPEGFrameGrabber(inWidth, inHeight, channel, videoStandard,
-                compressionQuality, imageFormat);
+        frameGrabber = videoDev.getJPEGFrameGrabber(inWidth, inHeight, channel, videoStandard, compressionQuality, imageFormat);
 
         frameGrabber.setCaptureCallback(new CaptureCallback() {
             public void exceptionReceived(V4L4JException e) {
@@ -197,7 +204,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         });
 
         frameGrabber.startCapture();
-
+        //System.err.println("Video Frame width,height: " + frameGrabber.getWidth() + "," + frameGrabber.getHeight());
         width = frameGrabber.getWidth();
         height = frameGrabber.getHeight();
     }
@@ -214,18 +221,20 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         windowFrame.setVisible(true);
         //windowFrame.setSize(width, height);
         windowFrame.setSize(width+5, height+25);
+        //System.err.println("JFrame width,height: " + windowFrame.getSize().width + "," + windowFrame.getSize().height);
         windowFrame.addMouseListener(this);
+        windowFrame.addMouseMotionListener(this);
     }
     
     //When the mouse has been clicked get the location.
     public void mouseClicked(MouseEvent e){
-        coords = e.getPoint();
+        coords = correctPoint(e.getPoint());
         mouseClick = true;
     }
     
-	public Point correctPoint(Point p){
-		return new Point(p.x-6,p.y-27);
-	}
+    public Point correctPoint(Point p){
+        return new Point(p.x-4,p.y-24);
+    }
 
     /*
     Get the colour where the mouse was clicked.  Takes an average of the adjacent
@@ -233,7 +242,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     */
     public Color getColor(Point p, BufferedImage image){
 
-		//writeImage(image,"test");
+        //writeImage(image,"test");
 
         Color[] temp = new Color[9];
         temp[0] = new Color(image.getRGB(p.x-1,p.y-1));
@@ -247,17 +256,17 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         temp[8] = new Color(image.getRGB(p.x+1,p.y+1));
         
         int avgr = 0;
-		int avgg = 0;
-		int avgb = 0;
+        int avgg = 0;
+        int avgb = 0;
 
         for(int i = 0;i<9;i++){
             avgr += temp[i].getRed();
-			avgg += temp[i].getGreen();
-			avgb += temp[i].getBlue();
+            avgg += temp[i].getGreen();
+            avgb += temp[i].getBlue();
         }
         avgr = avgr/9;
-		avgg = avgg/9;
-		avgb = avgb/9;
+        avgg = avgg/9;
+        avgb = avgb/9;
 
         Color avgColor = new Color(avgr,avgg,avgb);
         return avgColor;
@@ -273,34 +282,47 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         } catch (Exception e) {}
     }
 
-	//crops the image based on the corner values and then stretches that back up to 640x480
-	private static BufferedImage stretchImage(BufferedImage image) {
-		if(cornersSet){
-			int width = 640;
-			int height = 480;
-			
-			//currently instead of cropping and stretching the image it simply draws on the borders of where it would crop to in blue
-			for(int x = 0;x<width;x++){
-				for(int y = 0;y<height;y++){
-					if((x == corners[0].x) || (y == corners[0].y) || (x == corners[2].x) || (y == corners[2].y)){
-						image.setRGB(x,y,(255 << 24) + 255);
-					}
-				}
-			}
-			return image;
-	
-			/*BufferedImage croppedImage = new BufferedImage(corners[1].x - corners[0].x,corners[2].y - corners[1].y,BufferedImage.TYPE_INT_ARGB);
-			
-			for(int i = corners[0].x;i<corners[1].x;i++){
-				for(int j = corners[1].y;j<corners[2].y;j++){
-					croppedImage.setRGB(i-corners[0].x,j-corners[1].y,image.getRGB(i,j));
-				}
-			}
-			return croppedImage;*/
-		} else {
-			return image;
-		}
-	}
+    //crops the image based on the corner values and then stretches that back up to 640x480
+    private static BufferedImage stretchImage(BufferedImage image) {
+        int width = 640;
+        int height = 480;
+        
+
+        /*if(!cornersSet){
+            for(int x = 0;x<width;x++){
+                for(int y = 0;y<height;y++){
+                    if((x == mouseCo.x) || (y == mouseCo.y)){
+                        image.setRGB(x,y,(255 << 24) + 255);
+                    }
+                }
+            }
+        }*/
+        if(cornersSet){
+            //currently instead of cropping and stretching the image it simply draws on the borders of where it would crop to in blue
+            for(int x = 0;x<width;x++){
+                for(int y = 0;y<height;y++){
+                    if((x == corners[0].x) || (y == corners[0].y) || (x == corners[2].x) || (y == corners[2].y)){
+                        image.setRGB(x,y,(255 << 24) + 255);
+                    }
+                    if((x == mouseCo.x) || (y == mouseCo.y)){
+                        image.setRGB(x,y,(255 << 24) + 255);
+                    }
+                }
+            }
+            return image;
+    
+            /*BufferedImage croppedImage = new BufferedImage(corners[1].x - corners[0].x,corners[2].y - corners[1].y,BufferedImage.TYPE_INT_ARGB);
+            
+            for(int i = corners[0].x;i<corners[1].x;i++){
+                for(int j = corners[1].y;j<corners[2].y;j++){
+                    croppedImage.setRGB(i-corners[0].x,j-corners[1].y,image.getRGB(i,j));
+                }
+            }
+            return croppedImage;*/
+        } else {
+            return image;
+        }
+    }
 
 
     /**
@@ -362,10 +384,11 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         }
         */
 
-		/*NormaliseRGB nrgb = new NormaliseRGB();
-		image = nrgb.normalise(image);*/
 
-		image = stretchImage(image);
+        /*NormaliseRGB nrgb = new NormaliseRGB();
+        image = nrgb.normalise(image);*/
+
+        image = stretchImage(image);
 
         int ballX = 0;
         int ballY = 0;
