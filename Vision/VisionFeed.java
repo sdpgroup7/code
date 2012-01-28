@@ -212,7 +212,8 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         windowFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         windowFrame.addWindowListener(this);
         windowFrame.setVisible(true);
-        windowFrame.setSize(width, height);
+        //windowFrame.setSize(width, height);
+        windowFrame.setSize(width+5, height+25);
         windowFrame.addMouseListener(this);
     }
     
