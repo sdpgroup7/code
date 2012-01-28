@@ -85,88 +85,11 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         initGUI();
         this.thresholdGUI = thresholdsGUI;
-        getColors();
+        
         getPoints();
+        getColors();
     }
     
-	public void getPoints(){
-	
-	    /*
-	    Get the extremes of the pitch.
-	    */
-		System.err.println("By bulge we mean the part of the pitch (in green) which sticks out the most in the specified direction");
-		pitchConstants.setTopBuffer(getClickPoint("Click the top bulge").y);
-		pitchConstants.setRightBuffer(getClickPoint("Click the right bulge").x);
-		pitchConstants.setBottomBuffer(getClickPoint("Click the bottom bulge").y);
-		pitchConstants.setLeftBuffer(getClickPoint("Click the left bulge").x);
-
-		pitchConstants.setTopLeft(getClickPoint("Click the top left corner"));
-		pitchConstants.setTopRight(getClickPoint("Click the top right corner"));
-		pitchConstants.setBottomRight(getClickPoint("Click the bottom right corner"));
-		pitchConstants.setBottomLeft(getClickPoint("Click the bottom left corner"));
-
-		buffersSet = true;
-		
-	}
-    /*
-    just register the mouse click after being asked to by getClickPoint
-    */
-	public Point getClickPoint(String message){
-		System.err.println(message);
-
-        while (!mouseClick) {
-            try{
-                Thread.sleep(100);
-            } catch (Exception e) {}
-        }
-        mouseClick = false;
-        System.err.println(coords);
-        return coords;
-    }
-    /*
-    Get the threshold values for the objects in the match i.e. ball.
-    Registers the mouse clicks after being asked to by getColors
-    */
-    public Color getClickColor(String message){
-        System.err.println(message);
-
-        while (!mouseClick) {
-            try{
-                Thread.sleep(100);
-            } catch (Exception e) {}
-        }
-        mouseClick = false;
-        return getColor(coords, frameImage);
-    }
-
-    
-    //Set the sliders on the GUI, the messages are used to tell the user what to click
-    public void getColors(){
-        thresholdGUI.setBallValues(getClickColor("Click the ball"));
-        
-        thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
-        
-        thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
-        
-        thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
-
-        
-        thresholdGUI.setGreyValues(getClickColor("Click a grey circle"));
-        
-    }
-    
-    //useless, had to be included because of the MouseEvent interface
-    public void mouseExited(MouseEvent e){}
-    public void mouseEntered(MouseEvent e){}
-    public void mousePressed(MouseEvent e){}
-    public void mouseReleased(MouseEvent e){}
-    public void mouseMoved(MouseEvent e) {
-        mouseCo = correctPoint(e.getPoint());
-    }
-    public void mouseDragged(MouseEvent e) {
-        mouseCo = correctPoint(e.getPoint());
-    }
-
      /**
      * Initialises a FrameGrabber object with the given parameters.
      *
@@ -210,7 +133,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         width = frameGrabber.getWidth();
         height = frameGrabber.getHeight();
     }
-
+    
     /**
      * Creates the graphical interface components and initialises them
      */
@@ -239,12 +162,82 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         
     }
     
+    //useless, had to be included because of the MouseEvent interface
+    public void mouseExited(MouseEvent e){}
+    public void mouseEntered(MouseEvent e){}
+    public void mousePressed(MouseEvent e){}
+    public void mouseReleased(MouseEvent e){}
+    public void mouseMoved(MouseEvent e) {
+        mouseCo = correctPoint(e.getPoint());
+    }
+    public void mouseDragged(MouseEvent e) {
+        mouseCo = correctPoint(e.getPoint());
+    }
     //When the mouse has been clicked get the location.
     public void mouseClicked(MouseEvent e){
         coords = correctPoint(e.getPoint());
         mouseClick = true;
     }
     
+	public void getPoints(){
+	
+	    /*
+	    Get the extremes of the pitch.
+	    */
+		System.err.println("By bulge we mean the part of the pitch (in green) which sticks out the most in the specified direction");
+		pitchConstants.setTopBuffer(getClickPoint("Click the top bulge").y);
+		pitchConstants.setRightBuffer(getClickPoint("Click the right bulge").x);
+		pitchConstants.setBottomBuffer(getClickPoint("Click the bottom bulge").y);
+		pitchConstants.setLeftBuffer(getClickPoint("Click the left bulge").x);
+
+		pitchConstants.setTopLeft(getClickPoint("Click the top left corner"));
+		pitchConstants.setTopRight(getClickPoint("Click the top right corner"));
+		pitchConstants.setBottomRight(getClickPoint("Click the bottom right corner"));
+		pitchConstants.setBottomLeft(getClickPoint("Click the bottom left corner"));
+
+		buffersSet = true;
+		
+	}
+    /*
+    just register the mouse click after being asked to by getClickPoint
+    */
+	public Point getClickPoint(String message){
+		System.err.println(message);
+
+        while (!mouseClick) {
+            try{
+                Thread.sleep(100);
+            } catch (Exception e) {}
+        }
+        mouseClick = false;
+        System.err.println(coords);
+        return coords;
+    }
+    
+    //Set the sliders on the GUI, the messages are used to tell the user what to click
+    public void getColors(){
+        thresholdGUI.setBallValues(getClickColor("Click the ball"));
+        thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
+        thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
+        thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
+        thresholdGUI.setGreyValues(getClickColor("Click a grey circle"));
+    }
+    /*
+    Get the threshold values for the objects in the match i.e. ball.
+    Registers the mouse clicks after being asked to by getColors
+    */
+    public Color getClickColor(String message){
+        System.err.println(message);
+
+        while (!mouseClick) {
+            try{
+                Thread.sleep(100);
+            } catch (Exception e) {}
+        }
+        mouseClick = false;
+        return getColor(coords, frameImage);
+    }
+
     public Point correctPoint(Point p){
         return new Point(p.x-4,p.y-24);
     }
@@ -318,7 +311,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
             return image;
         }
     }
-
 
     /**
      * Catches the window closing event, so that we can free up resources
