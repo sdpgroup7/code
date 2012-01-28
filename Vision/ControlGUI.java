@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JCheckBox;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -47,6 +48,22 @@ public class ControlGUI implements ChangeListener {
 	private JButton saveButton;
 	private JButton loadButton;
 	
+	/* Kick and drive buttons - for M1 but can change function as neccessary*/
+	private JButton kickButton;
+	private JButton driveButton;
+	
+	/*Locate Button*/
+	private JButton locateButton;
+	
+	/* Start and Stop Buttons */
+	private JButton startButton;
+	private JButton stopButton;
+	
+	/*Penalty mode buttons */
+	private JButton penaltyAttackButton;
+	private JButton penaltyDefendButton;
+	private JCheckBox returnToGame;
+	
 	/* Tabs. */
 	private JTabbedPane tabPane;
 	private JPanel defaultPanel;
@@ -68,41 +85,169 @@ public class ControlGUI implements ChangeListener {
 	private RangeSlider ball_r;
 	private RangeSlider ball_g;
 	private RangeSlider ball_b;
-	private RangeSlider ball_h;
-	private RangeSlider ball_s;
-	private RangeSlider ball_v;
 	
 	/* Blue robot sliders. */
 	private RangeSlider blue_r;
 	private RangeSlider blue_g;
 	private RangeSlider blue_b;
-	private RangeSlider blue_h;
-	private RangeSlider blue_s;
-	private RangeSlider blue_v;
 	
 	/* Yellow robot sliders. */
 	private RangeSlider yellow_r;
 	private RangeSlider yellow_g;
 	private RangeSlider yellow_b;
-	private RangeSlider yellow_h;
-	private RangeSlider yellow_s;
-	private RangeSlider yellow_v;
 	
 	/* Grey circle sliders. */
 	private RangeSlider grey_r;
 	private RangeSlider grey_g;
 	private RangeSlider grey_b;
-	private RangeSlider grey_h;
-	private RangeSlider grey_s;
-	private RangeSlider grey_v;
 	
 	/* Green circle sliders. */
 	private RangeSlider green_r;
 	private RangeSlider green_g;
 	private RangeSlider green_b;
-	private RangeSlider green_h;
-	private RangeSlider green_s;
-	private RangeSlider green_v;
+
+	public final int THRESHOLD = 25;
+	
+    private boolean penaltyToGame = false;
+
+	public void setBlueValues(Color c){
+		setBlueValues(c.getRed(),c.getGreen(),c.getBlue());
+	}
+
+	public void setYellowValues(Color c){
+		setYellowValues(c.getRed(),c.getGreen(),c.getBlue());
+	}
+
+	public void setGreyValues(Color c){
+		setGreyValues(c.getRed(),c.getGreen(),c.getBlue());
+	}
+
+	public void setGreenValues(Color c){
+		setGreenValues(c.getRed(),c.getGreen(),c.getBlue());
+	}
+
+	public void setBallValues(Color c){
+		setBallValues(c.getRed(),c.getGreen(),c.getBlue());
+	}
+
+
+
+	public void setBlueValues(int r, int g, int b){
+
+		int rLower = r-THRESHOLD;
+		int rUpper = r+THRESHOLD;
+		int gLower = g-THRESHOLD;
+		int gUpper = g+THRESHOLD;
+		int bLower = b-THRESHOLD;
+		int bUpper = b+THRESHOLD;
+
+		if(rLower < 0) rLower = 0;
+		if(gLower < 0) gLower = 0;
+		if(bLower < 0) bLower = 0;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+
+		blue_r.setValue(rLower);
+		blue_r.setUpperValue(rUpper);
+		blue_g.setValue(gLower);
+		blue_g.setUpperValue(gUpper);
+		blue_b.setValue(bLower);
+		blue_b.setUpperValue(bUpper);
+
+	}
+
+	public void setYellowValues(int r, int g, int b){
+		int rLower = r-THRESHOLD;
+		int rUpper = r+THRESHOLD;
+		int gLower = g-THRESHOLD;
+		int gUpper = g+THRESHOLD;
+		int bLower = b-THRESHOLD;
+		int bUpper = b+THRESHOLD;
+
+		if(rLower < 0) rLower = 0;
+		if(gLower < 0) gLower = 0;
+		if(bLower < 0) bLower = 0;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+
+		yellow_r.setValue(rLower);
+		yellow_r.setUpperValue(rUpper);
+		yellow_g.setValue(gLower);
+		yellow_g.setUpperValue(gUpper);
+		yellow_b.setValue(bLower);
+		yellow_b.setUpperValue(bUpper);
+	}
+
+	public void setGreyValues(int r, int g, int b){
+		int rLower = r-THRESHOLD;
+		int rUpper = r+THRESHOLD;
+		int gLower = g-THRESHOLD;
+		int gUpper = g+THRESHOLD;
+		int bLower = b-THRESHOLD;
+		int bUpper = b+THRESHOLD;
+
+		if(rLower < 0) rLower = 0;
+		if(gLower < 0) gLower = 0;
+		if(bLower < 0) bLower = 0;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+
+		grey_r.setValue(rLower);
+		grey_r.setUpperValue(rUpper);
+		grey_g.setValue(gLower);
+		grey_g.setUpperValue(gUpper);
+		grey_b.setValue(bLower);
+		grey_b.setUpperValue(bUpper);
+	}
+
+	public void setGreenValues(int r, int g, int b){
+		int rLower = r-THRESHOLD;
+		int rUpper = r+THRESHOLD;
+		int gLower = g-THRESHOLD;
+		int gUpper = g+THRESHOLD;
+		int bLower = b-THRESHOLD;
+		int bUpper = b+THRESHOLD;
+
+		if(rLower < 0) rLower = 0;
+		if(gLower < 0) gLower = 0;
+		if(bLower < 0) bLower = 0;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+
+		green_r.setValue(rLower);
+		green_r.setUpperValue(rUpper);
+		green_g.setValue(gLower);
+		green_g.setUpperValue(gUpper);
+		green_b.setValue(bLower);
+		green_b.setUpperValue(bUpper);
+	}
+
+	public void setBallValues(int r, int g, int b){
+		int rLower = r-THRESHOLD;
+		int rUpper = r+THRESHOLD;
+		int gLower = g-THRESHOLD;
+		int gUpper = g+THRESHOLD;
+		int bLower = b-THRESHOLD;
+		int bUpper = b+THRESHOLD;
+
+		if(rLower < 0) rLower = 0;
+		if(gLower < 0) gLower = 0;
+		if(bLower < 0) bLower = 0;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+
+		ball_r.setValue(rLower);
+		ball_r.setUpperValue(rUpper);
+		ball_g.setValue(gLower);
+		ball_g.setUpperValue(gUpper);
+		ball_b.setValue(bLower);
+		ball_b.setUpperValue(bUpper);
+	}
 	
 	/**
 	 * Default constructor. 
@@ -282,12 +427,6 @@ public class ControlGUI implements ChangeListener {
 					writer.write(String.valueOf(ball_g.getUpperValue()) + "\n");
 					writer.write(String.valueOf(ball_b.getValue()) + "\n");
 					writer.write(String.valueOf(ball_b.getUpperValue()) + "\n");
-					writer.write(String.valueOf(ball_h.getValue()) + "\n");
-					writer.write(String.valueOf(ball_h.getUpperValue()) + "\n");
-					writer.write(String.valueOf(ball_s.getValue()) + "\n");
-					writer.write(String.valueOf(ball_s.getUpperValue()) + "\n");
-					writer.write(String.valueOf(ball_v.getValue()) + "\n");
-					writer.write(String.valueOf(ball_v.getUpperValue()) + "\n");
 					
 					/* Blue */
 					writer.write(String.valueOf(blue_r.getValue()) + "\n");
@@ -296,12 +435,6 @@ public class ControlGUI implements ChangeListener {
 					writer.write(String.valueOf(blue_g.getUpperValue()) + "\n");
 					writer.write(String.valueOf(blue_b.getValue()) + "\n");
 					writer.write(String.valueOf(blue_b.getUpperValue()) + "\n");
-					writer.write(String.valueOf(blue_h.getValue()) + "\n");
-					writer.write(String.valueOf(blue_h.getUpperValue()) + "\n");
-					writer.write(String.valueOf(blue_s.getValue()) + "\n");
-					writer.write(String.valueOf(blue_s.getUpperValue()) + "\n");
-					writer.write(String.valueOf(blue_v.getValue()) + "\n");
-					writer.write(String.valueOf(blue_v.getUpperValue()) + "\n");
 					
 					/* Yellow */
 					writer.write(String.valueOf(yellow_r.getValue()) + "\n");
@@ -309,13 +442,7 @@ public class ControlGUI implements ChangeListener {
 					writer.write(String.valueOf(yellow_g.getValue()) + "\n");
 					writer.write(String.valueOf(yellow_g.getUpperValue()) + "\n");
 					writer.write(String.valueOf(yellow_b.getValue()) + "\n");
-					writer.write(String.valueOf(yellow_b.getUpperValue()) + "\n");
-					writer.write(String.valueOf(yellow_h.getValue()) + "\n");
-					writer.write(String.valueOf(yellow_h.getUpperValue()) + "\n");
-					writer.write(String.valueOf(yellow_s.getValue()) + "\n");
-					writer.write(String.valueOf(yellow_s.getUpperValue()) + "\n");
-					writer.write(String.valueOf(yellow_v.getValue()) + "\n");
-					writer.write(String.valueOf(yellow_v.getUpperValue()) + "\n");
+					writer.write(String.valueOf(yellow_b.getUpperValue()) + "\n");;
 					
 					/* Grey */
 					writer.write(String.valueOf(grey_r.getValue()) + "\n");
@@ -324,12 +451,6 @@ public class ControlGUI implements ChangeListener {
 					writer.write(String.valueOf(grey_g.getUpperValue()) + "\n");
 					writer.write(String.valueOf(grey_b.getValue()) + "\n");
 					writer.write(String.valueOf(grey_b.getUpperValue()) + "\n");
-					writer.write(String.valueOf(grey_h.getValue()) + "\n");
-					writer.write(String.valueOf(grey_h.getUpperValue()) + "\n");
-					writer.write(String.valueOf(grey_s.getValue()) + "\n");
-					writer.write(String.valueOf(grey_s.getUpperValue()) + "\n");
-					writer.write(String.valueOf(grey_v.getValue()) + "\n");
-					writer.write(String.valueOf(grey_v.getUpperValue()) + "\n");
 					
 					/* Green */
 					writer.write(String.valueOf(green_r.getValue()) + "\n");
@@ -338,12 +459,6 @@ public class ControlGUI implements ChangeListener {
 					writer.write(String.valueOf(green_g.getUpperValue()) + "\n");
 					writer.write(String.valueOf(green_b.getValue()) + "\n");
 					writer.write(String.valueOf(green_b.getUpperValue()) + "\n");
-					writer.write(String.valueOf(green_h.getValue()) + "\n");
-					writer.write(String.valueOf(green_h.getUpperValue()) + "\n");
-					writer.write(String.valueOf(green_s.getValue()) + "\n");
-					writer.write(String.valueOf(green_s.getUpperValue()) + "\n");
-					writer.write(String.valueOf(green_v.getValue()) + "\n");
-					writer.write(String.valueOf(green_v.getUpperValue()) + "\n");
 					
 					/* We need to re-write the pitch dimensions. 
 					 * TODO: This currently means that cross-saving values
@@ -393,6 +508,140 @@ public class ControlGUI implements ChangeListener {
 		
 		defaultPanel.add(saveLoadPanel);
 		
+		/*
+		The locate button is pressed to start the locating of the objects
+		and pitch boundaries
+		*/
+		
+		JPanel locatePanel = new JPanel();
+		
+		locateButton = new JButton("Locate Objects");
+		
+		locatePanel.add(locateButton);
+		locateButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //Call the methods to find and set the thresholds of the objects and locate the corners
+		        //Call to vision
+		        System.err.println("Run Location");
+		    }
+		});
+		    
+		
+		defaultPanel.add(locatePanel);
+		
+		/*
+		Buttons for starting and stopping the match, before starting you have
+		to have done locate.  Stop will be used for breaks in play etc.
+		*/
+		
+		JPanel startStopPanel = new JPanel();
+		
+		startButton = new JButton("Start Match");
+		stopButton = new JButton("Stop Match");
+		
+		startStopPanel.add(startButton);
+		startStopPanel.add(stopButton);
+		
+		startButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to strategy system for there start of match code
+		        System.err.println("Start Strategy");
+		    }
+		});
+		
+		stopButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to strategy to get them to stop what they are doing
+		        System.err.println("Stop the strategy");
+		    }
+		});
+		
+		defaultPanel.add(startStopPanel);
+		
+		/*
+		Penalty Mode buttons.  Stop button must be pressed first
+		*/
+		
+		JPanel penaltyPanel = new JPanel();
+		
+		penaltyAttackButton = new JButton("Penalty Shoot");
+		penaltyDefendButton = new JButton("Penalty Goalie");
+		returnToGame = new JCheckBox("Return to Game");
+		
+		penaltyPanel.add(returnToGame);
+		penaltyPanel.add(penaltyAttackButton);
+		penaltyPanel.add(penaltyDefendButton);
+		
+		returnToGame.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    //Boolean value to be sent with function calls to strategy for penalties
+		    //letting them know whether they should continue playing or not after taking or saving penalty
+		    public void actionPerformed(ActionEvent e) {
+		        penaltyToGame = !(penaltyToGame);
+		        if (penaltyToGame) {
+		            System.err.println("Checked");
+		        } else {
+		            System.err.println("Unchecked");
+		        }
+		    }
+		});
+		
+		penaltyAttackButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to strategy letting them know that bot is taking a penalty
+		        System.err.println("Penalty Attack");
+		    }
+		});
+		
+		penaltyDefendButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to strategy to let them know to prepare to save
+		        System.err.println("Goalie Mode");
+		    }
+		});
+		
+		defaultPanel.add(penaltyPanel);
+		
+		/*Currently Milestone 1 stuff - WILL CHANGE */
+		
+		JPanel misc = new JPanel();
+		
+		kickButton = new JButton("Kick");
+		driveButton = new JButton("Drive");
+		
+		misc.add(kickButton);
+		misc.add(driveButton);
+		
+		kickButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to control to activate kicker
+		        System.err.println("Kicked the Ball");
+		    }
+		});
+		
+		driveButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to control to drive forward
+		        System.err.println("Vroom vroom");
+		    }
+		});
+		
+		defaultPanel.add(misc);
 	}
 	
 	/**
@@ -423,37 +672,11 @@ public class ControlGUI implements ChangeListener {
         ball_b_panel.add(ball_b_label);
 		ball_b_panel.add(ball_b);
 		ballPanel.add(ball_b_panel);
-        
-        /* Hue. */
-		JPanel ball_h_panel = new JPanel();
-        JLabel ball_h_label = new JLabel("Hue:");
-        ball_h = setUpSlider(0, 100, pitchConstants.ball_h_low, pitchConstants.ball_h_high, 1,20);
-        ball_h_panel.add(ball_h_label);
-		ball_h_panel.add(ball_h);
-		ballPanel.add(ball_h_panel);
-        
-        /* Sat. */
-		JPanel ball_s_panel = new JPanel();
-        JLabel ball_s_label = new JLabel("Sat:");
-        ball_s = setUpSlider(0, 100, pitchConstants.ball_s_low, pitchConstants.ball_s_high, 1,20);
-        ball_s_panel.add(ball_s_label);
-		ball_s_panel.add(ball_s);
-		ballPanel.add(ball_s_panel);
-        
-        /* Value. */
-		JPanel ball_v_panel = new JPanel();
-        JLabel ball_v_label = new JLabel("Value:");
-        ball_v = setUpSlider(0, 100, pitchConstants.ball_v_low, pitchConstants.ball_v_high, 1,20);
-        ball_v_panel.add(ball_v_label);
-		ball_v_panel.add(ball_v);
-		ballPanel.add(ball_v_panel);
-        
+                
         ball_r.addChangeListener(this);
         ball_g.addChangeListener(this);
         ball_b.addChangeListener(this);
-        ball_h.addChangeListener(this);
-        ball_s.addChangeListener(this);
-        ball_v.addChangeListener(this);
+
 		
 	}
 	
@@ -486,37 +709,9 @@ public class ControlGUI implements ChangeListener {
 		blue_b_panel.add(blue_b);
 		bluePanel.add(blue_b_panel);
 
-		/* Hue. */
-		JPanel blue_h_panel = new JPanel();
-		JLabel blue_h_label = new JLabel("Hue:");
-		blue_h = setUpSlider(0, 255, pitchConstants.blue_h_low, pitchConstants.blue_h_high, 10,50);
-		blue_h_panel.add(blue_h_label);
-		blue_h_panel.add(blue_h);
-		bluePanel.add(blue_h_panel);
-
-		/* Sat. */
-		JPanel blue_s_panel = new JPanel();
-		JLabel blue_s_label = new JLabel("Sat:");
-		blue_s = setUpSlider(0, 255, pitchConstants.blue_s_low, pitchConstants.blue_s_high, 10,50);
-		blue_s_panel.add(blue_s_label);
-		blue_s_panel.add(blue_s);
-		bluePanel.add(blue_s_panel);
-
-
-		/* Value. */
-		JPanel blue_v_panel = new JPanel();
-		JLabel blue_v_label = new JLabel("Value:");
-		blue_v = setUpSlider(0, 255, pitchConstants.blue_v_low, pitchConstants.blue_v_high, 10,50);
-		blue_v_panel.add(blue_v_label);
-		blue_v_panel.add(blue_v);
-		bluePanel.add(blue_v_panel);
-
 		blue_r.addChangeListener(this);
 		blue_g.addChangeListener(this);
 		blue_b.addChangeListener(this);
-		blue_h.addChangeListener(this);
-		blue_s.addChangeListener(this);
-		blue_v.addChangeListener(this);
 
 	}
 	
@@ -549,37 +744,9 @@ public class ControlGUI implements ChangeListener {
 		yellow_b_panel.add(yellow_b);
 		yellowPanel.add(yellow_b_panel);
 
-		/* Hue. */
-		JPanel yellow_h_panel = new JPanel();
-		JLabel yellow_h_label = new JLabel("Hue:");
-		yellow_h = setUpSlider(0, 255, pitchConstants.yellow_h_low, pitchConstants.yellow_h_high, 10,50);
-		yellow_h_panel.add(yellow_h_label);
-		yellow_h_panel.add(yellow_h);
-		yellowPanel.add(yellow_h_panel);
-
-		/* Sat. */
-		JPanel yellow_s_panel = new JPanel();
-		JLabel yellow_s_label = new JLabel("Sat:");
-		yellow_s = setUpSlider(0, 255, pitchConstants.yellow_s_low, pitchConstants.yellow_s_high, 10,50);
-		yellow_s_panel.add(yellow_s_label);
-		yellow_s_panel.add(yellow_s);
-		yellowPanel.add(yellow_s_panel);
-
-
-		/* Value. */
-		JPanel yellow_v_panel = new JPanel();
-		JLabel yellow_v_label = new JLabel("Value:");
-		yellow_v = setUpSlider(0, 255, pitchConstants.yellow_v_low, pitchConstants.yellow_v_high, 10,50);
-		yellow_v_panel.add(yellow_v_label);
-		yellow_v_panel.add(yellow_v);
-		yellowPanel.add(yellow_v_panel);
-
 		yellow_r.addChangeListener(this);
 		yellow_g.addChangeListener(this);
-		yellow_b.addChangeListener(this);
-		yellow_h.addChangeListener(this);
-		yellow_s.addChangeListener(this);
-		yellow_v.addChangeListener(this);
+		yellow_b.addChangeListener(this);;
 
 	}
 	
@@ -612,37 +779,9 @@ public class ControlGUI implements ChangeListener {
 		grey_b_panel.add(grey_b);
 		greyPanel.add(grey_b_panel);
 
-		/* Hue. */
-		JPanel grey_h_panel = new JPanel();
-		JLabel grey_h_label = new JLabel("Hue:");
-		grey_h = setUpSlider(0, 255, pitchConstants.grey_h_low, pitchConstants.grey_h_high, 10,50);
-		grey_h_panel.add(grey_h_label);
-		grey_h_panel.add(grey_h);
-		greyPanel.add(grey_h_panel);
-
-		/* Sat. */
-		JPanel grey_s_panel = new JPanel();
-		JLabel grey_s_label = new JLabel("Sat:");
-		grey_s = setUpSlider(0, 255, pitchConstants.grey_s_low, pitchConstants.grey_s_high, 10,50);
-		grey_s_panel.add(grey_s_label);
-		grey_s_panel.add(grey_s);
-		greyPanel.add(grey_s_panel);
-
-
-		/* Value. */
-		JPanel grey_v_panel = new JPanel();
-		JLabel grey_v_label = new JLabel("Value:");
-		grey_v = setUpSlider(0, 255, pitchConstants.grey_v_low, pitchConstants.grey_v_high, 10,50);
-		grey_v_panel.add(grey_v_label);
-		grey_v_panel.add(grey_v);
-		greyPanel.add(grey_v_panel);
-
 		grey_r.addChangeListener(this);
 		grey_g.addChangeListener(this);
 		grey_b.addChangeListener(this);
-		grey_h.addChangeListener(this);
-		grey_s.addChangeListener(this);
-		grey_v.addChangeListener(this);
 
 	}
 	
@@ -675,37 +814,9 @@ public class ControlGUI implements ChangeListener {
 		green_b_panel.add(green_b);
 		greenPanel.add(green_b_panel);
 
-		/* Hue. */
-		JPanel green_h_panel = new JPanel();
-		JLabel green_h_label = new JLabel("Hue:");
-		green_h = setUpSlider(0, 255, pitchConstants.green_h_low, pitchConstants.green_h_high, 10,50);
-		green_h_panel.add(green_h_label);
-		green_h_panel.add(green_h);
-		greenPanel.add(green_h_panel);
-
-		/* Sat. */
-		JPanel green_s_panel = new JPanel();
-		JLabel green_s_label = new JLabel("Sat:");
-		green_s = setUpSlider(0, 255, pitchConstants.green_s_low, pitchConstants.green_s_high, 10,50);
-		green_s_panel.add(green_s_label);
-		green_s_panel.add(green_s);
-		greenPanel.add(green_s_panel);
-
-
-		/* Value. */
-		JPanel green_v_panel = new JPanel();
-		JLabel green_v_label = new JLabel("Value:");
-		green_v = setUpSlider(0, 255, pitchConstants.green_v_low, pitchConstants.green_v_high, 10,50);
-		green_v_panel.add(green_v_label);
-		green_v_panel.add(green_v);
-		greenPanel.add(green_v_panel);
-
 		green_r.addChangeListener(this);
 		green_g.addChangeListener(this);
 		green_b.addChangeListener(this);
-		green_h.addChangeListener(this);
-		green_s.addChangeListener(this);
-		green_v.addChangeListener(this);
 
 	}
 
@@ -828,29 +939,6 @@ public class ControlGUI implements ChangeListener {
 		
 		thresholdsState.setBall_b_low(ball_b.getValue());
 		thresholdsState.setBall_b_high(ball_b.getUpperValue());
-		
-		thresholdsState.setBall_h_low(ball_h.getValue() / 255.0);
-		thresholdsState.setBall_h_high(ball_h.getUpperValue() / 255.0);
-
-		thresholdsState.setBall_s_low(ball_s.getValue() / 255.0);
-		thresholdsState.setBall_s_high(ball_s.getUpperValue() / 255.0);
-		
-		thresholdsState.setBall_v_low(ball_v.getValue() / 255.0);
-		thresholdsState.setBall_v_high(ball_v.getUpperValue() / 255.0);
-
-		
-		//Makes the HSV bars move when the RGB ones move. 
-		/*float[] ballHSV = new float[3];
-		Color.RGBtoHSB(ball_r.getValue(),ball_g.getValue(),ball_b.getValue(),ballHSV);
-		float[] ballUpperHSV = new float[3];
-		Color.RGBtoHSB(ball_r.getUpperValue(),ball_g.getUpperValue(),ball_b.getUpperValue(),ballUpperHSV);
-		ball_h.setValue((int)(ballHSV[0]*100));
-		ball_s.setValue((int)(ballHSV[1]*100));
-		ball_v.setValue((int)(ballHSV[2]*100));
-		ball_h.setUpperValue((int)(ballUpperHSV[0]*100));
-		ball_s.setUpperValue((int)(ballUpperHSV[1]*100));
-		ball_v.setUpperValue((int)(ballUpperHSV[2]*100));
-		System.out.println("(H,S,V) = (" + (ballHSV[0]*100) + "," + (ballHSV[1]*100) + "," + (ballHSV[2]*100) + ")");*/
 
 
 		/* Blue Robot. */
@@ -863,15 +951,6 @@ public class ControlGUI implements ChangeListener {
 		thresholdsState.setBlue_b_low(blue_b.getValue());
 		thresholdsState.setBlue_b_high(blue_b.getUpperValue());
 		
-		thresholdsState.setBlue_h_low(blue_h.getValue() / 255.0);
-		thresholdsState.setBlue_h_high(blue_h.getUpperValue() / 255.0);
-
-		thresholdsState.setBlue_s_low(blue_s.getValue() / 255.0);
-		thresholdsState.setBlue_s_high(blue_s.getUpperValue() / 255.0);
-		
-		thresholdsState.setBlue_v_low(blue_v.getValue() / 255.0);
-		thresholdsState.setBlue_v_high(blue_v.getUpperValue() / 255.0);
-		
 		/* Yellow Robot. */
 		thresholdsState.setYellow_r_low(yellow_r.getValue());
 		thresholdsState.setYellow_r_high(yellow_r.getUpperValue());
@@ -881,15 +960,6 @@ public class ControlGUI implements ChangeListener {
 		
 		thresholdsState.setYellow_b_low(yellow_b.getValue());
 		thresholdsState.setYellow_b_high(yellow_b.getUpperValue());
-		
-		thresholdsState.setYellow_h_low(yellow_h.getValue() / 255.0);
-		thresholdsState.setYellow_h_high(yellow_h.getUpperValue() / 255.0);
-
-		thresholdsState.setYellow_s_low(yellow_s.getValue() / 255.0);
-		thresholdsState.setYellow_s_high(yellow_s.getUpperValue() / 255.0);
-		
-		thresholdsState.setYellow_v_low(yellow_v.getValue() / 255.0);
-		thresholdsState.setYellow_v_high(yellow_v.getUpperValue() / 255.0);
 		
 		/* Grey Circles. */
 		thresholdsState.setGrey_r_low(grey_r.getValue());
@@ -901,15 +971,6 @@ public class ControlGUI implements ChangeListener {
 		thresholdsState.setGrey_b_low(grey_b.getValue());
 		thresholdsState.setGrey_b_high(grey_b.getUpperValue());
 		
-		thresholdsState.setGrey_h_low(grey_h.getValue() / 255.0);
-		thresholdsState.setGrey_h_high(grey_h.getUpperValue() / 255.0);
-
-		thresholdsState.setGrey_s_low(grey_s.getValue() / 255.0);
-		thresholdsState.setGrey_s_high(grey_s.getUpperValue() / 255.0);
-		
-		thresholdsState.setGrey_v_low(grey_v.getValue() / 255.0);
-		thresholdsState.setGrey_v_high(grey_v.getUpperValue() / 255.0);
-		
 		
 		/* Green Circles. */
 		thresholdsState.setGreen_r_low(green_r.getValue());
@@ -920,15 +981,6 @@ public class ControlGUI implements ChangeListener {
 		
 		thresholdsState.setGreen_b_low(green_b.getValue());
 		thresholdsState.setGreen_b_high(green_b.getUpperValue());
-		
-		thresholdsState.setGreen_h_low(green_h.getValue() / 255.0);
-		thresholdsState.setGreen_h_high(green_h.getUpperValue() / 255.0);
-
-		thresholdsState.setGreen_s_low(green_s.getValue() / 255.0);
-		thresholdsState.setGreen_s_high(green_s.getUpperValue() / 255.0);
-		
-		thresholdsState.setGreen_v_low(green_v.getValue() / 255.0);
-		thresholdsState.setGreen_v_high(green_v.getUpperValue() / 255.0);
 		
 		
 	}
@@ -942,41 +994,26 @@ public class ControlGUI implements ChangeListener {
 		setSliderVals(ball_r, pitchConstants.ball_r_low, pitchConstants.ball_r_high);
 		setSliderVals(ball_g, pitchConstants.ball_g_low, pitchConstants.ball_g_high);
 		setSliderVals(ball_b, pitchConstants.ball_b_low, pitchConstants.ball_b_high);
-		setSliderVals(ball_h, pitchConstants.ball_h_low, pitchConstants.ball_h_high);
-		setSliderVals(ball_s, pitchConstants.ball_s_low, pitchConstants.ball_s_high);
-		setSliderVals(ball_v, pitchConstants.ball_v_low, pitchConstants.ball_v_high);
 		
 		/* Blue slider */
 		setSliderVals(blue_r, pitchConstants.blue_r_low, pitchConstants.blue_r_high);
 		setSliderVals(blue_g, pitchConstants.blue_g_low, pitchConstants.blue_g_high);
 		setSliderVals(blue_b, pitchConstants.blue_b_low, pitchConstants.blue_b_high);
-		setSliderVals(blue_h, pitchConstants.blue_h_low, pitchConstants.blue_h_high);
-		setSliderVals(blue_s, pitchConstants.blue_s_low, pitchConstants.blue_s_high);
-		setSliderVals(blue_v, pitchConstants.blue_v_low, pitchConstants.blue_v_high);
 		
 		/* Yellow slider */
 		setSliderVals(yellow_r, pitchConstants.yellow_r_low, pitchConstants.yellow_r_high);
 		setSliderVals(yellow_g, pitchConstants.yellow_g_low, pitchConstants.yellow_g_high);
 		setSliderVals(yellow_b, pitchConstants.yellow_b_low, pitchConstants.yellow_b_high);
-		setSliderVals(yellow_h, pitchConstants.yellow_h_low, pitchConstants.yellow_h_high);
-		setSliderVals(yellow_s, pitchConstants.yellow_s_low, pitchConstants.yellow_s_high);
-		setSliderVals(yellow_v, pitchConstants.yellow_v_low, pitchConstants.yellow_v_high);
 		
 		/* Grey slider */
 		setSliderVals(grey_r, pitchConstants.grey_r_low, pitchConstants.grey_r_high);
 		setSliderVals(grey_g, pitchConstants.grey_g_low, pitchConstants.grey_g_high);
 		setSliderVals(grey_b, pitchConstants.grey_b_low, pitchConstants.grey_b_high);
-		setSliderVals(grey_h, pitchConstants.grey_h_low, pitchConstants.grey_h_high);
-		setSliderVals(grey_s, pitchConstants.grey_s_low, pitchConstants.grey_s_high);
-		setSliderVals(grey_v, pitchConstants.grey_v_low, pitchConstants.grey_v_high);
 		
 		/* Green slider */
 		setSliderVals(green_r, pitchConstants.green_r_low, pitchConstants.green_r_high);
 		setSliderVals(green_g, pitchConstants.green_g_low, pitchConstants.green_g_high);
 		setSliderVals(green_b, pitchConstants.green_b_low, pitchConstants.green_b_high);
-		setSliderVals(green_h, pitchConstants.green_h_low, pitchConstants.green_h_high);
-		setSliderVals(green_s, pitchConstants.green_s_low, pitchConstants.green_s_high);
-		setSliderVals(green_v, pitchConstants.green_v_low, pitchConstants.green_v_high);
 		
 	}
 
