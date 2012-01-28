@@ -56,6 +56,16 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     private static Point[] corners = new Point[4];
     private static boolean cornersSet = false;
     private static Point mouseCo = new Point(0,0);
+    private int[] hsbLowBall = new int[3];
+    private int[] hsbHighBall = new int[3];
+    private int[] hsbLowBlue = new int[3];
+    private int[] hsbHighBlue = new int[3];
+    private int[] hsbLowYellow = new int[3];
+    private int[] hsbHighYellow = new int[3];
+    private int[] hsbLowGreen = new int[3];
+    private int[] hsbHighGreen = new int[3];
+    private int[] hsbLowGrey = new int[3];
+    private int[] hsbHighGrey = new int[3];
 
     /**
      * Default constructor.
@@ -128,8 +138,8 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
             } catch (Exception e) {}
         }
         mouseClick = false;
-        System.err.println(correctPoint(coords));
-        return correctPoint(coords);
+        System.err.println(coords);
+        return coords;
     }
     /*
     Get the threshold values for the objects in the match i.e. ball.
@@ -151,14 +161,25 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     //Set the sliders on the GUI, the messages are used to tell the user what to click
     public void getColors(){
         thresholdGUI.setBallValues(getClickColor("Click the ball"));
+        hsbLowBall = hsbValues(thresholdsState.getBall_r_low(),thresholdsState.getBall_g_low(),thresholdsState.getBall_b_low(), -25);
+        hsbHighBall = hsbValues(thresholdsState.getBall_r_high(),thresholdsState.getBall_g_high(),thresholdsState.getBall_b_high(), 25);
         
         thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
+        hsbLowYellow = hsbValues(thresholdsState.getYellow_r_low(),thresholdsState.getYellow_g_low(),thresholdsState.getYellow_b_low(), -25);
+        hsbHighYellow = hsbValues(thresholdsState.getYellow_r_high(),thresholdsState.getYellow_g_high(),thresholdsState.getYellow_b_high(), 25);
         
         thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
+        hsbLowBlue = hsbValues(thresholdsState.getBlue_r_low(),thresholdsState.getBlue_g_low(),thresholdsState.getBlue_b_low(), -25);
+        hsbHighBlue = hsbValues(thresholdsState.getBlue_r_high(),thresholdsState.getBlue_g_high(),thresholdsState.getBlue_b_high(), 25);
         
         thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
+        hsbLowGreen = hsbValues(thresholdsState.getGreen_r_low(),thresholdsState.getGreen_g_low(),thresholdsState.getGreen_b_low(), -25);
+        hsbHighGreen = hsbValues(thresholdsState.getGreen_r_high(),thresholdsState.getGreen_g_high(),thresholdsState.getGreen_b_high(), 25);
+
         
         thresholdGUI.setGreyValues(getClickColor("Click a grey circle"));
+        hsbLowGrey = hsbValues(thresholdsState.getGrey_r_low(),thresholdsState.getGrey_g_low(),thresholdsState.getGrey_b_low(), -25);
+        hsbHighGrey = hsbValues(thresholdsState.getGrey_r_high(),thresholdsState.getGrey_g_high(),thresholdsState.getGrey_b_high(), 25);
         
     }
     
@@ -585,11 +606,9 @@ z
     }
      
     private boolean isBlue(Color color, float[] hsbvals) {
-        int[] hsbLow = hsbValues(thresholdsState.getBlue_r_low(),thresholdsState.getBlue_g_low(),thresholdsState.getBlue_b_low(), -25);
-        int[] hsbHigh = hsbValues(thresholdsState.getBlue_r_high(),thresholdsState.getBlue_g_high(),thresholdsState.getBlue_b_high(), 25);
-        return hsbvals[0] <= hsbHigh[0] && hsbvals[0] >= hsbLow[0] &&
-        hsbvals[1] <= hsbHigh[1] && hsbvals[1] >= hsbLow[1] &&
-        hsbvals[2] <= hsbHigh[2] && hsbvals[2] >= hsbLow[2] &&
+        return hsbvals[0] <= hsbHighBlue[0] && hsbvals[0] >= hsbLowBlue[0] &&
+        hsbvals[1] <= hsbHighBlue[1] && hsbvals[1] >= hsbLowBlue[1] &&
+        hsbvals[2] <= hsbHighBlue[2] && hsbvals[2] >= hsbLowBlue[2] &&
         color.getRed() <= thresholdsState.getBlue_r_high() && color.getRed() >= thresholdsState.getBlue_r_low() &&
         color.getGreen() <= thresholdsState.getBlue_g_high() && color.getGreen() >= thresholdsState.getBlue_g_low() &&
         color.getBlue() <= thresholdsState.getBlue_b_high() && color.getBlue() >= thresholdsState.getBlue_b_low();
@@ -607,13 +626,9 @@ z
      *                      false otherwise.
      */
     private boolean isYellow(Color colour, float[] hsbvals) {
-    
-        int[] hsbLow = hsbValues(thresholdsState.getYellow_r_low(),thresholdsState.getYellow_g_low(),thresholdsState.getYellow_b_low(), -25);
-        int[] hsbHigh = hsbValues(thresholdsState.getYellow_r_high(),thresholdsState.getYellow_g_high(),thresholdsState.getYellow_b_high(), 25);
-        
-        return hsbvals[0] <= hsbHigh[0] && hsbvals[0] >= hsbLow[0] &&
-        hsbvals[1] <= hsbHigh[1] && hsbvals[1] >= hsbLow[1] &&
-        hsbvals[2] <= hsbHigh[2] && hsbvals[2] >= hsbLow[2] &&
+        return hsbvals[0] <= hsbHighYellow[0] && hsbvals[0] >= hsbLowYellow[0] &&
+        hsbvals[1] <= hsbHighYellow[1] && hsbvals[1] >= hsbLowYellow[1] &&
+        hsbvals[2] <= hsbHighYellow[2] && hsbvals[2] >= hsbLowYellow[2] &&
         colour.getRed() <= thresholdsState.getYellow_r_high() &&  colour.getRed() >= thresholdsState.getYellow_r_low() &&
         colour.getGreen() <= thresholdsState.getYellow_g_high() && colour.getGreen() >= thresholdsState.getYellow_g_low() &&
         colour.getBlue() <= thresholdsState.getYellow_b_high() && colour.getBlue() >= thresholdsState.getYellow_b_low();
@@ -631,13 +646,9 @@ z
      *                      false otherwise.
      */
     private boolean isBall(Color colour, float[] hsbvals) {
-    
-        int[] hsbLow = hsbValues(thresholdsState.getBall_r_low(),thresholdsState.getBall_g_low(),thresholdsState.getBall_b_low(), -25);
-        int[] hsbHigh = hsbValues(thresholdsState.getBall_r_high(),thresholdsState.getBall_g_high(),thresholdsState.getBall_b_high(), 25);
-        
-        return hsbvals[0] <= hsbHigh[0] && hsbvals[0] >= hsbLow[0] &&
-        hsbvals[1] <= hsbHigh[1] && hsbvals[1] >= hsbLow[1] &&
-        hsbvals[2] <= hsbHigh[2] && hsbvals[2] >= hsbLow[2] &&
+        return hsbvals[0] <= hsbHighBall[0] && hsbvals[0] >= hsbLowBall[0] &&
+        hsbvals[1] <= hsbHighBall[1] && hsbvals[1] >= hsbLowBall[1] &&
+        hsbvals[2] <= hsbHighBall[2] && hsbvals[2] >= hsbLowBall[2] &&
         colour.getRed() <= thresholdsState.getBall_r_high() &&  colour.getRed() >= thresholdsState.getBall_r_low() &&
         colour.getGreen() <= thresholdsState.getBall_g_high() && colour.getGreen() >= thresholdsState.getBall_g_low() &&
         colour.getBlue() <= thresholdsState.getBall_b_high() && colour.getBlue() >= thresholdsState.getBall_b_low();
@@ -655,13 +666,9 @@ z
      *                      false otherwise.
      */
     private boolean isGrey(Color colour, float[] hsbvals) {
-    
-        int[] hsbLow = hsbValues(thresholdsState.getGrey_r_low(),thresholdsState.getGrey_g_low(),thresholdsState.getGrey_b_low(), -25);
-        int[] hsbHigh = hsbValues(thresholdsState.getGrey_r_high(),thresholdsState.getGrey_g_high(),thresholdsState.getGrey_b_high(), 25);
-        
-        return hsbvals[0] <= hsbHigh[0] && hsbvals[0] >= hsbLow[0] &&
-        hsbvals[1] <= hsbHigh[1] && hsbvals[1] >= hsbLow[1] &&
-        hsbvals[2] <= hsbHigh[2] && hsbvals[2] >= hsbLow[2] &&
+        return hsbvals[0] <= hsbHighGrey[0] && hsbvals[0] >= hsbLowGrey[0] &&
+        hsbvals[1] <= hsbHighGrey[1] && hsbvals[1] >= hsbLowGrey[1] &&
+        hsbvals[2] <= hsbHighGrey[2] && hsbvals[2] >= hsbLowGrey[2] &&
         colour.getRed() <= thresholdsState.getGrey_r_high() &&  colour.getRed() >= thresholdsState.getGrey_r_low() &&
         colour.getGreen() <= thresholdsState.getGrey_g_high() && colour.getGreen() >= thresholdsState.getGrey_g_low() &&
         colour.getBlue() <= thresholdsState.getGrey_b_high() && colour.getBlue() >= thresholdsState.getGrey_b_low();
@@ -679,13 +686,9 @@ z
      *                      false otherwise.
      */
     private boolean isGreen(Color colour, float[] hsbvals) {
-
-        int[] hsbLow = hsbValues(thresholdsState.getGreen_r_low(),thresholdsState.getGreen_g_low(),thresholdsState.getGreen_b_low(), -25);
-        int[] hsbHigh = hsbValues(thresholdsState.getGreen_r_high(),thresholdsState.getGreen_g_high(),thresholdsState.getGreen_b_high(), 25);
-        
-        return hsbvals[0] <= hsbHigh[0] && hsbvals[0] >= hsbLow[0] &&
-        hsbvals[1] <= hsbHigh[1] && hsbvals[1] >= hsbLow[1] &&
-        hsbvals[2] <= hsbHigh[2] && hsbvals[2] >= hsbLow[2] &&
+        return hsbvals[0] <= hsbHighGreen[0] && hsbvals[0] >= hsbLowGreen[0] &&
+        hsbvals[1] <= hsbHighGreen[1] && hsbvals[1] >= hsbLowGreen[1] &&
+        hsbvals[2] <= hsbHighGreen[2] && hsbvals[2] >= hsbLowGreen[2] &&
         colour.getRed() <= thresholdsState.getGreen_r_high() &&  colour.getRed() >= thresholdsState.getGreen_r_low() &&
         colour.getGreen() <= thresholdsState.getGreen_g_high() && colour.getGreen() >= thresholdsState.getGreen_g_low() &&
         colour.getBlue() <= thresholdsState.getGreen_b_high() && colour.getBlue() >= thresholdsState.getGreen_b_low();
