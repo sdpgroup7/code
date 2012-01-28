@@ -1,6 +1,6 @@
 public class FeedProcessor{
 
-    public FeedProcessor{
+    public FeedProcessor(){
 
     }
 
