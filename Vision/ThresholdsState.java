@@ -5,6 +5,9 @@
  * @author s0840449
  *
  */
+ 
+import java.awt.Color;
+
 public class ThresholdsState {
 	
 	/* Ball. */

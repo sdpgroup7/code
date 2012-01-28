@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -32,10 +33,10 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 
 
 
-//TODO: The points returned when we click are out somehow. Click on the ball for example and you can see that it returns the wrong colour - just called correctPoint in the choose colour bit, and it seems to have a done the job
-//		I verified this when I drew lines on the image as they were not in the place I clicked. 
+//TODO: The points returned when we click are out somehow. Click on the ball for example and you can see that it returns the wrong colour
+//        I verified this when I drew lines on the image as they were not in the place I clicked. 
 
-public class VisionFeed extends WindowAdapter implements MouseListener{
+public class VisionFeed extends WindowAdapter implements MouseListener, MouseMotionListener {
     private VideoDevice videoDev;
     private JLabel label;
     private JFrame windowFrame;
@@ -51,12 +52,20 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     private Color[] objects = new Color[5];
     private int objectIndex = 0;
     private BufferedImage frameImage;
-	private ControlGUI thresholdGUI;
-	private static Point[] corners = new Point[4];
-	private static boolean cornersSet = false;
-
-    //private int[] xDistortion;
-    //private int[] yDistortion;
+    private ControlGUI thresholdGUI;
+    private static Point[] corners = new Point[4];
+    private static boolean cornersSet = false;
+    private static Point mouseCo = new Point(0,0);
+    private int[] hsbLowBall = new int[3];
+    private int[] hsbHighBall = new int[3];
+    private int[] hsbLowBlue = new int[3];
+    private int[] hsbHighBlue = new int[3];
+    private int[] hsbLowYellow = new int[3];
+    private int[] hsbHighYellow = new int[3];
+    private int[] hsbLowGreen = new int[3];
+    private int[] hsbHighGreen = new int[3];
+    private int[] hsbLowGrey = new int[3];
+    private int[] hsbHighGrey = new int[3];
 
     /**
      * Default constructor.
@@ -85,12 +94,11 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         /* Initialise the GUI that displays the video feed. */
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         initGUI();
-		this.thresholdGUI = thresholdsGUI;
-		getColors();
-		getCorners();
+        this.thresholdGUI = thresholdsGUI;
+        getColors();
+        getCorners();
     }
     
-
 	public void getCorners(){
 	
 	    /*
@@ -129,9 +137,10 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
                 Thread.sleep(100);
             } catch (Exception e) {}
         }
-		mouseClick = false;
-        return correctPoint(coords);
-	}
+        mouseClick = false;
+        System.err.println(coords);
+        return coords;
+    }
     /*
     Get the threshold values for the objects in the match i.e. ball.
     Registers the mouse clicks after being asked to by getColors
@@ -144,7 +153,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
                 Thread.sleep(100);
             } catch (Exception e) {}
         }
-		mouseClick = false;
+        mouseClick = false;
         return getColor(coords, frameImage);
     }
 
@@ -152,10 +161,26 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     //Set the sliders on the GUI, the messages are used to tell the user what to click
     public void getColors(){
         thresholdGUI.setBallValues(getClickColor("Click the ball"));
+        hsbLowBall = hsbValues(thresholdsState.getBall_r_low(),thresholdsState.getBall_g_low(),thresholdsState.getBall_b_low(), -25);
+        hsbHighBall = hsbValues(thresholdsState.getBall_r_high(),thresholdsState.getBall_g_high(),thresholdsState.getBall_b_high(), 25);
+        
         thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
+        hsbLowYellow = hsbValues(thresholdsState.getYellow_r_low(),thresholdsState.getYellow_g_low(),thresholdsState.getYellow_b_low(), -25);
+        hsbHighYellow = hsbValues(thresholdsState.getYellow_r_high(),thresholdsState.getYellow_g_high(),thresholdsState.getYellow_b_high(), 25);
+        
         thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
+        hsbLowBlue = hsbValues(thresholdsState.getBlue_r_low(),thresholdsState.getBlue_g_low(),thresholdsState.getBlue_b_low(), -25);
+        hsbHighBlue = hsbValues(thresholdsState.getBlue_r_high(),thresholdsState.getBlue_g_high(),thresholdsState.getBlue_b_high(), 25);
+        
         thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
+        hsbLowGreen = hsbValues(thresholdsState.getGreen_r_low(),thresholdsState.getGreen_g_low(),thresholdsState.getGreen_b_low(), -25);
+        hsbHighGreen = hsbValues(thresholdsState.getGreen_r_high(),thresholdsState.getGreen_g_high(),thresholdsState.getGreen_b_high(), 25);
+
+        
         thresholdGUI.setGreyValues(getClickColor("Click a grey circle"));
+        hsbLowGrey = hsbValues(thresholdsState.getGrey_r_low(),thresholdsState.getGrey_g_low(),thresholdsState.getGrey_b_low(), -25);
+        hsbHighGrey = hsbValues(thresholdsState.getGrey_r_high(),thresholdsState.getGrey_g_high(),thresholdsState.getGrey_b_high(), 25);
+        
     }
     
     //useless, had to be included because of the MouseEvent interface
@@ -163,6 +188,12 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     public void mouseEntered(MouseEvent e){}
     public void mousePressed(MouseEvent e){}
     public void mouseReleased(MouseEvent e){}
+    public void mouseMoved(MouseEvent e) {
+        mouseCo = correctPoint(e.getPoint());
+    }
+    public void mouseDragged(MouseEvent e) {
+        mouseCo = correctPoint(e.getPoint());
+    }
 
      /**
      * Initialises a FrameGrabber object with the given parameters.
@@ -176,8 +207,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
      *
      * @throws V4L4JException   If any parameter is invalid.
      */
-    private void initFrameGrabber(String videoDevice, int inWidth, int inHeight, int channel,
-            int videoStandard, int compressionQuality) throws V4L4JException {
+    private void initFrameGrabber(String videoDevice, int inWidth, int inHeight, int channel, int videoStandard, int compressionQuality) throws V4L4JException {
         videoDev = new VideoDevice(videoDevice);
 
         DeviceInfo deviceInfo = videoDev.getDeviceInfo();
@@ -187,8 +217,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         }
         ImageFormat imageFormat = deviceInfo.getFormatList().getNativeFormat(0);
 
-        frameGrabber = videoDev.getJPEGFrameGrabber(inWidth, inHeight, channel, videoStandard,
-                compressionQuality, imageFormat);
+        frameGrabber = videoDev.getJPEGFrameGrabber(inWidth, inHeight, channel, videoStandard, compressionQuality, imageFormat);
 
         frameGrabber.setCaptureCallback(new CaptureCallback() {
             public void exceptionReceived(V4L4JException e) {
@@ -205,7 +234,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         });
 
         frameGrabber.startCapture();
-
+        //System.err.println("Video Frame width,height: " + frameGrabber.getWidth() + "," + frameGrabber.getHeight());
         width = frameGrabber.getWidth();
         height = frameGrabber.getHeight();
     }
@@ -220,24 +249,22 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         windowFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         windowFrame.addWindowListener(this);
         windowFrame.setVisible(true);
-        windowFrame.setSize(width, height);
+        //windowFrame.setSize(width, height);
+        windowFrame.setSize(width+5, height+25);
+        //System.err.println("JFrame width,height: " + windowFrame.getSize().width + "," + windowFrame.getSize().height);
         windowFrame.addMouseListener(this);
+        windowFrame.addMouseMotionListener(this);
     }
     
     //When the mouse has been clicked get the location.
     public void mouseClicked(MouseEvent e){
-        coords = e.getPoint();
-        System.err.println(coords.toString());
+        coords = correctPoint(e.getPoint());
         mouseClick = true;
     }
     
-    /*
-    Corrects the points (working hypothesis currently is that they are
-    off due to distortion, may need slight calculation
-	*/
-	public Point correctPoint(Point p){
-		return new Point(p.x-6,p.y-27);
-	}
+    public Point correctPoint(Point p){
+        return new Point(p.x-4,p.y-24);
+    }
 
     /*
     Get the colour where the mouse was clicked.  Takes an average of the adjacent
@@ -245,8 +272,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
     */
     public Color getColor(Point p, BufferedImage image){
         //writeImage(image,"test.png");
-        
-        p = correctPoint(p);
 
         Color[] temp = new Color[9];
         temp[0] = new Color(image.getRGB(p.x-1,p.y-1));
@@ -260,17 +285,17 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         temp[8] = new Color(image.getRGB(p.x+1,p.y+1));
         
         int avgr = 0;
-		int avgg = 0;
-		int avgb = 0;
+        int avgg = 0;
+        int avgb = 0;
 
         for(int i = 0;i<9;i++){
             avgr += temp[i].getRed();
-			avgg += temp[i].getGreen();
-			avgb += temp[i].getBlue();
+            avgg += temp[i].getGreen();
+            avgb += temp[i].getBlue();
         }
         avgr = avgr/9;
-		avgg = avgg/9;
-		avgb = avgb/9;
+        avgg = avgg/9;
+        avgb = avgb/9;
 
         Color avgColor = new Color(avgr,avgg,avgb);
         System.err.println(avgColor.toString());
@@ -287,34 +312,39 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         } catch (Exception e) {}
     }
 
-	//crops the image based on the corner values and then stretches that back up to 640x480
-	private static BufferedImage stretchImage(BufferedImage image) {
-		if(cornersSet){
-			int width = 640;
-			int height = 480;
-			
-			//currently instead of cropping and stretching the image it simply draws on the borders of where it would crop to in blue
-			for(int x = 0;x<width;x++){
-				for(int y = 0;y<height;y++){
-					if((x == corners[0].x) || (y == corners[0].y) || (x == corners[2].x) || (y == corners[2].y)){
-						image.setRGB(x,y,(255 << 24) + 255);
-					}
-				}
-			}
-			return image;
-	
-			/*BufferedImage croppedImage = new BufferedImage(corners[1].x - corners[0].x,corners[2].y - corners[1].y,BufferedImage.TYPE_INT_ARGB);
-			
-			for(int i = corners[0].x;i<corners[1].x;i++){
-				for(int j = corners[1].y;j<corners[2].y;j++){
-					croppedImage.setRGB(i-corners[0].x,j-corners[1].y,image.getRGB(i,j));
-				}
-			}
-			return croppedImage;*/
-		} else {
-			return image;
-		}
-	}
+    //crops the image based on the corner values and then stretches that back up to 640x480
+    private static BufferedImage markImage(BufferedImage image) {
+        int width = 640;
+        int height = 480;
+        
+
+        /*if(!cornersSet){
+            for(int x = 0;x<width;x++){
+                for(int y = 0;y<height;y++){
+                    if((x == mouseCo.x) || (y == mouseCo.y)){
+                        image.setRGB(x,y,(255 << 24) + 255);
+                    }
+                }
+            }
+        }*/
+        if(cornersSet){
+            //currently instead of cropping and stretching the image it simply draws on the borders of where it would crop to in blue
+            for(int x = 0;x<width;x++){
+                for(int y = 0;y<height;y++){
+                    if((x == corners[0].x) || (y == corners[0].y) || (x == corners[2].x) || (y == corners[2].y)){
+                        image.setRGB(x,y,(255 << 24) + 255);
+                    }
+                    if((x == mouseCo.x) || (y == mouseCo.y)){
+                        image.setRGB(x,y,(255 << 24) + 255);
+                    }
+                }
+            }
+            return image;
+
+        } else {
+            return image;
+        }
+    }
 
 
     /**
@@ -342,44 +372,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
      */
     public void processAndUpdateImage(BufferedImage image, long before) {
 
-        /*
-        //Lens distortion - not working fully
-        BufferedImage image = new BufferedImage(input.getWidth(), input.getHeight(), BufferedImage.TYPE_INT_RGB);
-
-
-        int centerX = 320;
-        int centerY = 240;
-        float k = (float) 0.006;
-
-        for (int i = 0; i < 480; i++) {
-            for (int j = 0; j < 640; j++) {
-                int x = (int) Math.floor(getRadialX(j, i, centerX, centerY, (float) Math.pow(k, 2)));
-                int y = (int) Math.floor(getRadialY(j, i, centerX, centerY, (float) Math.pow(k, 2)));
-
-                if (y >= 480) { y = 1; }
-                if (x >= 640) { x = 1; }
-                if (y < 0) { y = 1; }
-                if (x < 0) { x = 1; }
-
-                image.setRGB(j, i, input.getRGB(x, y));
-            }
-        }
-        */
-
-
-        /*
-        for (int i = 0; i < image.getHeight(); i++) {
-            for (int j = 0; j < image.getWidth(); j++) {
-                image.setRGB(j, i, input.getRGB(xDistortion[j], yDistortion[i]));
-                //image.setRGB(j, i, input.getRGB(j, i));
-            }
-        }
-        */
-
-		/*NormaliseRGB nrgb = new NormaliseRGB();
-		image = nrgb.normalise(image);*/
-
-		image = stretchImage(image);
+        image = markImage(image);
 
         int ballX = 0;
         int ballY = 0;
@@ -498,7 +491,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
             ball = new Position(worldState.getBallX(), worldState.getBallY());
         }
 
-        /* If we have only found a few 'Blue' pixels, chances are that the ball has not
+        /* If we have only found a few 'Blue' pixels, chances are that the blue bot has not
          * actually been detected. */
         if (numBluePos > 0) {
             blueX /= numBluePos;
@@ -511,7 +504,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
             blue = new Position(worldState.getBlueX(), worldState.getBlueY());
         }
 
-        /* If we have only found a few 'Yellow' pixels, chances are that the ball has not
+        /* If we have only found a few 'Yellow' pixels, chances are that the yellow bot has not
          * actually been detected. */
         if (numYellowPos > 0) {
             yellowX /= numYellowPos;
@@ -536,7 +529,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
             }
         } catch (NoAngleException e) {
             worldState.setBlueOrientation(worldState.getBlueOrientation());
-            System.out.println("Blue robot: " + e.getMessage());
         }
 
 
@@ -550,7 +542,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
             }
         } catch (NoAngleException e) {
             worldState.setYellowOrientation(worldState.getYellowOrientation());
-            System.out.println("Yellow robot: " + e.getMessage());
         }
 
 
@@ -580,15 +571,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
             imageGraphics.drawOval(yellow.getX()-15, yellow.getY()-15, 30,30);
             imageGraphics.setColor(Color.white);
 
-            /*
-            float ax = (float) Math.cos(worldState.getBlueOrientation());
-            float ay = (float) Math.sin(worldState.getBlueOrientation());
-            imageGraphics.drawLine(blue.getX(), blue.getY(), (int) (ax*70), (int) (ay*70));
-
-            ax = (float) Math.sin(worldState.getYellowOrientation());
-            ay = (float) Math.cos(worldState.getYellowOrientation());
-            imageGraphics.drawLine(yellow.getX(), yellow.getY(), (int) (ax*70), (int) (ay*70));
-            */
         }
 
         /* Used to calculate the FPS. */
@@ -600,7 +582,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
         imageGraphics.drawString("FPS: " + fps, 15, 15);
         frameGraphics.drawImage(image, 0, 0, width, height, null);
     }
-
+z
     /**
      * Determines if a pixel is part of the blue T, based on input RGB colours
      * and hsv values.
@@ -612,10 +594,21 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
      *                      thresholds (and thus the pixel is part of the blue T),
      *                      false otherwise.
      */
+    
+    private int[] hsbValues(int r, int g, int b, int thresh){
+        float[] hsb = new float[3];
+        int[] hsbInt = new int[3];
+        Color.RGBtoHSB(r,g,b,hsb);
+        for(int i = 0; i < 3; i++){
+            hsbInt[i] = (int)hsb[i] + thresh;
+        }
+        return hsbInt;
+    }
+     
     private boolean isBlue(Color color, float[] hsbvals) {
-        return hsbvals[0] <= thresholdsState.getBlue_h_high() && hsbvals[0] >= thresholdsState.getBlue_h_low() &&
-        hsbvals[1] <= thresholdsState.getBlue_s_high() && hsbvals[1] >= thresholdsState.getBlue_s_low() &&
-        hsbvals[2] <= thresholdsState.getBlue_v_high() && hsbvals[2] >= thresholdsState.getBlue_v_low() &&
+        return hsbvals[0] <= hsbHighBlue[0] && hsbvals[0] >= hsbLowBlue[0] &&
+        hsbvals[1] <= hsbHighBlue[1] && hsbvals[1] >= hsbLowBlue[1] &&
+        hsbvals[2] <= hsbHighBlue[2] && hsbvals[2] >= hsbLowBlue[2] &&
         color.getRed() <= thresholdsState.getBlue_r_high() && color.getRed() >= thresholdsState.getBlue_r_low() &&
         color.getGreen() <= thresholdsState.getBlue_g_high() && color.getGreen() >= thresholdsState.getBlue_g_low() &&
         color.getBlue() <= thresholdsState.getBlue_b_high() && color.getBlue() >= thresholdsState.getBlue_b_low();
@@ -633,9 +626,9 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
      *                      false otherwise.
      */
     private boolean isYellow(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= thresholdsState.getYellow_h_high() && hsbvals[0] >= thresholdsState.getYellow_h_low() &&
-        hsbvals[1] <= thresholdsState.getYellow_s_high() &&  hsbvals[1] >= thresholdsState.getYellow_s_low() &&
-        hsbvals[2] <= thresholdsState.getYellow_v_high() &&  hsbvals[2] >= thresholdsState.getYellow_v_low() &&
+        return hsbvals[0] <= hsbHighYellow[0] && hsbvals[0] >= hsbLowYellow[0] &&
+        hsbvals[1] <= hsbHighYellow[1] && hsbvals[1] >= hsbLowYellow[1] &&
+        hsbvals[2] <= hsbHighYellow[2] && hsbvals[2] >= hsbLowYellow[2] &&
         colour.getRed() <= thresholdsState.getYellow_r_high() &&  colour.getRed() >= thresholdsState.getYellow_r_low() &&
         colour.getGreen() <= thresholdsState.getYellow_g_high() && colour.getGreen() >= thresholdsState.getYellow_g_low() &&
         colour.getBlue() <= thresholdsState.getYellow_b_high() && colour.getBlue() >= thresholdsState.getYellow_b_low();
@@ -653,9 +646,9 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
      *                      false otherwise.
      */
     private boolean isBall(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= thresholdsState.getBall_h_high() && hsbvals[0] >= thresholdsState.getBall_h_low() &&
-        hsbvals[1] <= thresholdsState.getBall_s_high() &&  hsbvals[1] >= thresholdsState.getBall_s_low() &&
-        hsbvals[2] <= thresholdsState.getBall_v_high() &&  hsbvals[2] >= thresholdsState.getBall_v_low() &&
+        return hsbvals[0] <= hsbHighBall[0] && hsbvals[0] >= hsbLowBall[0] &&
+        hsbvals[1] <= hsbHighBall[1] && hsbvals[1] >= hsbLowBall[1] &&
+        hsbvals[2] <= hsbHighBall[2] && hsbvals[2] >= hsbLowBall[2] &&
         colour.getRed() <= thresholdsState.getBall_r_high() &&  colour.getRed() >= thresholdsState.getBall_r_low() &&
         colour.getGreen() <= thresholdsState.getBall_g_high() && colour.getGreen() >= thresholdsState.getBall_g_low() &&
         colour.getBlue() <= thresholdsState.getBall_b_high() && colour.getBlue() >= thresholdsState.getBall_b_low();
@@ -673,9 +666,9 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
      *                      false otherwise.
      */
     private boolean isGrey(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= thresholdsState.getGrey_h_high() && hsbvals[0] >= thresholdsState.getGrey_h_low() &&
-        hsbvals[1] <= thresholdsState.getGrey_s_high() &&  hsbvals[1] >= thresholdsState.getGrey_s_low() &&
-        hsbvals[2] <= thresholdsState.getGrey_v_high() &&  hsbvals[2] >= thresholdsState.getGrey_v_low() &&
+        return hsbvals[0] <= hsbHighGrey[0] && hsbvals[0] >= hsbLowGrey[0] &&
+        hsbvals[1] <= hsbHighGrey[1] && hsbvals[1] >= hsbLowGrey[1] &&
+        hsbvals[2] <= hsbHighGrey[2] && hsbvals[2] >= hsbLowGrey[2] &&
         colour.getRed() <= thresholdsState.getGrey_r_high() &&  colour.getRed() >= thresholdsState.getGrey_r_low() &&
         colour.getGreen() <= thresholdsState.getGrey_g_high() && colour.getGreen() >= thresholdsState.getGrey_g_low() &&
         colour.getBlue() <= thresholdsState.getGrey_b_high() && colour.getBlue() >= thresholdsState.getGrey_b_low();
@@ -693,9 +686,9 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
      *                      false otherwise.
      */
     private boolean isGreen(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= thresholdsState.getGreen_h_high() && hsbvals[0] >= thresholdsState.getGreen_h_low() &&
-        hsbvals[1] <= thresholdsState.getGreen_s_high() &&  hsbvals[1] >= thresholdsState.getGreen_s_low() &&
-        hsbvals[2] <= thresholdsState.getGreen_v_high() &&  hsbvals[2] >= thresholdsState.getGreen_v_low() &&
+        return hsbvals[0] <= hsbHighGreen[0] && hsbvals[0] >= hsbLowGreen[0] &&
+        hsbvals[1] <= hsbHighGreen[1] && hsbvals[1] >= hsbLowGreen[1] &&
+        hsbvals[2] <= hsbHighGreen[2] && hsbvals[2] >= hsbLowGreen[2] &&
         colour.getRed() <= thresholdsState.getGreen_r_high() &&  colour.getRed() >= thresholdsState.getGreen_r_low() &&
         colour.getGreen() <= thresholdsState.getGreen_g_high() && colour.getGreen() >= thresholdsState.getGreen_g_low() &&
         colour.getBlue() <= thresholdsState.getGreen_b_high() && colour.getBlue() >= thresholdsState.getGreen_b_low();
@@ -954,29 +947,4 @@ public class VisionFeed extends WindowAdapter implements MouseListener{
 
         return angle;
     }
-
-    /* Doesn't work */
-    /*
-    private void calculateDistortion() {
-        this.xDistortion = new int[640];
-        this.yDistortion = new int[480];
-
-        int centerX = 320;
-        int centerY = 240;
-        float k = (float) 0.01;
-
-        for (int i = 0; i < 480; i++) {
-            for (int j = 0; j < 640; j++) {
-                int x = (int) Math.floor(getRadialX(j, i, centerX, centerY, (float) Math.pow(k, 2)));
-                int y = (int) Math.floor(getRadialY(j, i, centerX, centerY, (float) Math.pow(k, 2)));
-
-                if (y >= 480) { y = 240; }
-                if (x >= 640) { x = 320; }
-
-                xDistortion[j] = x;
-                yDistortion[i] = y;
-            }
-        }
-    }
-    */
 }

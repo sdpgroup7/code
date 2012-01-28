@@ -25,7 +25,7 @@ public class Vision {
         PitchConstants pitchConstants = new PitchConstants(0);
         /* Default values for the main vision window. */
         String videoDevice = "/dev/video0";
-        int width = 640;
+        int width = 640; //these dont actually appear to do anything?
         int height = 480;
         int channel = 0;
         int videoStandard = V4L4JConstants.STANDARD_PAL;
