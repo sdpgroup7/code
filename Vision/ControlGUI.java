@@ -464,10 +464,10 @@ public class ControlGUI implements ChangeListener {
 					 * TODO: This currently means that cross-saving values
 					 * is basically unsupported as they will overwrite the
 					 * pitch dimensions incorrectly.*/
-					writer.write(String.valueOf(pitchConstants.topBuffer) + "\n");
-					writer.write(String.valueOf(pitchConstants.bottomBuffer) + "\n");
-					writer.write(String.valueOf(pitchConstants.leftBuffer) + "\n");
-					writer.write(String.valueOf(pitchConstants.rightBuffer) + "\n");
+					writer.write(String.valueOf(pitchConstants.getTopBuffer()) + "\n");
+					writer.write(String.valueOf(pitchConstants.getBottomBuffer()) + "\n");
+					writer.write(String.valueOf(pitchConstants.getLeftBuffer()) + "\n");
+					writer.write(String.valueOf(pitchConstants.getRightBuffer()) + "\n");
 					
 					writer.flush();
 					writer.close();
