@@ -33,8 +33,11 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 
 
 
+<<<<<<< HEAD
 //TODO: The points returned when we click are out somehow. Click on the ball for example and you can see that it returns the wrong colour
 //        I verified this when I drew lines on the image as they were not in the place I clicked. 
+=======
+>>>>>>> 14080c0299fa7ddba0053432f13a5ce5224d689d
 
 public class VisionFeed extends WindowAdapter implements MouseListener, MouseMotionListener {
     private VideoDevice videoDev;
@@ -93,31 +96,41 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     }
     
 
-    public void getCorners(){
-        Point[] bulges = new Point[4];
-        System.err.println("By bulge we mean the part of the pitch (in green) which sticks out the most in the specified direction");
-        bulges[0] = getCorner("Click the top bulge");
-        bulges[1] = getCorner("Click the right bulge");
-        bulges[2] = getCorner("Click the bottom bulge");
-        bulges[3] = getCorner("Click the left bulge");
+<<<<<<< HEAD
+=======
+	public void getCorners(){
+	
+	    /*
+	    Get the corners of the pitch by choosing the widest parts of the pitch in the horizontal
+	    and the vertical.  Gets bits not in the pitch because of distortion
+	    */
+		Point[] bulges = new Point[4];
+		System.err.println("By bulge we mean the part of the pitch (in green) which sticks out the most in the specified direction");
+		bulges[0] = getCorner("Click the top bulge");
+		bulges[1] = getCorner("Click the right bulge");
+		bulges[2] = getCorner("Click the bottom bulge");
+		bulges[3] = getCorner("Click the left bulge");
 
-        corners[0] = new Point(bulges[3].x,bulges[0].y);
-        corners[1] = new Point(bulges[1].x,bulges[0].y);
-        corners[2] = new Point(bulges[1].x,bulges[2].y);
-        corners[3] = new Point(bulges[3].x,bulges[2].y);
+		corners[0] = new Point(bulges[3].x,bulges[0].y);
+		corners[1] = new Point(bulges[1].x,bulges[0].y);
+		corners[2] = new Point(bulges[1].x,bulges[2].y);
+		corners[3] = new Point(bulges[3].x,bulges[2].y);
 
-        System.err.println("Corners:");
-        System.err.println(corners[0]);
-        System.err.println(corners[1]);
-        System.err.println(corners[2]);
-        System.err.println(corners[3]);
+		System.err.println("Corners:");
+		System.err.println(corners[0]);
+		System.err.println(corners[1]);
+		System.err.println(corners[2]);
+		System.err.println(corners[3]);
 
-        cornersSet = true;
-        
-    }
-
-    public Point getCorner(String message){
-        System.err.println(message);
+		cornersSet = true;
+		
+	}
+    /*
+    just register the mouse click after being asked to by getCorner
+    */
+	public Point getCorner(String message){
+		System.err.println(message);
+>>>>>>> 14080c0299fa7ddba0053432f13a5ce5224d689d
 
         while (!mouseClick) {
             try{
@@ -130,6 +143,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     }
     /*
     Get the threshold values for the objects in the match i.e. ball.
+    Registers the mouse clicks after being asked to by getColors
     */
     public Color getClickColor(String message){
         System.err.println(message);
@@ -228,6 +242,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     
     //When the mouse has been clicked get the location.
     public void mouseClicked(MouseEvent e){
+<<<<<<< HEAD
         coords = correctPoint(e.getPoint());
         mouseClick = true;
     }
@@ -235,14 +250,20 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     public Point correctPoint(Point p){
         return new Point(p.x-4,p.y-24);
     }
+=======
+>>>>>>> 14080c0299fa7ddba0053432f13a5ce5224d689d
 
     /*
     Get the colour where the mouse was clicked.  Takes an average of the adjacent
     pixels, but you should try and click centrally in the object still.
     */
     public Color getColor(Point p, BufferedImage image){
-
-        //writeImage(image,"test");
+<<<<<<< HEAD
+=======
+        //writeImage(image,"test.png");
+        
+        p = correctPoint(p);
+>>>>>>> 14080c0299fa7ddba0053432f13a5ce5224d689d
 
         Color[] temp = new Color[9];
         temp[0] = new Color(image.getRGB(p.x-1,p.y-1));
@@ -269,13 +290,14 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
         avgb = avgb/9;
 
         Color avgColor = new Color(avgr,avgg,avgb);
+        System.err.println(avgColor.toString());
         return avgColor;
     }
     
-    //can output the buffered image to disk, currently will try and normalise it.
+    //can output the buffered image to disk, can normalise if neccessary
     public void writeImage(BufferedImage image, String fn){
-        NormaliseRGB norm = new NormaliseRGB();
-        image = norm.normalise(image);
+        //NormaliseRGB norm = new NormaliseRGB();
+        //image = norm.normalise(image);
         try {
             File outputFile = new File(fn);
             ImageIO.write(image, "png", outputFile);
@@ -621,10 +643,23 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
      *                      thresholds (and thus the pixel is part of the blue T),
      *                      false otherwise.
      */
+    
+    private int[] hsbValues(int r, int g, int b, int thresh){
+        float[] hsb = new float[3];
+        int[] hsbInt = new int[3];
+        Color.RGBtoHSB(r,g,b,hsb);
+        for(int i = 0; i < 3; i++){
+            hsbInt[i] = (int)hsb[i] + thresh;
+        }
+        return hsbInt;
+    }
+     
     private boolean isBlue(Color color, float[] hsbvals) {
-        return hsbvals[0] <= thresholdsState.getBlue_h_high() && hsbvals[0] >= thresholdsState.getBlue_h_low() &&
-        hsbvals[1] <= thresholdsState.getBlue_s_high() && hsbvals[1] >= thresholdsState.getBlue_s_low() &&
-        hsbvals[2] <= thresholdsState.getBlue_v_high() && hsbvals[2] >= thresholdsState.getBlue_v_low() &&
+        int[] hsbLow = hsbValues(thresholdsState.getBlue_r_low(),thresholdsState.getBlue_g_low(),thresholdsState.getBlue_b_low(), -25);
+        int[] hsbHigh = hsbValues(thresholdsState.getBlue_r_high(),thresholdsState.getBlue_g_high(),thresholdsState.getBlue_b_high(), 25);
+        return hsbvals[0] <= hsbHigh[0] && hsbvals[0] >= hsbLow[0] &&
+        hsbvals[1] <= hsbHigh[1] && hsbvals[1] >= hsbLow[1] &&
+        hsbvals[2] <= hsbHigh[2] && hsbvals[2] >= hsbLow[2] &&
         color.getRed() <= thresholdsState.getBlue_r_high() && color.getRed() >= thresholdsState.getBlue_r_low() &&
         color.getGreen() <= thresholdsState.getBlue_g_high() && color.getGreen() >= thresholdsState.getBlue_g_low() &&
         color.getBlue() <= thresholdsState.getBlue_b_high() && color.getBlue() >= thresholdsState.getBlue_b_low();
@@ -642,9 +677,13 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
      *                      false otherwise.
      */
     private boolean isYellow(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= thresholdsState.getYellow_h_high() && hsbvals[0] >= thresholdsState.getYellow_h_low() &&
-        hsbvals[1] <= thresholdsState.getYellow_s_high() &&  hsbvals[1] >= thresholdsState.getYellow_s_low() &&
-        hsbvals[2] <= thresholdsState.getYellow_v_high() &&  hsbvals[2] >= thresholdsState.getYellow_v_low() &&
+    
+        int[] hsbLow = hsbValues(thresholdsState.getYellow_r_low(),thresholdsState.getYellow_g_low(),thresholdsState.getYellow_b_low(), -25);
+        int[] hsbHigh = hsbValues(thresholdsState.getYellow_r_high(),thresholdsState.getYellow_g_high(),thresholdsState.getYellow_b_high(), 25);
+        
+        return hsbvals[0] <= hsbHigh[0] && hsbvals[0] >= hsbLow[0] &&
+        hsbvals[1] <= hsbHigh[1] && hsbvals[1] >= hsbLow[1] &&
+        hsbvals[2] <= hsbHigh[2] && hsbvals[2] >= hsbLow[2] &&
         colour.getRed() <= thresholdsState.getYellow_r_high() &&  colour.getRed() >= thresholdsState.getYellow_r_low() &&
         colour.getGreen() <= thresholdsState.getYellow_g_high() && colour.getGreen() >= thresholdsState.getYellow_g_low() &&
         colour.getBlue() <= thresholdsState.getYellow_b_high() && colour.getBlue() >= thresholdsState.getYellow_b_low();
@@ -662,9 +701,13 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
      *                      false otherwise.
      */
     private boolean isBall(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= thresholdsState.getBall_h_high() && hsbvals[0] >= thresholdsState.getBall_h_low() &&
-        hsbvals[1] <= thresholdsState.getBall_s_high() &&  hsbvals[1] >= thresholdsState.getBall_s_low() &&
-        hsbvals[2] <= thresholdsState.getBall_v_high() &&  hsbvals[2] >= thresholdsState.getBall_v_low() &&
+    
+        int[] hsbLow = hsbValues(thresholdsState.getBall_r_low(),thresholdsState.getBall_g_low(),thresholdsState.getBall_b_low(), -25);
+        int[] hsbHigh = hsbValues(thresholdsState.getBall_r_high(),thresholdsState.getBall_g_high(),thresholdsState.getBall_b_high(), 25);
+        
+        return hsbvals[0] <= hsbHigh[0] && hsbvals[0] >= hsbLow[0] &&
+        hsbvals[1] <= hsbHigh[1] && hsbvals[1] >= hsbLow[1] &&
+        hsbvals[2] <= hsbHigh[2] && hsbvals[2] >= hsbLow[2] &&
         colour.getRed() <= thresholdsState.getBall_r_high() &&  colour.getRed() >= thresholdsState.getBall_r_low() &&
         colour.getGreen() <= thresholdsState.getBall_g_high() && colour.getGreen() >= thresholdsState.getBall_g_low() &&
         colour.getBlue() <= thresholdsState.getBall_b_high() && colour.getBlue() >= thresholdsState.getBall_b_low();
@@ -682,9 +725,13 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
      *                      false otherwise.
      */
     private boolean isGrey(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= thresholdsState.getGrey_h_high() && hsbvals[0] >= thresholdsState.getGrey_h_low() &&
-        hsbvals[1] <= thresholdsState.getGrey_s_high() &&  hsbvals[1] >= thresholdsState.getGrey_s_low() &&
-        hsbvals[2] <= thresholdsState.getGrey_v_high() &&  hsbvals[2] >= thresholdsState.getGrey_v_low() &&
+    
+        int[] hsbLow = hsbValues(thresholdsState.getGrey_r_low(),thresholdsState.getGrey_g_low(),thresholdsState.getGrey_b_low(), -25);
+        int[] hsbHigh = hsbValues(thresholdsState.getGrey_r_high(),thresholdsState.getGrey_g_high(),thresholdsState.getGrey_b_high(), 25);
+        
+        return hsbvals[0] <= hsbHigh[0] && hsbvals[0] >= hsbLow[0] &&
+        hsbvals[1] <= hsbHigh[1] && hsbvals[1] >= hsbLow[1] &&
+        hsbvals[2] <= hsbHigh[2] && hsbvals[2] >= hsbLow[2] &&
         colour.getRed() <= thresholdsState.getGrey_r_high() &&  colour.getRed() >= thresholdsState.getGrey_r_low() &&
         colour.getGreen() <= thresholdsState.getGrey_g_high() && colour.getGreen() >= thresholdsState.getGrey_g_low() &&
         colour.getBlue() <= thresholdsState.getGrey_b_high() && colour.getBlue() >= thresholdsState.getGrey_b_low();
@@ -702,9 +749,13 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
      *                      false otherwise.
      */
     private boolean isGreen(Color colour, float[] hsbvals) {
-        return hsbvals[0] <= thresholdsState.getGreen_h_high() && hsbvals[0] >= thresholdsState.getGreen_h_low() &&
-        hsbvals[1] <= thresholdsState.getGreen_s_high() &&  hsbvals[1] >= thresholdsState.getGreen_s_low() &&
-        hsbvals[2] <= thresholdsState.getGreen_v_high() &&  hsbvals[2] >= thresholdsState.getGreen_v_low() &&
+
+        int[] hsbLow = hsbValues(thresholdsState.getGreen_r_low(),thresholdsState.getGreen_g_low(),thresholdsState.getGreen_b_low(), -25);
+        int[] hsbHigh = hsbValues(thresholdsState.getGreen_r_high(),thresholdsState.getGreen_g_high(),thresholdsState.getGreen_b_high(), 25);
+        
+        return hsbvals[0] <= hsbHigh[0] && hsbvals[0] >= hsbLow[0] &&
+        hsbvals[1] <= hsbHigh[1] && hsbvals[1] >= hsbLow[1] &&
+        hsbvals[2] <= hsbHigh[2] && hsbvals[2] >= hsbLow[2] &&
         colour.getRed() <= thresholdsState.getGreen_r_high() &&  colour.getRed() >= thresholdsState.getGreen_r_low() &&
         colour.getGreen() <= thresholdsState.getGreen_g_high() && colour.getGreen() >= thresholdsState.getGreen_g_low() &&
         colour.getBlue() <= thresholdsState.getGreen_b_high() && colour.getBlue() >= thresholdsState.getGreen_b_low();
