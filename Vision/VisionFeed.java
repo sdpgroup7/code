@@ -52,6 +52,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     private static boolean buffersSet = false;
     private static Point mouseCo = new Point(0,0);
 
+
     /**
      * Default constructor.
      *
@@ -549,6 +550,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
      *                      thresholds (and thus the pixel is part of the blue T),
      *                      false otherwise.
      */
+
      
     private boolean isBlue(Color color) {
         return color.getRed() <= thresholdsState.getBlue_r_high() && color.getRed() >= thresholdsState.getBlue_r_low() &&
