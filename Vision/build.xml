@@ -33,7 +33,7 @@
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
-            <src path="src:../Strategy"/>
+            <src path="src:../Strategy/src"/>
             <classpath refid="Vision.classpath"/>
         </javac>
     </target>
