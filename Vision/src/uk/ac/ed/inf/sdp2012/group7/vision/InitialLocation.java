@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import javax.swing.JFrame;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
 
@@ -18,11 +19,15 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     private ControlGUI thresholdGUI;
     private VisionFeed visionFeed;
     private boolean buffersSet = false;
+    private JFrame windowFrame;
 
-    public InitialLocation(ControlGUI thresholdsGUI, VisionFeed visionFeed, PitchConstants pitchConstants) {
+    public InitialLocation(ControlGUI thresholdsGUI, VisionFeed visionFeed, PitchConstants pitchConstants, JFrame windowFrame) {
         this.thresholdGUI = thresholdsGUI;
         this.visionFeed = visionFeed;
         this.pitchConstants = pitchConstants;
+        this.windowFrame = windowFrame;
+        windowFrame.addMouseListener(this);
+        windowFrame.addMouseMotionListener(this);
     }
     
     public void mouseExited(MouseEvent e){}

@@ -9,25 +9,23 @@ import javax.swing.JLabel;
 public class FeedProcessor{
     
     private WorldState worldState = new WorldState();
-    private ThresholdsState thresholdsState = new ThresholdsState();
+    private ThresholdsState thresholdsState;
     private PitchConstants pitchConstants;
     private OrientationFinder orientationFinder;
 
-    private static Position ball;
-    private static Position blue;
-    private static Position yellow;
     private ColorDetection colorDetection;
     private InitialLocation initialLocation;
     
     private int height;
     private int width;
 
-    public FeedProcessor(InitialLocation il, int height, int width, PitchConstants pitchConstants){
-        this.colorDetection = new ColorDetection(thresholdsState);
+    public FeedProcessor(InitialLocation il, int height, int width, PitchConstants pitchConstants, ControlGUI controlGUI){
+        this.thresholdsState = controlGUI.getThresholdsState();
         this.initialLocation = il;
         this.height = height;
         this.width = width;
         this.pitchConstants = pitchConstants;
+        this.colorDetection = new ColorDetection(thresholdsState);
         this.orientationFinder = new OrientationFinder(this.thresholdsState);
     }
 
@@ -46,6 +44,10 @@ public class FeedProcessor{
         int yellowX = 0;
         int yellowY = 0;
         int numYellowPixels = 0;
+
+        Position ball;
+        Position blue;
+        Position yellow;
 
         ArrayList<Integer> ballXPoints = new ArrayList<Integer>();
         ArrayList<Integer> ballYPoints = new ArrayList<Integer>();
@@ -81,7 +83,6 @@ public class FeedProcessor{
 
                 /* Is this pixel part of the Blue T? */
                 if (colorDetection.isBlue(c) ){
-
                     blueX += column;
                     blueY += row;
                     numBluePixels++;
@@ -222,16 +223,16 @@ public class FeedProcessor{
         
         
         
-        markObjects(imageGraphics);
+        markObjects(imageGraphics,ball,blue,yellow);
 
         calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
     }
 
-    public void markObjects(Graphics imageGraphics){
+    public void markObjects(Graphics imageGraphics, Position ball, Position blue, Position yellow){
         /* Only display these markers in non-debug mode. */
-        if (!(thresholdsState.isBall_debug() || thresholdsState.isBlue_debug()
+        /*if (!(thresholdsState.isBall_debug() || thresholdsState.isBlue_debug()
                 || thresholdsState.isYellow_debug() || thresholdsState.isGreen_debug()
-                || thresholdsState.isGrey_debug())) {
+                || thresholdsState.isGrey_debug())) {*/
             imageGraphics.setColor(Color.red);
             imageGraphics.drawLine(0, ball.getY(), 640, ball.getY());
             imageGraphics.drawLine(ball.getX(), 0, ball.getX(), 480);
@@ -240,7 +241,7 @@ public class FeedProcessor{
             imageGraphics.setColor(Color.yellow);
             imageGraphics.drawOval(yellow.getX()-15, yellow.getY()-15, 30,30);
             imageGraphics.setColor(Color.white);
-        }
+        //}
     }
 
     public static void calculateFPS(long before, Graphics imageGraphics, Graphics frameGraphics, BufferedImage image, int width, int height){

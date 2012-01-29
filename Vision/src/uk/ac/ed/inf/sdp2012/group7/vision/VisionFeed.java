@@ -10,9 +10,6 @@ import java.io.*;
 import javax.imageio.*;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -73,8 +70,8 @@ public class VisionFeed extends WindowAdapter {
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         initGUI();
         this.thresholdGUI = thresholdsGUI;
-        InitialLocation il = new InitialLocation(this.thresholdGUI,this,pitchConstants);
-        processor = new FeedProcessor(il,height,width,pitchConstants);
+        InitialLocation il = new InitialLocation(thresholdsGUI,this,pitchConstants,this.windowFrame);
+        processor = new FeedProcessor(il,height,width,pitchConstants,thresholdsGUI);
 
         il.getColors();
         il.getPoints();
@@ -140,8 +137,6 @@ public class VisionFeed extends WindowAdapter {
         windowFrame.addWindowListener(this);
         windowFrame.setVisible(true);
         windowFrame.setSize(width+5, height+25);
-        //windowFrame.addMouseListener(this);
-        //windowFrame.addMouseMotionListener(this);
     }
     
     //useless, had to be included because of the MouseEvent interface
