@@ -87,6 +87,6 @@ public class ObjectPosition extends Point{
     }
 
     public String toString(){
-        return "Center: " super.toString() + "\n" + "(TopLeft,TopRight,BottomLeft,BottomRight) = (" + Integer.toString(topLeft) + "," + Integer.toString(topRight) + "," + Integer.toString(bottomLeft) + "," + Integer.toString(bottomRight) + ")";
+        return "Center: " + super.toString() + "\n" + "(TopLeft,TopRight,BottomLeft,BottomRight) = (" + Integer.toString(topLeft) + "," + Integer.toString(topRight) + "," + Integer.toString(bottomLeft) + "," + Integer.toString(bottomRight) + ")";
     }
 }

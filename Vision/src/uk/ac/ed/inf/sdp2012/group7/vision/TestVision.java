@@ -7,10 +7,12 @@ public class TestVision {
 
     public static void main(String[] args){
         Vision v = new Vision();
-        System.out.println("");
-        System.out.println("");
-        System.out.println("BALL POSITION!!!!");
-        System.out.println(v.getBallPosition().toString());
+        while(true){
+            System.out.println("Ball Position: " + v.getBallPosition().toString());
+            try{
+                Thread.sleep(100);
+            } catch (Exception e) {}
+        }
     }
 
 }
