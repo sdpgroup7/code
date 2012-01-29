@@ -10,6 +10,8 @@ import java.io.*;
 import javax.imageio.*;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -137,9 +139,7 @@ public class VisionFeed extends WindowAdapter {
         windowFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         windowFrame.addWindowListener(this);
         windowFrame.setVisible(true);
-        //windowFrame.setSize(width, height);
         windowFrame.setSize(width+5, height+25);
-        //System.err.println("JFrame width,height: " + windowFrame.getSize().width + "," + windowFrame.getSize().height);
         windowFrame.addMouseListener(this);
         windowFrame.addMouseMotionListener(this);
     }
@@ -149,8 +149,6 @@ public class VisionFeed extends WindowAdapter {
     
     //can output the buffered image to disk, can normalise if neccessary
     public void writeImage(BufferedImage image, String fn){
-        //NormaliseRGB norm = new NormaliseRGB();
-        //image = norm.normalise(image);
         try {
             File outputFile = new File(fn);
             ImageIO.write(image, "png", outputFile);
