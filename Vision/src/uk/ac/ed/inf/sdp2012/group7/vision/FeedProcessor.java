@@ -174,20 +174,21 @@ public class FeedProcessor{
             }*/
             worldState.setBlueOrientation(blueOrientation);
         } catch (NoAngleException e) {
-            worldState.setBlueOrientation(worldState.getBlueOrientation());
+            //worldState.setBlueOrientation(worldState.getBlueOrientation());
         }
 
 
         /* Attempt to find the yellow robot's orientation. */
         try {
             float yellowOrientation = findOrientation(yellowXPoints, yellowYPoints, yellow.getX(), yellow.getY(), image, true);
-            float diff = Math.abs(yellowOrientation - worldState.getYellowOrientation());
+            /*float diff = Math.abs(yellowOrientation - worldState.getYellowOrientation());
             if (yellowOrientation != 0 && diff > 0.1) {
                 float angle = (float) Math.round(((yellowOrientation / Math.PI) * 180) / 5) * 5;
                 worldState.setYellowOrientation((float) (angle / 180 * Math.PI));
-            }
+            }*/
+            worldState.setYellowOrientation(yellowOrientation);
         } catch (NoAngleException e) {
-            worldState.setYellowOrientation(worldState.getYellowOrientation());
+            //worldState.setYellowOrientation(worldState.getYellowOrientation());
         }
 
 
