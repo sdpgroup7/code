@@ -75,8 +75,10 @@ public class VisionFeed extends WindowAdapter {
         this.thresholdGUI = thresholdsGUI;
         InitialLocation il = new InitialLocation(this.thresholdGUI,this,pitchConstants);
         processor = new FeedProcessor(il,height,width,pitchConstants);
-        il.getPoints();
+
         il.getColors();
+        il.getPoints();
+        
     }
 
     public BufferedImage getFrameImage(){
