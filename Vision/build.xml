@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="Vision">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="Vision.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="/group/teaching/sdp/sdp7/JavaVision/lib/v4l4j.jar"/>
+        <pathelement location="/group/teaching/sdp/sdp7/lib/javacpp.jar"/>
+        <pathelement location="/group/teaching/sdp/sdp7/lib/javacv.jar"/>
+        <pathelement location="/group/teaching/sdp/sdp7/lib/javacv-linux-x86_64.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-project,TestVision" name="build"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="Vision.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target name="TestVision">
+        <java classname="uk.ac.ed.inf.sdp2012.group7.vision.TestVision" failonerror="true" fork="yes">
+            <env key="LD_LIBRARY_PATH" value="/group/teaching/sdp/sdp7/lib:/group/teaching/sdp/sdp7/OpenCV/OpenCV-2.3.1/release/lib"/>
+            <classpath refid="Vision.classpath"/>
+        </java>
+    </target>
+</project>
