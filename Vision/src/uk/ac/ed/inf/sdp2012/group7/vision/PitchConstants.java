@@ -176,6 +176,7 @@ public class PitchConstants {
 		/* Just call the setPitchNum method to load in the constants. */
 		setPitchNum(pitchNum);
 	}
+
 	
 	/**
 	 * Sets a new pitch number, loading in constants from the corresponding file.
