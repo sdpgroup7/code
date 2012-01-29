@@ -2,13 +2,9 @@ package uk.ac.ed.inf.sdp2012.group7.vision;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.awt.Point;
 import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
@@ -39,7 +35,7 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
  */
 
 
-public class VisionFeed extends WindowAdapter implements MouseListener, MouseMotionListener {
+public class VisionFeed extends WindowAdapter {
     private VideoDevice videoDev;
     private JLabel label;
     private JFrame windowFrame;
@@ -50,17 +46,12 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
     private WorldState worldState;
     private ThresholdsState thresholdsState;
     private static PitchConstants pitchConstants;
-    private Point coords = new Point();
     private boolean mouseClick = false;
     private Color[] objects = new Color[5];
     private int objectIndex = 0;
     private BufferedImage frameImage;
     private ControlGUI thresholdGUI;
     private static boolean buffersSet = false;
-    private static Point mouseCo = new Point(0,0);
-
-    private final Color black= new Color(0,0,0);
-    private final Color white = new Color(255,255,255);
     /**
      * Default constructor.
      *
@@ -77,13 +68,11 @@ public class VisionFeed extends WindowAdapter implements MouseListener, MouseMot
      * @throws V4L4JException   If any parameter if invalid.
      */
     public VisionFeed(String videoDevice, int width, int height, int channel, int videoStandard,
-            int compressionQuality, WorldState worldState, ThresholdsState thresholdsState,
-            PitchConstants pitchConstants, ControlGUI thresholdsGUI) throws V4L4JException {
-
-        /* Set the state fields. */
-        this.worldState = worldState;
-        this.thresholdsState = thresholdsState;
-        this.pitchConstants = pitchConstants;
+            int compressionQuality, ControlGUI thresholdsGUI) throws V4L4JException {
+            
+       /*
+       Removed pitch constants, threshold constants and worldstate from the constructor
+       */
 
         /* Initialise the GUI that displays the video feed. */
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);

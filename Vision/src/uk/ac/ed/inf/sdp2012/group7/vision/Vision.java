@@ -41,7 +41,7 @@ public class Vision {
 
             /* Create a new Vision object to serve the main vision window. */
             VisionFeed feed = new VisionFeed(videoDevice, width, height, channel, videoStandard,
-                    compressionQuality, worldState, thresholdsState, pitchConstants,thresholdsGUI);
+                    compressionQuality,thresholdsGUI);
             
            
             

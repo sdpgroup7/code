@@ -1,5 +1,15 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
+import uk.ac.ed.inf.sdp2012.group7.vision.ui.*;
+import java.util.ArrayList;
+import java.awt.Color;
+
 public class FeedProcessor{
+
+    private final Color black= new Color(0,0,0);
+    private final Color white = new Color(255,255,255);
+    
+    private WorldState worldState = new WorldState();
+    private ThesholdsState thesholdsState = new ThresholdsState();
 
     public FeedProcessor(){
 

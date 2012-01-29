@@ -1,6 +1,16 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
 
-public class InitialLocation.java {
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseEvent;
+import java.awt.Color;
+
+import java.awt.Point;
+
+public class InitialLocation implements MouseListener, MouseMotionListener {
+
+    private Point coords = new Point();
+    private static Point mouseCo = new Point(0,0);
 
     public InitialLocation() {
     }
