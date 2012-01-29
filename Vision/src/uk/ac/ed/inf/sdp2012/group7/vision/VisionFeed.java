@@ -10,6 +10,7 @@ import java.io.*;
 import javax.imageio.*;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
@@ -42,18 +43,10 @@ public class VisionFeed extends WindowAdapter {
     private JLabel label;
     private JFrame windowFrame;
     private FrameGrabber frameGrabber;
-    private Thread captureThread;
-    private boolean stop;
     private int width, height;
-    private WorldState worldState;
-    private ThresholdsState thresholdsState;
-    private static PitchConstants pitchConstants;
-    private boolean mouseClick = false;
-    private Color[] objects = new Color[5];
-    private int objectIndex = 0;
     private BufferedImage frameImage;
     private ControlGUI thresholdGUI;
-    private static boolean buffersSet = false;
+    private FeedProcessor processor;
     /**
      * Default constructor.
      *
@@ -70,7 +63,7 @@ public class VisionFeed extends WindowAdapter {
      * @throws V4L4JException   If any parameter if invalid.
      */
     public VisionFeed(String videoDevice, int width, int height, int channel, int videoStandard,
-            int compressionQuality, ControlGUI thresholdsGUI) throws V4L4JException {
+            int compressionQuality, ControlGUI thresholdsGUI, PitchConstants pitchConstants) throws V4L4JException {
             
        /*
        Removed pitch constants, threshold constants and worldstate from the constructor
@@ -80,9 +73,14 @@ public class VisionFeed extends WindowAdapter {
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         initGUI();
         this.thresholdGUI = thresholdsGUI;
-        
-        getPoints();
-        getColors();
+        InitialLocation il = new InitialLocation(this.thresholdGUI,this,pitchConstants);
+        processor = new FeedProcessor(il,height,width,pitchConstants);
+        il.getPoints();
+        il.getColors();
+    }
+
+    public BufferedImage getFrameImage(){
+        return this.frameImage;
     }
     
      /**
@@ -119,7 +117,7 @@ public class VisionFeed extends WindowAdapter {
                 long before = System.currentTimeMillis();
                 frameImage = frame.getBufferedImage();
                 frame.recycle();
-                processAndUpdateImage(frameImage, before);
+                processor.processAndUpdateImage(frameImage, before, label);
             }
         });
 
@@ -140,8 +138,8 @@ public class VisionFeed extends WindowAdapter {
         windowFrame.addWindowListener(this);
         windowFrame.setVisible(true);
         windowFrame.setSize(width+5, height+25);
-        windowFrame.addMouseListener(this);
-        windowFrame.addMouseMotionListener(this);
+        //windowFrame.addMouseListener(this);
+        //windowFrame.addMouseMotionListener(this);
     }
     
     //useless, had to be included because of the MouseEvent interface

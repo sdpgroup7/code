@@ -2,23 +2,38 @@ package uk.ac.ed.inf.sdp2012.group7.vision;
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.*;
 import java.util.ArrayList;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import javax.swing.JLabel;
 
 public class FeedProcessor{
     
     private WorldState worldState = new WorldState();
-    private ThesholdsState thesholdsState = new ThresholdsState();
+    private ThresholdsState thresholdsState = new ThresholdsState();
+    private PitchConstants pitchConstants;
+    private OrientationFinder orientationFinder;
 
-    Position ball;
-    Position blue;
-    Position yellow;
+    private static Position ball;
+    private static Position blue;
+    private static Position yellow;
+    private ColorDetection colorDetection;
+    private InitialLocation initialLocation;
+    
+    private int height;
+    private int width;
 
-    public FeedProcessor(){
-        
+    public FeedProcessor(InitialLocation il, int height, int width, PitchConstants pitchConstants){
+        this.colorDetection = new ColorDetection(thresholdsState);
+        this.initialLocation = il;
+        this.height = height;
+        this.width = width;
+        this.pitchConstants = pitchConstants;
+        this.orientationFinder = new OrientationFinder(this.thresholdsState);
     }
 
-    public void processAndUpdateImage(BufferedImage image, long before) {
+    public void processAndUpdateImage(BufferedImage image, long before, JLabel label) {
 
-        image = markImage(image);
+        image = initialLocation.markImage(image);
 
         int ballX = 0;
         int ballY = 0;
@@ -56,16 +71,16 @@ public class FeedProcessor{
 
                 /* Debug graphics for the grey circles and green plates.
                  * TODO: Move these into the actual detection. */
-                if (thresholdsState.isGrey_debug() && isGrey(c)) {
+                if (thresholdsState.isGrey_debug() && colorDetection.isGrey(c)) {
                     image.setRGB(column, row, 0xFFFF0099);
                 }
 
-                if (thresholdsState.isGreen_debug() && isGreen(c)) {
+                if (thresholdsState.isGreen_debug() && colorDetection.isGreen(c)) {
                     image.setRGB(column, row, 0xFFFF0099);
                 }
 
                 /* Is this pixel part of the Blue T? */
-                if (isBlue(c) ){
+                if (colorDetection.isBlue(c) ){
 
                     blueX += column;
                     blueY += row;
@@ -83,7 +98,7 @@ public class FeedProcessor{
                 }
 
                 /* Is this pixel part of the Yellow T? */
-                if (isYellow(c)) {
+                if (colorDetection.isYellow(c)) {
 
                     yellowX += column;
                     yellowY += row;
@@ -100,7 +115,7 @@ public class FeedProcessor{
                 }
 
                 /* Is this pixel part of the Ball? */
-                if (isBall(c)) {
+                if (colorDetection.isBall(c)) {
 
                     ballX += column;
                     ballY += row;
@@ -164,7 +179,7 @@ public class FeedProcessor{
 
         /* Attempt to find the blue robot's orientation. */
         try {
-            float blueOrientation = findOrientation(blueXPoints, blueYPoints, blue.getX(), blue.getY(), image, true);
+            float blueOrientation = orientationFinder.findOrientation(blueXPoints, blueYPoints, blue.getX(), blue.getY(), image, true);
             /*float diff = Math.abs(blueOrientation - worldState.getBlueOrientation());
             if (diff > 0.1) {
                 float angle = (float) Math.round(((blueOrientation / Math.PI) * 180) / 5) * 5;
@@ -180,7 +195,7 @@ public class FeedProcessor{
 
         /* Attempt to find the yellow robot's orientation. */
         try {
-            float yellowOrientation = findOrientation(yellowXPoints, yellowYPoints, yellow.getX(), yellow.getY(), image, true);
+            float yellowOrientation = orientationFinder.findOrientation(yellowXPoints, yellowYPoints, yellow.getX(), yellow.getY(), image, true);
             /*float diff = Math.abs(yellowOrientation - worldState.getYellowOrientation());
             if (yellowOrientation != 0 && diff > 0.1) {
                 float angle = (float) Math.round(((yellowOrientation / Math.PI) * 180) / 5) * 5;
@@ -204,14 +219,15 @@ public class FeedProcessor{
         /* Draw the image onto the vision frame. */
         Graphics frameGraphics = label.getGraphics();
         Graphics imageGraphics = image.getGraphics();
-
+        
+        
         
         markObjects(imageGraphics);
 
-        calculateFPS(before,imageGraphics,frameGraphics);
+        calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
     }
 
-    public static void markObjects(Graphics imageGraphics){
+    public void markObjects(Graphics imageGraphics){
         /* Only display these markers in non-debug mode. */
         if (!(thresholdsState.isBall_debug() || thresholdsState.isBlue_debug()
                 || thresholdsState.isYellow_debug() || thresholdsState.isGreen_debug()
@@ -227,7 +243,7 @@ public class FeedProcessor{
         }
     }
 
-    public static void calculateFPS(long before, Graphics imageGraphics, Graphics frameGraphics){
+    public static void calculateFPS(long before, Graphics imageGraphics, Graphics frameGraphics, BufferedImage image, int width, int height){
         /* Used to calculate the FPS. */
         long after = System.currentTimeMillis();
 
@@ -236,15 +252,16 @@ public class FeedProcessor{
         imageGraphics.setColor(Color.white);
         imageGraphics.drawString("FPS: " + fps, 15, 15);
         frameGraphics.drawImage(image, 0, 0, width, height, null);
+        //TODO: Check that the above isn't needed.
     }
 
     public BufferedImage getThresh(BufferedImage img, int redL, int redH, int greenL, int greenH, int blueL, int blueH) { // Method to get thresholded image 
 
-    	BufferedImage threshed = new BufferedImage(width,height, 0);
+    	BufferedImage threshed = new BufferedImage(this.width,this.height, 0);
     	Color c;
     	
-    	for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
+    	for (int i = 0; i < this.width; i++) {
+			for (int j = 0; j < this.height; j++) {
 				c = new Color(img.getRGB(i,j));
 				if( (c.getRed()>redL) && (c.getRed() <= redH) && (c.getBlue()>blueL) && (c.getBlue() <=blueH) && (c.getGreen()>greenL) && (c.getGreen() <= greenH)){
 					threshed.setRGB(i, j, Color.black.getRGB());

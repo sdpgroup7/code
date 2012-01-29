@@ -1,4 +1,15 @@
+package uk.ac.ed.inf.sdp2012.group7.vision;
+import java.awt.Color;
+
 public class ColorDetection{
+
+
+    private ThresholdsState thresholdsState;
+
+    public ColorDetection(ThresholdsState ts){
+        this.thresholdsState = ts;
+    }
+
 
     /**
      * Determines if a pixel is part of the blue T, based on input RGB colors
@@ -11,9 +22,7 @@ public class ColorDetection{
      *                      thresholds (and thus the pixel is part of the blue T),
      *                      false otherwise.
      */
-
-     
-    private boolean isBlue(Color color) {
+    public boolean isBlue(Color color) {
         return color.getRed() <= thresholdsState.getBlue_r_high() && color.getRed() >= thresholdsState.getBlue_r_low() &&
         color.getGreen() <= thresholdsState.getBlue_g_high() && color.getGreen() >= thresholdsState.getBlue_g_low() &&
         color.getBlue() <= thresholdsState.getBlue_b_high() && color.getBlue() >= thresholdsState.getBlue_b_low();
@@ -31,7 +40,7 @@ public class ColorDetection{
      *                      false otherwise.
      */
 
-    private boolean isYellow(Color colour) {
+    public boolean isYellow(Color colour) {
         return colour.getRed() <= thresholdsState.getYellow_r_high() &&  colour.getRed() >= thresholdsState.getYellow_r_low() &&
         colour.getGreen() <= thresholdsState.getYellow_g_high() && colour.getGreen() >= thresholdsState.getYellow_g_low() &&
         colour.getBlue() <= thresholdsState.getYellow_b_high() && colour.getBlue() >= thresholdsState.getYellow_b_low();
@@ -49,7 +58,7 @@ public class ColorDetection{
      *                      false otherwise.
      */
 
-    private boolean isBall(Color colour) {
+    public boolean isBall(Color colour) {
         return colour.getRed() <= thresholdsState.getBall_r_high() &&  colour.getRed() >= thresholdsState.getBall_r_low() &&
         colour.getGreen() <= thresholdsState.getBall_g_high() && colour.getGreen() >= thresholdsState.getBall_g_low() &&
         colour.getBlue() <= thresholdsState.getBall_b_high() && colour.getBlue() >= thresholdsState.getBall_b_low();
@@ -66,7 +75,7 @@ public class ColorDetection{
      *                      thresholds (and thus the pixel is part of a grey circle),
      *                      false otherwise.
      */
-    private boolean isGrey(Color colour) {
+    public boolean isGrey(Color colour) {
         return colour.getRed() <= thresholdsState.getGrey_r_high() &&  colour.getRed() >= thresholdsState.getGrey_r_low() &&
         colour.getGreen() <= thresholdsState.getGrey_g_high() && colour.getGreen() >= thresholdsState.getGrey_g_low() &&
         colour.getBlue() <= thresholdsState.getGrey_b_high() && colour.getBlue() >= thresholdsState.getGrey_b_low();
@@ -85,7 +94,7 @@ public class ColorDetection{
      *                      false otherwise.
      */
 
-    private boolean isGreen(Color colour) {
+    public boolean isGreen(Color colour) {
         return colour.getRed() <= thresholdsState.getGreen_r_high() &&  colour.getRed() >= thresholdsState.getGreen_r_low() &&
         colour.getGreen() <= thresholdsState.getGreen_g_high() && colour.getGreen() >= thresholdsState.getGreen_g_low() &&
         colour.getBlue() <= thresholdsState.getGreen_b_high() && colour.getBlue() >= thresholdsState.getGreen_b_low();

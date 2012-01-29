@@ -4,15 +4,25 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
-
+import java.awt.image.BufferedImage;
 import java.awt.Point;
+
+import uk.ac.ed.inf.sdp.sdp2012.group7.vision.ui.ControlGUI;
 
 public class InitialLocation implements MouseListener, MouseMotionListener {
 
     private Point coords = new Point();
     private static Point mouseCo = new Point(0,0);
+    private boolean mouseClick = false;
+    private PitchConstants pitchConstants;
+    private ControlGUI thresholdGUI;
+    private VisionFeed visionFeed;
+    private boolean buffersSet = false;
 
-    public InitialLocation() {
+    public InitialLocation(ControlGUI thresholdsGUI, VisionFeed visionFeed, PitchConstants pitchConstants) {
+        this.thresholdGUI = thresholdsGUI;
+        this.visionFeed = visionFeed;
+        this.pitchConstants = pitchConstants;
     }
     
     public void mouseExited(MouseEvent e){}
@@ -87,7 +97,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
             } catch (Exception e) {}
         }
         mouseClick = false;
-        return getColor(coords, frameImage);
+        return getColor(coords, this.visionFeed.getFrameImage());
     }
 
     public Point correctPoint(Point p){
@@ -130,7 +140,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         return avgColor;
     }
     
-    private static BufferedImage markImage(BufferedImage image) {
+    public BufferedImage markImage(BufferedImage image) {
         int width = 640;
         int height = 480;
         
@@ -141,9 +151,6 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
                     if((y == pitchConstants.getTopBuffer()) || (x == pitchConstants.getRightBuffer()) || (y == pitchConstants.getBottomBuffer()) || (x == pitchConstants.getLeftBuffer())){
                         image.setRGB(x,y,(255 << 24) + 255);
                     }
-                    /*if((x == mouseCo.x) || (y == mouseCo.y)){
-                        image.setRGB(x,y,(255 << 24) + 255);
-                    }*/
                 }
             }
             return image;

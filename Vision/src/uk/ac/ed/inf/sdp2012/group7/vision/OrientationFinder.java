@@ -1,4 +1,15 @@
+package uk.ac.ed.inf.sdp2012.group7.vision;
+import java.util.ArrayList;
+import java.awt.image.BufferedImage;
+import java.awt.Color;
+
 public class OrientationFinder{
+
+    ThresholdsState thresholdsState;
+
+    public OrientationFinder(ThresholdsState thresholdsState){
+        this.thresholdsState = thresholdsState;
+    }
 
     /**
      * Finds the orientation of a robot, given a list of the points contained within it's
@@ -82,6 +93,7 @@ public class OrientationFinder{
         //Look in a cone in the opposite direction to try to find the grey circle
         ArrayList<Integer> greyXPoints = new ArrayList<Integer>();
         ArrayList<Integer> greyYPoints = new ArrayList<Integer>();
+        ColorDetection colorDetection = new ColorDetection(this.thresholdsState);
 
         for (int a=-20; a < 21; a++) {
             ax = (float) Math.cos(angle+((a*Math.PI)/180));
@@ -91,7 +103,7 @@ public class OrientationFinder{
                 int greyY = meanY - (int) (ay * i);
                 try {
                     Color c = new Color(image.getRGB(greyX, greyY));
-                    if (isGrey(c)) {
+                    if (colorDetection.isGrey(c)) {
                         greyXPoints.add(greyX);
                         greyYPoints.add(greyY);
                     }
@@ -130,7 +142,7 @@ public class OrientationFinder{
             for (int y = (int) (backY-9); y < backY; y++) {
                 try {
                     Color c = new Color(image.getRGB(x, y));
-                    if (isGreen(c)) {
+                    if (colorDetection.isGreen(c)) {
                         foundGreen++;
                         break;
                     }
@@ -151,7 +163,7 @@ public class OrientationFinder{
             for (int y = (int) (backY); y < backY+10; y++) {
                 try {
                     Color c = new Color(image.getRGB(x, y));
-                    if (isGreen(c)) {
+                    if (colorDetection.isGreen(c)) {
                         foundGreen++;
                         break;
                     }
@@ -172,7 +184,7 @@ public class OrientationFinder{
             for (int y = (int) (backY-2); y < backY+3; y++) {
                 try {
                     Color c = new Color(image.getRGB(x, y));
-                    if (isGreen(c)) {
+                    if (colorDetection.isGreen(c)) {
                         foundGreen++;
                         break;
                     }
@@ -192,7 +204,7 @@ public class OrientationFinder{
             for (int y = (int) (backY-2); y < backY+3; y++) {
                 try {
                     Color c = new Color(image.getRGB(x, y));
-                    if (isGreen(c)) {
+                    if (colorDetection.isGreen(c)) {
                         foundGreen++;
                         break;
                     }
