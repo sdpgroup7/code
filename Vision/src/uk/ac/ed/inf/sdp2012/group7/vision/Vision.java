@@ -1,4 +1,6 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
+import java.awt.event.ActionListener;
+
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
 import au.edu.jcu.v4l4j.V4L4JConstants;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
@@ -12,12 +14,17 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 public class Vision {
     private static ControlGUI thresholdsGUI;
     
+    
     /**
      * The main method for the class. Creates the control
      * GUI, and initialises the image processing.
      * 
      * @param args        Program arguments. Not used.
      */
+    
+    public Vision(ActionListener strategyListener){
+    	
+    }
     public Vision() {
         WorldState worldState = new WorldState();
         ThresholdsState thresholdsState = new ThresholdsState();
@@ -33,7 +40,6 @@ public class Vision {
         int compressionQuality = 80;
 
         try {
-
 			 /* Create the Control GUI for threshold setting/etc. */
             thresholdsGUI = new ControlGUI(thresholdsState, worldState, pitchConstants);
             thresholdsGUI.initGUI();

@@ -1,8 +1,8 @@
 package uk.ac.ed.inf.sdp2012.group7.vision.ui;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.Color;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,16 +10,17 @@ import java.io.IOException;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JCheckBox;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.vision.PitchConstants;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
 import uk.ac.ed.inf.sdp2012.group7.vision.WorldState;
@@ -45,6 +46,8 @@ public class ControlGUI implements ChangeListener {
 	/* Stores information about the current world state, such as 
 	 * shooting direction, ball location, etc. */
 	private WorldState worldState;
+	
+	private final Strategy strat;
 	
 	/* The main frame holding the Control GUI. */
 	private JFrame frame;
@@ -273,7 +276,7 @@ public class ControlGUI implements ChangeListener {
 		this.thresholdsState = thresholdsState;
 		this.worldState = worldState;
 		this.pitchConstants = pitchConstants;
-		
+		strat = new Strategy(worldState);
 	}
 	
 	/**
@@ -632,8 +635,8 @@ public class ControlGUI implements ChangeListener {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        //call to control to activate kicker
-		        System.err.println("Kicked the Ball");
+		        //call to strategy letting them know that bot is taking a penalty
+		        strat.mileStone1(true);
 		    }
 		});
 		
@@ -641,8 +644,8 @@ public class ControlGUI implements ChangeListener {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        //call to control to drive forward
-		        System.err.println("Vroom vroom");
+		        //call to strategy letting them know that bot is taking a penalty
+		    	strat.mileStone1(false);
 		    }
 		});
 		
