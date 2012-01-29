@@ -1,13 +1,13 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
 
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseEvent;
-import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.awt.Point;
 
-import uk.ac.ed.inf.sdp.sdp2012.group7.vision.ui.ControlGUI;
+import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
 
 public class InitialLocation implements MouseListener, MouseMotionListener {
 

@@ -24,17 +24,16 @@
         <delete dir="bin"/>
     </target>
     <target depends="clean" name="cleanall"/>
-    <target depends="build-project" name="build"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" verbose="true" failonerror="false" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
             <src path="src"/>
-        	<compilerarg value="-Xlint:all"/>
-        	 <compilerarg value="-Werror"/>
             <classpath refid="Vision.classpath"/>
         </javac>
     </target>
-    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-projects"/>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
     <target name="TestVision">
         <java classname="uk.ac.ed.inf.sdp2012.group7.vision.TestVision" failonerror="true" fork="yes">
             <env key="LD_LIBRARY_PATH" value="/group/teaching/sdp/sdp7/lib:/group/teaching/sdp/sdp7/OpenCV/OpenCV-2.3.1/release/lib"/>
