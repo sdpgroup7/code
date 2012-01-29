@@ -1041,4 +1041,8 @@ public class ControlGUI implements ChangeListener {
         return this.thresholdsState;
     }
 
+    public WorldState getWorldState(){
+        return this.worldState;
+    }
+
 }

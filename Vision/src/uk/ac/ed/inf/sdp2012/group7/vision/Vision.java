@@ -11,6 +11,7 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
  */
 public class Vision implements VisualMethods {
     private static ControlGUI thresholdsGUI;
+    private static WorldState worldState;
     
     /**
      * The main method for the class. Creates the control
@@ -19,7 +20,7 @@ public class Vision implements VisualMethods {
      * @param args        Program arguments. Not used.
      */
     public Vision() {
-        WorldState worldState = new WorldState();
+        worldState = new WorldState();
         ThresholdsState thresholdsState = new ThresholdsState();
 
         /* Default to main pitch. */
@@ -39,7 +40,7 @@ public class Vision implements VisualMethods {
             thresholdsGUI.initGUI();
 
             /* Create a new Vision object to serve the main vision window. */
-            VisionFeed feed = new VisionFeed(videoDevice, width, height, channel, videoStandard, compressionQuality,thresholdsGUI,pitchConstants);
+            VisionFeed feed = new VisionFeed(videoDevice, width, height, channel, videoStandard, compressionQuality, thresholdsGUI, pitchConstants);
             //ObjectPosition o = getBallPosition(); //For testing
         } catch (V4L4JException e) {
             e.printStackTrace(); //TODO: ADD LOGGING!
@@ -50,7 +51,7 @@ public class Vision implements VisualMethods {
 
     public ObjectPosition getBallPosition(){
         //gets the position of the ball
-        throw new UnsupportedOperationException("Not yet implemented");
+        return new ObjectPosition(worldState.getBallX(),worldState.getBallY());
     }
     
     public ObjectPosition getOurPosition(){

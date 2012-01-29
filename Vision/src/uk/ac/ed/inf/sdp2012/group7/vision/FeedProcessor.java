@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 
 public class FeedProcessor{
     
-    private WorldState worldState = new WorldState();
+    private WorldState worldState;
     private ThresholdsState thresholdsState;
     private PitchConstants pitchConstants;
     private OrientationFinder orientationFinder;
@@ -21,6 +21,7 @@ public class FeedProcessor{
 
     public FeedProcessor(InitialLocation il, int height, int width, PitchConstants pitchConstants, ControlGUI controlGUI){
         this.thresholdsState = controlGUI.getThresholdsState();
+        this.worldState = controlGUI.getWorldState();
         this.initialLocation = il;
         this.height = height;
         this.width = width;

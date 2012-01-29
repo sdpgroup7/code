@@ -7,6 +7,10 @@ public class TestVision {
 
     public static void main(String[] args){
         Vision v = new Vision();
+        System.out.println("");
+        System.out.println("");
+        System.out.println("BALL POSITION!!!!");
+        System.out.println(v.getBallPosition().toString());
     }
 
 }

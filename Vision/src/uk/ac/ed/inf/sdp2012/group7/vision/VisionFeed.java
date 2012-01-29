@@ -70,8 +70,8 @@ public class VisionFeed extends WindowAdapter {
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         initGUI();
         this.thresholdGUI = thresholdsGUI;
-        InitialLocation il = new InitialLocation(thresholdsGUI,this,pitchConstants,this.windowFrame);
-        processor = new FeedProcessor(il,height,width,pitchConstants,thresholdsGUI);
+        InitialLocation il = new InitialLocation(thresholdsGUI, this, pitchConstants, this.windowFrame);
+        processor = new FeedProcessor(il, height, width, pitchConstants, thresholdsGUI);
 
         il.getColors();
         il.getPoints();
