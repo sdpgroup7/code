@@ -181,30 +181,18 @@ public class FeedProcessor{
         /* Attempt to find the blue robot's orientation. */
         try {
             float blueOrientation = orientationFinder.findOrientation(blueXPoints, blueYPoints, blue.getX(), blue.getY(), image, true);
-            /*float diff = Math.abs(blueOrientation - worldState.getBlueOrientation());
-            if (diff > 0.1) {
-                float angle = (float) Math.round(((blueOrientation / Math.PI) * 180) / 5) * 5;
-                //TODO: Have a look at this. Divide by 5 then times by 5? It seems to only be in 5 degree increments.
-                worldState.setBlueOrientation((float) (angle / 180 * Math.PI));
-                //TODO: WTF!?!
-            }*/
             worldState.setBlueOrientation(blueOrientation);
         } catch (NoAngleException e) {
-            //worldState.setBlueOrientation(worldState.getBlueOrientation());
+
         }
 
 
         /* Attempt to find the yellow robot's orientation. */
         try {
             float yellowOrientation = orientationFinder.findOrientation(yellowXPoints, yellowYPoints, yellow.getX(), yellow.getY(), image, true);
-            /*float diff = Math.abs(yellowOrientation - worldState.getYellowOrientation());
-            if (yellowOrientation != 0 && diff > 0.1) {
-                float angle = (float) Math.round(((yellowOrientation / Math.PI) * 180) / 5) * 5;
-                worldState.setYellowOrientation((float) (angle / 180 * Math.PI));
-            }*/
             worldState.setYellowOrientation(yellowOrientation);
         } catch (NoAngleException e) {
-            //worldState.setYellowOrientation(worldState.getYellowOrientation());
+
         }
 
 
@@ -221,8 +209,6 @@ public class FeedProcessor{
         Graphics frameGraphics = label.getGraphics();
         Graphics imageGraphics = image.getGraphics();
         
-        
-        
         markObjects(imageGraphics,ball,blue,yellow);
 
         calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
@@ -230,9 +216,9 @@ public class FeedProcessor{
 
     public void markObjects(Graphics imageGraphics, Position ball, Position blue, Position yellow){
         /* Only display these markers in non-debug mode. */
-        /*if (!(thresholdsState.isBall_debug() || thresholdsState.isBlue_debug()
+        if (!(thresholdsState.isBall_debug() || thresholdsState.isBlue_debug()
                 || thresholdsState.isYellow_debug() || thresholdsState.isGreen_debug()
-                || thresholdsState.isGrey_debug())) {*/
+                || thresholdsState.isGrey_debug())) {
             imageGraphics.setColor(Color.red);
             imageGraphics.drawLine(0, ball.getY(), 640, ball.getY());
             imageGraphics.drawLine(ball.getX(), 0, ball.getX(), 480);
@@ -241,7 +227,7 @@ public class FeedProcessor{
             imageGraphics.setColor(Color.yellow);
             imageGraphics.drawOval(yellow.getX()-15, yellow.getY()-15, 30,30);
             imageGraphics.setColor(Color.white);
-        //}
+        }
     }
 
     public static void calculateFPS(long before, Graphics imageGraphics, Graphics frameGraphics, BufferedImage image, int width, int height){
