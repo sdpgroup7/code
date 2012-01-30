@@ -54,8 +54,8 @@ public class Nxt_code implements Runnable {
 
 		// set initial pilot variables to produce maximum speed
 		//pilot.regulateSpeed(true);
-		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()*0.4);
-		pilot.setRotateSpeed(pilot.getMaxRotateSpeed()*0.4);
+		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()*0.6);
+		pilot.setRotateSpeed(pilot.getMaxRotateSpeed()*0.6);
 
 		
 		while (true) {
@@ -245,17 +245,11 @@ public class Nxt_code implements Runnable {
 		boolean reacting = false;
 		float tempCurSpeed;
 		
-		TouchSensor touchKick = new TouchSensor(SensorPort.S1);
-		
-		TouchSensor touchA = new TouchSensor(SensorPort.S2);
-		TouchSensor touchB = new TouchSensor(SensorPort.S3);
+		TouchSensor touchA = new TouchSensor(SensorPort.S1);
+		TouchSensor touchB = new TouchSensor(SensorPort.S2);
 
 		while (true) {
 			try {
-				if (touchKick.isPressed()) {
-					Motor.A.setSpeed(10);
-					Motor.A.rotate(-1,true);
-				}
 				if (!reacting && (touchA.isPressed() || touchB.isPressed())) {
 
 					// flag sensor hit as being dealt with and save the speed
