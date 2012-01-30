@@ -11,6 +11,7 @@
         <pathelement location="/group/teaching/sdp/sdp7/lib/javacv.jar"/>
         <pathelement location="/group/teaching/sdp/sdp7/lib/javacv-linux-x86_64.jar"/>
         <pathelement location="../Control/bin"/>
+	<pathelement location="../Strategy/bin"/>
         <pathelement location="/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/bluecove.jar"/>
         <pathelement location="/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/bluecove-gpl.jar"/>
         <pathelement location="/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/pccomm.jar"/>
