@@ -120,36 +120,27 @@ public class WorldState implements VisualMethods{
 
     public ObjectPosition getBallPosition(){
         //gets the position of the ball
+        //Pretty accurate. Gets confused occasionally if the ball has went into the shadows
         return new ObjectPosition(ballX,ballY);
     }
     
     public ObjectPosition getOurPosition(){
         //gets the position of our robot (return center?)
-        throw new UnsupportedOperationException("Not yet implemented");
+        //Currently finds the centroid of the blue T.
+        if(this.colour == 0) return new ObjectPosition(yellowX,yellowY);
+        return new ObjectPosition(blueX,blueY);
     }
 
     public ObjectPosition getOpponentPosition(){
         //gets the position of our oponents robot
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    public ObjectPosition getOurOrientation(){
-        //gets our orientation
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    public ObjectPosition getOpponentOrientation(){
-        //gets our opponents orientation
-        throw new UnsupportedOperationException("Not yet implemented");
+        if(this.colour == 1) return new ObjectPosition(yellowX,yellowY);
+        return new ObjectPosition(blueX,blueY);
     }
 
     public Vector2 getDistanceToOpponent(){
         //gets the distance and direction to our opponent
         throw new UnsupportedOperationException("Not yet implemented");
     }
-
-
-    //Priority 2 - Needed to have any sort of success
 
     public Vector2 getDistanceToSide(){
         //finds distance to nearest side (specified maybe?)
@@ -180,8 +171,6 @@ public class WorldState implements VisualMethods{
         //if you hit something we'll tell you what you hit, using a code 
         throw new UnsupportedOperationException("Not yet implemented");
     }
-
-    //Priority 3 - Could be useful
 
     public boolean didWeScore(){
         //Check whether the ball is in opponents goal (then victory celebration)
