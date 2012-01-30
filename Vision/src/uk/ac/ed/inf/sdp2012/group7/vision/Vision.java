@@ -56,4 +56,8 @@ public class Vision {
         }
     }
 
+    public WorldState getWorldState(){
+        //used for debugging purposes
+        return this.worldState;
+    }
 }
