@@ -1040,4 +1040,12 @@ public class ControlGUI implements ChangeListener {
 		rangeSlider.setValue(low);
 	}
 
+    public ThresholdsState getThresholdsState(){
+        return this.thresholdsState;
+    }
+
+    public WorldState getWorldState(){
+        return this.worldState;
+    }
+
 }

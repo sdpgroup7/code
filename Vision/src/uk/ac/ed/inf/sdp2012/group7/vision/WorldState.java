@@ -1,4 +1,5 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
+
 public class WorldState {
 	
 	private int direction; // 0 = right, 1 = left.

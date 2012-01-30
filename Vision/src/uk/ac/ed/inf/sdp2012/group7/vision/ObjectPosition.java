@@ -1,93 +1,92 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
 import java.lang.Math;
+import java.awt.Point;
 
 /**
  * Represents the position of an object, for example the ball or a robot.
  * 
  * @author Dale Myers - 0942590
  */
-public class ObjectPosition{
+public class ObjectPosition extends Point{
 
-	private int topLeft;
-	private int topRight;
-	private int bottomLeft;
-	private int bottomRight;
-	
-	public ObjectPosition(){
-		this(0,0,0,0);
-	}
+    private int topLeft = 0;
+    private int topRight = 0;
+    private int bottomLeft = 0;
+    private int bottomRight = 0;
+    
+    public ObjectPosition(){
+        super(0,0);
+    }
 
-	public ObjectPosition(int topLeft, int topRight, int bottomLeft, int bottomRight){
-		this.topLeft = topLeft;
-		this.topRight = topRight;
-		this.bottomLeft = bottomLeft;
-		this.bottomRight = bottomRight;
-	}
+    public ObjectPosition(int x, int y){
+        super(x,y);
+    }
 
-	public int[] getPosition(){
-		int[] ret = new int[4];
-		ret[0] = topLeft;
-		ret[1] = topRight;
-		ret[2] = bottomLeft;
-		ret[3] = bottomRight;
-		return ret;
-	}
+    public ObjectPosition(int topLeft, int topRight, int bottomLeft, int bottomRight){
+        this.topLeft = topLeft;
+        this.topRight = topRight;
+        this.bottomLeft = bottomLeft;
+        this.bottomRight = bottomRight;
+    }
 
-	public void setPosition(int[] positions){
-		this.topLeft = positions[0];
-		this.topRight = positions[1];
-		this.bottomLeft = positions[2];
-		this.bottomRight = positions[3];
-	}
 
-	public int getTopLeft(){
-		return this.topLeft;
-	}
+    public int[] getCorners(){
+        int[] ret = new int[4];
+        ret[0] = topLeft;
+        ret[1] = topRight;
+        ret[2] = bottomLeft;
+        ret[3] = bottomRight;
+        return ret;
+    }
 
-	public int getTopRight(){
-		return this.topRight;
-	}
+    public void setCorners(int[] corners){
+        this.topLeft = corners[0];
+        this.topRight = corners[1];
+        this.bottomLeft = corners[2];
+        this.bottomRight = corners[3];
+    }
 
-	public int getBottomLeft(){
-		return this.bottomLeft;
-	}
+    public int getTopLeft(){
+        return this.topLeft;
+    }
 
-	public int getBottomRight(){
-		return this.bottomRight;
-	}
+    public int getTopRight(){
+        return this.topRight;
+    }
 
-	public void setTopLeft(int v){
-		this.topLeft = v;
-	}
+    public int getBottomLeft(){
+        return this.bottomLeft;
+    }
 
-	public void setTopRight(int v){
-		this.topRight = v;
-	}
+    public int getBottomRight(){
+        return this.bottomRight;
+    }
 
-	public void setBottomLeft(int v){
-		this.bottomLeft = v;
-	}
+    public void setTopLeft(int v){
+        this.topLeft = v;
+    }
 
-	public void setBottomRight(int v){
-		this.bottomRight = v;
-	}
+    public void setTopRight(int v){
+        this.topRight = v;
+    }
 
-	public Position getCentre(){
-		int top = (int)((this.topLeft + this.topRight)/2);
-		int bottom = (int)((this.bottomLeft + this.bottomRight)/2);
-		int left = (int)((this.topLeft + this.bottomLeft)/2);
-		int right = (int)((this.topRight + this.topRight)/2);
-		int tbCentre = Math.max(top,bottom);
-		int lrCentre = Math.max(left,right);
-		return new Position(lrCentre,tbCentre);
-	}
+    public void setBottomLeft(int v){
+        this.bottomLeft = v;
+    }
 
-	public int getHeight(){
-		return Math.max(topLeft,topRight) - Math.min(bottomLeft,bottomRight);
-	}
+    public void setBottomRight(int v){
+        this.bottomRight = v;
+    }
 
-	public int getWidth(){
-		return Math.max(topRight,bottomRight) - Math.min(topLeft,bottomLeft);
-	}
+    public int getHeight(){
+        return Math.max(topLeft,topRight) - Math.min(bottomLeft,bottomRight);
+    }
 
+    public int getWidth(){
+        return Math.max(topRight,bottomRight) - Math.min(topLeft,bottomLeft);
+    }
+
+    public String toString(){
+        return "Center: " + super.toString() + "\n" + "(TopLeft,TopRight,BottomLeft,BottomRight) = (" + Integer.toString(topLeft) + "," + Integer.toString(topRight) + "," + Integer.toString(bottomLeft) + "," + Integer.toString(bottomRight) + ")";
+    }
 }
