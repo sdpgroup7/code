@@ -24,7 +24,7 @@ public class Nxt_code implements Runnable {
 	private static volatile boolean kicking = false;
 
 	// constants for the pilot class 
-	private static final float TRACK_WIDTH = (float) 15.0;
+	private static final float TRACK_WIDTH = (float) 13.0;
 	private static final float WHEEL_DIAMETER = (float) 8.16;
 
 	// NXT Opcodes
@@ -47,6 +47,7 @@ public class Nxt_code implements Runnable {
 
 	public static void main(String[] args) throws Exception {
 
+		
 		DifferentialPilot pilot = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, Motor.B,Motor.C, false);
 		
 		// start the sensor thread
@@ -54,9 +55,9 @@ public class Nxt_code implements Runnable {
 
 		// set initial pilot variables to produce maximum speed
 		//pilot.regulateSpeed(true);
-		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()*0.4);
-		pilot.setRotateSpeed(pilot.getMaxRotateSpeed()*0.4);
-
+		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()*0.7);
+		pilot.setRotateSpeed(pilot.getMaxRotateSpeed()*0.7);
+		pilot.setAcceleration(2000);
 		
 		while (true) {
 			try {
@@ -245,17 +246,11 @@ public class Nxt_code implements Runnable {
 		boolean reacting = false;
 		float tempCurSpeed;
 		
-		TouchSensor touchKick = new TouchSensor(SensorPort.S1);
-		
-		TouchSensor touchA = new TouchSensor(SensorPort.S2);
-		TouchSensor touchB = new TouchSensor(SensorPort.S3);
+		TouchSensor touchA = new TouchSensor(SensorPort.S1);
+		TouchSensor touchB = new TouchSensor(SensorPort.S2);
 
 		while (true) {
 			try {
-				if (touchKick.isPressed()) {
-					Motor.A.setSpeed(10);
-					Motor.A.rotate(-1,true);
-				}
 				if (!reacting && (touchA.isPressed() || touchB.isPressed())) {
 
 					// flag sensor hit as being dealt with and save the speed
