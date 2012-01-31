@@ -9,7 +9,7 @@ public class Strategy {
 		if (kick) {
 			controller.kick();
 		} else {
-			controller.moveForward(200);
+			controller.moveForward(215);
 		}
 	}
 	
