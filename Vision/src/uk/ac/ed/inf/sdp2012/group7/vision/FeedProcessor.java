@@ -243,24 +243,5 @@ public class FeedProcessor{
         //TODO: Check that the above isn't needed.
     }
 
-    public BufferedImage getThresh(BufferedImage img, int redL, int redH, int greenL, int greenH, int blueL, int blueH) { // Method to get thresholded image 
-
-    	BufferedImage threshed = new BufferedImage(this.width,this.height, 0);
-    	Color c;
-    	
-    	for (int i = 0; i < this.width; i++) {
-			for (int j = 0; j < this.height; j++) {
-				c = new Color(img.getRGB(i,j));
-				if( (c.getRed()>redL) && (c.getRed() <= redH) && (c.getBlue()>blueL) && (c.getBlue() <=blueH) && (c.getGreen()>greenL) && (c.getGreen() <= greenH)){
-					threshed.setRGB(i, j, Color.black.getRGB());
-				}
-				else{
-					threshed.setRGB(i, j, Color.white.getRGB());
-				}
-			}
-		}
-    	return threshed;
-    }
-
 
 }
