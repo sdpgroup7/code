@@ -635,7 +635,7 @@ public class ControlGUI implements ChangeListener {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        //call to strategy letting them know that bot is taking a penalty
+		        //call to control saying kick
 		        strat.mileStone1(true);
 		    }
 		});
@@ -644,7 +644,7 @@ public class ControlGUI implements ChangeListener {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        //call to strategy letting them know that bot is taking a penalty
+		        //call to control saying to drive
 		    	strat.mileStone1(false);
 		    }
 		});
