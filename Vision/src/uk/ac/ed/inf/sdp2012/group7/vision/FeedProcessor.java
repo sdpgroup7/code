@@ -15,6 +15,7 @@ public class FeedProcessor{
 
     private ColorDetection colorDetection;
     private InitialLocation initialLocation;
+    private Thresholding doThresh = new Thresholding(0); // Do Thresholding 
     
     private int height;
     private int width;
@@ -28,6 +29,7 @@ public class FeedProcessor{
         this.pitchConstants = pitchConstants;
         this.colorDetection = new ColorDetection(thresholdsState);
         this.orientationFinder = new OrientationFinder(this.thresholdsState);
+	
     }
 
     public void processAndUpdateImage(BufferedImage image, long before, JLabel label) {
@@ -205,10 +207,15 @@ public class FeedProcessor{
         worldState.setYellowX(yellow.getX());
         worldState.setYellowY(yellow.getY());
         worldState.updateCounter();
+        
+       
 
-        /* Draw the image onto the vision frame. */
+        /* Draw the image onto the vision frame. As well as the threshed image*/
         Graphics frameGraphics = label.getGraphics();
-        Graphics imageGraphics = image.getGraphics();
+       // Graphics frameGraphicsThresh = labelThresh.getGraphics();
+       // Graphics imageGraphics = image.getGraphics();
+        Graphics imageGraphics = doThresh.getThresh(image, pitchConstants.getTopLeft(),pitchConstants.getBottomRight()).getGraphics();
+        
         
         markObjects(imageGraphics,ball,blue,yellow);
 
@@ -242,25 +249,4 @@ public class FeedProcessor{
         frameGraphics.drawImage(image, 0, 0, width, height, null);
         //TODO: Check that the above isn't needed.
     }
-
-    public BufferedImage getThresh(BufferedImage img, int redL, int redH, int greenL, int greenH, int blueL, int blueH) { // Method to get thresholded image 
-
-    	BufferedImage threshed = new BufferedImage(this.width,this.height, 0);
-    	Color c;
-    	
-    	for (int i = 0; i < this.width; i++) {
-			for (int j = 0; j < this.height; j++) {
-				c = new Color(img.getRGB(i,j));
-				if( (c.getRed()>redL) && (c.getRed() <= redH) && (c.getBlue()>blueL) && (c.getBlue() <=blueH) && (c.getGreen()>greenL) && (c.getGreen() <= greenH)){
-					threshed.setRGB(i, j, Color.black.getRGB());
-				}
-				else{
-					threshed.setRGB(i, j, Color.white.getRGB());
-				}
-			}
-		}
-    	return threshed;
-    }
-
-
 }
