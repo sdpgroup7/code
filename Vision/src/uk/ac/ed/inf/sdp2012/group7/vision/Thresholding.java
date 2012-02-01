@@ -14,6 +14,7 @@ public class Thresholding {
     private final Color white = new Color(255,255,255);
     private final Color red = new Color(255,0,0);
     private final Color yellow = new Color(255,255,0);
+    private final Color blue = new Color(0,0,255);
     private Color c;
 	private int GB;// green - blue
 	private int RG; // red - green
@@ -36,16 +37,22 @@ public class Thresholding {
     	redBallThresh[0][0] = 130;
     	redBallThresh[0][1] = 110;
     	redBallThresh[0][2] = 110;
-    	redBallThresh[1][0] = 160;
+    	redBallThresh[1][0] = 150;
     	redBallThresh[1][1] = 110;
     	redBallThresh[1][2] = 110;
 	yellowRobotThresh[0][0] = 140;
 	yellowRobotThresh[0][1] = 140;
 	yellowRobotThresh[0][2] = 150;
-	yellowRobotThresh[1][0] = 160;
-	yellowRobotThresh[1][1] = 160;
-	yellowRobotThresh[1][2] = 150;
-	
+	yellowRobotThresh[1][0] = 150;
+	yellowRobotThresh[1][1] = 190;
+	yellowRobotThresh[1][2] = 140;
+	blueRobotThresh[0][0] = 150;
+	blueRobotThresh[0][1] = 150;
+	blueRobotThresh[0][2] = 100;
+	blueRobotThresh[1][0] = 150;
+	blueRobotThresh[1][1] = 150;
+	blueRobotThresh[1][2] = 100;
+
     	this.pitch=pitch;
     }
     public BufferedImage getThresh(BufferedImage img, Point TL, Point BR) { // Method to get thresholded image 
@@ -80,8 +87,8 @@ public class Thresholding {
 						yellowCount++;
 						yellowCentroid.setLocation(yellowCentroid.getX() + i, yellowCentroid.getY() + j);
 					}
-					else if( (c.getRed() <= 120) && (c.getBlue()>100)  && (c.getGreen()>140) && (c.getGreen() <= 165)){
-						img.setRGB(i, j, black.getRGB()); // Blue robot 
+					else if( (c.getRed() <= 130) && (c.getBlue()>90)  && (c.getGreen()>130) && (c.getGreen() <= 170)){
+						img.setRGB(i, j, blue.getRGB()); // Blue robot 
 						blueCount++;
 						blueCentroid.setLocation(blueCentroid.getX() + i, blueCentroid.getY() + j);
 					}
@@ -89,6 +96,9 @@ public class Thresholding {
 			}
 			
 			ballCentroid.setLocation(ballCentroid.getX()/ballCount, ballCentroid.getY()/ballCount);
+			yellowCentroid.setLocation(yellowCentroid.getX()/yellowCount, yellowCentroid.getY()/yellowCount);
+			blueCentroid.setLocation(blueCentroid.getX()/blueCount, blueCentroid.getY()/blueCount);
+			
 			
 	    	return img;
     }
