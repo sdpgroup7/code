@@ -65,14 +65,15 @@ public class Thresholding {
 						ballCentroid.setLocation(ballCentroid.getX() + i, ballCentroid.getY() + j);
 						
 					}
-				/*	else if( RG < 35 &&  (c.getBlue() <=150) && (c.getRed() > 140)  && (c.getRed() > 140)   ){
-						threshed.setRGB(i, j, black.getRGB()); // Yellow robot
+					else if( RG < 35 &&  (c.getBlue() <=150) && (c.getRed() > 140)  && (c.getRed() > 140)   ){
+						img.setRGB(i, j, black.getRGB()); // Yellow robot
+						yellowCount++;
+						yellowCentroid.setLocation(yellowCentroid.getX() + i, yellowCentroid.getY() + j);
 					}
 					else if( (c.getRed() <= 120) && (c.getBlue()>100)  && (c.getGreen()>140) && (c.getGreen() <= 165)){
-						threshed.setRGB(i, j, black.getRGB()); // Blue robot 
-					}*/
-					else{
-						//img.setRGB(i, j, red.getRGB());
+						img.setRGB(i, j, black.getRGB()); // Blue robot 
+						blueCount++;
+						blueCentroid.setLocation(blueCentroid.getX() + i, blueCentroid.getY() + j);
 					}
 				}
 			}
