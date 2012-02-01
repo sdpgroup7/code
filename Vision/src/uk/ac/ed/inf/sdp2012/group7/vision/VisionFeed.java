@@ -39,11 +39,14 @@ public class VisionFeed extends WindowAdapter {
     private VideoDevice videoDev;
     private JLabel label;
     private JFrame windowFrame;
+    //private JLabel labelThresh;
+    //private JFrame windowFrameThresh;
     private FrameGrabber frameGrabber;
     private int width, height;
     private BufferedImage frameImage;
     private ControlGUI thresholdGUI;
     private FeedProcessor processor;
+    
     /**
      * Default constructor.
      *
@@ -73,7 +76,6 @@ public class VisionFeed extends WindowAdapter {
         InitialLocation il = new InitialLocation(thresholdsGUI, this, pitchConstants, this.windowFrame);
         processor = new FeedProcessor(il, height, width, pitchConstants, thresholdsGUI);
 
-        il.getColors();
         il.getPoints();
         
     }
@@ -116,7 +118,8 @@ public class VisionFeed extends WindowAdapter {
                 long before = System.currentTimeMillis();
                 frameImage = frame.getBufferedImage();
                 frame.recycle();
-                processor.processAndUpdateImage(frameImage, before, label);
+                //processor.processAndUpdateImage(frameImage, before, label, labelThresh);
+		processor.processAndUpdateImage(frameImage, before, label);		
             }
         });
 
@@ -137,6 +140,14 @@ public class VisionFeed extends WindowAdapter {
         windowFrame.addWindowListener(this);
         windowFrame.setVisible(true);
         windowFrame.setSize(width+5, height+25);
+       
+      /*  windowFrameThresh = new JFrame("Vision Window Threshed");
+        labelThresh = new JLabel();
+        windowFrameThresh.getContentPane().add(labelThresh);
+	windowFrameThresh.addWindowListener(this);
+        windowFrameThresh.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        windowFrameThresh.setVisible(true);
+        windowFrameThresh.setSize(width+5, height+25);  */
     }
     
     //useless, had to be included because of the MouseEvent interface

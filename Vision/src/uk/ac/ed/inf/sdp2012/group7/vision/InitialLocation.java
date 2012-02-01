@@ -20,6 +20,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     private VisionFeed visionFeed;
     private boolean buffersSet = false;
     private JFrame windowFrame;
+    private Color wh = new Color(255,255,255);
 
     public InitialLocation(ControlGUI thresholdsGUI, VisionFeed visionFeed, PitchConstants pitchConstants, JFrame windowFrame) {
         this.thresholdGUI = thresholdsGUI;
@@ -154,7 +155,8 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
             for(int x = 0;x<width;x++){
                 for(int y = 0;y<height;y++){
                     if((y == pitchConstants.getTopBuffer()) || (x == pitchConstants.getRightBuffer()) || (y == pitchConstants.getBottomBuffer()) || (x == pitchConstants.getLeftBuffer())){
-                        image.setRGB(x,y,(255 << 24) + 255);
+                        
+                        image.setRGB(x,y,wh.getRGB());
                     }
                 }
             }
