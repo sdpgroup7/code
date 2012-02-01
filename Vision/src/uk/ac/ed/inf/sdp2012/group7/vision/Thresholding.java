@@ -21,9 +21,9 @@ public class Thresholding {
     private int pitch;
     private int height;
     private int width;
-    private Point ballCentroid;
-    private Point blueCentroid;
-    private Point yellowCentroid;
+    private Point ballCentroid = new Point();
+    private Point blueCentroid = new Point();
+    private Point yellowCentroid = new Point();
     private int ballCount;
     private int yellowCount;
     private int blueCount;
