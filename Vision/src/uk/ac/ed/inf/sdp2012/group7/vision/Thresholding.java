@@ -87,10 +87,11 @@ public class Thresholding {
 						yellowCount++;
 						yellowCentroid.setLocation(yellowCentroid.getX() + i, yellowCentroid.getY() + j);
 					}
-					else if( (c.getRed() <= 130) && (c.getBlue()>90)  && (c.getGreen()>130) && (c.getGreen() <= 170)){
+					else if( (c.getRed() <= 110) && (c.getBlue()>100)  && (c.getGreen()>140) && (c.getGreen() <= 165)){
 						img.setRGB(i, j, blue.getRGB()); // Blue robot 
 						blueCount++;
 						blueCentroid.setLocation(blueCentroid.getX() + i, blueCentroid.getY() + j);
+						//make blue thresholds for the different pitches in that [pitch][x] style
 					}
 				}
 			}
