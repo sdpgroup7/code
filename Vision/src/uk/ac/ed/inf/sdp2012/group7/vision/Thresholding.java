@@ -21,6 +21,12 @@ public class Thresholding {
     private int pitch;
     private int height;
     private int width;
+    private Point ballCentroid;
+    private Point blueCentroid;
+    private Point yellowCentroid;
+    private int ballCount;
+    private int yellowCount;
+    private int blueCount;
     
     
     public Thresholding(int pitch) {
@@ -32,13 +38,20 @@ public class Thresholding {
     	redBallThresh[1][2] = 110;
     	this.pitch=pitch;
     }
-	   public BufferedImage getThresh(BufferedImage img, Point TL, Point BR) { // Method to get thresholded image 
+    public BufferedImage getThresh(BufferedImage img, Point TL, Point BR) { // Method to get thresholded image 
 		   	
 		   width = BR.x;
 		   height = BR.y;
 		 //  BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
 	    	
-
+           ballCount = 0;
+           ballCentroid.setLocation(0,0);
+            
+           blueCount = 0;
+           blueCentroid.setLocation(0,0);
+            
+           yellowCount = 0;
+           yellowCentroid.setLocation(0,0);
 
 	    	
 	    	for (int i = TL.x; i < width; i++) {
@@ -48,6 +61,9 @@ public class Thresholding {
 					RG = Math.abs((c.getRed() - c.getGreen()));
 					if( (c.getRed() > redBallThresh[pitch][0]) &&  (c.getBlue() <= redBallThresh[pitch][1]) &&  (c.getGreen() <= redBallThresh[pitch][2]) && GB < 40){
 						img.setRGB(i, j, black.getRGB()); //Red Ball
+						ballCount++;
+						ballCentroid.setLocation(ballCentroid.getX() + i, ballCentroid.getY() + j);
+						
 					}
 				/*	else if( RG < 35 &&  (c.getBlue() <=150) && (c.getRed() > 140)  && (c.getRed() > 140)   ){
 						threshed.setRGB(i, j, black.getRGB()); // Yellow robot
@@ -60,6 +76,23 @@ public class Thresholding {
 					}
 				}
 			}
+			
+			ballCentroid.setLocation(ballCentroid.getX()/ballCount, ballCentroid.getY()/ballCount);
+			
 	    	return img;
-	    }
+    }
+    
+    public Point getBallCentroid() {
+        return ballCentroid;
+    }
+    
+    public Point getBlueCentroid() {
+        return blueCentroid;
+    }
+    
+    public Point getYellowCentroid() {
+        return yellowCentroid;
+    }
+	    
+	    
 }
