@@ -3,7 +3,7 @@ package uk.ac.ed.inf.sdp2012.group7.vision;
 public class WorldState implements VisualMethods{
 
 
-    Pitch pitch = new Pitch();
+    ObjectPosition pitch = new ObjectPosition();
     ObjectPosition ourGoal = new ObjectPosition();
     ObjectPosition opponentsGoal = new ObjectPosition();
     
@@ -15,20 +15,49 @@ public class WorldState implements VisualMethods{
     private int pitch; // 0 = main, 1 = side room
   
     public WorldState() {
-        
         /* control properties */
         this.direction = 0;
         this.pitch = 0;
-        
     }
     
     public Robot getOurRobot(){
-        return ourRobot;
+        return this.ourRobot;
     }
 
     public Robot getOpponentsRobot(){
-        return opponentsRobot;
+        return this.opponentsRobot;
     }
+
+    public Ball getBall(){
+        return this.ball;
+    }
+
+    public ObjectPosition getPitch(){
+        return this.pitch
+    }
+
+    public ObjectPosition getOurGoal(){
+        return this.ourGoal;
+    }
+
+    public ObjectPosition getOpponentsGoal(){
+        return this.opponentsGoal;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void setYellowY(int yellowY) {
         this.yellowY = yellowY;
