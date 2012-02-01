@@ -13,14 +13,18 @@ public class Thresholding {
     private final Color black= new Color(0,0,0);
     private final Color white = new Color(255,255,255);
     private final Color red = new Color(255,0,0);
+    private final Color yellow = new Color(255,255,0);
     private Color c;
 	private int GB;// green - blue
 	private int RG; // red - green
 	private int RGthresh;
     private int[][] redBallThresh= new int[2][3];
+    private int[][] yellowRobotThresh= new int[2][3];
+    private int[][] blueRobotThresh= new int[2][3];
     private int pitch;
     private int height;
     private int width;
+
     
     
     public Thresholding(int pitch) {
@@ -30,6 +34,13 @@ public class Thresholding {
     	redBallThresh[1][0] = 160;
     	redBallThresh[1][1] = 110;
     	redBallThresh[1][2] = 110;
+	yellowRobotThresh[0][0] = 140;
+	yellowRobotThresh[0][1] = 140;
+	yellowRobotThresh[0][2] = 150;
+	yellowRobotThresh[1][0] = 160;
+	yellowRobotThresh[1][1] = 160;
+	yellowRobotThresh[1][2] = 150;
+	
     	this.pitch=pitch;
     }
 	   public BufferedImage getThresh(BufferedImage img, Point TL, Point BR) { // Method to get thresholded image 
@@ -49,10 +60,10 @@ public class Thresholding {
 					if( (c.getRed() > redBallThresh[pitch][0]) &&  (c.getBlue() <= redBallThresh[pitch][1]) &&  (c.getGreen() <= redBallThresh[pitch][2]) && GB < 40){
 						img.setRGB(i, j, black.getRGB()); //Red Ball
 					}
-				/*	else if( RG < 35 &&  (c.getBlue() <=150) && (c.getRed() > 140)  && (c.getRed() > 140)   ){
-						threshed.setRGB(i, j, black.getRGB()); // Yellow robot
+					else if( RG < 35 &&  (c.getBlue() <= yellowRobotThresh[pitch][2]) && (c.getRed() > yellowRobotThresh[pitch][0])  && (c.getGreen() > yellowRobotThresh[pitch][1])   ){
+						img.setRGB(i, j, yellow.getRGB()); // Yellow robot
 					}
-					else if( (c.getRed() <= 120) && (c.getBlue()>100)  && (c.getGreen()>140) && (c.getGreen() <= 165)){
+					/*else if( (c.getRed() <= 120) && (c.getBlue()>100)  && (c.getGreen()>140) && (c.getGreen() <= 165)){
 						threshed.setRGB(i, j, black.getRGB()); // Blue robot 
 					}*/
 					else{
