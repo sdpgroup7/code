@@ -1,59 +1,64 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
 
 public class WorldState implements VisualMethods{
+
+
+    ObjectPosition pitch = new ObjectPosition();
+    ObjectPosition ourGoal = new ObjectPosition();
+    ObjectPosition opponentsGoal = new ObjectPosition();
+    
+    Robot ourRobot = new Robot();
+    Robot opponentsRobot = new Robot();
+    Ball ball = new Ball();
     
     private int direction; // 0 = right, 1 = left.
-    private int colour; // 0 = yellow, 1 = blue
     private int pitch; // 0 = main, 1 = side room
-    private int blueX;
-    private int blueY;
-    private int yellowX;
-    private int yellowY;
-    private int ballX;
-    private int ballY;
-    private float blueOrientation;
-    private float yellowOrientation;
-    private long counter;
   
     public WorldState() {
-        
         /* control properties */
         this.direction = 0;
-        this.colour = 0;
         this.pitch = 0;
-        
-        /* object properties */
-        this.blueX = 0;
-        this.blueY = 0;
-        this.yellowX = 0;
-        this.yellowY = 0;
-        this.ballX = 0;
-        this.ballY = 0;
-        this.blueOrientation = 0;
-        this.yellowOrientation = 0;
     }
     
-    public int getBlueX() {
-        return blueX;
+    public Robot getOurRobot(){
+        return this.ourRobot;
     }
-    public void setBlueX(int blueX) {
-        this.blueX = blueX;
+
+    public Robot getOpponentsRobot(){
+        return this.opponentsRobot;
     }
-    public int getBlueY() {
-        return blueY;
+
+    public Ball getBall(){
+        return this.ball;
     }
-    public void setBlueY(int blueY) {
-        this.blueY = blueY;
+
+    public ObjectPosition getPitch(){
+        return this.pitch
     }
-    public int getYellowX() {
-        return yellowX;
+
+    public ObjectPosition getOurGoal(){
+        return this.ourGoal;
     }
-    public void setYellowX(int yellowX) {
-        this.yellowX = yellowX;
+
+    public ObjectPosition getOpponentsGoal(){
+        return this.opponentsGoal;
     }
-    public int getYellowY() {
-        return yellowY;
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public void setYellowY(int yellowY) {
         this.yellowY = yellowY;
     }
@@ -108,14 +113,6 @@ public class WorldState implements VisualMethods{
 
     public void setPitch(int pitch) {
         this.pitch = pitch;
-    }
-  
-    public void updateCounter() {
-        this.counter++;
-    }
-  
-    public long getCounter() {
-        return this.counter;
     }
 
     public ObjectPosition getBallPosition(){
