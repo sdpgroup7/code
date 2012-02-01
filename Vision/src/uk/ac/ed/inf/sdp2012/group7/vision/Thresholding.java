@@ -24,7 +24,12 @@ public class Thresholding {
     private int pitch;
     private int height;
     private int width;
-
+    private Point ballCentroid = new Point();
+    private Point blueCentroid = new Point();
+    private Point yellowCentroid = new Point();
+    private int ballCount;
+    private int yellowCount;
+    private int blueCount;
     
     
     public Thresholding(int pitch) {
@@ -43,13 +48,20 @@ public class Thresholding {
 	
     	this.pitch=pitch;
     }
-	   public BufferedImage getThresh(BufferedImage img, Point TL, Point BR) { // Method to get thresholded image 
+    public BufferedImage getThresh(BufferedImage img, Point TL, Point BR) { // Method to get thresholded image 
 		   	
 		   width = BR.x;
 		   height = BR.y;
 		 //  BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
 	    	
-
+           ballCount = 0;
+           ballCentroid.setLocation(0,0);
+            
+           blueCount = 0;
+           blueCentroid.setLocation(0,0);
+            
+           yellowCount = 0;
+           yellowCentroid.setLocation(0,0);
 
 	    	
 	    	for (int i = TL.x; i < width; i++) {
@@ -59,18 +71,39 @@ public class Thresholding {
 					RG = Math.abs((c.getRed() - c.getGreen()));
 					if( (c.getRed() > redBallThresh[pitch][0]) &&  (c.getBlue() <= redBallThresh[pitch][1]) &&  (c.getGreen() <= redBallThresh[pitch][2]) && GB < 40){
 						img.setRGB(i, j, black.getRGB()); //Red Ball
+						ballCount++;
+						ballCentroid.setLocation(ballCentroid.getX() + i, ballCentroid.getY() + j);
+						
 					}
 					else if( RG < 35 &&  (c.getBlue() <= yellowRobotThresh[pitch][2]) && (c.getRed() > yellowRobotThresh[pitch][0])  && (c.getGreen() > yellowRobotThresh[pitch][1])   ){
 						img.setRGB(i, j, yellow.getRGB()); // Yellow robot
+						yellowCount++;
+						yellowCentroid.setLocation(yellowCentroid.getX() + i, yellowCentroid.getY() + j);
 					}
-					/*else if( (c.getRed() <= 120) && (c.getBlue()>100)  && (c.getGreen()>140) && (c.getGreen() <= 165)){
-						threshed.setRGB(i, j, black.getRGB()); // Blue robot 
-					}*/
-					else{
-						//img.setRGB(i, j, red.getRGB());
+					else if( (c.getRed() <= 120) && (c.getBlue()>100)  && (c.getGreen()>140) && (c.getGreen() <= 165)){
+						img.setRGB(i, j, black.getRGB()); // Blue robot 
+						blueCount++;
+						blueCentroid.setLocation(blueCentroid.getX() + i, blueCentroid.getY() + j);
 					}
 				}
 			}
+			
+			ballCentroid.setLocation(ballCentroid.getX()/ballCount, ballCentroid.getY()/ballCount);
+			
 	    	return img;
-	    }
+    }
+    
+    public Point getBallCentroid() {
+        return ballCentroid;
+    }
+    
+    public Point getBlueCentroid() {
+        return blueCentroid;
+    }
+    
+    public Point getYellowCentroid() {
+        return yellowCentroid;
+    }
+	    
+	    
 }
