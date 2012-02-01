@@ -132,14 +132,14 @@ public class Nxt_code implements Runnable {
 								public void run() {
 									Motor.A.setSpeed(900);
 									
-									Motor.A.rotate(-60, true);
+									Motor.A.rotate(-45, true);
 									try {
 										Thread.sleep(300);
 									} catch (InterruptedException e) {
 										System.err.println("Kick: interrupted during waiting: " + e.getMessage());
 									}
-									Motor.A.setSpeed(60);
-									Motor.A.rotate(60, true);
+									Motor.A.setSpeed(45);
+									Motor.A.rotate(45, true);
 									
 									kicking = false;
 								}
