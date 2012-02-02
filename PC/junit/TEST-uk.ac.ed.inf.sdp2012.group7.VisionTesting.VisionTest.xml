@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="4" hostname="knapdale.inf.ed.ac.uk" name="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" tests="4" time="0.173" timestamp="2012-02-02T19:45:07">
+<testsuite errors="0" failures="4" hostname="knapdale.inf.ed.ac.uk" name="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" tests="4" time="0.077" timestamp="2012-02-02T21:45:09">
   <properties>
     <property name="java.vendor" value="Sun Microsystems Inc." />
     <property name="env.SESSION_MANAGER" value="local/unix:@/tmp/.ICE-unix/7070,unix/unix:/tmp/.ICE-unix/7070" />
@@ -170,12 +170,12 @@ module-cs sdp7" />
 	at uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest.testMarkObjects(VisionTest.java:16)
 </failure>
   </testcase>
-  <testcase classname="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" name="test1" time="0.002">
+  <testcase classname="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" name="test1" time="0.008">
     <failure message="Not yet implemented" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Not yet implemented
 	at uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest.test1(VisionTest.java:21)
 </failure>
   </testcase>
-  <testcase classname="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" name="test2" time="0.009">
+  <testcase classname="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" name="test2" time="0.002">
     <failure message="Not yet implemented" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Not yet implemented
 	at uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest.test2(VisionTest.java:26)
 </failure>
