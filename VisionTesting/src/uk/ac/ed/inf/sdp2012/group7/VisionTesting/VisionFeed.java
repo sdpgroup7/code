@@ -6,6 +6,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.Point;
 import java.io.*;
 import javax.imageio.*;
 import java.awt.Graphics2D;
@@ -24,19 +27,67 @@ import au.edu.jcu.v4l4j.exceptions.ImageFormatException;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 
 
-public class VisionFeed extends WindowAdapter {
+public class VisionFeed extends WindowAdapter implements MouseListener {
     private VideoDevice videoDev;
     private JLabel label = new JLabel();
     private JFrame windowFrame;
     private FrameGrabber frameGrabber;
     private int width, height;
     private BufferedImage frameImage;
+    private boolean mouseClick = false;
+    private Point coords = new Point(0,0);
+    private ArrayList<Point> points = new ArrayList<Point>();
 
     public VisionFeed(String videoDevice, int width, int height, int channel, int videoStandard, int compressionQuality) throws V4L4JException {
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);  
         initGUI();
-        System.out.println("I've run");      
+        getPoints();
     }
+
+    public void mouseExited(MouseEvent e){}
+    public void mouseEntered(MouseEvent e){}
+    public void mousePressed(MouseEvent e){}
+    public void mouseReleased(MouseEvent e){}
+    public void mouseClicked(MouseEvent e){
+        coords = correctPoint(e.getPoint());
+        mouseClick = true;
+    }
+
+
+    public Point correctPoint(Point p){
+        return new Point(p.x-4,p.y-24);
+    }
+
+
+    public void getPoints(){
+        points.add(getClickPoint("Click the ball"));
+        points.add(getClickPoint("Click a corner on the blue robot"));
+        points.add(getClickPoint("Click another corner on the blue robot"));
+        points.add(getClickPoint("Click another corner on the blue robot"));
+        points.add(getClickPoint("Click another corner on the blue robot"));
+        points.add(getClickPoint("Click a corner on the yellow robot"));
+        points.add(getClickPoint("Click another corner on the yellow robot"));
+        points.add(getClickPoint("Click another corner on the yellow robot"));
+        points.add(getClickPoint("Click another corner on the yellow robot"));
+        points.add(getClickPoint("Click the grey circle on the blue robot"));
+        points.add(getClickPoint("Click the grey circle on the yellow robot"));
+        points.add(getClickPoint("Click the very bottom of the T on the blue robot"));
+        points.add(getClickPoint("Click the very bottom of the T on the yellow robot"));
+    }
+
+    public Point getClickPoint(String message){
+        System.out.println(message);
+
+        while (!mouseClick) {
+            try{
+                Thread.sleep(100);
+            } catch (Exception e) {}
+        }
+        mouseClick = false;
+        System.out.println(coords);
+        return coords;
+    }
+
 
     public BufferedImage getFrameImage(){
         return this.frameImage;
@@ -80,6 +131,7 @@ public class VisionFeed extends WindowAdapter {
         windowFrame.addWindowListener(this);
         windowFrame.setVisible(true);
         windowFrame.setSize(660,500);
+        windowFrame.addMouseListener(this);
     }
 
     public void writeImage(BufferedImage image, String fn){
