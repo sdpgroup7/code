@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="VisionTesting">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="VisionTesting.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="/group/teaching/sdp/sdp7/JavaVision/lib/v4l4j.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="src:./src"/>
+            <classpath refid="VisionTesting.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target name="VisionTesting">
+        <java classname="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTesting" failonerror="true" fork="yes">
+            <env key="LD_LIBRARY_PATH" value="/group/teaching/sdp/sdp7/lib:/group/teaching/sdp/sdp7/OpenCV/OpenCV-2.3.1/release/lib:/group/teaching/sdp/sdp7/lejos/bluez/lib"/>
+            <classpath refid="VisionTesting.classpath"/>
+        </java>
+    </target>
+</project>
