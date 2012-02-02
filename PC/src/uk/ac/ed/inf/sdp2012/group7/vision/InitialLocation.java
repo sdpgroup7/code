@@ -43,6 +43,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     }
     //When the mouse has been clicked get the location.
     public void mouseClicked(MouseEvent e){
+    	System.out.println(e.getPoint().toString());
         coords = correctPoint(e.getPoint());
         mouseClick = true;
     }
@@ -107,7 +108,15 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     }
 
     public Point correctPoint(Point p){
-        return new Point(p.x-4,p.y-24);
+        return new Point(correctX(p.x),correctY(p.y));
+    }
+    
+    public int correctX(int x){
+    	return x-4;
+    }
+    
+    public int correctY(int y){
+    	return y-24;
     }
 
     /*
@@ -117,7 +126,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     public Color getColor(Point p, BufferedImage image){
         //writeImage(image,"test.png");
 
-        Color[] temp = new Color[9];
+        /*Color[] temp = new Color[9];
         temp[0] = new Color(image.getRGB(p.x-1,p.y-1));
         temp[1] = new Color(image.getRGB(p.x-1,p.y));
         temp[2] = new Color(image.getRGB(p.x-1,p.y+1));
@@ -143,7 +152,10 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
 
         Color avgColor = new Color(avgr,avgg,avgb);
         System.err.println(avgColor.toString());
-        return avgColor;
+        return avgColor;*/
+    	Color c = new Color(image.getRGB(p.x,p.y));
+    	System.out.println(c.toString());
+    	return c;
     }
     
     public BufferedImage markImage(BufferedImage image) {

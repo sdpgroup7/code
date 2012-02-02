@@ -70,7 +70,9 @@ public class VisionFeed extends WindowAdapter {
         InitialLocation il = new InitialLocation(thresholdsGUI, this, pitchConstants, this.windowFrame);
         processor = new FeedProcessor(il, height, width, pitchConstants, thresholdsGUI);
 
+        il.getColors();
         il.getPoints();
+        
         
     }
 

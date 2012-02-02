@@ -18,7 +18,7 @@ public class FeedProcessor{
 
     private ColorDetection colorDetection;
     private InitialLocation initialLocation;
-    private Thresholding doThresh = new Thresholding(1); // Do Thresholding 
+    private Thresholding doThresh = new Thresholding(0); // Do Thresholding 
     
     private int height;
     private int width;
@@ -75,7 +75,7 @@ public class FeedProcessor{
         Graphics frameGraphics = label.getGraphics();
        // Graphics frameGraphicsThresh = labelThresh.getGraphics();
        // Graphics imageGraphics = image.getGraphics();
-        Graphics imageGraphics = doThresh.getThresh(image, pitchConstants.getTopLeft(),pitchConstants.getBottomRight()).getGraphics();
+        Graphics imageGraphics = doThresh.getThresh(image, pitchConstants.getLeftBuffer(),pitchConstants.getRightBuffer(), pitchConstants.getTopBuffer(),pitchConstants.getBottomBuffer()).getGraphics();
         
         Point ballCent = doThresh.getBallCentroid();
         Point blueCent = doThresh.getBlueCentroid();
