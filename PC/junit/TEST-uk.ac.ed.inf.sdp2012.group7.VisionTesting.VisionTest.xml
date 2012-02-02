@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="4" hostname="knapdale.inf.ed.ac.uk" name="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" tests="4" time="0.064" timestamp="2012-02-02T15:40:26">
+<testsuite errors="0" failures="4" hostname="knapdale.inf.ed.ac.uk" name="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" tests="4" time="0.056" timestamp="2012-02-02T15:50:23">
   <properties>
     <property name="java.vendor" value="Sun Microsystems Inc." />
     <property name="env.SESSION_MANAGER" value="local/unix:@/tmp/.ICE-unix/17732,unix/unix:/tmp/.ICE-unix/17732" />
@@ -13,7 +13,7 @@
     <property name="env.PROMPT_COMMAND" value="echo -en &quot;\e]2;$USER @ $SHORT_HOSTNAME:$PWD\a\e]1;$SHORT_HOSTNAME\a&quot;" />
     <property name="os.name" value="Linux" />
     <property name="sun.boot.class.path" value="/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/resources.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/rt.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/jsse.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/jce.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/charsets.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/netx.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/plugin.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/rhino.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/modules/jdk.boot.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/classes" />
-    <property name="env.PWD" value="/afs/inf.ed.ac.uk/user/s09/s0943263/workspace/PC" />
+    <property name="env.PWD" value="/afs/inf.ed.ac.uk/user/s09/s0943263/code/PC" />
     <property name="env.XDG_SESSION_COOKIE" value="eb8ce103bbcd434abc80bf5c00000012-1328194626.742367-1806666157" />
     <property name="sun.desktop" value="gnome" />
     <property name="env.LANG" value="en_GB.UTF-8" />
@@ -67,7 +67,7 @@
     <property name="java.vm.info" value="mixed mode" />
     <property name="env.KRB5CCNAME" value="FILE:/tmp/krb5cc_496716_g2rU0L" />
     <property name="env.LOGNAME" value="s0943263" />
-    <property name="ant.file" value="/afs/inf.ed.ac.uk/user/s09/s0943263/workspace/PC/build.xml" />
+    <property name="ant.file" value="/afs/inf.ed.ac.uk/user/s09/s0943263/code/PC/build.xml" />
     <property name="os.version" value="2.6.32-131.21.1.el6.x86_64" />
     <property name="env.NXJ_HOME" value="/group/teaching/sdp/sdp7/lejos/lejos_nxj" />
     <property name="env.ROLES" value="module-comn
@@ -110,7 +110,7 @@ old-degree-csp sdp7" />
     <property name="java.vendor.url" value="http://java.sun.com/" />
     <property name="java.vm.vendor" value="Sun Microsystems Inc." />
     <property name="java.runtime.name" value="OpenJDK Runtime Environment" />
-    <property name="java.class.path" value="/afs/inf.ed.ac.uk/user/s09/s0943263/workspace/PC/bin:/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/pccomm.jar:/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/bluecove.jar:/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/bluecove-gpl.jar:/group/teaching/sdp/sdp7/lib/v4l4j.jar:/usr/lib64/eclipse/dropins/jdt/plugins/org.junit_4.8.1.v4_8_1_v20100427-1100/junit.jar:/usr/lib64/eclipse/dropins/jdt/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar:/usr/share/java/junit-3.8.2.jar:/usr/share/java/ant-launcher-1.7.1.jar:/usr/share/java/ant-1.7.1.jar:/usr/share/java/ant/ant-junit-1.7.1.jar" />
+    <property name="java.class.path" value="/afs/inf.ed.ac.uk/user/s09/s0943263/code/PC/bin:/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/pccomm.jar:/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/bluecove.jar:/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/bluecove-gpl.jar:/group/teaching/sdp/sdp7/lib/v4l4j.jar:/usr/lib64/eclipse/dropins/jdt/plugins/org.junit_4.8.1.v4_8_1_v20100427-1100/junit.jar:/usr/lib64/eclipse/dropins/jdt/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar:/usr/share/java/junit-3.8.2.jar:/usr/share/java/ant-launcher-1.7.1.jar:/usr/share/java/ant-1.7.1.jar:/usr/share/java/ant/ant-junit-1.7.1.jar" />
     <property name="ant.version" value="Apache Ant version 1.7.1 compiled on November 24 2010" />
     <property name="env.ORGANIZATION" value="School of Informatics, The University of Edinburgh" />
     <property name="env.CVS_RSH" value="ssh" />
@@ -137,7 +137,7 @@ old-degree-csp sdp7" />
     <property name="env.ENV_ROOT" value="/usr/share/defenv/bash" />
     <property name="java.ext.dirs" value="/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/ext:/usr/java/packages/lib/ext" />
     <property name="env.XAUTHORITY" value="/var/run/kdm/.Xauthg4X4eT" />
-    <property name="user.dir" value="/afs/inf.ed.ac.uk/user/s09/s0943263/workspace/PC" />
+    <property name="user.dir" value="/afs/inf.ed.ac.uk/user/s09/s0943263/code/PC" />
     <property name="env.SshAgent" value="/usr/bin/ssh-agent" />
     <property name="line.separator" value="
 " />
@@ -145,14 +145,14 @@ old-degree-csp sdp7" />
     <property name="env.ASPELL_CONF" value="master british" />
     <property name="env.COLORTERM" value="gnome-terminal" />
     <property name="env.EDITOR" value="/usr/bin/emacs" />
-    <property name="basedir" value="/afs/inf.ed.ac.uk/user/s09/s0943263/workspace/PC" />
+    <property name="basedir" value="/afs/inf.ed.ac.uk/user/s09/s0943263/code/PC" />
     <property name="ant.java.version" value="1.6" />
     <property name="env.ORBIT_SOCKETDIR" value="/tmp/orbit-s0943263" />
     <property name="ant.core.lib" value="/usr/share/java/ant-1.7.1.jar" />
     <property name="source" value="1.6" />
     <property name="file.encoding" value="UTF-8" />
     <property name="env.GNOME_KEYRING_SOCKET" value="/tmp/keyring-cUhyo7/socket" />
-    <property name="ant.file.PC" value="/afs/inf.ed.ac.uk/user/s09/s0943263/workspace/PC/build.xml" />
+    <property name="ant.file.PC" value="/afs/inf.ed.ac.uk/user/s09/s0943263/code/PC/build.xml" />
     <property name="env.resize" value="() {  eval `command resize`
 }" />
     <property name="env.KDE_IS_PRELINKED" value="1" />
@@ -171,12 +171,12 @@ old-degree-csp sdp7" />
 	at uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest.testMarkObjects(VisionTest.java:16)
 </failure>
   </testcase>
-  <testcase classname="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" name="test1" time="0.0">
+  <testcase classname="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" name="test1" time="0.001">
     <failure message="Not yet implemented" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Not yet implemented
 	at uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest.test1(VisionTest.java:21)
 </failure>
   </testcase>
-  <testcase classname="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" name="test2" time="0.004">
+  <testcase classname="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" name="test2" time="0.003">
     <failure message="Not yet implemented" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Not yet implemented
 	at uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest.test2(VisionTest.java:26)
 </failure>
