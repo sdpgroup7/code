@@ -9,10 +9,10 @@ import java.awt.Point;
  */
 public class ObjectPosition extends Point{
 
-    private int topLeft = 0;
-    private int topRight = 0;
-    private int bottomLeft = 0;
-    private int bottomRight = 0;
+    private Point topLeft = new Point(0,0);
+    private Point topRight = new Point(0,0);
+    private Point bottomLeft = new Point(0,0);
+    private Point bottomRight = new Point(0,0);
     
     public ObjectPosition(){
         super(0,0);
@@ -22,7 +22,7 @@ public class ObjectPosition extends Point{
         super(x,y);
     }
 
-    public ObjectPosition(int topLeft, int topRight, int bottomLeft, int bottomRight){
+    public ObjectPosition(Point topLeft, Point topRight, Point bottomLeft, Point bottomRight){
         this.topLeft = topLeft;
         this.topRight = topRight;
         this.bottomLeft = bottomLeft;
@@ -30,8 +30,8 @@ public class ObjectPosition extends Point{
     }
 
 
-    public int[] getCorners(){
-        int[] ret = new int[4];
+    public Point[] getCorners(){
+        Point[] ret = new Point[4];
         ret[0] = topLeft;
         ret[1] = topRight;
         ret[2] = bottomLeft;
@@ -39,54 +39,54 @@ public class ObjectPosition extends Point{
         return ret;
     }
 
-    public void setCorners(int[] corners){
+    public void setCorners(Point[] corners){
         this.topLeft = corners[0];
         this.topRight = corners[1];
         this.bottomLeft = corners[2];
         this.bottomRight = corners[3];
     }
 
-    public int getTopLeft(){
+    public Point getTopLeft(){
         return this.topLeft;
     }
 
-    public int getTopRight(){
+    public Point getTopRight(){
         return this.topRight;
     }
 
-    public int getBottomLeft(){
+    public Point getBottomLeft(){
         return this.bottomLeft;
     }
 
-    public int getBottomRight(){
+    public Point getBottomRight(){
         return this.bottomRight;
     }
 
-    public void setTopLeft(int v){
+    public void setTopLeft(Point v){
         this.topLeft = v;
     }
 
-    public void setTopRight(int v){
+    public void setTopRight(Point v){
         this.topRight = v;
     }
 
-    public void setBottomLeft(int v){
+    public void setBottomLeft(Point v){
         this.bottomLeft = v;
     }
 
-    public void setBottomRight(int v){
+    public void setBottomRight(Point v){
         this.bottomRight = v;
     }
 
     public int getHeight(){
-        return Math.max(topLeft,topRight) - Math.min(bottomLeft,bottomRight);
+        return Math.max(topLeft.y,topRight.y) - Math.min(bottomLeft.y,bottomRight.y);
     }
 
     public int getWidth(){
-        return Math.max(topRight,bottomRight) - Math.min(topLeft,bottomLeft);
+        return Math.max(topRight.x,bottomRight.x) - Math.min(topLeft.x,bottomLeft.x);
     }
 
     public String toString(){
-        return "Center: " + super.toString() + "\n" + "(TopLeft,TopRight,BottomLeft,BottomRight) = (" + Integer.toString(topLeft) + "," + Integer.toString(topRight) + "," + Integer.toString(bottomLeft) + "," + Integer.toString(bottomRight) + ")";
+        return "Center: " + super.toString() + "\n" + "(TopLeft,TopRight,BottomLeft,BottomRight) = (" + topLeft.toString() + "," + topRight.toString() + "," + bottomLeft.toString() + "," + bottomRight.toString() + ")";
     }
 }

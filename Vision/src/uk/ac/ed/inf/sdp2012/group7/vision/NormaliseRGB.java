@@ -6,7 +6,8 @@ public class NormaliseRGB{
 
     /*
     Takes in an image and normalises the RGB values.
-    Probably wont use it as affects frame rate too much
+    Probably wont use it as affects frame rate too much, even 
+    when only doing it within the bounds.
     */
 
     public BufferedImage normalise(BufferedImage image){
