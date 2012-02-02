@@ -31,7 +31,7 @@ public class ObjectPosition extends Point{
 
 
     public Point[] getCorners(){
-        Point[4] ret;
+        Point[] ret = new Point[4];
         ret[0] = topLeft;
         ret[1] = topRight;
         ret[2] = bottomLeft;
@@ -87,6 +87,6 @@ public class ObjectPosition extends Point{
     }
 
     public String toString(){
-        return "Center: " + super.toString() + "\n" + "(TopLeft,TopRight,BottomLeft,BottomRight) = (" + Integer.toString(topLeft) + "," + Integer.toString(topRight) + "," + Integer.toString(bottomLeft) + "," + Integer.toString(bottomRight) + ")";
+        return "Center: " + super.toString() + "\n" + "(TopLeft,TopRight,BottomLeft,BottomRight) = (" + topLeft.toString() + "," + topRight.toString() + "," + bottomLeft.toString() + "," + bottomRight.toString() + ")";
     }
 }
