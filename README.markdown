@@ -4,11 +4,8 @@ How to run / compile the PC code (make sure the brick is running the Nxt_code if
 --
 Low-tech people:
 1. cd PC/
-
 (2. ant clean)
-
 3. ant
-
 4. ant MainRunner 
 
 
