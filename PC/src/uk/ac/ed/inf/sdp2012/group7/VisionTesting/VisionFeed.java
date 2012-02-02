@@ -23,6 +23,9 @@ import au.edu.jcu.v4l4j.VideoDevice;
 import au.edu.jcu.v4l4j.VideoFrame;
 import au.edu.jcu.v4l4j.exceptions.ImageFormatException;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
+import org.w3c.dom.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 
 public class VisionFeed extends WindowAdapter implements MouseListener {
@@ -40,6 +43,17 @@ public class VisionFeed extends WindowAdapter implements MouseListener {
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);  
         initGUI();
         getPoints();
+        writePoints(); //http://www.roseindia.net/xml/dom/createblankdomdocument.shtml
+    }
+
+    public void writePoints(){
+        try{
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder parser = factory.newDocumentBuilder();
+            Document doc = parser.newDocument();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     public void mouseExited(MouseEvent e){}

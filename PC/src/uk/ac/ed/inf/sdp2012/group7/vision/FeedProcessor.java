@@ -18,7 +18,7 @@ public class FeedProcessor{
 
     private ColorDetection colorDetection;
     private InitialLocation initialLocation;
-    private Thresholding doThresh = new Thresholding(1); // Do Thresholding 
+    private Thresholding doThresh = new Thresholding(0); // Do Thresholding 
     
     private int height;
     private int width;
