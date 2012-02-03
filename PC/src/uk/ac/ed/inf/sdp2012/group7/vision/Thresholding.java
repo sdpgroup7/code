@@ -18,8 +18,6 @@ public class Thresholding {
 
 	private ArrayList<Point> yellowRobot = new ArrayList<Point>();
 	private ArrayList<Point> blueRobot = new ArrayList<Point>();;
-
-
     private Color c;
 	private int GB;// green - blue
 	private int RG; // red - green

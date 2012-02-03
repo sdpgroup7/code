@@ -7,14 +7,12 @@ import java.util.Queue;
 import lejos.pc.comm.NXTComm;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTInfo;
-import uk.ac.ed.inf.sdp2012.group7.shared.ConstantsReuse;
-import uk.ac.ed.inf.sdp2012.group7.shared.RobotDetails;
 
 /**
  * This class holds the geometric location of our robot but is also responsible
  * for communicating with it.
  */
-public class RobotControl extends RobotDetails {
+public class RobotControl {
 
 	private CommunicationInterface comms;
 	private NXTComm nxtComm;
@@ -26,14 +24,6 @@ public class RobotControl extends RobotDetails {
 	private boolean keepConnected = true;
 	public boolean askingToReset = false;
 	private volatile int currentSpeed = 0;
-
-	/**
-	 * This method updates the location and angle of the robot.
-	 */
-	public void updateRobotDetails(RobotDetails me) {
-		coors = me.getCoors();
-		angle = me.getAngle();
-	}
 
 	/**
 	 * This method initialises the connection and starts the thread which sends
