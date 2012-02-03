@@ -34,30 +34,31 @@ public class Thresholding {
     private int ballCount;
     private int yellowCount;
     private int blueCount;
+    private PitchConstants pc = new PitchConstants(0);
     
     private int upperBound = 181;
     
     
     public Thresholding(int pitch) {  // Sets the constants for thresholding for each pitch 
-    	redBallThresh[0][0] = 130;
-    	redBallThresh[0][1] = 100;
-    	redBallThresh[0][2] = 100;
+    	redBallThresh[0][0] = pc.ball_r_low+25;
+    	redBallThresh[0][1] = pc.ball_g_low+25;
+    	redBallThresh[0][2] = pc.ball_b_low+25;
     	redBallThresh[1][0] = 150;
     	redBallThresh[1][1] = 110;
     	redBallThresh[1][2] = 110;
-    	yellowRobotThresh[0][0] = 150;
-    	yellowRobotThresh[0][1] = 150;
-    	yellowRobotThresh[0][2] = 150;
+    	yellowRobotThresh[0][0] = pc.yellow_r_low+25;
+    	yellowRobotThresh[0][1] = pc.yellow_g_low+25;
+    	yellowRobotThresh[0][2] = pc.yellow_b_low+25;
 		yellowRobotThresh[1][0] = 150;
 		yellowRobotThresh[1][1] = 190;
 		yellowRobotThresh[1][2] = 140;
-		blueRobotThresh[0][0] = 150;
-		blueRobotThresh[0][1] = 150;
-		blueRobotThresh[0][2] = 100;
+		blueRobotThresh[0][0] = pc.blue_r_low+25;
+		blueRobotThresh[0][1] = pc.blue_r_low+25;
+		blueRobotThresh[0][2] = pc.blue_r_low+25;
 		blueRobotThresh[1][0] = 150;
 		blueRobotThresh[1][1] = 150;
 		blueRobotThresh[1][2] = 100;
-		greenPlatesThresh[0][0] = 155;
+		greenPlatesThresh[0][0] = pc.green_g_low+25;
 		greenPlatesThresh[1][0] = 155;
 
     	this.pitch=pitch;
