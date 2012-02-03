@@ -79,6 +79,7 @@ public class FeedProcessor{
         Point ballCent = doThresh.getBallCentroid();
         Point blueCent = doThresh.getBlueCentroid();
         Point yellowCent = doThresh.getYellowCentroid();
+        Point blueGreenPlate = doThresh.getBlueGreenPlateCentori();
 
         worldState.setBallX((int)ballCent.getX());
         worldState.setBallY((int)ballCent.getY());
@@ -86,6 +87,10 @@ public class FeedProcessor{
       
         worldState.setBlueX((int)blueCent.getX());
         worldState.setBlueY((int)blueCent.getY());
+        
+        worldState.setBlueGreenPlateX(blueGreenPlate.x);
+        worldState.setBlueGreenPlateY(blueGreenPlate.y);
+        
         /* worldState.setYellowX(yellow.getX());
         worldState.setYellowY(yellow.getY());
         worldState.updateCounter();
@@ -110,6 +115,8 @@ public class FeedProcessor{
             imageGraphics.setColor(Color.yellow);
             imageGraphics.drawOval((int)yellow.getX()-15, (int)yellow.getY()-15, 30,30);
             imageGraphics.setColor(Color.white);
+            imageGraphics.setColor(Color.red);
+            imageGraphics.drawLine(worldState.getBlueX(), worldState.getBlueY(), worldState.getBlueGreenPlateX(), worldState.getBlueGreenPlateY());
         
     }
 

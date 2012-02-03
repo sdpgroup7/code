@@ -17,28 +17,38 @@ import java.util.ArrayList;
 public class Thresholding {
 
 	private ArrayList<Point> yellowRobot = new ArrayList<Point>();
-	private ArrayList<Point> blueRobot = new ArrayList<Point>();;
+
+	private ArrayList<Point> blueRobot = new ArrayList<Point>();
+	private ArrayList<Point> greenPlates = new ArrayList<Point>();
+	
+
     private Color c;
+    
 	private int GB;// green - blue
 	private int RG; // red - green
 	private int RB; // red - blue
 	private int RGthresh;
+	
     private int[][] redBallThresh= new int[2][3];
     private int[][] yellowRobotThresh= new int[2][3];
     private int[][] blueRobotThresh= new int[2][3];
     private int[][] greenPlatesThresh= new int[2][1];
+    
     private int pitch;
     private int height;
     private int width;
+    
     private Point ballCentroid = new Point();
     private Point blueCentroid = new Point();
     private Point yellowCentroid = new Point();
+    private Point blueGreenPlateCentroid = new Point();
+    
     private int ballCount;
     private int yellowCount;
     private int blueCount;
     private int robot; // 0 for Yellow, 1 for Blue(our robot) 
     
-    private int upperBound = 181;
+
     
     
     public Thresholding(int pitch) {  // Sets the constants for thresholding for each pitch 
@@ -122,6 +132,8 @@ public class Thresholding {
 					}
 					else if ( GB > 50 && RG > 50 && c.getGreen() > 160) {
 						img.setRGB(i,j, Color.green.getRGB()); // GreenPlates 
+						p.setLocation(i,j);
+						greenPlates.add(p);
 					}
 				}
 			}
@@ -130,10 +142,42 @@ public class Thresholding {
 			yellowCentroid.setLocation(yellowCentroid.getX()/yellowCount, yellowCentroid.getY()/yellowCount);
 			blueCentroid.setLocation(blueCentroid.getX()/blueCount, blueCentroid.getY()/blueCount);
 
+			
+			blueGreenPlateCentroid = findCentroid(getGreenPlateBlue(greenPlates));
 
 	    	return img;
     }
-    
+    /**
+     * 
+     * @param allGreenThings
+     * @return ourGreen
+     *  Given all green points return the green points around the blue robot
+     */
+    public ArrayList<Point> getGreenPlateBlue(ArrayList<Point> allGreenThings){
+    	ArrayList<Point> ourGreen = new ArrayList<Point>();
+    	for (int i = 0; i < greenPlates.size(); i++) {
+			if( (greenPlates.get(i).x > blueCentroid.x - 40) && (greenPlates.get(i).x < blueCentroid.x + 40) &&(greenPlates.get(i).y > blueCentroid.y - 40) && (greenPlates.get(i).y < blueCentroid.y + 40 ) ){
+				ourGreen.add(greenPlates.get(i));
+			}
+		}
+    	return ourGreen;
+    }
+    /**
+     * 
+     * @param listOfPoints
+     * @return centroidPoint
+     * Given an array of points return its centorid
+     */
+    public Point findCentroid(ArrayList<Point> listOfPoints){
+    	int sumX = 0;
+    	int sumY = 0;
+    	for (int i = 0; i < listOfPoints.size(); i++) {
+			sumX += listOfPoints.get(i).x;
+			sumY += listOfPoints.get(i).y;
+		}
+    	
+    	return new Point((int) (sumX/(double)listOfPoints.size() ), (int) (sumY/(double)listOfPoints.size()));
+    }
     public Point getBallCentroid() {
         return ballCentroid;
     }
@@ -146,5 +190,9 @@ public class Thresholding {
         return yellowCentroid;
     }
 
-
+    public Point getBlueGreenPlateCentori(){ 
+    	return blueGreenPlateCentroid;
+    }
+	    
+	    
 }
