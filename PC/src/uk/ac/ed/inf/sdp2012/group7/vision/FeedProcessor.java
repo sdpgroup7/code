@@ -84,10 +84,10 @@ public class FeedProcessor{
         worldState.setBallX((int)ballCent.getX());
         worldState.setBallY((int)ballCent.getY());
         
-        /*
-        worldState.setBlueX(blue.getX());
-        worldState.setBlueY(blue.getY());
-        worldState.setYellowX(yellow.getX());
+      
+        worldState.setBlueX((int)blueCent.getX());
+        worldState.setBlueY((int)blueCent.getY());
+        /* worldState.setYellowX(yellow.getX());
         worldState.setYellowY(yellow.getY());
         worldState.updateCounter();
         */

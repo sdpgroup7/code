@@ -74,6 +74,16 @@ public class WorldState implements VisualMethods{
     public void setYellowY(int yellowY) {
         this.yellowY = yellowY;
     }
+    public void setYellowX(int yellowX) {
+        this.yellowX = yellowX;
+    }
+    public void setBlueY(int blueY) {
+        this.blueY = blueY;
+    }
+    public void setBlueX(int blueX) {
+        this.blueX = blueX;
+    }
+
     public int getBallX() {
         return ballX;
     }
