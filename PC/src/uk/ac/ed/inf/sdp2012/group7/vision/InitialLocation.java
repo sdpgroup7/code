@@ -20,7 +20,6 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     private VisionFeed visionFeed;
     private boolean buffersSet = false;
     private JFrame windowFrame;
-    private Color wh = new Color(255,255,255);
 
     public InitialLocation(ControlGUI thresholdsGUI, VisionFeed visionFeed, PitchConstants pitchConstants, JFrame windowFrame) {
         this.thresholdGUI = thresholdsGUI;
@@ -29,6 +28,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         this.windowFrame = windowFrame;
         windowFrame.addMouseListener(this);
         windowFrame.addMouseMotionListener(this);
+        Vision.logger.info("InitialLocation Initialised");
     }
     
     public void mouseExited(MouseEvent e){}
@@ -43,7 +43,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     }
     //When the mouse has been clicked get the location.
     public void mouseClicked(MouseEvent e){
-    	System.out.println(e.getPoint().toString());
+    	Vision.logger.debug(e.getPoint().toString());
         coords = correctPoint(e.getPoint());
         mouseClick = true;
     }
@@ -53,7 +53,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
 	    /*
 	    Get the extremes of the pitch.
 	    */
-		System.err.println("By bulge we mean the part of the pitch (in green) which sticks out the most in the specified direction");
+		System.out.println("By bulge we mean the part of the pitch (in green) which sticks out the most in the specified direction");
 		pitchConstants.setTopBuffer(getClickPoint("Click the top bulge").y);
 		pitchConstants.setRightBuffer(getClickPoint("Click the right bulge").x);
 		pitchConstants.setBottomBuffer(getClickPoint("Click the bottom bulge").y);
@@ -71,7 +71,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     just register the mouse click after being asked to by getClickPoint
     */
 	public Point getClickPoint(String message){
-		System.err.println(message);
+		System.out.println(message);
 
         while (!mouseClick) {
             try{
@@ -79,7 +79,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
             } catch (Exception e) {}
         }
         mouseClick = false;
-        System.err.println(coords);
+        Vision.logger.debug(coords.toString());
         return coords;
     }
     
@@ -96,7 +96,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     Registers the mouse clicks after being asked to by getColors
     */
     public Color getClickColor(String message){
-        System.err.println(message);
+        System.out.println(message);
 
         while (!mouseClick) {
             try{
@@ -154,7 +154,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         System.err.println(avgColor.toString());
         return avgColor;*/
     	Color c = new Color(image.getRGB(p.x,p.y));
-    	System.out.println(c.toString());
+    	Vision.logger.debug(c.toString());
     	return c;
     }
     
@@ -167,8 +167,8 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
             for(int x = 0;x<width;x++){
                 for(int y = 0;y<height;y++){
                     if((y == pitchConstants.getTopBuffer()) || (x == pitchConstants.getRightBuffer()) || (y == pitchConstants.getBottomBuffer()) || (x == pitchConstants.getLeftBuffer())){
-                        
-                        image.setRGB(x,y,wh.getRGB());
+                        //TODO: Use the line drawing methods to do this
+                        image.setRGB(x,y,Color.white.getRGB());
                     }
                 }
             }
