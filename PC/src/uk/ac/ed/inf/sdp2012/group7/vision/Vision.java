@@ -6,6 +6,9 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 import au.edu.jcu.v4l4j.V4L4JConstants;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 /** 
  * The main class used to run the vision system. Creates the control
  * GUI, and initialises the image processing.
@@ -15,6 +18,7 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 public class Vision {
     private static ControlGUI thresholdsGUI;
     private static WorldState worldState;
+    static final Logger logger = Logger.getLogger(Vision.class);
     
     
     /**
@@ -25,9 +29,13 @@ public class Vision {
      */
     
     public Vision(ActionListener strategyListener){
-    	
+        
     }
+
     public Vision() {
+        
+        BasicConfigurator.configure();
+        Vision.logger.debug("Hello World!");
         worldState = new WorldState();
         ThresholdsState thresholdsState = new ThresholdsState();
 
