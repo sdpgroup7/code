@@ -10,7 +10,7 @@ import java.awt.Point;
 public class PitchConstants {
 	
 	/* The pitch number. 0 is the main pitch, 1 is the side pitch. */
-	private int pitchNum; //TODO: remove
+	//private int pitchNum;
 
 	/* Ball */
 	public int ball_r_low;
@@ -185,7 +185,7 @@ public class PitchConstants {
 	 */
 	public void setPitchNum(int newPitchNum) {
 		assert (newPitchNum >= 0 && newPitchNum <= 1);
-		this.pitchNum = newPitchNum;
+		//this.pitchNum = newPitchNum;
 		loadDefaultConstants();
 	}
 	

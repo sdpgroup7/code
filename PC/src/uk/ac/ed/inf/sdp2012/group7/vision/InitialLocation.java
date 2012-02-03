@@ -13,7 +13,6 @@ import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
 public class InitialLocation implements MouseListener, MouseMotionListener {
 
     private Point coords = new Point();
-    private static Point mouseCo = new Point(0,0);
     private boolean mouseClick = false;
     private PitchConstants pitchConstants;
     private ControlGUI thresholdGUI;
@@ -22,7 +21,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     private JFrame windowFrame;
 
     public InitialLocation(ControlGUI thresholdsGUI, VisionFeed visionFeed, PitchConstants pitchConstants, JFrame windowFrame) {
-        this.thresholdGUI = thresholdsGUI;
+    	this.thresholdGUI = thresholdsGUI;
         this.visionFeed = visionFeed;
         this.pitchConstants = pitchConstants;
         this.windowFrame = windowFrame;
@@ -35,12 +34,8 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     public void mouseEntered(MouseEvent e){}
     public void mousePressed(MouseEvent e){}
     public void mouseReleased(MouseEvent e){}
-    public void mouseMoved(MouseEvent e) {
-        mouseCo = correctPoint(e.getPoint());
-    }
-    public void mouseDragged(MouseEvent e) {
-        mouseCo = correctPoint(e.getPoint());
-    }
+    public void mouseMoved(MouseEvent e) {}
+    public void mouseDragged(MouseEvent e) {}
     //When the mouse has been clicked get the location.
     public void mouseClicked(MouseEvent e){
     	Vision.logger.debug(e.getPoint().toString());
