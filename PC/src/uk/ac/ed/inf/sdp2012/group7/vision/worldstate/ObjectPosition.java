@@ -71,6 +71,10 @@ public class ObjectPosition{
     public Point getBottomRight(){
         return this.bottomRight;
     }
+    
+    public Point getCentre(){
+    	return this.centre;
+    }
 
     public void setTopLeft(Point v){
         this.topLeft = v;
