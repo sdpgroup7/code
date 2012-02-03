@@ -57,7 +57,7 @@ public class Nxt_code implements Runnable {
 		//pilot.regulateSpeed(true);
 		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()*0.7);
 		pilot.setRotateSpeed(pilot.getMaxRotateSpeed()*0.7);
-		pilot.setAcceleration(2000);
+		pilot.setAcceleration(1000);
 		
 		while (true) {
 			try {
@@ -132,14 +132,14 @@ public class Nxt_code implements Runnable {
 								public void run() {
 									Motor.A.setSpeed(900);
 									
-									Motor.A.rotate(-45, true);
+									Motor.A.rotate(-30, true);
 									try {
-										Thread.sleep(300);
+										Thread.sleep(150);
 									} catch (InterruptedException e) {
 										System.err.println("Kick: interrupted during waiting: " + e.getMessage());
 									}
 									Motor.A.setSpeed(45);
-									Motor.A.rotate(45, true);
+									Motor.A.rotate(30, true);
 									
 									kicking = false;
 								}
