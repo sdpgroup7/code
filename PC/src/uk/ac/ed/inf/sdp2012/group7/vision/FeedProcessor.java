@@ -81,10 +81,16 @@ public class FeedProcessor{
         Point yellowCent = doThresh.getYellowCentroid();
         Point blueGreenPlate = doThresh.getBlueGreenPlateCentori();
 
-        worldState.setBallX((int)ballCent.getX());
-        worldState.setBallY((int)ballCent.getY());
-        
+        worldState.setBallPosition(ballCent);
+        if(true){ //TODO: make this check if we are blue
+        	worldState.setOurRobotPosition(blueCent);
+        	worldState.setOpponentsRobotPosition(yellowCent);
+        } else {
+        	worldState.setOurRobotPosition(yellowCent);
+        	worldState.setOpponentsRobotPosition(blueCent);
+        }
       
+<<<<<<< HEAD
         worldState.setBlueX((int)blueCent.getX());
         worldState.setBlueY((int)blueCent.getY());
         
@@ -96,6 +102,9 @@ public class FeedProcessor{
         worldState.updateCounter();
         */
        
+=======
+ 
+>>>>>>> worldstate
 
 
         

@@ -35,6 +35,7 @@ public class Vision {
     public Vision() {
         
         BasicConfigurator.configure();
+        
         Vision.logger.info("Vision System Started");
         //Vision.logger.debug("Sample debug message");
         //Vision.logger.info("Sample info message");
