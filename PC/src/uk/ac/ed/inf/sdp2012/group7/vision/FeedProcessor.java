@@ -24,7 +24,8 @@ public class FeedProcessor{
     private int width;
 
     public FeedProcessor(InitialLocation il, int height, int width, PitchConstants pitchConstants, ControlGUI controlGUI){
-        this.thresholdsState = controlGUI.getThresholdsState();
+        
+    	this.thresholdsState = controlGUI.getThresholdsState();
         this.worldState = controlGUI.getWorldState();
         this.initialLocation = il;
         this.height = height;
@@ -32,7 +33,7 @@ public class FeedProcessor{
         this.pitchConstants = pitchConstants;
         this.colorDetection = new ColorDetection(thresholdsState);
         this.orientationFinder = new OrientationFinder(this.thresholdsState);
-	
+        Vision.logger.info("Feed Processor Initialised");
     }
 
     public void processAndUpdateImage(BufferedImage image, long before, JLabel label) {

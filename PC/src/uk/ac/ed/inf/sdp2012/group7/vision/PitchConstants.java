@@ -147,22 +147,22 @@ public class PitchConstants {
 
     public void setTopBuffer(int value){
         this.topBuffer = value;
-        System.err.println(Integer.toString(value));
+        Vision.logger.debug(Integer.toString(value));
     }
 
     public void setRightBuffer(int value){
         this.rightBuffer = value;
-        System.err.println(Integer.toString(value));
+        Vision.logger.debug(Integer.toString(value));
     }
 
     public void setBottomBuffer(int value){
         this.bottomBuffer = value;
-        System.err.println(Integer.toString(value));
+        Vision.logger.debug(Integer.toString(value));
     }
 
     public void setLeftBuffer(int value){
         this.leftBuffer = value;
-        System.err.println(Integer.toString(value));
+        Vision.logger.debug(Integer.toString(value));
     }
 
 
