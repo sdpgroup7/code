@@ -12,11 +12,10 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 public class FeedProcessor{
     
     private WorldState worldState;
-    private ThresholdsState thresholdsState;
+    //private ThresholdsState thresholdsState; //might not be needed any more
     private PitchConstants pitchConstants;
-    private OrientationFinder orientationFinder;
+    //private OrientationFinder orientationFinder; //might not be needed anymore
 
-    private ColorDetection colorDetection;
     private InitialLocation initialLocation;
     private Thresholding doThresh = new Thresholding(0); // Do Thresholding 
     
@@ -25,14 +24,13 @@ public class FeedProcessor{
 
     public FeedProcessor(InitialLocation il, int height, int width, PitchConstants pitchConstants, ControlGUI controlGUI){
         
-    	this.thresholdsState = controlGUI.getThresholdsState();
+    	//this.thresholdsState = controlGUI.getThresholdsState();
         this.worldState = controlGUI.getWorldState();
         this.initialLocation = il;
         this.height = height;
         this.width = width;
         this.pitchConstants = pitchConstants;
-        this.colorDetection = new ColorDetection(thresholdsState);
-        this.orientationFinder = new OrientationFinder(this.thresholdsState);
+        //this.orientationFinder = new OrientationFinder(this.thresholdsState);
         Vision.logger.info("Feed Processor Initialised");
     }
 
@@ -40,14 +38,14 @@ public class FeedProcessor{
 
         image = initialLocation.markImage(image);
 
-        int topBuffer = pitchConstants.getTopBuffer();
-        int bottomBuffer = pitchConstants.getBottomBuffer();
-        int leftBuffer = pitchConstants.getLeftBuffer();
-        int rightBuffer = pitchConstants.getRightBuffer();
+        //int topBuffer = pitchConstants.getTopBuffer();
+        //int bottomBuffer = pitchConstants.getBottomBuffer();
+        //int leftBuffer = pitchConstants.getLeftBuffer();
+        //int rightBuffer = pitchConstants.getRightBuffer();
 
         /* For every pixel within the pitch, test to see if it belongs to the ball,
          * the yellow T, the blue T, either green plate or a grey circle. */
-        Color c;
+        //Color c;
         /* Position objects to hold the centre point of the ball and both robots. */
         
 
