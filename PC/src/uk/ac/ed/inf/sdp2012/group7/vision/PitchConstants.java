@@ -10,7 +10,7 @@ import java.awt.Point;
 public class PitchConstants {
 	
 	/* The pitch number. 0 is the main pitch, 1 is the side pitch. */
-	private int pitchNum; //TODO: remove
+	//private int pitchNum;
 
 	/* Ball */
 	public int ball_r_low;
@@ -147,22 +147,22 @@ public class PitchConstants {
 
     public void setTopBuffer(int value){
         this.topBuffer = value;
-        System.err.println(Integer.toString(value));
+        Vision.logger.debug(Integer.toString(value));
     }
 
     public void setRightBuffer(int value){
         this.rightBuffer = value;
-        System.err.println(Integer.toString(value));
+        Vision.logger.debug(Integer.toString(value));
     }
 
     public void setBottomBuffer(int value){
         this.bottomBuffer = value;
-        System.err.println(Integer.toString(value));
+        Vision.logger.debug(Integer.toString(value));
     }
 
     public void setLeftBuffer(int value){
         this.leftBuffer = value;
-        System.err.println(Integer.toString(value));
+        Vision.logger.debug(Integer.toString(value));
     }
 
 
@@ -185,7 +185,7 @@ public class PitchConstants {
 	 */
 	public void setPitchNum(int newPitchNum) {
 		assert (newPitchNum >= 0 && newPitchNum <= 1);
-		this.pitchNum = newPitchNum;
+		//this.pitchNum = newPitchNum;
 		loadDefaultConstants();
 	}
 	

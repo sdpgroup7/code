@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.sdp2012.group7.VisionTesting;
+package uk.ac.ed.inf.sdp2012.group7.testing.vision;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -28,6 +28,9 @@ import au.edu.jcu.v4l4j.VideoFrame;
 import au.edu.jcu.v4l4j.exceptions.ImageFormatException;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 import org.w3c.dom.*;
+
+import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+
 import javax.xml.parsers.*; 
 import javax.xml.transform.*; 
 import javax.xml.transform.dom.DOMSource; 
@@ -49,13 +52,11 @@ public class VisionFeed extends WindowAdapter implements MouseListener {
     
     public VisionFeed(String videoDevice, int width, int height, int channel, int videoStandard, int compressionQuality) throws V4L4JException {
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);  
-        
         initGUI();
         try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		}
         getPoints();
         writePoints(); //http://www.roseindia.net/xml/dom/createblankdomdocument.shtml

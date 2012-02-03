@@ -17,9 +17,11 @@ import java.util.ArrayList;
 public class Thresholding {
 
 	private ArrayList<Point> yellowRobot = new ArrayList<Point>();
+
 	private ArrayList<Point> blueRobot = new ArrayList<Point>();
 	private ArrayList<Point> greenPlates = new ArrayList<Point>();
 	
+
     private Color c;
     
 	private int GB;// green - blue
@@ -75,11 +77,11 @@ public class Thresholding {
     	//this.robot = robot;
     }
     public BufferedImage getThresh(BufferedImage img, int left, int right, int top, int bottom) { // Method to get thresholded image 
-		   	
+
 		   width = right-left;
 		   height = top-bottom;
 		 //  BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
-	    	
+
            ballCount = 0;
            ballCentroid.setLocation(0,0);
             
@@ -100,7 +102,7 @@ public class Thresholding {
 						img.setRGB(i, j, Color.black.getRGB()); //Red Ball
 						ballCount++;
 						ballCentroid.setLocation(ballCentroid.getX() + i, ballCentroid.getY() + j);
-						
+
 					}
 					/*if(  RB > 50 && RG > 50 && c.getRed() >= redBallThresh[pitch][0]){ //  was inside  RB > 50 && RG > 50
 						img.setRGB(i, j, Color.black.getRGB()); //Red Ball
@@ -135,13 +137,14 @@ public class Thresholding {
 					}
 				}
 			}
-			
+
 			ballCentroid.setLocation(ballCentroid.getX()/ballCount, ballCentroid.getY()/ballCount);
 			yellowCentroid.setLocation(yellowCentroid.getX()/yellowCount, yellowCentroid.getY()/yellowCount);
 			blueCentroid.setLocation(blueCentroid.getX()/blueCount, blueCentroid.getY()/blueCount);
+
 			
 			blueGreenPlateCentroid = findCentroid(getGreenPlateBlue(greenPlates));
-			
+
 	    	return img;
     }
     /**
@@ -186,6 +189,7 @@ public class Thresholding {
     public Point getYellowCentroid() {
         return yellowCentroid;
     }
+
     public Point getBlueGreenPlateCentori(){ 
     	return blueGreenPlateCentroid;
     }

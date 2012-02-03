@@ -69,7 +69,7 @@ public class VisionFeed extends WindowAdapter {
         this.thresholdGUI = thresholdsGUI;
         InitialLocation il = new InitialLocation(thresholdsGUI, this, pitchConstants, this.windowFrame);
         processor = new FeedProcessor(il, height, width, pitchConstants, thresholdsGUI);
-
+        Vision.logger.info("VisionFeed Initialised");
         il.getColors();
         il.getPoints();
         
@@ -98,7 +98,8 @@ public class VisionFeed extends WindowAdapter {
         DeviceInfo deviceInfo = videoDev.getDeviceInfo();
 
         if (deviceInfo.getFormatList().getNativeFormats().isEmpty()) {
-          throw new ImageFormatException("Unable to detect any native formats for the device!");
+        	Vision.logger.fatal("Couldn't detect native format for the device.");
+            throw new ImageFormatException("Unable to detect any native formats for the device!");
         }
         ImageFormat imageFormat = deviceInfo.getFormatList().getNativeFormat(0);
 
@@ -106,8 +107,7 @@ public class VisionFeed extends WindowAdapter {
 
         frameGrabber.setCaptureCallback(new CaptureCallback() {
             public void exceptionReceived(V4L4JException e) {
-                System.err.println("Unable to capture frame:");
-                e.printStackTrace();
+                Vision.logger.error("Unable to capture frame: " + e.getMessage());
             }
 
             public void nextFrame(VideoFrame frame) {
@@ -115,12 +115,11 @@ public class VisionFeed extends WindowAdapter {
                 frameImage = frame.getBufferedImage();
                 frame.recycle();
                 //processor.processAndUpdateImage(frameImage, before, label, labelThresh);
-		processor.processAndUpdateImage(frameImage, before, label);		
+                processor.processAndUpdateImage(frameImage, before, label);		
             }
         });
 
         frameGrabber.startCapture();
-        //System.err.println("Video Frame width,height: " + frameGrabber.getWidth() + "," + frameGrabber.getHeight());
         width = frameGrabber.getWidth();
         height = frameGrabber.getHeight();
     }
@@ -149,16 +148,15 @@ public class VisionFeed extends WindowAdapter {
     //useless, had to be included because of the MouseEvent interface
     
     
-    //can output the buffered image to disk, can normalise if neccessary
+    //can output the buffered image to disk, can normalise if necessary
     public void writeImage(BufferedImage image, String fn){
         try {
             File outputFile = new File(fn);
             ImageIO.write(image, "png", outputFile);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        	Vision.logger.error("Failed to write image: " + e.getMessage());
+        }
     }
-
-    //crops the image based on the corner values and then stretches that back up to 640x480
-
 
     /**
      * Catches the window closing event, so that we can free up resources
@@ -172,7 +170,7 @@ public class VisionFeed extends WindowAdapter {
         videoDev.releaseFrameGrabber();
 
         windowFrame.dispose();
-
+        Vision.logger.info("Vision System Ending...");
         System.exit(0);
     }
 

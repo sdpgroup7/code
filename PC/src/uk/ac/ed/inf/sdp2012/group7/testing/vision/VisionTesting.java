@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.sdp2012.group7.VisionTesting;
+package uk.ac.ed.inf.sdp2012.group7.testing.vision;
 import au.edu.jcu.v4l4j.V4L4JConstants;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 

@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/bluecove-gpl.jar"/>
 	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/v4l4j.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="/group/teaching/sdp/sdp7/lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

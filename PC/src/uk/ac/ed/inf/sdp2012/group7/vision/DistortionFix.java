@@ -5,7 +5,8 @@ import java.awt.image.BufferedImage;
 public class DistortionFix {
 
     public BufferedImage removeBarrelDistortion(BufferedImage image){
-
+    	Vision.logger.info("This method has not yet been implemented.");
+    	
         return null;
     }
 

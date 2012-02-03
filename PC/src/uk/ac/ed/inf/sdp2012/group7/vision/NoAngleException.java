@@ -6,9 +6,11 @@ public class NoAngleException extends Exception {
 
 	public NoAngleException() {
 		super();
+		Vision.logger.error("NoAngleException was thrown!");
 	}
 	
 	public NoAngleException(String message) {
 		super(message);
+		Vision.logger.error("NoAngleException: " + message);
 	}
 }
