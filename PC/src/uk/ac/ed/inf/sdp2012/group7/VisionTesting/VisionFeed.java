@@ -9,7 +9,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.math.*;
 
 import javax.imageio.ImageIO;
@@ -37,14 +40,23 @@ public class VisionFeed extends WindowAdapter implements MouseListener {
     private JFrame windowFrame;
     private FrameGrabber frameGrabber;
     private int width, height;
-    private BufferedImage frameImage;
+    private static BufferedImage frameImage;
     private boolean mouseClick = false;
     private Point coords = new Point(0,0);
     private ArrayList<Point> points = new ArrayList<Point>();
-
+    private boolean pause = false;
+    private String filename = "";
+    
     public VisionFeed(String videoDevice, int width, int height, int channel, int videoStandard, int compressionQuality) throws V4L4JException {
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);  
+        
         initGUI();
+        try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         getPoints();
         writePoints(); //http://www.roseindia.net/xml/dom/createblankdomdocument.shtml
     }
@@ -66,37 +78,37 @@ public class VisionFeed extends WindowAdapter implements MouseListener {
         	DocumentBuilder docBuilder = factory.newDocumentBuilder();
         	Document doc = docBuilder.newDocument();
         	Element root = doc.createElement("data");
-        	root.setAttribute("location", "/path/to/file");
+        	root.setAttribute("location", this.filename + ".png");
         	doc.appendChild(root);
-        	Element childElement = doc.createElement("Blue");
-        	childElement.setAttribute("Orientation","" + blueO );
+        	Element childElement = doc.createElement("blue");
+        	childElement.setAttribute("orientation","" + blueO );
         	root.appendChild(childElement);
         	for(int i = 1;i<5;i++){
-        		Element corner = doc.createElement("Corner");
+        		Element corner = doc.createElement("corner");
         		corner.setAttribute("vertex", Integer.toString(i-1));
-        		corner.setAttribute("X", Integer.toString(pts[i].x));
-        		corner.setAttribute("Y", Integer.toString(pts[i].y));
+        		corner.setAttribute("x", Integer.toString(pts[i].x));
+        		corner.setAttribute("y", Integer.toString(pts[i].y));
         		childElement.appendChild(corner);
         	}
-        	childElement = doc.createElement("Yellow");
-        	childElement.setAttribute("Orientation","" + yellowO);
+        	childElement = doc.createElement("yellow");
+        	childElement.setAttribute("orientation","" + yellowO);
         	root.appendChild(childElement);
         	for(int i = 5;i<9;i++){
-        		Element corner = doc.createElement("Corner");
+        		Element corner = doc.createElement("corner");
         		corner.setAttribute("vertex", Integer.toString(i-5));
-        		corner.setAttribute("X", Integer.toString(pts[i].x));
-        		corner.setAttribute("Y", Integer.toString(pts[i].y));
+        		corner.setAttribute("x", Integer.toString(pts[i].x));
+        		corner.setAttribute("y", Integer.toString(pts[i].y));
         		childElement.appendChild(corner);
         	}
-        	childElement = doc.createElement("Ball");
-        	childElement.setAttribute("X",Integer.toString(pts[0].x));
-        	childElement.setAttribute("Y",Integer.toString(pts[0].y));
+        	childElement = doc.createElement("ball");
+        	childElement.setAttribute("x",Integer.toString(pts[0].x));
+        	childElement.setAttribute("y",Integer.toString(pts[0].y));
         	root.appendChild(childElement);
         	TransformerFactory tranFactory = TransformerFactory.newInstance(); 
         	Transformer aTransformer = tranFactory.newTransformer(); 
 
         	Source src = new DOMSource(doc); 
-        	Result dest = new StreamResult(new File("testing.xml")); 
+        	Result dest = new StreamResult(new File(filename + ".xml")); 
         	aTransformer.transform(src, dest); 
         	  
         }catch(Exception e){
@@ -120,6 +132,11 @@ public class VisionFeed extends WindowAdapter implements MouseListener {
 
 
     public void getPoints(){
+    	pause = true;
+    	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	Date date = new Date();
+    	filename = "testData/" + dateFormat.format(date);
+    	writeImage(getFrameImage(),filename + ".png");
         points.add(getClickPoint("Click the ball"));
         points.add(getClickPoint("Click a corner on the blue robot"));
         points.add(getClickPoint("Click another corner on the blue robot"));
@@ -133,6 +150,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener {
         points.add(getClickPoint("Click the grey circle on the yellow robot"));
         points.add(getClickPoint("Click the very bottom of the T on the blue robot"));
         points.add(getClickPoint("Click the very bottom of the T on the yellow robot"));
+        pause = false;
     }
 
     public Point getClickPoint(String message){
@@ -149,8 +167,8 @@ public class VisionFeed extends WindowAdapter implements MouseListener {
     }
 
 
-    public BufferedImage getFrameImage(){
-        return this.frameImage;
+    public static BufferedImage getFrameImage(){
+        return frameImage;
     }
     
     private void initFrameGrabber(String videoDevice, int inWidth, int inHeight, int channel, int videoStandard, int compressionQuality) throws V4L4JException {
@@ -172,10 +190,10 @@ public class VisionFeed extends WindowAdapter implements MouseListener {
             }
 
             public void nextFrame(VideoFrame frame) {
-                long before = System.currentTimeMillis();
-                frameImage = frame.getBufferedImage();
-                frame.recycle();
-                processAndUpdateImage(frameImage, before);
+	            long before = System.currentTimeMillis();
+	            if(!pause) frameImage = frame.getBufferedImage();
+	            frame.recycle();
+	            processAndUpdateImage(frameImage, before);
             }
         });
 
@@ -194,11 +212,13 @@ public class VisionFeed extends WindowAdapter implements MouseListener {
         windowFrame.addMouseListener(this);
     }
 
-    public void writeImage(BufferedImage image, String fn){
+    public static void writeImage(BufferedImage image, String fn){
         try {
             File outputFile = new File(fn);
             ImageIO.write(image, "png", outputFile);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        	System.err.println("Why doesn't this just run?");
+        }
     }
 
     public void windowClosing(WindowEvent e) {
