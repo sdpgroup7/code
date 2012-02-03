@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="4" hostname="cumbrae.inf.ed.ac.uk" name="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" tests="4" time="0.06" timestamp="2012-02-03T14:48:19">
+<testsuite errors="0" failures="4" hostname="kilbride.inf.ed.ac.uk" name="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" tests="4" time="0.068" timestamp="2012-02-03T16:27:53">
   <properties>
     <property name="java.vendor" value="Sun Microsystems Inc." />
-    <property name="env.SESSION_MANAGER" value="local/unix:@/tmp/.ICE-unix/14715,unix/unix:/tmp/.ICE-unix/14715" />
+    <property name="env.SESSION_MANAGER" value="local/unix:@/tmp/.ICE-unix/17463,unix/unix:/tmp/.ICE-unix/17463" />
     <property name="env.LESSOPEN" value="|/usr/bin/lesspipe.sh %s" />
     <property name="env. new_PATH" value="`$pathfix_binary $@`;" />
     <property name="sun.java.launcher" value="SUN_STANDARD" />
@@ -14,14 +14,14 @@
     <property name="os.name" value="Linux" />
     <property name="sun.boot.class.path" value="/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/resources.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/rt.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/jsse.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/jce.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/charsets.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/netx.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/plugin.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/rhino.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/modules/jdk.boot.jar:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/classes" />
     <property name="env.PWD" value="/afs/inf.ed.ac.uk/user/s09/s0901522/sdp/code/PC" />
-    <property name="env.XDG_SESSION_COOKIE" value="b9a7331c7f83ecc92e96fa2a00000012-1328274709.140679-621314684" />
+    <property name="env.XDG_SESSION_COOKIE" value="3797af733b71b632b351fb5600000012-1328284522.167423-1467334711" />
     <property name="sun.desktop" value="gnome" />
     <property name="env.LANG" value="en_GB.UTF-8" />
     <property name="java.vm.specification.vendor" value="Sun Microsystems Inc." />
     <property name="ant.home" value="/usr/share/ant" />
     <property name="java.runtime.version" value="1.6.0_20-b20" />
     <property name="env.GTK_IM_MODULE" value="gtk-im-context-simple" />
-    <property name="env.SHORT_HOSTNAME" value="cumbrae" />
+    <property name="env.SHORT_HOSTNAME" value="kilbride" />
     <property name="env.DISPLAY" value=":0.0" />
     <property name="env.MAPPATH" value="/etc/amd:/etc" />
     <property name="user.name" value="s0901522" />
@@ -40,9 +40,9 @@
     <property name="ant.project.name" value="PC" />
     <property name="java.version" value="1.6.0_20" />
     <property name="user.timezone" value="" />
-    <property name="env.DBUS_SESSION_BUS_ADDRESS" value="unix:abstract=/tmp/dbus-QFJfyha8jl,guid=c47e0a6fb5dbab881645d8f000008553" />
+    <property name="env.DBUS_SESSION_BUS_ADDRESS" value="unix:abstract=/tmp/dbus-MEI8urV5XW,guid=56690d4692809a14fde90d4200027e54" />
     <property name="sun.arch.data.model" value="64" />
-    <property name="env.SSH_AGENT_PID" value="14899" />
+    <property name="env.SSH_AGENT_PID" value="17647" />
     <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/endorsed" />
     <property name="sun.cpu.isalist" value="" />
     <property name="env. [ &quot;$new_PATH&quot; ] &amp;&amp; PATH" value="&quot;$new_PATH&quot;;
@@ -61,11 +61,11 @@
     <property name="env.GNOME_DESKTOP_SESSION_ID" value="this-is-deprecated" />
     <property name="java.class.version" value="50.0" />
     <property name="user.country" value="GB" />
-    <property name="env.GNOME_KEYRING_PID" value="14713" />
+    <property name="env.GNOME_KEYRING_PID" value="17461" />
     <property name="env.PRINTER" value="at14" />
     <property name="java.home" value="/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre" />
     <property name="java.vm.info" value="mixed mode" />
-    <property name="env.KRB5CCNAME" value="FILE:/tmp/krb5cc_460977_eY7tqb" />
+    <property name="env.KRB5CCNAME" value="FILE:/tmp/krb5cc_460977_4mKjSF" />
     <property name="env.LOGNAME" value="s0901522" />
     <property name="ant.file" value="/afs/inf.ed.ac.uk/user/s09/s0901522/sdp/code/PC/build.xml" />
     <property name="os.version" value="2.6.32-131.21.1.el6.x86_64" />
@@ -103,7 +103,7 @@ module-lp sdp7" />
     <property name="java.specification.vendor" value="Sun Microsystems Inc." />
     <property name="env.setup" value="() {  source /usr/local/share/setup/setup.sh $*
 }" />
-    <property name="env.WINDOWID" value="65011715" />
+    <property name="env.WINDOWID" value="62914563" />
     <property name="java.library.path" value="/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/amd64/server:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/amd64:/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/../lib/amd64:/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib" />
     <property name="java.vendor.url" value="http://java.sun.com/" />
     <property name="java.vm.vendor" value="Sun Microsystems Inc." />
@@ -127,7 +127,7 @@ module-lp sdp7" />
     <property name="env.LS_COLORS" value="" />
     <property name="java.io.tmpdir" value="/tmp" />
     <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi" />
-    <property name="env.SSH_AUTH_SOCK" value="/tmp/keyring-UkKLS7/socket.ssh" />
+    <property name="env.SSH_AUTH_SOCK" value="/tmp/keyring-POWe2u/socket.ssh" />
     <property name="env.KDEDIRS" value="/usr" />
     <property name="os.arch" value="amd64" />
     <property name="env.module" value="() {  eval `/usr/bin/modulecmd bash $*`
@@ -135,7 +135,7 @@ module-lp sdp7" />
     <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment" />
     <property name="env.ENV_ROOT" value="/usr/share/defenv/bash" />
     <property name="java.ext.dirs" value="/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/ext:/usr/java/packages/lib/ext" />
-    <property name="env.XAUTHORITY" value="/var/run/kdm/.XauthP9yYih" />
+    <property name="env.XAUTHORITY" value="/var/run/kdm/.XauthZ0Y6sH" />
     <property name="user.dir" value="/afs/inf.ed.ac.uk/user/s09/s0901522/sdp/code/PC" />
     <property name="env.SshAgent" value="/usr/bin/ssh-agent" />
     <property name="line.separator" value="
@@ -150,7 +150,7 @@ module-lp sdp7" />
     <property name="ant.core.lib" value="/usr/share/java/ant-1.7.1.jar" />
     <property name="source" value="1.6" />
     <property name="file.encoding" value="UTF-8" />
-    <property name="env.GNOME_KEYRING_SOCKET" value="/tmp/keyring-UkKLS7/socket" />
+    <property name="env.GNOME_KEYRING_SOCKET" value="/tmp/keyring-POWe2u/socket" />
     <property name="ant.file.PC" value="/afs/inf.ed.ac.uk/user/s09/s0901522/sdp/code/PC/build.xml" />
     <property name="env.resize" value="() {  eval `command resize`
 }" />
@@ -165,7 +165,7 @@ module-lp sdp7" />
 	at uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest.testProcessAndUpdateImage(VisionTest.java:11)
 </failure>
   </testcase>
-  <testcase classname="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" name="testMarkObjects" time="0.001">
+  <testcase classname="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" name="testMarkObjects" time="0.002">
     <failure message="Not yet implemented" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Not yet implemented
 	at uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest.testMarkObjects(VisionTest.java:16)
 </failure>
@@ -175,7 +175,7 @@ module-lp sdp7" />
 	at uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest.test1(VisionTest.java:21)
 </failure>
   </testcase>
-  <testcase classname="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" name="test2" time="0.003">
+  <testcase classname="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" name="test2" time="0.004">
     <failure message="Not yet implemented" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Not yet implemented
 	at uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest.test2(VisionTest.java:26)
 </failure>
