@@ -22,9 +22,13 @@ public class WorldState implements VisualMethods{
     private int yellowY;
     private int ballX;
     private int ballY;
+    private int blueGreenPlateX;
+    private int blueGreenPlateY;
+    
     private float blueOrientation;
     private float yellowOrientation;
     private long counter;
+    
   
     public WorldState() {
         /* control properties */
@@ -68,8 +72,26 @@ public class WorldState implements VisualMethods{
 
 
 
-
-
+    public int getBlueGreenPlateX(){
+    	return blueGreenPlateX;
+    }
+    public int getBlueGreenPlateY(){
+    	return blueGreenPlateY;
+    }
+    
+    public int getBlueX(){
+    	return blueX;
+    }
+    public int getBlueY(){
+    	return blueY;
+    }
+     
+    public void setBlueGreenPlateX(int x){
+    	blueGreenPlateX = x;
+    }
+    public void setBlueGreenPlateY(int y){
+    	blueGreenPlateY = y;
+    }
 
     public void setYellowY(int yellowY) {
         this.yellowY = yellowY;
