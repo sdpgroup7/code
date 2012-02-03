@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 public class Vision {
     private static ControlGUI thresholdsGUI;
     private static WorldState worldState;
-    static final Logger logger = Logger.getLogger(Vision.class);
+    public static final Logger logger = Logger.getLogger(Vision.class);
     
     
     /**
@@ -35,7 +35,12 @@ public class Vision {
     public Vision() {
         
         BasicConfigurator.configure();
-        Vision.logger.debug("Hello World!");
+        Vision.logger.info("Vision System Started");
+        //Vision.logger.debug("Sample debug message");
+        //Vision.logger.info("Sample info message");
+        //Vision.logger.warn("Sample warn message");
+        //Vision.logger.error("Sample error message");
+        //Vision.logger.fatal("Sample fatal message");
         worldState = new WorldState();
         ThresholdsState thresholdsState = new ThresholdsState();
 
@@ -57,16 +62,16 @@ public class Vision {
 
             /* Create a new Vision object to serve the main vision window. */
             VisionFeed feed = new VisionFeed(videoDevice, width, height, channel, videoStandard, compressionQuality, thresholdsGUI, pitchConstants);
-            //ObjectPosition o = getBallPosition(); //For testing
+            Vision.logger.info("Vision System Initialised");
         } catch (V4L4JException e) {
-            e.printStackTrace(); //TODO: ADD LOGGING!
+        	Vision.logger.fatal("V4L4JException: " + e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+        	Vision.logger.fatal("Exception: " + e.getMessage());
         }
     }
 
     public WorldState getWorldState(){
         //used for debugging purposes
-        return this.worldState;
+        return Vision.worldState;
     }
 }
