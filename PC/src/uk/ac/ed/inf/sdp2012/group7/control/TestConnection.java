@@ -9,7 +9,6 @@ import lejos.pc.comm.NXTInfo;
 
 import java.io.*;
 
-import uk.ac.ed.inf.sdp2012.group7.shared.ConstantsReuse;
 
 public class TestConnection {
 	public static void main(String[] args) throws NXTCommException, IOException, Exception {

@@ -7,7 +7,6 @@ import java.util.Queue;
 import lejos.pc.comm.NXTComm;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTInfo;
-import uk.ac.ed.inf.sdp2012.group7.shared.ConstantsReuse;
 
 /**
  * This class holds the geometric location of our robot but is also responsible

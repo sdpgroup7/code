@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.sdp2012.group7.shared;
+package uk.ac.ed.inf.sdp2012.group7.control;
 
 public class ConstantsReuse {
 	private ConstantsReuse() {
