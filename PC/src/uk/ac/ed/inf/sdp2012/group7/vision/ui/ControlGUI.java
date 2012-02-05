@@ -21,7 +21,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
-import uk.ac.ed.inf.sdp2012.group7.vision.PitchConstants;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
 import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
@@ -35,10 +34,6 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
  * @author s0840449
  */
 public class ControlGUI implements ChangeListener {
-	
-	/* A PitchConstants class used to load/save constants
-	 * for the pitch. */
-	private PitchConstants pitchConstants;
 	
 	/* The thresholds state class stores the current state 
  	 * of the thresholds. */
@@ -265,18 +260,15 @@ public class ControlGUI implements ChangeListener {
 	 * 							values.			
 	 * @param worldState		A WorldState object to update the pitch choice, shooting
 	 * 							direction, etc.
-	 * @param pitchConstants	A PitchConstants object to allow saving/loading of data.
 	 */
-	public ControlGUI(ThresholdsState thresholdsState, WorldState worldState, PitchConstants pitchConstants) {
+	public ControlGUI(ThresholdsState thresholdsState, WorldState worldState) {
 		
 		/* All three state objects must not be null. */
 		assert (thresholdsState != null);
 		assert (worldState != null);
-		assert (pitchConstants != null);
 		
 		this.thresholdsState = thresholdsState;
 		this.worldState = worldState;
-		this.pitchConstants = pitchConstants;
 		strat = new Strategy(worldState);
 	}
 	
@@ -507,7 +499,6 @@ public class ControlGUI implements ChangeListener {
 				
 				if (result == JOptionPane.NO_OPTION || result == JOptionPane.CANCEL_OPTION) return;
 				
-				pitchConstants.setPitchNum(pitchNum);
 				reloadSliderDefaults();
 				
 			}
@@ -661,7 +652,7 @@ public class ControlGUI implements ChangeListener {
 		 /* Red. */
 		JPanel ball_r_panel = new JPanel();
         JLabel ball_r_label = new JLabel("Red:");
-		ball_r = setUpSlider(0, 255, pitchConstants.ball_r_low, pitchConstants.ball_r_high, 10, 50);
+		ball_r = setUpSlider(0, 255, 0, 255, 10, 50);
 		ball_r_panel.add(ball_r_label);
 		ball_r_panel.add(ball_r);
 		ballPanel.add(ball_r_panel);
@@ -669,7 +660,7 @@ public class ControlGUI implements ChangeListener {
         /* Green. */
 		JPanel ball_g_panel = new JPanel();
         JLabel ball_g_label = new JLabel("Green:");
-        ball_g = setUpSlider( 0, 255, pitchConstants.ball_g_low, pitchConstants.ball_g_high, 10, 50);
+        ball_g = setUpSlider( 0, 255, 0, 255, 10, 50);
         ball_g_panel.add(ball_g_label);
 		ball_g_panel.add(ball_g);
 		ballPanel.add(ball_g_panel);
@@ -677,7 +668,7 @@ public class ControlGUI implements ChangeListener {
         /* Blue. */
 		JPanel ball_b_panel = new JPanel();
         JLabel ball_b_label = new JLabel("Blue:");
-        ball_b = setUpSlider( 0, 255, pitchConstants.ball_b_low, pitchConstants.ball_b_high, 10, 50);
+        ball_b = setUpSlider( 0, 255, 0, 255, 10, 50);
         ball_b_panel.add(ball_b_label);
 		ball_b_panel.add(ball_b);
 		ballPanel.add(ball_b_panel);
@@ -697,7 +688,7 @@ public class ControlGUI implements ChangeListener {
 		/* Red. */
 		JPanel blue_r_panel = new JPanel();
 		JLabel blue_r_label = new JLabel("Red:");
-		blue_r = setUpSlider(0, 255, pitchConstants.blue_r_low, pitchConstants.blue_r_high, 10, 50);
+		blue_r = setUpSlider(0, 255, 0, 255, 10, 50);
 		blue_r_panel.add(blue_r_label);
 		blue_r_panel.add(blue_r);
 		bluePanel.add(blue_r_panel);
@@ -705,7 +696,7 @@ public class ControlGUI implements ChangeListener {
 		/* Green. */
 		JPanel blue_g_panel = new JPanel();
 		JLabel blue_g_label = new JLabel("Green:");
-		blue_g = setUpSlider( 0, 255, pitchConstants.blue_g_low, pitchConstants.blue_g_high, 10, 50);
+		blue_g = setUpSlider( 0, 255, 0, 255, 10, 50);
 		blue_g_panel.add(blue_g_label);
 		blue_g_panel.add(blue_g);
 		bluePanel.add(blue_g_panel);
@@ -713,7 +704,7 @@ public class ControlGUI implements ChangeListener {
 		/* Blue. */
 		JPanel blue_b_panel = new JPanel();
 		JLabel blue_b_label = new JLabel("Blue:");
-		blue_b = setUpSlider( 0, 255, pitchConstants.blue_b_low, pitchConstants.blue_b_high, 10, 50);
+		blue_b = setUpSlider( 0, 255, 0, 255, 10, 50);
 		blue_b_panel.add(blue_b_label);
 		blue_b_panel.add(blue_b);
 		bluePanel.add(blue_b_panel);
@@ -732,7 +723,7 @@ public class ControlGUI implements ChangeListener {
 		/* Red. */
 		JPanel yellow_r_panel = new JPanel();
 		JLabel yellow_r_label = new JLabel("Red:");
-		yellow_r = setUpSlider(0, 255, pitchConstants.yellow_r_low, pitchConstants.yellow_r_high, 10, 50);
+		yellow_r = setUpSlider(0, 255, 0, 255, 10, 50);
 		yellow_r_panel.add(yellow_r_label);
 		yellow_r_panel.add(yellow_r);
 		yellowPanel.add(yellow_r_panel);
@@ -740,7 +731,7 @@ public class ControlGUI implements ChangeListener {
 		/* Green. */
 		JPanel yellow_g_panel = new JPanel();
 		JLabel yellow_g_label = new JLabel("Green:");
-		yellow_g = setUpSlider( 0, 255, pitchConstants.yellow_g_low, pitchConstants.yellow_g_high, 10, 50);
+		yellow_g = setUpSlider( 0, 255, 0, 255, 10, 50);
 		yellow_g_panel.add(yellow_g_label);
 		yellow_g_panel.add(yellow_g);
 		yellowPanel.add(yellow_g_panel);
@@ -748,7 +739,7 @@ public class ControlGUI implements ChangeListener {
 		/* Blue. */
 		JPanel yellow_b_panel = new JPanel();
 		JLabel yellow_b_label = new JLabel("Blue:");
-		yellow_b = setUpSlider( 0, 255, pitchConstants.yellow_b_low, pitchConstants.yellow_b_high, 10, 50);
+		yellow_b = setUpSlider( 0, 255, 0, 255, 10, 50);
 		yellow_b_panel.add(yellow_b_label);
 		yellow_b_panel.add(yellow_b);
 		yellowPanel.add(yellow_b_panel);
@@ -767,7 +758,7 @@ public class ControlGUI implements ChangeListener {
 		/* Red. */
 		JPanel grey_r_panel = new JPanel();
 		JLabel grey_r_label = new JLabel("Red:");
-		grey_r = setUpSlider(0, 255, pitchConstants.grey_r_low, pitchConstants.grey_r_high, 10, 50);
+		grey_r = setUpSlider(0, 255, 0, 255, 10, 50);
 		grey_r_panel.add(grey_r_label);
 		grey_r_panel.add(grey_r);
 		greyPanel.add(grey_r_panel);
@@ -775,7 +766,7 @@ public class ControlGUI implements ChangeListener {
 		/* Green. */
 		JPanel grey_g_panel = new JPanel();
 		JLabel grey_g_label = new JLabel("Green:");
-		grey_g = setUpSlider( 0, 255, pitchConstants.grey_g_low, pitchConstants.grey_g_high, 10, 50);
+		grey_g = setUpSlider( 0, 255, 0, 255, 10, 50);
 		grey_g_panel.add(grey_g_label);
 		grey_g_panel.add(grey_g);
 		greyPanel.add(grey_g_panel);
@@ -783,7 +774,7 @@ public class ControlGUI implements ChangeListener {
 		/* Blue. */
 		JPanel grey_b_panel = new JPanel();
 		JLabel grey_b_label = new JLabel("Blue:");
-		grey_b = setUpSlider( 0, 255, pitchConstants.grey_b_low, pitchConstants.grey_b_high, 10, 50);
+		grey_b = setUpSlider( 0, 255, 0, 255, 10, 50);
 		grey_b_panel.add(grey_b_label);
 		grey_b_panel.add(grey_b);
 		greyPanel.add(grey_b_panel);
@@ -802,7 +793,7 @@ public class ControlGUI implements ChangeListener {
 		/* Red. */
 		JPanel green_r_panel = new JPanel();
 		JLabel green_r_label = new JLabel("Red:");
-		green_r = setUpSlider(0, 255, pitchConstants.green_r_low, pitchConstants.green_r_high, 10, 50);
+		green_r = setUpSlider(0, 255, 0, 255, 10, 50);
 		green_r_panel.add(green_r_label);
 		green_r_panel.add(green_r);
 		greenPanel.add(green_r_panel);
@@ -810,7 +801,7 @@ public class ControlGUI implements ChangeListener {
 		/* Green. */
 		JPanel green_g_panel = new JPanel();
 		JLabel green_g_label = new JLabel("Green:");
-		green_g = setUpSlider( 0, 255, pitchConstants.green_g_low, pitchConstants.green_g_high, 10, 50);
+		green_g = setUpSlider( 0, 255, 0, 255, 10, 50);
 		green_g_panel.add(green_g_label);
 		green_g_panel.add(green_g);
 		greenPanel.add(green_g_panel);
@@ -818,7 +809,7 @@ public class ControlGUI implements ChangeListener {
 		/* Blue. */
 		JPanel green_b_panel = new JPanel();
 		JLabel green_b_label = new JLabel("Blue:");
-		green_b = setUpSlider( 0, 255, pitchConstants.green_b_low, pitchConstants.green_b_high, 10, 50);
+		green_b = setUpSlider( 0, 255, 0, 255, 10, 50);
 		green_b_panel.add(green_b_label);
 		green_b_panel.add(green_b);
 		greenPanel.add(green_b_panel);
@@ -983,29 +974,29 @@ public class ControlGUI implements ChangeListener {
 	public void reloadSliderDefaults() {
 		
 		/* Ball slider */
-		setSliderVals(ball_r, pitchConstants.ball_r_low, pitchConstants.ball_r_high);
-		setSliderVals(ball_g, pitchConstants.ball_g_low, pitchConstants.ball_g_high);
-		setSliderVals(ball_b, pitchConstants.ball_b_low, pitchConstants.ball_b_high);
+		setSliderVals(ball_r, 0, 255);
+		setSliderVals(ball_g, 0, 255);
+		setSliderVals(ball_b, 0, 255);
 		
 		/* Blue slider */
-		setSliderVals(blue_r, pitchConstants.blue_r_low, pitchConstants.blue_r_high);
-		setSliderVals(blue_g, pitchConstants.blue_g_low, pitchConstants.blue_g_high);
-		setSliderVals(blue_b, pitchConstants.blue_b_low, pitchConstants.blue_b_high);
+		setSliderVals(blue_r, 0, 255);
+		setSliderVals(blue_g, 0, 255);
+		setSliderVals(blue_b, 0, 255);
 		
 		/* Yellow slider */
-		setSliderVals(yellow_r, pitchConstants.yellow_r_low, pitchConstants.yellow_r_high);
-		setSliderVals(yellow_g, pitchConstants.yellow_g_low, pitchConstants.yellow_g_high);
-		setSliderVals(yellow_b, pitchConstants.yellow_b_low, pitchConstants.yellow_b_high);
+		setSliderVals(yellow_r, 0, 255);
+		setSliderVals(yellow_g, 0, 255);
+		setSliderVals(yellow_b, 0, 255);
 		
 		/* Grey slider */
-		setSliderVals(grey_r, pitchConstants.grey_r_low, pitchConstants.grey_r_high);
-		setSliderVals(grey_g, pitchConstants.grey_g_low, pitchConstants.grey_g_high);
-		setSliderVals(grey_b, pitchConstants.grey_b_low, pitchConstants.grey_b_high);
+		setSliderVals(grey_r, 0, 255);
+		setSliderVals(grey_g, 0, 255);
+		setSliderVals(grey_b, 0, 255);
 		
 		/* Green slider */
-		setSliderVals(green_r, pitchConstants.green_r_low, pitchConstants.green_r_high);
-		setSliderVals(green_g, pitchConstants.green_g_low, pitchConstants.green_g_high);
-		setSliderVals(green_b, pitchConstants.green_b_low, pitchConstants.green_b_high);
+		setSliderVals(green_r, 0, 255);
+		setSliderVals(green_g, 0, 255);
+		setSliderVals(green_b, 0, 255);
 		
 	}
 

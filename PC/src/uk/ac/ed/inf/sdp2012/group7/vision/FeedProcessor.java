@@ -13,7 +13,6 @@ public class FeedProcessor{
     
     private WorldState worldState;
     //private ThresholdsState thresholdsState; //might not be needed any more
-    private PitchConstants pitchConstants;
     //private OrientationFinder orientationFinder; //might not be needed anymore
 
     private InitialLocation initialLocation;
@@ -22,14 +21,13 @@ public class FeedProcessor{
     private int height;
     private int width;
 
-    public FeedProcessor(InitialLocation il, int height, int width, PitchConstants pitchConstants, ControlGUI controlGUI){
+    public FeedProcessor(InitialLocation il, int height, int width, ControlGUI controlGUI){
         
     	//this.thresholdsState = controlGUI.getThresholdsState();
         this.worldState = controlGUI.getWorldState();
         this.initialLocation = il;
         this.height = height;
         this.width = width;
-        this.pitchConstants = pitchConstants;
         //this.orientationFinder = new OrientationFinder(this.thresholdsState);
         Vision.logger.info("Feed Processor Initialised");
     }
@@ -38,10 +36,10 @@ public class FeedProcessor{
     	
         image = initialLocation.markImage(image);
         
-        //int topBuffer = pitchConstants.getTopBuffer();
-        //int bottomBuffer = pitchConstants.getBottomBuffer();
-        //int leftBuffer = pitchConstants.getLeftBuffer();
-        //int rightBuffer = pitchConstants.getRightBuffer();
+        //int topBuffer = Vision.worldState.getPitch().getTopBuffer();
+        //int bottomBuffer = Vision.worldState.getPitch().getBottomBuffer();
+        //int leftBuffer = Vision.worldState.getPitch().getLeftBuffer();
+        //int rightBuffer = Vision.worldState.getPitch().getRightBuffer();
 
         /* For every pixel within the pitch, test to see if it belongs to the ball,
          * the yellow T, the blue T, either green plate or a grey circle. */

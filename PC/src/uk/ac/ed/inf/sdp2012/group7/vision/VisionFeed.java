@@ -10,7 +10,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
-import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.DeviceInfo;
 import au.edu.jcu.v4l4j.FrameGrabber;
@@ -58,7 +57,7 @@ public class VisionFeed extends WindowAdapter {
      * @throws V4L4JException   If any parameter if invalid.
      */
     public VisionFeed(String videoDevice, int width, int height, int channel, int videoStandard,
-            int compressionQuality, ControlGUI thresholdsGUI, PitchConstants pitchConstants) throws V4L4JException {
+            int compressionQuality, ControlGUI thresholdsGUI) throws V4L4JException {
             
        /*
        Removed pitch constants, threshold constants and worldstate from the constructor
@@ -68,8 +67,8 @@ public class VisionFeed extends WindowAdapter {
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         initGUI();
         //this.thresholdGUI = thresholdsGUI;
-        InitialLocation il = new InitialLocation(thresholdsGUI, this, pitchConstants, this.windowFrame);
-        processor = new FeedProcessor(il, height, width, pitchConstants, thresholdsGUI);
+        InitialLocation il = new InitialLocation(thresholdsGUI, this, this.windowFrame);
+        processor = new FeedProcessor(il, height, width, thresholdsGUI);
         Vision.logger.info("VisionFeed Initialised");
         il.getColors();
         il.getPoints();

@@ -46,7 +46,6 @@ public class Vision {
         ThresholdsState thresholdsState = new ThresholdsState();
 
         /* Default to main pitch. */
-        PitchConstants pitchConstants = new PitchConstants(0);
         /* Default values for the main vision window. */
         String videoDevice = "/dev/video0";
         int width = 640; //these dont actually appear to do anything?
@@ -58,11 +57,11 @@ public class Vision {
         try {
 
             /* Create the Control GUI for threshold setting/etc. */
-            thresholdsGUI = new ControlGUI(thresholdsState, worldState, pitchConstants);
+            thresholdsGUI = new ControlGUI(thresholdsState, worldState);
             thresholdsGUI.initGUI();
 
             /* Create a new Vision object to serve the main vision window. */
-            new VisionFeed(videoDevice, width, height, channel, videoStandard, compressionQuality, thresholdsGUI, pitchConstants);
+            new VisionFeed(videoDevice, width, height, channel, videoStandard, compressionQuality, thresholdsGUI);
             Vision.logger.info("Vision System Initialised");
         } catch (V4L4JException e) {
         	Vision.logger.fatal("V4L4JException: " + e.getMessage());
