@@ -2,6 +2,8 @@ package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
 import java.lang.Math;
 import java.awt.Point;
 
+import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+
 /**
  * Represents the position of an object, for example the ball or a robot.
  * 
@@ -73,6 +75,7 @@ public class ObjectPosition{
     }
     
     public Point getCentre(){
+    	//Vision.logger.debug(Integer.toString(this.centre.x) + "," + Integer.toString(this.centre.y));
     	return this.centre;
     }
 

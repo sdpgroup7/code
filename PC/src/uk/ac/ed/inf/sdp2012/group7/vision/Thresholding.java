@@ -51,7 +51,6 @@ public class Thresholding {
     private int robot; // 0 for Yellow, 1 for Blue(our robot) 
     
     private ThresholdsState ts = new ThresholdsState();
-    private WorldState ws = new WorldState();
     
 
     
@@ -112,6 +111,7 @@ public class Thresholding {
 
 					}
 					else if (isYellow(c)) {
+						Vision.logger.info("Found yellow");
 						img.setRGB(i, j, Color.yellow.getRGB()); // Yellow robot
 						//p.setLocation(i, j);
 						//yellowRobot.add(p);
@@ -122,6 +122,7 @@ public class Thresholding {
 						img.setRGB(i, j, Color.blue.getRGB()); // Blue robot 
 						//p.setLocation(i, j);
 						//blueRobot.add(p);
+						
 						blueCount++;
 						blueCentroid.setLocation(blueCentroid.getX() + i, blueCentroid.getY() + j);
 						//make blue thresholds for the different pitches in that [pitch][x] style
@@ -142,10 +143,9 @@ public class Thresholding {
 			blueCentroid.setLocation(blueCentroid.getX()/blueCount, blueCentroid.getY()/blueCount);
 			
 			blueGreenPlateCentroid = findCentroid(getGreenPlateBlue(greenPlates));
-			//Vision.logger.debug("Returning");
-			ws.setOurRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
-			ws.setOpponentsRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
-			ws.setBallPosition((int)ballCentroid.getX(),(int)ballCentroid.getY());
+			Vision.worldState.setOurRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
+			Vision.worldState.setOpponentsRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
+			Vision.worldState.setBallPosition((int)ballCentroid.getX(),(int)ballCentroid.getY());
 			
 
 	    	return img;

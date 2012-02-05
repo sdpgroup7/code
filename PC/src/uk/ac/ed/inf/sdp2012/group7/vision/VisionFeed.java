@@ -58,10 +58,6 @@ public class VisionFeed extends WindowAdapter {
      */
     public VisionFeed(String videoDevice, int width, int height, int channel, int videoStandard,
             int compressionQuality, ControlGUI thresholdsGUI) throws V4L4JException {
-            
-       /*
-       Removed pitch constants, threshold constants and worldstate from the constructor
-       */
 
         /* Initialise the GUI that displays the video feed. */
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
