@@ -11,6 +11,7 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.ObjectPosition;
 import uk.ac.ed.inf.sdp2012.group7.vision.Thresholding;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
+import uk.ac.ed.inf.sdp2012.group7.vision.OrientationFinder;
 
 
 
@@ -79,7 +80,8 @@ public class FeedProcessor{
        // Graphics imageGraphics = image.getGraphics();
         Graphics imageGraphics = doThresh.getThresh(image, Vision.worldState.getPitch().getLeftBuffer(),Vision.worldState.getPitch().getRightBuffer(), Vision.worldState.getPitch().getTopBuffer(),Vision.worldState.getPitch().getBottomBuffer()).getGraphics();
         
-        Point blueGreenPlate = doThresh.getBlueGreenPlateCentori();
+        //Point blueGreenPlate = doThresh.getBlueGreenPlateCentori();
+        
         
                     
         markObjects(imageGraphics);
