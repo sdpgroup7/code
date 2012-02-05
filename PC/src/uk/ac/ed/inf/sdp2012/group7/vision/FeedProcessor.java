@@ -9,6 +9,10 @@ import javax.swing.JLabel;
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.ObjectPosition;
+import uk.ac.ed.inf.sdp2012.group7.vision.Thresholding;
+import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
+
+
 
 public class FeedProcessor{
     
@@ -16,7 +20,7 @@ public class FeedProcessor{
     //private OrientationFinder orientationFinder; //might not be needed anymore
 
     private InitialLocation initialLocation;
-    private Thresholding doThresh = new Thresholding(0); // Do Thresholding 
+    private Thresholding doThresh; // Do Thresholding 
     
     private int height;
     private int width;
@@ -27,6 +31,7 @@ public class FeedProcessor{
         this.initialLocation = il;
         this.height = height;
         this.width = width;
+        this.doThresh = new Thresholding(0,controlGUI.getThresholdsState());
         //this.orientationFinder = new OrientationFinder(this.thresholdsState);
         Vision.logger.info("Feed Processor Initialised");
     }
