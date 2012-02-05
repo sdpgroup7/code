@@ -3,13 +3,19 @@ package uk.ac.ed.inf.sdp2012.group7.vision;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.awt.Point;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
+import uk.ac.ed.inf.sdp2012.group7.testing.vision.TestSaver;
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.DeviceInfo;
 import au.edu.jcu.v4l4j.FrameGrabber;
@@ -40,7 +46,13 @@ public class VisionFeed extends WindowAdapter {
     private BufferedImage frameImage;
     //private ControlGUI thresholdGUI;
     private FeedProcessor processor;
-    
+    //The below variables are for the testing system
+    private boolean paused = false;
+    private ArrayList<Point> points = new ArrayList<Point>();
+    private boolean mouseClick = false;
+    private Point coords = new Point(0,0);
+    private String filename;
+    private BufferedImage testImage;
     /**
      * Default constructor.
      *
@@ -66,10 +78,49 @@ public class VisionFeed extends WindowAdapter {
         InitialLocation il = new InitialLocation(thresholdsGUI, this, this.windowFrame);
         processor = new FeedProcessor(il, height, width, thresholdsGUI);
         Vision.logger.info("VisionFeed Initialised");
-        il.getColors();
         il.getPoints();
+        il.getColors();
         Vision.logger.info("Vision System Calibrated");
-        
+        if(Vision.TESTING){
+        	getPoints();
+        	TestSaver ts = new TestSaver();
+        	ts.writePoints(points, testImage, filename);
+        }
+    }
+    
+    public void getPoints(){
+    	paused = true;
+    	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	Date date = new Date();
+    	filename = "testData/" + dateFormat.format(date);
+    	writeImage(getFrameImage(),filename + ".png");
+        points.add(getClickPoint("Click the ball"));
+        points.add(getClickPoint("Click a corner on the blue robot"));
+        points.add(getClickPoint("Click another corner on the blue robot"));
+        points.add(getClickPoint("Click another corner on the blue robot"));
+        points.add(getClickPoint("Click another corner on the blue robot"));
+        points.add(getClickPoint("Click a corner on the yellow robot"));
+        points.add(getClickPoint("Click another corner on the yellow robot"));
+        points.add(getClickPoint("Click another corner on the yellow robot"));
+        points.add(getClickPoint("Click another corner on the yellow robot"));
+        points.add(getClickPoint("Click the grey circle on the blue robot"));
+        points.add(getClickPoint("Click the grey circle on the yellow robot"));
+        points.add(getClickPoint("Click the very bottom of the T on the blue robot"));
+        points.add(getClickPoint("Click the very bottom of the T on the yellow robot"));
+        paused = false;
+    }
+
+    public Point getClickPoint(String message){
+        System.out.println(message);
+
+        while (!mouseClick) {
+            try{
+                Thread.sleep(100);
+            } catch (Exception e) {}
+        }
+        mouseClick = false;
+        System.out.println(coords);
+        return coords;
     }
 
     public BufferedImage getFrameImage(){
@@ -108,7 +159,11 @@ public class VisionFeed extends WindowAdapter {
 
             public void nextFrame(VideoFrame frame) {
                 long before = System.currentTimeMillis();
-                frameImage = frame.getBufferedImage();
+                if(Vision.TESTING){
+                	if(!paused) frameImage = frame.getBufferedImage();
+                } else {
+                	frameImage = frame.getBufferedImage();
+                }
                 frame.recycle();
                 //processor.processAndUpdateImage(frameImage, before, label, labelThresh);
                 processor.processAndUpdateImage(frameImage, before, label);

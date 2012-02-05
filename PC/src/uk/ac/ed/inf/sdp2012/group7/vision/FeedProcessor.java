@@ -37,53 +37,17 @@ public class FeedProcessor{
     }
 
     public void processAndUpdateImage(BufferedImage image, long before, JLabel label) {
-    	
-        image = initialLocation.markImage(image);
-        
-        //int topBuffer = Vision.worldState.getPitch().getTopBuffer();
-        //int bottomBuffer = Vision.worldState.getPitch().getBottomBuffer();
-        //int leftBuffer = Vision.worldState.getPitch().getLeftBuffer();
-        //int rightBuffer = Vision.worldState.getPitch().getRightBuffer();
-
-        /* For every pixel within the pitch, test to see if it belongs to the ball,
-         * the yellow T, the blue T, either green plate or a grey circle. */
-        //Color c;
-        /* Position objects to hold the centre point of the ball and both robots. */
-        
-
-        /* If we have only found a few 'Ball' pixels, chances are that the ball has not
-         * actually been detected. */
-        /* Attempt to find the blue robot's orientation. */
-        /*
-        try {
-            float blueOrientation = orientationFinder.findOrientation(blueXPoints, blueYPoints, blue.getX(), blue.getY(), image, true);
-            worldState.setBlueOrientation(blueOrientation);
-        } catch (NoAngleException e) {
-
+    	if(!Vision.TESTING){
+    		image = initialLocation.markImage(image);
+            Graphics frameGraphics = label.getGraphics();
+            Graphics imageGraphics = doThresh.getThresh(image, Vision.worldState.getPitch().getLeftBuffer(),Vision.worldState.getPitch().getRightBuffer(), Vision.worldState.getPitch().getTopBuffer(),Vision.worldState.getPitch().getBottomBuffer()).getGraphics(); 
+            markObjects(imageGraphics);
+            calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
+        } else {
+            Graphics frameGraphics = label.getGraphics();
+            Graphics imageGraphics = image.getGraphics();
+            calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
         }
-        */
-
-        /* Attempt to find the yellow robot's orientation. */
-        /*
-        try {
-            float yellowOrientation = orientationFinder.findOrientation(yellowXPoints, yellowYPoints, yellow.getX(), yellow.getY(), image, true);
-            worldState.setYellowOrientation(yellowOrientation);
-        } catch (NoAngleException e) {
-
-        }
-        */
-                /* Draw the image onto the vision frame. As well as the threshed image*/
-        Graphics frameGraphics = label.getGraphics();
-        
-       // Graphics frameGraphicsThresh = labelThresh.getGraphics();
-       // Graphics imageGraphics = image.getGraphics();
-        Graphics imageGraphics = doThresh.getThresh(image, Vision.worldState.getPitch().getLeftBuffer(),Vision.worldState.getPitch().getRightBuffer(), Vision.worldState.getPitch().getTopBuffer(),Vision.worldState.getPitch().getBottomBuffer()).getGraphics();
-        
-        Point blueGreenPlate = doThresh.getBlueGreenPlateCentori();
-        
-                    
-        markObjects(imageGraphics);
-        calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
     }
 
     public void markObjects(Graphics imageGraphics){
