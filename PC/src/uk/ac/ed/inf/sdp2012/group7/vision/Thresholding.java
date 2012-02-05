@@ -18,11 +18,10 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 public class Thresholding {
 
-	private ArrayList<Point> yellowRobot = new ArrayList<Point>();
-
-	private ArrayList<Point> blueRobot = new ArrayList<Point>();
-	private ArrayList<Point> greenPlates = new ArrayList<Point>();
-	
+	private ArrayList<Integer> yellowRobotX = new ArrayList<Integer>();
+	private ArrayList<Integer> blueRobotX = new ArrayList<Integer>();
+	private ArrayList<Integer> yellowRobotY = new ArrayList<Integer>();
+	private ArrayList<Integer> blueRobotY = new ArrayList<Integer>();
 
     private Color c;
     
@@ -97,9 +96,6 @@ public class Thresholding {
             
            yellowCount = 0;
            yellowCentroid.setLocation(0,0);
-           
-
-           Point p = new Point();
 
            //Vision.logger.debug("Iterating image");
 	    	for (int i = left; i < right; i++) {
@@ -118,24 +114,21 @@ public class Thresholding {
 					}
 					else if (isYellow(c)) {
 						img.setRGB(i, j, Color.yellow.getRGB()); // Yellow robot
-						//p.setLocation(i, j);
-						//yellowRobot.add(p);
+						yellowRobotX.add(i);
+						yellowRobotY.add(j);
 						yellowCount++;
 						yellowCentroid.setLocation(yellowCentroid.getX() + i, yellowCentroid.getY() + j);
 					}
 					else if (isBlue(c)){
 						img.setRGB(i, j, Color.blue.getRGB()); // Blue robot 
-						//p.setLocation(i, j);
-						//blueRobot.add(p);
-						
+						blueRobotX.add(i);
+						blueRobotY.add(j);						
 						blueCount++;
 						blueCentroid.setLocation(blueCentroid.getX() + i, blueCentroid.getY() + j);
 						//make blue thresholds for the different pitches in that [pitch][x] style
 					}
 					else if (isGreen(c,GB,RG))  {
 						img.setRGB(i,j, Color.green.getRGB()); // GreenPlates 
-						//p.setLocation(i,j);
-						//greenPlates.add(p);
 					}
 					else if (isGrey(c)) {
 					    img.setRGB(i,j, Color.black.getRGB());
@@ -147,7 +140,6 @@ public class Thresholding {
 			yellowCentroid.setLocation(yellowCentroid.getX()/yellowCount, yellowCentroid.getY()/yellowCount);
 			blueCentroid.setLocation(blueCentroid.getX()/blueCount, blueCentroid.getY()/blueCount);
 			
-			blueGreenPlateCentroid = findCentroid(getGreenPlateBlue(greenPlates));
 			Vision.worldState.setOurRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
 			Vision.worldState.setOpponentsRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
 			Vision.worldState.setBallPosition((int)ballCentroid.getX(),(int)ballCentroid.getY());
@@ -161,6 +153,7 @@ public class Thresholding {
      * @return ourGreen
      *  Given all green points return the green points around the blue robot
      */
+     /*
     public ArrayList<Point> getGreenPlateBlue(ArrayList<Point> allGreenThings){
     	ArrayList<Point> ourGreen = new ArrayList<Point>();
     	for (int i = 0; i < greenPlates.size(); i++) {
@@ -170,6 +163,7 @@ public class Thresholding {
 		}
     	return ourGreen;
     }
+    */
     /**
      * 
      * @param listOfPoints
@@ -209,6 +203,22 @@ public class Thresholding {
     
     public boolean isYellow(Color c){
         return ((c.getRed() >= ts.getYellow_r_low()) && (c.getRed() <= ts.getYellow_r_high()) && (c.getGreen() >= ts.getYellow_g_low()) && (c.getGreen() <= ts.getYellow_g_high()) && (c.getBlue() >= ts.getYellow_b_low()) && (c.getBlue() <= ts.getYellow_b_high()));
+    }
+    
+    public ArrayList<Integer> getBlueX(){
+        return blueRobotX;
+    }
+    
+    public ArrayList<Integer> getBlueY(){
+        return blueRobotY;
+    }
+    
+    public ArrayList<Integer> getYellowX(){
+        return yellowRobotX;
+    }
+    
+    public ArrayList<Integer> getYellowY(){
+        return yellowRobotY;
     }
 	    
 	    
