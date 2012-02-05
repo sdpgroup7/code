@@ -98,11 +98,14 @@ public class Thresholding {
            
 
            Point p = new Point();
+            System.out.println(ts.getYellow_r_low());
+		    System.out.println(ts.getYellow_r_high());
            //Vision.logger.debug("Iterating image");
 	    	for (int i = left; i < right; i++) {
 				for (int j = top; j < bottom; j++) {
 					//Vision.logger.debug("Oh dear (i,j) = " + Integer.toString(i) + "," + Integer.toString(j) + ")");
 					c = new Color(img.getRGB(i,j));
+
 					GB = Math.abs((c.getBlue() - c.getGreen()));
 					RG = Math.abs((c.getRed() - c.getGreen()));
 					RB = Math.abs((c.getRed() - c.getBlue()));
@@ -182,17 +185,6 @@ public class Thresholding {
     	
     	return new Point((int) (sumX/(double)listOfPoints.size() ), (int) (sumY/(double)listOfPoints.size()));
     }
-    public Point getBallCentroid() {
-        return ballCentroid;
-    }
-    
-    public Point getBlueCentroid() {
-        return blueCentroid;
-    }
-    
-    public Point getYellowCentroid() {
-        return yellowCentroid;
-    }
 
     public Point getBlueGreenPlateCentori(){ 
     	return blueGreenPlateCentroid;
@@ -211,11 +203,11 @@ public class Thresholding {
     }
     
     public boolean isGrey(Color c){
-        return ((c.getRed() > ts.getGrey_r_low()) && (c.getRed() < ts.getGrey_r_high()) && (c.getGreen() > ts.getGrey_g_low()) && (c.getGreen() < ts.getGrey_g_high()) && (c.getBlue() > ts.getGrey_b_low()) && (c.getBlue() < ts.getGrey_b_high()));
+        return ((c.getRed() >= ts.getGrey_r_low()) && (c.getRed() <= ts.getGrey_r_high()) && (c.getGreen() >= ts.getGrey_g_low()) && (c.getGreen() <= ts.getGrey_g_high()) && (c.getBlue() >= ts.getGrey_b_low()) && (c.getBlue() <= ts.getGrey_b_high()));
     }
     
     public boolean isYellow(Color c){
-        return ((c.getRed() > ts.getYellow_r_low()) && (c.getRed() < ts.getYellow_r_high()) && (c.getGreen() > ts.getYellow_g_low()) && (c.getGreen() < ts.getYellow_g_high()) && (c.getBlue() > ts.getYellow_b_low()) && (c.getBlue() < ts.getYellow_b_high()));
+        return ((c.getRed() >= ts.getYellow_r_low()) && (c.getRed() <= ts.getYellow_r_high()) && (c.getGreen() >= ts.getYellow_g_low()) && (c.getGreen() <= ts.getYellow_g_high()) && (c.getBlue() >= ts.getYellow_b_low()) && (c.getBlue() <= ts.getYellow_b_high()));
     }
 	    
 	    
