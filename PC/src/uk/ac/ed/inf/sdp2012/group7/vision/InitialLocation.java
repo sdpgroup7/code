@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.ObjectPosition;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.Pitch;
 
 public class InitialLocation implements MouseListener, MouseMotionListener {
 
@@ -47,20 +48,17 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     
 	public void getPoints(){
 	
-	    /*
-	    Get the extremes of the pitch.
-	    */
-		System.out.println("By bulge we mean the part of the pitch (in green) which sticks out the most in the specified direction");
-		pitchConstants.setTopBuffer(getClickPoint("Click the top bulge").y);
-		pitchConstants.setRightBuffer(getClickPoint("Click the right bulge").x);
-		pitchConstants.setBottomBuffer(getClickPoint("Click the bottom bulge").y);
-		pitchConstants.setLeftBuffer(getClickPoint("Click the left bulge").x);
-
-		Vision.worldState.setPitch(new ObjectPosition(
+		Vision.worldState.setPitch(new Pitch(
 				getClickPoint("Click the top left corner"),
 				getClickPoint("Click the top right corner"),
 				getClickPoint("Click the bottom right corner"),
 				getClickPoint("Click the bottom left corner")));
+		
+		Vision.worldState.setPitchBuffers(
+				getClickPoint("Click the top bulge").y,
+				getClickPoint("Click the right bulge").x,
+				getClickPoint("Click the bottom bulge").y,
+				getClickPoint("Click the left bulge").x);
 
 		buffersSet = true;
 		
@@ -161,10 +159,10 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         int height = 480;
         Graphics2D graphics = image.createGraphics();
         if(buffersSet){
-        	graphics.drawLine(pitchConstants.getLeftBuffer(),0,pitchConstants.getLeftBuffer(),height);
-        	graphics.drawLine(pitchConstants.getRightBuffer(),0,pitchConstants.getRightBuffer(),height);
-        	graphics.drawLine(0,pitchConstants.getTopBuffer(),width,pitchConstants.getTopBuffer());
-        	graphics.drawLine(0,pitchConstants.getBottomBuffer(),width,pitchConstants.getBottomBuffer());
+        	graphics.drawLine(Vision.worldState.getPitch().getLeftBuffer(),0,Vision.worldState.getPitch().getLeftBuffer(),height);
+        	graphics.drawLine(Vision.worldState.getPitch().getRightBuffer(),0,Vision.worldState.getPitch().getRightBuffer(),height);
+        	graphics.drawLine(0,Vision.worldState.getPitch().getTopBuffer(),width,Vision.worldState.getPitch().getTopBuffer());
+        	graphics.drawLine(0,Vision.worldState.getPitch().getBottomBuffer(),width,Vision.worldState.getPitch().getBottomBuffer());
             return image;
         } else {
             return image;

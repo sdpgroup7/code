@@ -116,7 +116,7 @@ public class VisionFeed extends WindowAdapter {
                 frameImage = frame.getBufferedImage();
                 frame.recycle();
                 //processor.processAndUpdateImage(frameImage, before, label, labelThresh);
-                processor.processAndUpdateImage(frameImage, before, label);		
+                processor.processAndUpdateImage(frameImage, before, label);
             }
         });
 

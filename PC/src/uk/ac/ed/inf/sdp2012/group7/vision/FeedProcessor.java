@@ -35,9 +35,9 @@ public class FeedProcessor{
     }
 
     public void processAndUpdateImage(BufferedImage image, long before, JLabel label) {
-
+    	
         image = initialLocation.markImage(image);
-
+        
         //int topBuffer = pitchConstants.getTopBuffer();
         //int bottomBuffer = pitchConstants.getBottomBuffer();
         //int leftBuffer = pitchConstants.getLeftBuffer();
@@ -72,15 +72,16 @@ public class FeedProcessor{
         */
                 /* Draw the image onto the vision frame. As well as the threshed image*/
         Graphics frameGraphics = label.getGraphics();
+        
        // Graphics frameGraphicsThresh = labelThresh.getGraphics();
        // Graphics imageGraphics = image.getGraphics();
-        Graphics imageGraphics = doThresh.getThresh(image, pitchConstants.getLeftBuffer(),pitchConstants.getRightBuffer(), pitchConstants.getTopBuffer(),pitchConstants.getBottomBuffer()).getGraphics();
+        Graphics imageGraphics = doThresh.getThresh(image, Vision.worldState.getPitch().getLeftBuffer(),Vision.worldState.getPitch().getRightBuffer(), Vision.worldState.getPitch().getTopBuffer(),Vision.worldState.getPitch().getBottomBuffer()).getGraphics();
         
         Point ballCent = doThresh.getBallCentroid();
         Point blueCent = doThresh.getBlueCentroid();
         Point yellowCent = doThresh.getYellowCentroid();
         //Point blueGreenPlate = doThresh.getBlueGreenPlateCentori();
-
+        
         worldState.setBallPosition(ballCent);
         if(true){ //TODO: make this check if we are blue
         	worldState.setOurRobotPosition(blueCent);
@@ -88,10 +89,8 @@ public class FeedProcessor{
         } /*else {
         	worldState.setOurRobotPosition(yellowCent);
         	worldState.setOpponentsRobotPosition(blueCent);
-        }*/
-                    
+        }*/     
         markObjects(imageGraphics,ballCent,blueCent,yellowCent);
-
         calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
     }
 

@@ -217,7 +217,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener {
             File outputFile = new File(fn);
             ImageIO.write(image, "png", outputFile);
         } catch (Exception e) {
-        	System.err.println("Why doesn't this just run?");
+        	Vision.logger.error("Unable to save image: " + e.getMessage());
         }
     }
 

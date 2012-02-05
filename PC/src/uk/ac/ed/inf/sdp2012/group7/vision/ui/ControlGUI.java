@@ -23,6 +23,7 @@ import javax.swing.event.ChangeListener;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.vision.PitchConstants;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
+import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
@@ -472,10 +473,10 @@ public class ControlGUI implements ChangeListener {
 					 * TODO: This currently means that cross-saving values
 					 * is basically unsupported as they will overwrite the
 					 * pitch dimensions incorrectly.*/
-					writer.write(String.valueOf(pitchConstants.getTopBuffer()) + "\n");
-					writer.write(String.valueOf(pitchConstants.getBottomBuffer()) + "\n");
-					writer.write(String.valueOf(pitchConstants.getLeftBuffer()) + "\n");
-					writer.write(String.valueOf(pitchConstants.getRightBuffer()) + "\n");
+					writer.write(String.valueOf(Vision.worldState.getPitch().getTopBuffer()) + "\n");
+					writer.write(String.valueOf(Vision.worldState.getPitch().getBottomBuffer()) + "\n");
+					writer.write(String.valueOf(Vision.worldState.getPitch().getLeftBuffer()) + "\n");
+					writer.write(String.valueOf(Vision.worldState.getPitch().getRightBuffer()) + "\n");
 					
 					writer.flush();
 					writer.close();

@@ -86,85 +86,7 @@ public class PitchConstants {
 	 * When scanning the pitch we look at pixels starting from 0 + topBuffer and 
 	 * 0 + leftBuffer, and then scan to pixels at 480 - bottomBuffer and 
 	 * 640 - rightBuffer. */
-	private int topBuffer = 0;
-	private int bottomBuffer = 640;
-	private int leftBuffer = 0;
-	private int rightBuffer = 480;
-
-    /*private Point topLeft = new Point(0,0);
-    private Point topRight = new Point(640,0);
-    private Point bottomRight = new Point(640,480);
-    private Point bottomLeft = new Point(0,480);
-
-    
-    public Point getTopLeft(){
-        return this.topLeft;
-    }
-
-    public Point getTopRight(){
-        return this.topRight;
-    }
-
-    public Point getBottomLeft(){
-        return this.bottomLeft;
-    }
-
-    public Point getBottomRight(){
-        return this.bottomRight;
-    }
-
-    public void setTopLeft(Point p){
-        this.topLeft = p;
-    }
-
-    public void setTopRight(Point p){
-        this.topRight = p;
-    }
-
-    public void setBottomLeft(Point p){
-        this.bottomLeft = p;
-    }
-
-    public void setBottomRight(Point p){
-        this.bottomRight = p;
-    }*/
-
-    public int getTopBuffer(){
-        return this.topBuffer;
-    }
-
-    public int getRightBuffer(){
-        return this.rightBuffer;
-    }
-
-    public int getBottomBuffer(){
-        return this.bottomBuffer;
-    }
-
-    public int getLeftBuffer(){
-        return this.leftBuffer;
-    }
-
-    public void setTopBuffer(int value){
-        this.topBuffer = value;
-        Vision.logger.debug(Integer.toString(value));
-    }
-
-    public void setRightBuffer(int value){
-        this.rightBuffer = value;
-        Vision.logger.debug(Integer.toString(value));
-    }
-
-    public void setBottomBuffer(int value){
-        this.bottomBuffer = value;
-        Vision.logger.debug(Integer.toString(value));
-    }
-
-    public void setLeftBuffer(int value){
-        this.leftBuffer = value;
-        Vision.logger.debug(Integer.toString(value));
-    }
-
+	
 
 
 	/**
@@ -266,11 +188,6 @@ public class PitchConstants {
 		this.green_v_low = 0;
 		this.green_v_high = 10;
 
-		/* Pitch Dimensions */
-		this.topBuffer = 0;
-		this.bottomBuffer = 0;
-		this.leftBuffer = 0;
-		this.rightBuffer = 0;
 	
 	}
 

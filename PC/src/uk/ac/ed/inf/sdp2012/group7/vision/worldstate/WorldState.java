@@ -8,7 +8,7 @@ public class WorldState{
 	Color ourColor;
 	int room; //0 == main room, 1 == side room
 
-    ObjectPosition pitch = new ObjectPosition();
+    Pitch pitch = new Pitch();
     ObjectPosition ourGoal = new ObjectPosition();
     ObjectPosition opponentsGoal = new ObjectPosition();
     
@@ -54,7 +54,7 @@ public class WorldState{
         return this.ball;
     }
 
-    public ObjectPosition getPitch(){
+    public Pitch getPitch(){
         return this.pitch;
     }
 
@@ -118,8 +118,16 @@ public class WorldState{
     	this.ball.setVelocity(velocity);
     }
     
-    public void setPitch(ObjectPosition position){
-    	this.pitch = position;
+    public void setPitch(Pitch pitch){
+    	this.pitch = pitch;
+    }
+    
+    public void setPitchBuffers(int top, int right, int bottom, int left){
+    	this.pitch.setBuffers(top, right, bottom, left);
+    }
+    
+    public void setPitchPositin(ObjectPosition position){
+    	this.pitch.setPosition(position);
     }
     
     public void setOurGoal(ObjectPosition position){

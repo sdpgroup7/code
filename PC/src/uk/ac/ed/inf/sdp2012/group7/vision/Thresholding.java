@@ -77,7 +77,7 @@ public class Thresholding {
     	//this.robot = robot;
     }
     public BufferedImage getThresh(BufferedImage img, int left, int right, int top, int bottom) { // Method to get thresholded image 
-
+    		//Vision.logger.debug("Starting thresholding");
 		   width = right-left;
 		   height = top-bottom;
 		 //  BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
@@ -92,8 +92,10 @@ public class Thresholding {
            yellowCentroid.setLocation(0,0);
 
            Point p = new Point();
+           //Vision.logger.debug("Iterating image");
 	    	for (int i = left; i < right; i++) {
 				for (int j = top; j < bottom; j++) {
+					//Vision.logger.debug("Oh dear (i,j) = " + Integer.toString(i) + "," + Integer.toString(j) + ")");
 					c = new Color(img.getRGB(i,j));
 					GB = Math.abs((c.getBlue() - c.getGreen()));
 					RG = Math.abs((c.getRed() - c.getGreen()));
@@ -137,14 +139,14 @@ public class Thresholding {
 					}
 				}
 			}
-
+	    	//Vision.logger.debug("End Iteration");
 			ballCentroid.setLocation(ballCentroid.getX()/ballCount, ballCentroid.getY()/ballCount);
 			yellowCentroid.setLocation(yellowCentroid.getX()/yellowCount, yellowCentroid.getY()/yellowCount);
 			blueCentroid.setLocation(blueCentroid.getX()/blueCount, blueCentroid.getY()/blueCount);
 
 			
 			blueGreenPlateCentroid = findCentroid(getGreenPlateBlue(greenPlates));
-
+			//Vision.logger.debug("Returning");
 	    	return img;
     }
     /**
