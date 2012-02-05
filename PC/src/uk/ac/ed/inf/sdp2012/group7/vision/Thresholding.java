@@ -50,12 +50,12 @@ public class Thresholding {
     private int blueCount;
     private int robot; // 0 for Yellow, 1 for Blue(our robot) 
     
-    private ThresholdsState ts = new ThresholdsState();
+    private ThresholdsState ts;
     
 
     
     
-    public Thresholding(int pitch) {  // Sets the constants for thresholding for each pitch 
+    public Thresholding(int pitch, ThresholdsState ts) {  // Sets the constants for thresholding for each pitch 
     	redBallThresh[0][0] = 130;
     	redBallThresh[0][1] = 100;
     	redBallThresh[0][2] = 100;
@@ -78,6 +78,7 @@ public class Thresholding {
 		greenPlatesThresh[1][0] = 155;
 
     	this.pitch=pitch;
+    	this.ts = ts;
     	//this.robot = robot;
     }
     public BufferedImage getThresh(BufferedImage img, int left, int right, int top, int bottom) { // Method to get thresholded image 
@@ -94,6 +95,7 @@ public class Thresholding {
             
            yellowCount = 0;
            yellowCentroid.setLocation(0,0);
+           
 
            Point p = new Point();
            //Vision.logger.debug("Iterating image");
@@ -111,7 +113,6 @@ public class Thresholding {
 
 					}
 					else if (isYellow(c)) {
-						Vision.logger.info("Found yellow");
 						img.setRGB(i, j, Color.yellow.getRGB()); // Yellow robot
 						//p.setLocation(i, j);
 						//yellowRobot.add(p);
