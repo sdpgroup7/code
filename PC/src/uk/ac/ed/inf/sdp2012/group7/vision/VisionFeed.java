@@ -82,7 +82,7 @@ public class VisionFeed extends WindowAdapter {
         	String filename = "testData/" + dateFormat.format(date);
         	il.getTestData(frameImage,filename);
         	TestSaver ts = new TestSaver();
-        	ts.writePoints(il.getTestPoints(), testImage, filename);
+        	ts.writePoints(il.getTestPoints(), frameImage, filename);
         }
     }
 
