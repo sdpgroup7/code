@@ -1,11 +1,12 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
+import java.awt.image.*;
 import javax.swing.JFrame;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
@@ -55,11 +56,6 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
 		pitchConstants.setBottomBuffer(getClickPoint("Click the bottom bulge").y);
 		pitchConstants.setLeftBuffer(getClickPoint("Click the left bulge").x);
 
-		/*pitchConstants.setTopLeft(getClickPoint("Click the top left corner"));
-		pitchConstants.setTopRight(getClickPoint("Click the top right corner"));
-		pitchConstants.setBottomRight(getClickPoint("Click the bottom right corner"));
-		pitchConstants.setBottomLeft(getClickPoint("Click the bottom left corner"));*/
-		
 		Vision.worldState.setPitch(new ObjectPosition(
 				getClickPoint("Click the top left corner"),
 				getClickPoint("Click the top right corner"),
@@ -163,19 +159,13 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     public BufferedImage markImage(BufferedImage image) {
         int width = 640;
         int height = 480;
-        
+        Graphics2D graphics = image.createGraphics();
         if(buffersSet){
-            //currently instead of cropping and stretching the image it simply draws on the borders of where it would crop to in blue
-            for(int x = 0;x<width;x++){
-                for(int y = 0;y<height;y++){
-                    if((y == pitchConstants.getTopBuffer()) || (x == pitchConstants.getRightBuffer()) || (y == pitchConstants.getBottomBuffer()) || (x == pitchConstants.getLeftBuffer())){
-                        //TODO: Use the line drawing methods to do this
-                        image.setRGB(x,y,Color.white.getRGB());
-                    }
-                }
-            }
+        	graphics.drawLine(pitchConstants.getLeftBuffer(),0,pitchConstants.getLeftBuffer(),height);
+        	graphics.drawLine(pitchConstants.getRightBuffer(),0,pitchConstants.getRightBuffer(),height);
+        	graphics.drawLine(0,pitchConstants.getTopBuffer(),width,pitchConstants.getTopBuffer());
+        	graphics.drawLine(0,pitchConstants.getBottomBuffer(),width,pitchConstants.getBottomBuffer());
             return image;
-
         } else {
             return image;
         }
