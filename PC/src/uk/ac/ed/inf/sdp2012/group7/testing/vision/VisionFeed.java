@@ -65,7 +65,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener {
     public void writePoints(){
         try{
         	//TODO: verify angles
-        	//TODO: write out images
         	Point[] pts = new Point[points.size()];
         	points.toArray(pts);
         	Point p = pts[9];
@@ -218,7 +217,7 @@ public class VisionFeed extends WindowAdapter implements MouseListener {
             File outputFile = new File(fn);
             ImageIO.write(image, "png", outputFile);
         } catch (Exception e) {
-        	System.err.println("Why doesn't this just run?");
+        	Vision.logger.error("Unable to save image: " + e.getMessage());
         }
     }
 

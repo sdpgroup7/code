@@ -38,7 +38,7 @@ public class VisionFeed extends WindowAdapter {
     private FrameGrabber frameGrabber;
     private int width, height;
     private BufferedImage frameImage;
-    private ControlGUI thresholdGUI;
+    //private ControlGUI thresholdGUI;
     private FeedProcessor processor;
     
     /**
@@ -57,7 +57,7 @@ public class VisionFeed extends WindowAdapter {
      * @throws V4L4JException   If any parameter if invalid.
      */
     public VisionFeed(String videoDevice, int width, int height, int channel, int videoStandard,
-            int compressionQuality, ControlGUI thresholdsGUI, PitchConstants pitchConstants) throws V4L4JException {
+            int compressionQuality, ControlGUI thresholdsGUI) throws V4L4JException {
             
        /*
        Removed pitch constants, threshold constants and worldstate from the constructor
@@ -66,13 +66,13 @@ public class VisionFeed extends WindowAdapter {
         /* Initialise the GUI that displays the video feed. */
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         initGUI();
-        this.thresholdGUI = thresholdsGUI;
-        InitialLocation il = new InitialLocation(thresholdsGUI, this, pitchConstants, this.windowFrame);
-        processor = new FeedProcessor(il, height, width, pitchConstants, thresholdsGUI);
+        //this.thresholdGUI = thresholdsGUI;
+        InitialLocation il = new InitialLocation(thresholdsGUI, this, this.windowFrame);
+        processor = new FeedProcessor(il, height, width, thresholdsGUI);
         Vision.logger.info("VisionFeed Initialised");
         il.getColors();
         il.getPoints();
-        
+        Vision.logger.info("Vision System Calibrated");
         
     }
 
@@ -115,7 +115,7 @@ public class VisionFeed extends WindowAdapter {
                 frameImage = frame.getBufferedImage();
                 frame.recycle();
                 //processor.processAndUpdateImage(frameImage, before, label, labelThresh);
-                processor.processAndUpdateImage(frameImage, before, label);		
+                processor.processAndUpdateImage(frameImage, before, label);
             }
         });
 

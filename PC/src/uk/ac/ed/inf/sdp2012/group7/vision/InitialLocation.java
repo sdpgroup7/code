@@ -1,30 +1,30 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
+import java.awt.image.*;
 import javax.swing.JFrame;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.Pitch;
 
 public class InitialLocation implements MouseListener, MouseMotionListener {
 
     private Point coords = new Point();
     private boolean mouseClick = false;
-    private PitchConstants pitchConstants;
     private ControlGUI thresholdGUI;
     private VisionFeed visionFeed;
     private boolean buffersSet = false;
-    private JFrame windowFrame;
+    //private JFrame windowFrame;
 
-    public InitialLocation(ControlGUI thresholdsGUI, VisionFeed visionFeed, PitchConstants pitchConstants, JFrame windowFrame) {
+    public InitialLocation(ControlGUI thresholdsGUI, VisionFeed visionFeed, JFrame windowFrame) {
     	this.thresholdGUI = thresholdsGUI;
         this.visionFeed = visionFeed;
-        this.pitchConstants = pitchConstants;
-        this.windowFrame = windowFrame;
+        //this.windowFrame = windowFrame;
         windowFrame.addMouseListener(this);
         windowFrame.addMouseMotionListener(this);
         Vision.logger.info("InitialLocation Initialised");
@@ -45,19 +45,17 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     
 	public void getPoints(){
 	
-	    /*
-	    Get the extremes of the pitch.
-	    */
-		System.out.println("By bulge we mean the part of the pitch (in green) which sticks out the most in the specified direction");
-		pitchConstants.setTopBuffer(getClickPoint("Click the top bulge").y);
-		pitchConstants.setRightBuffer(getClickPoint("Click the right bulge").x);
-		pitchConstants.setBottomBuffer(getClickPoint("Click the bottom bulge").y);
-		pitchConstants.setLeftBuffer(getClickPoint("Click the left bulge").x);
-
-		pitchConstants.setTopLeft(getClickPoint("Click the top left corner"));
-		pitchConstants.setTopRight(getClickPoint("Click the top right corner"));
-		pitchConstants.setBottomRight(getClickPoint("Click the bottom right corner"));
-		pitchConstants.setBottomLeft(getClickPoint("Click the bottom left corner"));
+		Vision.worldState.setPitch(new Pitch(
+				getClickPoint("Click the top left corner"),
+				getClickPoint("Click the top right corner"),
+				getClickPoint("Click the bottom right corner"),
+				getClickPoint("Click the bottom left corner")));
+		
+		Vision.worldState.setPitchBuffers(
+				getClickPoint("Click the top bulge").y,
+				getClickPoint("Click the right bulge").x,
+				getClickPoint("Click the bottom bulge").y,
+				getClickPoint("Click the left bulge").x);
 
 		buffersSet = true;
 		
@@ -156,19 +154,13 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     public BufferedImage markImage(BufferedImage image) {
         int width = 640;
         int height = 480;
-        
+        Graphics2D graphics = image.createGraphics();
         if(buffersSet){
-            //currently instead of cropping and stretching the image it simply draws on the borders of where it would crop to in blue
-            for(int x = 0;x<width;x++){
-                for(int y = 0;y<height;y++){
-                    if((y == pitchConstants.getTopBuffer()) || (x == pitchConstants.getRightBuffer()) || (y == pitchConstants.getBottomBuffer()) || (x == pitchConstants.getLeftBuffer())){
-                        //TODO: Use the line drawing methods to do this
-                        image.setRGB(x,y,Color.white.getRGB());
-                    }
-                }
-            }
+        	graphics.drawLine(Vision.worldState.getPitch().getLeftBuffer(),0,Vision.worldState.getPitch().getLeftBuffer(),height);
+        	graphics.drawLine(Vision.worldState.getPitch().getRightBuffer(),0,Vision.worldState.getPitch().getRightBuffer(),height);
+        	graphics.drawLine(0,Vision.worldState.getPitch().getTopBuffer(),width,Vision.worldState.getPitch().getTopBuffer());
+        	graphics.drawLine(0,Vision.worldState.getPitch().getBottomBuffer(),width,Vision.worldState.getPitch().getBottomBuffer());
             return image;
-
         } else {
             return image;
         }
