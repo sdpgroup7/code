@@ -75,19 +75,8 @@ public class FeedProcessor{
        // Graphics imageGraphics = image.getGraphics();
         Graphics imageGraphics = doThresh.getThresh(image, Vision.worldState.getPitch().getLeftBuffer(),Vision.worldState.getPitch().getRightBuffer(), Vision.worldState.getPitch().getTopBuffer(),Vision.worldState.getPitch().getBottomBuffer()).getGraphics();
         
-        Point ballCent = doThresh.getBallCentroid();
-        Point blueCent = doThresh.getBlueCentroid();
-        Point yellowCent = doThresh.getYellowCentroid();
-        //Point blueGreenPlate = doThresh.getBlueGreenPlateCentori();
-        
-        worldState.setBallPosition(ballCent);
-        if(true){ //TODO: make this check if we are blue
-        	worldState.setOurRobotPosition(blueCent);
-        	worldState.setOpponentsRobotPosition(yellowCent);
-        } /*else {
-        	worldState.setOurRobotPosition(yellowCent);
-        	worldState.setOpponentsRobotPosition(blueCent);
-        }*/     
+        Point blueGreenPlate = doThresh.getBlueGreenPlateCentori();
+                    
         markObjects(imageGraphics,ballCent,blueCent,yellowCent);
         calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
     }
