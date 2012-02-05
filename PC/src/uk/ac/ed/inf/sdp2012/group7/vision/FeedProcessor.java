@@ -80,15 +80,6 @@ public class FeedProcessor{
         Point blueCent = doThresh.getBlueCentroid();
         Point yellowCent = doThresh.getYellowCentroid();
         Point blueGreenPlate = doThresh.getBlueGreenPlateCentori();
-
-        worldState.setBallPosition(ballCent);
-        if(true){ //TODO: make this check if we are blue
-        	worldState.setOurRobotPosition(blueCent);
-        	worldState.setOpponentsRobotPosition(yellowCent);
-        } else {
-        	worldState.setOurRobotPosition(yellowCent);
-        	worldState.setOpponentsRobotPosition(blueCent);
-        }
                     
         markObjects(imageGraphics,ballCent,blueCent,yellowCent);
 

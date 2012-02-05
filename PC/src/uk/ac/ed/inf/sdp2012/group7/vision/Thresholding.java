@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.awt.Point;
 import java.util.ArrayList;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
  * 
@@ -50,6 +51,7 @@ public class Thresholding {
     private int robot; // 0 for Yellow, 1 for Blue(our robot) 
     
     private ThresholdsState ts = new ThresholdsState();
+    private WorldState ws = new WorldState();
     
 
     
@@ -136,9 +138,11 @@ public class Thresholding {
 			ballCentroid.setLocation(ballCentroid.getX()/ballCount, ballCentroid.getY()/ballCount);
 			yellowCentroid.setLocation(yellowCentroid.getX()/yellowCount, yellowCentroid.getY()/yellowCount);
 			blueCentroid.setLocation(blueCentroid.getX()/blueCount, blueCentroid.getY()/blueCount);
-
 			
-			blueGreenPlateCentroid = findCentroid(getGreenPlateBlue(greenPlates));
+			ws.setOurRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
+			ws.setOpponentsRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
+			ws.setBallPosition((int)ballCentroid.getX(),(int)ballCentroid.getY());
+			
 
 	    	return img;
     }
