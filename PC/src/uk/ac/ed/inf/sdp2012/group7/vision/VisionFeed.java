@@ -68,6 +68,7 @@ public class VisionFeed extends WindowAdapter {
         Vision.logger.info("VisionFeed Initialised");
         il.getColors();
         il.getPoints();
+        Vision.worldState.setClickingDone(true);
         Vision.logger.info("Vision System Calibrated");
         
     }

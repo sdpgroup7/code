@@ -83,6 +83,8 @@ public class Thresholding {
     }
     public BufferedImage getThresh(BufferedImage img, int left, int right, int top, int bottom) { // Method to get thresholded image 
     		//Vision.logger.debug("Starting thresholding");
+    		
+    	if (Vision.worldState.isClickingDone()){
 		   width = right-left;
 		   height = top-bottom;
 		 //  BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
@@ -98,8 +100,7 @@ public class Thresholding {
            
 
            Point p = new Point();
-            System.out.println(ts.getYellow_r_low());
-		    System.out.println(ts.getYellow_r_high());
+
            //Vision.logger.debug("Iterating image");
 	    	for (int i = left; i < right; i++) {
 				for (int j = top; j < bottom; j++) {
@@ -150,7 +151,7 @@ public class Thresholding {
 			Vision.worldState.setOurRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
 			Vision.worldState.setOpponentsRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
 			Vision.worldState.setBallPosition((int)ballCentroid.getX(),(int)ballCentroid.getY());
-			
+		}
 
 	    	return img;
     }

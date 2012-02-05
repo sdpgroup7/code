@@ -9,6 +9,7 @@ public class WorldState{
 
 	Color ourColor;
 	int room; //0 == main room, 1 == side room
+	boolean clickingDone = false;
 
     Pitch pitch = new Pitch();
     ObjectPosition ourGoal = new ObjectPosition();
@@ -139,6 +140,14 @@ public class WorldState{
     
     public void setOpponentsGoal(ObjectPosition position){
     	this.opponentsGoal = position;
+    }
+    
+    public boolean isClickingDone(){
+        return clickingDone;
+    }
+    
+    public void setClickingDone(boolean yn){
+        this.clickingDone = yn;
     }
     
 }
