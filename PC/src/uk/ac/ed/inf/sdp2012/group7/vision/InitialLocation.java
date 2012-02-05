@@ -7,6 +7,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.*;
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
@@ -20,6 +27,11 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     private VisionFeed visionFeed;
     private boolean buffersSet = false;
     //private JFrame windowFrame;
+    //The below variables are for the testing system
+    private boolean paused = false;
+    private ArrayList<Point> points = new ArrayList<Point>();
+    public boolean testMouseClick = false;
+    public Point testCoords = new Point(0,0);
 
     public InitialLocation(ControlGUI thresholdsGUI, VisionFeed visionFeed, JFrame windowFrame) {
     	this.thresholdGUI = thresholdsGUI;
@@ -42,6 +54,39 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         coords = correctPoint(e.getPoint());
         mouseClick = true;
     }
+    
+    public ArrayList<Point> getTestPoints(){
+    	return this.points;
+    }
+    
+    public void getTestData(BufferedImage image, String filename){
+    	paused = true;
+    	writeImage(image,filename + ".png");
+        points.add(getClickPoint("Click the ball"));
+        points.add(getClickPoint("Click a corner on the blue robot"));
+        points.add(getClickPoint("Click another corner on the blue robot"));
+        points.add(getClickPoint("Click another corner on the blue robot"));
+        points.add(getClickPoint("Click another corner on the blue robot"));
+        points.add(getClickPoint("Click a corner on the yellow robot"));
+        points.add(getClickPoint("Click another corner on the yellow robot"));
+        points.add(getClickPoint("Click another corner on the yellow robot"));
+        points.add(getClickPoint("Click another corner on the yellow robot"));
+        points.add(getClickPoint("Click the grey circle on the blue robot"));
+        points.add(getClickPoint("Click the grey circle on the yellow robot"));
+        points.add(getClickPoint("Click the very bottom of the T on the blue robot"));
+        points.add(getClickPoint("Click the very bottom of the T on the yellow robot"));
+        paused = false;
+    }
+    
+    public void writeImage(BufferedImage image, String fn){
+        try {
+            File outputFile = new File(fn);
+            ImageIO.write(image, "png", outputFile);
+        } catch (Exception e) {
+        	Vision.logger.error("Failed to write image: " + e.getMessage());
+        }
+    }
+
     
 	public void getPoints(){
 	

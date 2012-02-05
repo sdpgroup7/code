@@ -46,13 +46,8 @@ public class VisionFeed extends WindowAdapter {
     private BufferedImage frameImage;
     //private ControlGUI thresholdGUI;
     private FeedProcessor processor;
-    //The below variables are for the testing system
-    private boolean paused = false;
-    private ArrayList<Point> points = new ArrayList<Point>();
-    private boolean mouseClick = false;
-    private Point coords = new Point(0,0);
-    private String filename;
-    private BufferedImage testImage;
+
+    public boolean paused = false;
     /**
      * Default constructor.
      *
@@ -82,46 +77,15 @@ public class VisionFeed extends WindowAdapter {
         il.getColors();
         Vision.logger.info("Vision System Calibrated");
         if(Vision.TESTING){
-        	getPoints();
+        	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        	Date date = new Date();
+        	String filename = "testData/" + dateFormat.format(date);
+        	il.getTestData(frameImage,filename);
         	TestSaver ts = new TestSaver();
-        	ts.writePoints(points, testImage, filename);
+        	ts.writePoints(il.getTestPoints(), testImage, filename);
         }
     }
-    
-    public void getPoints(){
-    	paused = true;
-    	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    	Date date = new Date();
-    	filename = "testData/" + dateFormat.format(date);
-    	writeImage(getFrameImage(),filename + ".png");
-        points.add(getClickPoint("Click the ball"));
-        points.add(getClickPoint("Click a corner on the blue robot"));
-        points.add(getClickPoint("Click another corner on the blue robot"));
-        points.add(getClickPoint("Click another corner on the blue robot"));
-        points.add(getClickPoint("Click another corner on the blue robot"));
-        points.add(getClickPoint("Click a corner on the yellow robot"));
-        points.add(getClickPoint("Click another corner on the yellow robot"));
-        points.add(getClickPoint("Click another corner on the yellow robot"));
-        points.add(getClickPoint("Click another corner on the yellow robot"));
-        points.add(getClickPoint("Click the grey circle on the blue robot"));
-        points.add(getClickPoint("Click the grey circle on the yellow robot"));
-        points.add(getClickPoint("Click the very bottom of the T on the blue robot"));
-        points.add(getClickPoint("Click the very bottom of the T on the yellow robot"));
-        paused = false;
-    }
 
-    public Point getClickPoint(String message){
-        System.out.println(message);
-
-        while (!mouseClick) {
-            try{
-                Thread.sleep(100);
-            } catch (Exception e) {}
-        }
-        mouseClick = false;
-        System.out.println(coords);
-        return coords;
-    }
 
     public BufferedImage getFrameImage(){
         return this.frameImage;
