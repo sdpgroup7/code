@@ -38,7 +38,7 @@ public class Tools {
 		// now find how much our robot has to turn to face target
 		// (turning by negative getAngle returns it to face 0 then add on ball
 		// Angle
-		double howMuchToTurn = angle - targetFromNxt;
+		double howMuchToTurn = targetFromNxt - angle;
 
 		// now adjust it so that it turns in the shortest direction (clockwise
 		// or counter clockwise)

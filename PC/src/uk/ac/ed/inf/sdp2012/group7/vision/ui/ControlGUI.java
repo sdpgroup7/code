@@ -556,8 +556,7 @@ public class ControlGUI implements ChangeListener {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        //call to strategy system for there start of match code
-		        System.err.println("Start Strategy");
+		        strat.mileStone2NavigateOn();
 		    }
 		});
 		
@@ -565,8 +564,7 @@ public class ControlGUI implements ChangeListener {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        //call to strategy to get them to stop what they are doing
-		        System.err.println("Stop the strategy");
+		        strat.mileStone2NavigateOff();
 		    }
 		});
 		

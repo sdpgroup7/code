@@ -68,7 +68,7 @@ public class ToolsTest {
 
 	@Test
 	public void test2GetAngleToFacePoint() {
-		double actual = Tools.getAngleToFacePoint(new Point(1,1), 3*Math.PI/2, new Point(2,1));
+		double actual = Tools.getAngleToFacePoint(new Point(1,1), Math.PI/2, new Point(2,1));
 		double expected = -Math.PI/2;
 		System.out.println("Running the second test of getAngleToFacePoint, result: " + actual);
 		assertTrue(actual == expected);

@@ -7,6 +7,7 @@ import au.edu.jcu.v4l4j.V4L4JConstants;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /** 
@@ -29,7 +30,10 @@ public class Vision {
      */
     
     public Vision(ActionListener strategyListener){
-        
+    	Logger.getLogger("com.intel.bluetooth").setLevel(Level.WARN);
+    	
+    	Logger.getRootLogger().setLevel(Level.WARN);
+        logger.setLevel(Level.WARN);
     }
 
     public Vision() {
