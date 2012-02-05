@@ -8,10 +8,10 @@ import javax.swing.JLabel;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.ObjectPosition;
 
 public class FeedProcessor{
     
-    private WorldState worldState;
     //private ThresholdsState thresholdsState; //might not be needed any more
     //private OrientationFinder orientationFinder; //might not be needed anymore
 
@@ -24,7 +24,6 @@ public class FeedProcessor{
     public FeedProcessor(InitialLocation il, int height, int width, ControlGUI controlGUI){
         
     	//this.thresholdsState = controlGUI.getThresholdsState();
-        this.worldState = controlGUI.getWorldState();
         this.initialLocation = il;
         this.height = height;
         this.width = width;
@@ -75,24 +74,17 @@ public class FeedProcessor{
        // Graphics imageGraphics = image.getGraphics();
         Graphics imageGraphics = doThresh.getThresh(image, Vision.worldState.getPitch().getLeftBuffer(),Vision.worldState.getPitch().getRightBuffer(), Vision.worldState.getPitch().getTopBuffer(),Vision.worldState.getPitch().getBottomBuffer()).getGraphics();
         
-        Point ballCent = doThresh.getBallCentroid();
-        Point blueCent = doThresh.getBlueCentroid();
-        Point yellowCent = doThresh.getYellowCentroid();
-        //Point blueGreenPlate = doThresh.getBlueGreenPlateCentori();
+        Point blueGreenPlate = doThresh.getBlueGreenPlateCentori();
         
-        worldState.setBallPosition(ballCent);
-        if(true){ //TODO: make this check if we are blue
-        	worldState.setOurRobotPosition(blueCent);
-        	worldState.setOpponentsRobotPosition(yellowCent);
-        } /*else {
-        	worldState.setOurRobotPosition(yellowCent);
-        	worldState.setOpponentsRobotPosition(blueCent);
-        }*/     
-        markObjects(imageGraphics,ballCent,blueCent,yellowCent);
+                    
+        markObjects(imageGraphics);
         calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
     }
 
-    public void markObjects(Graphics imageGraphics, Point ball, Point blue, Point yellow){
+    public void markObjects(Graphics imageGraphics){
+            Point ball = Vision.worldState.getBall().getPosition().getCentre();
+            Point blue = Vision.worldState.getOurRobot().getPosition().getCentre();
+            Point yellow = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
             imageGraphics.setColor(Color.red);
             imageGraphics.drawLine(0, (int)ball.getY(), 640, (int)ball.getY());
             imageGraphics.drawLine((int)ball.getX(), 0, (int)ball.getX(), 480);
@@ -102,7 +94,7 @@ public class FeedProcessor{
             imageGraphics.drawOval((int)yellow.getX()-15, (int)yellow.getY()-15, 30,30);
             imageGraphics.setColor(Color.white);
             imageGraphics.setColor(Color.red);
-            imageGraphics.drawLine(worldState.getBall().getPosition().getCentre().x,worldState.getBall().getPosition().getCentre().y,worldState.getOurRobot().getPosition().getCentre().x,worldState.getOurRobot().getPosition().getCentre().y);
+            imageGraphics.drawLine(Vision.worldState.getBall().getPosition().getCentre().x,Vision.worldState.getBall().getPosition().getCentre().y,Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y);
             //could the above line be shorter with the current worldState state?
     }
 
