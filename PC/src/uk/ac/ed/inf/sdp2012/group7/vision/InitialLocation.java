@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.ObjectPosition;
 
 public class InitialLocation implements MouseListener, MouseMotionListener {
 
@@ -18,13 +19,13 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     private ControlGUI thresholdGUI;
     private VisionFeed visionFeed;
     private boolean buffersSet = false;
-    private JFrame windowFrame;
+    //private JFrame windowFrame;
 
     public InitialLocation(ControlGUI thresholdsGUI, VisionFeed visionFeed, PitchConstants pitchConstants, JFrame windowFrame) {
     	this.thresholdGUI = thresholdsGUI;
         this.visionFeed = visionFeed;
         this.pitchConstants = pitchConstants;
-        this.windowFrame = windowFrame;
+        //this.windowFrame = windowFrame;
         windowFrame.addMouseListener(this);
         windowFrame.addMouseMotionListener(this);
         Vision.logger.info("InitialLocation Initialised");
@@ -54,10 +55,16 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
 		pitchConstants.setBottomBuffer(getClickPoint("Click the bottom bulge").y);
 		pitchConstants.setLeftBuffer(getClickPoint("Click the left bulge").x);
 
-		pitchConstants.setTopLeft(getClickPoint("Click the top left corner"));
+		/*pitchConstants.setTopLeft(getClickPoint("Click the top left corner"));
 		pitchConstants.setTopRight(getClickPoint("Click the top right corner"));
 		pitchConstants.setBottomRight(getClickPoint("Click the bottom right corner"));
-		pitchConstants.setBottomLeft(getClickPoint("Click the bottom left corner"));
+		pitchConstants.setBottomLeft(getClickPoint("Click the bottom left corner"));*/
+		
+		Vision.worldState.setPitch(new ObjectPosition(
+				getClickPoint("Click the top left corner"),
+				getClickPoint("Click the top right corner"),
+				getClickPoint("Click the bottom right corner"),
+				getClickPoint("Click the bottom left corner")));
 
 		buffersSet = true;
 		

@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.DeviceInfo;
 import au.edu.jcu.v4l4j.FrameGrabber;
@@ -38,7 +39,7 @@ public class VisionFeed extends WindowAdapter {
     private FrameGrabber frameGrabber;
     private int width, height;
     private BufferedImage frameImage;
-    private ControlGUI thresholdGUI;
+    //private ControlGUI thresholdGUI;
     private FeedProcessor processor;
     
     /**
@@ -66,13 +67,13 @@ public class VisionFeed extends WindowAdapter {
         /* Initialise the GUI that displays the video feed. */
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         initGUI();
-        this.thresholdGUI = thresholdsGUI;
+        //this.thresholdGUI = thresholdsGUI;
         InitialLocation il = new InitialLocation(thresholdsGUI, this, pitchConstants, this.windowFrame);
         processor = new FeedProcessor(il, height, width, pitchConstants, thresholdsGUI);
         Vision.logger.info("VisionFeed Initialised");
         il.getColors();
         il.getPoints();
-        
+        Vision.logger.info("Vision System Calibrated");
         
     }
 

@@ -91,7 +91,7 @@ public class PitchConstants {
 	private int leftBuffer = 0;
 	private int rightBuffer = 480;
 
-    private Point topLeft = new Point(0,0);
+    /*private Point topLeft = new Point(0,0);
     private Point topRight = new Point(640,0);
     private Point bottomRight = new Point(640,480);
     private Point bottomLeft = new Point(0,480);
@@ -127,7 +127,7 @@ public class PitchConstants {
 
     public void setBottomRight(Point p){
         this.bottomRight = p;
-    }
+    }*/
 
     public int getTopBuffer(){
         return this.topBuffer;

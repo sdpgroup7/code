@@ -65,7 +65,6 @@ public class VisionFeed extends WindowAdapter implements MouseListener {
     public void writePoints(){
         try{
         	//TODO: verify angles
-        	//TODO: write out images
         	Point[] pts = new Point[points.size()];
         	points.toArray(pts);
         	Point p = pts[9];

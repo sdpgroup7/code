@@ -14,7 +14,7 @@ public class VisionTesting {
         int compressionQuality = 80;
 
         try {
-            VisionFeed feed = new VisionFeed(videoDevice, width, height, channel, videoStandard, compressionQuality);
+            new VisionFeed(videoDevice, width, height, channel, videoStandard, compressionQuality);
         } catch (V4L4JException e) {
             e.printStackTrace();
         } catch (Exception e) {

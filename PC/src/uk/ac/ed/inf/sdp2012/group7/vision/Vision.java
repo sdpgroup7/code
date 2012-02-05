@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
  */
 public class Vision {
     private static ControlGUI thresholdsGUI;
-    private static WorldState worldState;
+    public static WorldState worldState;
     public static final Logger logger = Logger.getLogger(Vision.class);
     
     
@@ -62,7 +62,7 @@ public class Vision {
             thresholdsGUI.initGUI();
 
             /* Create a new Vision object to serve the main vision window. */
-            VisionFeed feed = new VisionFeed(videoDevice, width, height, channel, videoStandard, compressionQuality, thresholdsGUI, pitchConstants);
+            new VisionFeed(videoDevice, width, height, channel, videoStandard, compressionQuality, thresholdsGUI, pitchConstants);
             Vision.logger.info("Vision System Initialised");
         } catch (V4L4JException e) {
         	Vision.logger.fatal("V4L4JException: " + e.getMessage());
