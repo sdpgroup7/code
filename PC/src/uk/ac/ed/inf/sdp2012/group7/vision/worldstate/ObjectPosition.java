@@ -7,30 +7,39 @@ import java.awt.Point;
  * 
  * @author Dale Myers - 0942590
  */
-public class ObjectPosition extends Point{
+public class ObjectPosition{
 
 	private static final long serialVersionUID = -31952448440473456L;
 	private Point topLeft = new Point(0,0);
     private Point topRight = new Point(0,0);
     private Point bottomLeft = new Point(0,0);
     private Point bottomRight = new Point(0,0);
+    private Point centre = new Point(0,0);
     
     public ObjectPosition(){
-        super(0,0);
+        
     }
 
     public ObjectPosition(int x, int y){
-        super(x,y);
+        this.centre = new Point(x,y);
     }
-
+    
+    public ObjectPosition(Point p){
+    	this.centre = p;
+    }
+    
     public ObjectPosition(Point topLeft, Point topRight, Point bottomLeft, Point bottomRight){
-        this.topLeft = topLeft;
-        this.topRight = topRight;
-        this.bottomLeft = bottomLeft;
-        this.bottomRight = bottomRight;
+    	this(topLeft,topRight,bottomLeft,bottomRight,new Point(((topLeft.x + bottomRight.x) / 2),((topLeft.y + bottomRight.y) / 2)));
     }
-
-
+    
+    public ObjectPosition(Point topLeft, Point topRight, Point bottomLeft, Point bottomRight, Point centre){
+    	this.topLeft = topLeft;
+    	this.topRight = topRight;
+    	this.bottomLeft = bottomLeft;
+    	this.bottomRight = bottomRight;
+    	this.centre = centre;
+    }
+    
     public Point[] getCorners(){
         Point[] ret = new Point[4];
         ret[0] = topLeft;
@@ -62,6 +71,10 @@ public class ObjectPosition extends Point{
     public Point getBottomRight(){
         return this.bottomRight;
     }
+    
+    public Point getCentre(){
+    	return this.centre;
+    }
 
     public void setTopLeft(Point v){
         this.topLeft = v;
@@ -78,6 +91,14 @@ public class ObjectPosition extends Point{
     public void setBottomRight(Point v){
         this.bottomRight = v;
     }
+    
+    public void setCentre(Point p){
+    	this.centre = p;
+    }
+    
+    public void setCentre(int x, int y){
+    	this.centre = new Point(x,y);
+    }
 
     public int getHeight(){
         return Math.max(topLeft.y,topRight.y) - Math.min(bottomLeft.y,bottomRight.y);
@@ -88,6 +109,6 @@ public class ObjectPosition extends Point{
     }
 
     public String toString(){
-        return "Center: " + super.toString() + "\n" + "(TopLeft,TopRight,BottomLeft,BottomRight) = (" + topLeft.toString() + "," + topRight.toString() + "," + bottomLeft.toString() + "," + bottomRight.toString() + ")";
+        return "(TopLeft,TopRight,BottomLeft,BottomRight,Centre) = (" + topLeft.toString() + "," + topRight.toString() + "," + bottomLeft.toString() + "," + bottomRight.toString() + "," + centre.toString() + ")";
     }
 }

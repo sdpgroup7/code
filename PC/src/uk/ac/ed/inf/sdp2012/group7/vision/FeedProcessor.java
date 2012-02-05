@@ -81,25 +81,15 @@ public class FeedProcessor{
         Point yellowCent = doThresh.getYellowCentroid();
         Point blueGreenPlate = doThresh.getBlueGreenPlateCentori();
 
-        worldState.setBallX((int)ballCent.getX());
-        worldState.setBallY((int)ballCent.getY());
-        
-      
-        worldState.setBlueX((int)blueCent.getX());
-        worldState.setBlueY((int)blueCent.getY());
-        
-        worldState.setBlueGreenPlateX(blueGreenPlate.x);
-        worldState.setBlueGreenPlateY(blueGreenPlate.y);
-        
-        /* worldState.setYellowX(yellow.getX());
-        worldState.setYellowY(yellow.getY());
-        worldState.updateCounter();
-        */
-       
-
-
-        
-        
+        worldState.setBallPosition(ballCent);
+        if(true){ //TODO: make this check if we are blue
+        	worldState.setOurRobotPosition(blueCent);
+        	worldState.setOpponentsRobotPosition(yellowCent);
+        } else {
+        	worldState.setOurRobotPosition(yellowCent);
+        	worldState.setOpponentsRobotPosition(blueCent);
+        }
+                    
         markObjects(imageGraphics,ballCent,blueCent,yellowCent);
 
         calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
@@ -116,8 +106,7 @@ public class FeedProcessor{
             imageGraphics.drawOval((int)yellow.getX()-15, (int)yellow.getY()-15, 30,30);
             imageGraphics.setColor(Color.white);
             imageGraphics.setColor(Color.red);
-            imageGraphics.drawLine(worldState.getBlueX(), worldState.getBlueY(), worldState.getBlueGreenPlateX(), worldState.getBlueGreenPlateY());
-        
+            //imageGraphics.drawLine(worldState.getBall().getPosition().getCentre().x,worldState.getBall().getPosition().getCentre().y,worldState.getOurRobot().getPosition().getCentre().x,worldState.getOurRobot().getPosition().getCentre().y);
     }
 
     public static void calculateFPS(long before, Graphics imageGraphics, Graphics frameGraphics, BufferedImage image, int width, int height){
