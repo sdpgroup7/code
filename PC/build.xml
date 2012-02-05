@@ -52,6 +52,7 @@
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
             <test name="uk.ac.ed.inf.sdp2012.group7.VisionTesting.VisionTest" todir="${junit.output.dir}"/>
+        	<test name="uk.ac.ed.inf.sdp2012.group7.testing.control.ToolsTest" todir="${junit.output.dir}"/>
             <classpath refid="PC.classpath"/>
         </junit>
     </target>

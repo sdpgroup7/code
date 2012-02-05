@@ -3,8 +3,6 @@ package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
 import java.awt.Color;
 import java.awt.Point;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
-
 public class WorldState{
 
 	Color ourColor;
