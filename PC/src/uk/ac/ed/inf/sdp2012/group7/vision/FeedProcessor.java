@@ -96,7 +96,6 @@ public class FeedProcessor{
     }
 
     public void markObjects(Graphics imageGraphics, Point ball, Point blue, Point yellow){
-        /* Only display these markers in non-debug mode. */
             imageGraphics.setColor(Color.red);
             imageGraphics.drawLine(0, (int)ball.getY(), 640, (int)ball.getY());
             imageGraphics.drawLine((int)ball.getX(), 0, (int)ball.getX(), 480);
@@ -106,7 +105,8 @@ public class FeedProcessor{
             imageGraphics.drawOval((int)yellow.getX()-15, (int)yellow.getY()-15, 30,30);
             imageGraphics.setColor(Color.white);
             imageGraphics.setColor(Color.red);
-            //imageGraphics.drawLine(worldState.getBall().getPosition().getCentre().x,worldState.getBall().getPosition().getCentre().y,worldState.getOurRobot().getPosition().getCentre().x,worldState.getOurRobot().getPosition().getCentre().y);
+            imageGraphics.drawLine(worldState.getBall().getPosition().getCentre().x,worldState.getBall().getPosition().getCentre().y,worldState.getOurRobot().getPosition().getCentre().x,worldState.getOurRobot().getPosition().getCentre().y);
+            //could the above line be shorter with the current worldState state?
     }
 
     public static void calculateFPS(long before, Graphics imageGraphics, Graphics frameGraphics, BufferedImage image, int width, int height){
@@ -118,7 +118,6 @@ public class FeedProcessor{
         imageGraphics.setColor(Color.white);
         imageGraphics.drawString("FPS: " + fps, 15, 15);
         frameGraphics.drawImage(image, 0, 0, width, height, null);
-        //TODO: Check that the above isn't needed.
     }
 
 }
