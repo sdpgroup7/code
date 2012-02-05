@@ -86,12 +86,12 @@ public class FeedProcessor{
             Point blue = Vision.worldState.getOurRobot().getPosition().getCentre();
             Point yellow = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
             imageGraphics.setColor(Color.red);
-            imageGraphics.drawLine(0, (int)ball.getY(), 640, (int)ball.getY());
-            imageGraphics.drawLine((int)ball.getX(), 0, (int)ball.getX(), 480);
+            imageGraphics.drawLine(0, ball.y, 640, ball.y);
+            imageGraphics.drawLine(ball.x, 0, ball.x, 480);
             imageGraphics.setColor(Color.blue);
-            imageGraphics.drawOval((int)blue.getX()-15, (int)blue.getY()-15, 30,30);
+            imageGraphics.drawOval(blue.x-15, blue.y-15, 30,30);
             imageGraphics.setColor(Color.yellow);
-            imageGraphics.drawOval((int)yellow.getX()-15, (int)yellow.getY()-15, 30,30);
+            imageGraphics.drawOval(yellow.x-15, yellow.y-15, 30,30);
             imageGraphics.setColor(Color.white);
             imageGraphics.setColor(Color.red);
             imageGraphics.drawLine(Vision.worldState.getBall().getPosition().getCentre().x,Vision.worldState.getBall().getPosition().getCentre().y,Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y);

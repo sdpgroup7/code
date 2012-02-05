@@ -3,6 +3,8 @@ package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
 import java.awt.Color;
 import java.awt.Point;
 
+import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+
 public class WorldState{
 
 	Color ourColor;
@@ -71,6 +73,7 @@ public class WorldState{
     }
     
     public void setOurRobotPosition(int x, int y){
+    	//Vision.logger.debug(Integer.toString(x) + "," + Integer.toString(y));
     	this.ourRobot.setPosition(x,y);
     }
     
@@ -87,15 +90,15 @@ public class WorldState{
     }
     
     public void setOpponentsRobotPosition(int x, int y){
-    	this.ourRobot.setPosition(x,y);
+    	this.opponentsRobot.setPosition(x,y);
     }
     
     public void setOpponentsRobotPosition(Point p){
-    	this.ourRobot.setPosition(p);
+    	this.opponentsRobot.setPosition(p);
     }
     
     public void setOpponentsRobotPosition(ObjectPosition position){
-    	this.ourRobot.setPosition(position);
+    	this.opponentsRobot.setPosition(position);
     }
     
     public void setBall(ObjectPosition position, Vector2 velocity){
@@ -126,7 +129,7 @@ public class WorldState{
     	this.pitch.setBuffers(top, right, bottom, left);
     }
     
-    public void setPitchPositin(ObjectPosition position){
+    public void setPitchPosition(ObjectPosition position){
     	this.pitch.setPosition(position);
     }
     

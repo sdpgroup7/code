@@ -16,7 +16,7 @@ public class MainRunner {
     	Logger.getLogger("com.intel.bluetooth").setLevel(Level.WARN);
         Vision v = new Vision();
         /*while(true){
-            System.out.println("Ball Position: " + v.getWorldState().getBall().getPosition().getCentre().toString());
+            System.out.println("Blue Position: " + Vision.worldState.getOurRobot().getPosition().getCentre().toString());
             try{
                 Thread.sleep(100);
             } catch (Exception e) {}
