@@ -116,6 +116,7 @@ public class Thresholding {
 						//img.setRGB(i, j, Color.yellow.getRGB()); // Yellow robot
 						//p.setLocation(i, j);
 						//yellowRobot.add(p);
+						//TODO: Add a k-nearest neighbour to this to find the biggest?
 						yellowCount++;
 						yellowCentroid.setLocation(yellowCentroid.getX() + i, yellowCentroid.getY() + j);
 					}
