@@ -17,8 +17,11 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+
 public class TestSaver {
 	public void writePoints(ArrayList<Point> points, BufferedImage image,String filename){
+		Vision.logger.info("Starting XML generation");
         try{
         	//TODO: verify angles
         	Point[] pts = new Point[points.size()];
@@ -66,7 +69,7 @@ public class TestSaver {
         	Source src = new DOMSource(doc); 
         	Result dest = new StreamResult(new File(filename + ".xml")); 
         	aTransformer.transform(src, dest); 
-        	  
+        	Vision.logger.info("XML creation complete.");
         }catch(Exception e){
             System.out.println(e.getMessage());
         }

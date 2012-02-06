@@ -7,10 +7,8 @@ import java.awt.image.BufferedImage;
 import javax.swing.JLabel;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
-import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
-import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.ObjectPosition;
 import uk.ac.ed.inf.sdp2012.group7.vision.Thresholding;
-import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
+import uk.ac.ed.inf.sdp2012.group7.vision.VisionFeed;
 
 
 
@@ -21,31 +19,33 @@ public class FeedProcessor{
 
     private InitialLocation initialLocation;
     private Thresholding doThresh; // Do Thresholding 
+    private VisionFeed visionFeed;
     
     private int height;
     private int width;
 
-    public FeedProcessor(InitialLocation il, int height, int width, ControlGUI controlGUI){
+    public FeedProcessor(InitialLocation il, int height, int width, ControlGUI controlGUI, VisionFeed visionFeed){
         
     	//this.thresholdsState = controlGUI.getThresholdsState();
         this.initialLocation = il;
         this.height = height;
         this.width = width;
+        this.visionFeed = visionFeed;
         this.doThresh = new Thresholding(0,controlGUI.getThresholdsState());
         //this.orientationFinder = new OrientationFinder(this.thresholdsState);
         Vision.logger.info("Feed Processor Initialised");
     }
 
     public void processAndUpdateImage(BufferedImage image, long before, JLabel label) {
-    	if(!Vision.TESTING){
+    	if(Vision.TESTING && visionFeed.paused){
+    		Graphics frameGraphics = label.getGraphics();
+            Graphics imageGraphics = image.getGraphics();
+            calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
+    	} else {
     		image = initialLocation.markImage(image);
             Graphics frameGraphics = label.getGraphics();
             Graphics imageGraphics = doThresh.getThresh(image, Vision.worldState.getPitch().getLeftBuffer(),Vision.worldState.getPitch().getRightBuffer(), Vision.worldState.getPitch().getTopBuffer(),Vision.worldState.getPitch().getBottomBuffer()).getGraphics(); 
             markObjects(imageGraphics);
-            calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
-        } else {
-            Graphics frameGraphics = label.getGraphics();
-            Graphics imageGraphics = image.getGraphics();
             calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
         }
     }

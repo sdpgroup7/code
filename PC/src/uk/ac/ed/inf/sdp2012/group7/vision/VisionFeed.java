@@ -70,18 +70,20 @@ public class VisionFeed extends WindowAdapter {
         initGUI();
         //this.thresholdGUI = thresholdsGUI;
         InitialLocation il = new InitialLocation(thresholdsGUI, this, this.windowFrame);
-        processor = new FeedProcessor(il, height, width, thresholdsGUI);
+        processor = new FeedProcessor(il, height, width, thresholdsGUI, this);
         Vision.logger.info("VisionFeed Initialised");
         il.getPoints();
         il.getColors();
         Vision.logger.info("Vision System Calibrated");
         if(Vision.TESTING){
+        	Vision.logger.info("Vision testing starting.");
         	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         	Date date = new Date();
         	String filename = "testData/" + dateFormat.format(date);
         	il.getTestData(frameImage,filename);
         	TestSaver ts = new TestSaver();
         	ts.writePoints(il.getTestPoints(), frameImage, filename);
+        	Vision.logger.info("Vision testing complete.");
         }
     }
 
