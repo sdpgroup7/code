@@ -73,7 +73,6 @@ public class VisionFeed extends WindowAdapter {
         processor = new FeedProcessor(il, height, width, thresholdsGUI, this);
         Vision.logger.info("VisionFeed Initialised");
         il.getPoints();
-        Vision.worldState.setClickingDone(true);
         Vision.logger.info("Vision System Calibrated");
         if(Vision.TESTING){
         	Vision.logger.info("Vision testing starting.");
@@ -85,6 +84,7 @@ public class VisionFeed extends WindowAdapter {
         	ts.writePoints(il.getTestPoints(), frameImage, filename);
         	Vision.logger.info("Vision testing complete.");
         }
+        Vision.worldState.setClickingDone(true);
     }
 
 
