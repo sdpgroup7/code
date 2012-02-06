@@ -62,7 +62,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     public void getTestData(BufferedImage image, String filename){
     	paused = true;
     	writeImage(image,filename + ".png");
-        points.add(getClickPoint("Click the ball"));
+        /*points.add(getClickPoint("Click the ball"));
         points.add(getClickPoint("Click a corner on the blue robot"));
         points.add(getClickPoint("Click another corner on the blue robot"));
         points.add(getClickPoint("Click another corner on the blue robot"));
@@ -74,7 +74,22 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         points.add(getClickPoint("Click the grey circle on the blue robot"));
         points.add(getClickPoint("Click the grey circle on the yellow robot"));
         points.add(getClickPoint("Click the very bottom of the T on the blue robot"));
-        points.add(getClickPoint("Click the very bottom of the T on the yellow robot"));
+        points.add(getClickPoint("Click the very bottom of the T on the yellow robot"));*/
+    	//TODO: The above should be done automatically by querying the vision system.
+    	points.add(Vision.worldState.getBall().getPosition().getCentre());
+    	//etc.
+    	points.add(new Point(0,0));
+    	points.add(new Point(0,0));
+    	points.add(new Point(0,0));
+    	points.add(new Point(0,0));
+    	points.add(new Point(0,0));
+    	points.add(new Point(0,0));
+    	points.add(new Point(0,0));
+    	points.add(new Point(0,0));
+    	points.add(new Point(0,0));
+    	points.add(new Point(0,0));
+    	points.add(new Point(0,0));
+    	points.add(new Point(0,0));
         paused = false;
     }
     
