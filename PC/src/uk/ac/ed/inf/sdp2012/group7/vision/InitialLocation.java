@@ -59,7 +59,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     }
     
     public void getTestData(BufferedImage image, String filename){
-    	paused = true;
+    	visionFeed.paused = true;
     	writeImage(image,filename + ".png");
         /*points.add(getClickPoint("Click the ball"));
         points.add(getClickPoint("Click a corner on the blue robot"));
@@ -89,7 +89,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     	points.add(new Point(0,0));
     	points.add(new Point(0,0));
     	points.add(new Point(0,0));
-        paused = false;
+        visionFeed.paused = false;
     }
     
     public void writeImage(BufferedImage image, String fn){
