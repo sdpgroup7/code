@@ -28,7 +28,6 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     private boolean buffersSet = false;
     //private JFrame windowFrame;
     //The below variables are for the testing system
-    private boolean paused = false;
     private ArrayList<Point> points = new ArrayList<Point>();
     public boolean testMouseClick = false;
     public Point testCoords = new Point(0,0);

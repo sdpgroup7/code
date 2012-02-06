@@ -46,8 +46,7 @@ public class VisionFeed extends WindowAdapter {
     private BufferedImage frameImage;
     //private ControlGUI thresholdGUI;
     private FeedProcessor processor;
-
-    public boolean paused = false;
+    public boolean paused = true;
     /**
      * Default constructor.
      *
