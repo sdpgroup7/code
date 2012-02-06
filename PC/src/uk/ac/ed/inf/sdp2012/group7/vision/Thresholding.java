@@ -113,9 +113,9 @@ public class Thresholding {
 
 					}
 					else if (isYellow(c)) {
-						img.setRGB(i, j, Color.yellow.getRGB()); // Yellow robot
-						yellowRobotX.add(i);
-						yellowRobotY.add(j);
+						//img.setRGB(i, j, Color.yellow.getRGB()); // Yellow robot
+						//p.setLocation(i, j);
+						//yellowRobot.add(p);
 						yellowCount++;
 						yellowCentroid.setLocation(yellowCentroid.getX() + i, yellowCentroid.getY() + j);
 					}

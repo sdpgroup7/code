@@ -3,13 +3,19 @@ package uk.ac.ed.inf.sdp2012.group7.vision;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.awt.Point;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
+import uk.ac.ed.inf.sdp2012.group7.testing.vision.TestSaver;
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.DeviceInfo;
 import au.edu.jcu.v4l4j.FrameGrabber;
@@ -40,7 +46,7 @@ public class VisionFeed extends WindowAdapter {
     private BufferedImage frameImage;
     //private ControlGUI thresholdGUI;
     private FeedProcessor processor;
-    
+    public boolean paused = false;
     /**
      * Default constructor.
      *
@@ -64,14 +70,23 @@ public class VisionFeed extends WindowAdapter {
         initGUI();
         //this.thresholdGUI = thresholdsGUI;
         InitialLocation il = new InitialLocation(thresholdsGUI, this, this.windowFrame);
-        processor = new FeedProcessor(il, height, width, thresholdsGUI);
+        processor = new FeedProcessor(il, height, width, thresholdsGUI, this);
         Vision.logger.info("VisionFeed Initialised");
-        il.getColors();
         il.getPoints();
         Vision.worldState.setClickingDone(true);
         Vision.logger.info("Vision System Calibrated");
-        
+        if(Vision.TESTING){
+        	Vision.logger.info("Vision testing starting.");
+        	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        	Date date = new Date();
+        	String filename = "testData/" + dateFormat.format(date);
+        	il.getTestData(frameImage,filename);
+        	TestSaver ts = new TestSaver();
+        	ts.writePoints(il.getTestPoints(), frameImage, filename);
+        	Vision.logger.info("Vision testing complete.");
+        }
     }
+
 
     public BufferedImage getFrameImage(){
         return this.frameImage;
@@ -109,7 +124,11 @@ public class VisionFeed extends WindowAdapter {
 
             public void nextFrame(VideoFrame frame) {
                 long before = System.currentTimeMillis();
-                frameImage = frame.getBufferedImage();
+                if(Vision.TESTING){
+                	if(!paused) frameImage = frame.getBufferedImage();
+                } else {
+                	frameImage = frame.getBufferedImage();
+                }
                 frame.recycle();
                 //processor.processAndUpdateImage(frameImage, before, label, labelThresh);
                 processor.processAndUpdateImage(frameImage, before, label);

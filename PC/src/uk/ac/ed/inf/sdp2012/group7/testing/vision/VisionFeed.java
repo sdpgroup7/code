@@ -59,62 +59,10 @@ public class VisionFeed extends WindowAdapter implements MouseListener {
 			
 		}
         getPoints();
-        writePoints(); //http://www.roseindia.net/xml/dom/createblankdomdocument.shtml
+        TestSaver ts = new TestSaver();
+        ts.writePoints(points,frameImage,filename); //http://www.roseindia.net/xml/dom/createblankdomdocument.shtml
     }
 
-    public void writePoints(){
-        try{
-        	//TODO: verify angles
-        	Point[] pts = new Point[points.size()];
-        	points.toArray(pts);
-        	Point p = pts[9];
-        	Point q = pts[11];
-        	double blueO = Math.atan(((float)(p.y - q.y))/((float)(p.x - q.x))); //9,11
-        	p = pts[10];
-        	q = pts[12];
-        	double yellowO = Math.atan(((float)(p.y - q.y))/((float)(p.x - q.x))); //9,11
-        	
-        	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        	DocumentBuilder docBuilder = factory.newDocumentBuilder();
-        	Document doc = docBuilder.newDocument();
-        	Element root = doc.createElement("data");
-        	root.setAttribute("location", this.filename + ".png");
-        	doc.appendChild(root);
-        	Element childElement = doc.createElement("blue");
-        	childElement.setAttribute("orientation","" + blueO );
-        	root.appendChild(childElement);
-        	for(int i = 1;i<5;i++){
-        		Element corner = doc.createElement("corner");
-        		corner.setAttribute("vertex", Integer.toString(i-1));
-        		corner.setAttribute("x", Integer.toString(pts[i].x));
-        		corner.setAttribute("y", Integer.toString(pts[i].y));
-        		childElement.appendChild(corner);
-        	}
-        	childElement = doc.createElement("yellow");
-        	childElement.setAttribute("orientation","" + yellowO);
-        	root.appendChild(childElement);
-        	for(int i = 5;i<9;i++){
-        		Element corner = doc.createElement("corner");
-        		corner.setAttribute("vertex", Integer.toString(i-5));
-        		corner.setAttribute("x", Integer.toString(pts[i].x));
-        		corner.setAttribute("y", Integer.toString(pts[i].y));
-        		childElement.appendChild(corner);
-        	}
-        	childElement = doc.createElement("ball");
-        	childElement.setAttribute("x",Integer.toString(pts[0].x));
-        	childElement.setAttribute("y",Integer.toString(pts[0].y));
-        	root.appendChild(childElement);
-        	TransformerFactory tranFactory = TransformerFactory.newInstance(); 
-        	Transformer aTransformer = tranFactory.newTransformer(); 
-
-        	Source src = new DOMSource(doc); 
-        	Result dest = new StreamResult(new File(filename + ".xml")); 
-        	aTransformer.transform(src, dest); 
-        	  
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-    }
 
     public void mouseExited(MouseEvent e){}
     public void mouseEntered(MouseEvent e){}

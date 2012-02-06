@@ -20,6 +20,7 @@ public class Vision {
     private static ControlGUI thresholdsGUI;
     public static WorldState worldState;
     public static final Logger logger = Logger.getLogger(Vision.class);
+    public static final boolean TESTING = true;
     
     
     /**
@@ -40,7 +41,11 @@ public class Vision {
         
         BasicConfigurator.configure();
         
-        Vision.logger.info("Vision System Started");
+        if(TESTING){
+        	Vision.logger.info("Vision System Start in Testing Mode");
+        } else {
+        	Vision.logger.info("Vision System Started");
+        }
         //Vision.logger.debug("Sample debug message");
         //Vision.logger.info("Sample info message");
         //Vision.logger.warn("Sample warn message");
