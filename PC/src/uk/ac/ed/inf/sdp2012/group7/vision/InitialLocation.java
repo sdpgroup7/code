@@ -136,8 +136,6 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
             } catch (Exception e) {}
         }
         mouseClick = false;
-        initCents[count] = coords;
-        count++;
         Vision.logger.debug(coords.toString());
         return coords;
     }
@@ -165,6 +163,8 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
             } catch (Exception e) {}
         }
         mouseClick = false;
+        initCents[count] = coords;
+        count++;
         
         return getColor(coords, this.visionFeed.getFrameImage());
     }
