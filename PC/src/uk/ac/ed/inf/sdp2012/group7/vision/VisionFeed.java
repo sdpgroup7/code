@@ -75,8 +75,13 @@ public class VisionFeed extends WindowAdapter {
         Vision.logger.info("VisionFeed Initialised");
         il.getPoints();
         il.getColors();
-        if (Vision.worldState.getColor() == Color.blue){
-        }
+		if (Vision.worldState.getColor() == Color.blue) {
+		    Vision.worldState.setOurRobotPosition(il.getInitCentroids()[2]);
+		    Vision.worldState.setOpponentsRobotPosition(il.getInitCentroids()[1]);
+		} else {
+		    Vision.worldState.setOpponentsRobotPosition(il.getInitCentroids()[2]);
+		    Vision.worldState.setOurRobotPosition(il.getInitCentroids()[1]);
+		}
         Vision.logger.info("Vision System Calibrated");
         if(Vision.TESTING){
         	Vision.logger.info("Vision testing starting.");
