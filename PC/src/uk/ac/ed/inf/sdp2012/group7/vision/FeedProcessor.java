@@ -52,8 +52,16 @@ public class FeedProcessor{
 
     public void markObjects(Graphics imageGraphics){
             Point ball = Vision.worldState.getBall().getPosition().getCentre();
-            Point blue = Vision.worldState.getOurRobot().getPosition().getCentre();
-            Point yellow = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
+            Point blue;
+            Point yellow;
+            
+            if (Vision.worldState.getColor() == Color.blue){
+                blue = Vision.worldState.getOurRobot().getPosition().getCentre();
+                yellow = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
+            } else {
+                yellow = Vision.worldState.getOurRobot().getPosition().getCentre();
+                blue = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
+            }
             imageGraphics.setColor(Color.red);
             imageGraphics.drawLine(0, ball.y, 640, ball.y);
             imageGraphics.drawLine(ball.x, 0, ball.x, 480);
