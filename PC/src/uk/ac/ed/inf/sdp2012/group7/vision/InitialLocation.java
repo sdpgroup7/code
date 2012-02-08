@@ -20,7 +20,9 @@ import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.Pitch;
 
 public class InitialLocation implements MouseListener, MouseMotionListener {
-
+    
+    private int count = 0;
+    private Point[] initCents = new Point[5];
     private Point coords = new Point();
     private boolean mouseClick = false;
     private ControlGUI thresholdGUI;
@@ -128,7 +130,6 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     */
 	public Point getClickPoint(String message){
 		System.out.println(message);
-
         while (!mouseClick) {
             try{
                 Thread.sleep(100);
@@ -143,7 +144,9 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     public void getColors(){
         thresholdGUI.setBallValues(getClickColor("Click the ball"));
         thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
+        Vision.worldState.setOurRobotPosition(initCents[1]);
         thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
+        Vision.worldState.setOpponentsRobotPosition(initCents[2]);
         thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
         thresholdGUI.setGreyValues(getClickColor("Click a grey circle"));
     }
@@ -160,6 +163,9 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
             } catch (Exception e) {}
         }
         mouseClick = false;
+        initCents[count] = coords;
+        count++;
+        
         return getColor(coords, this.visionFeed.getFrameImage());
     }
 

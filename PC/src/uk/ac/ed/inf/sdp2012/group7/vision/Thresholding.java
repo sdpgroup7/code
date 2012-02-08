@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
+import uk.ac.ed.inf.sdp2012.group7.vision.EuclideanDistance;
 
 /**
  * 
@@ -39,6 +40,9 @@ public class Thresholding {
     private int height;
     private int width;
     
+    private Point pastBlueCent = new Point();
+    private Point pastYellCent = new Point();
+    
     private Point ballCentroid = new Point();
     private Point blueCentroid = new Point();
     private Point yellowCentroid = new Point();
@@ -50,7 +54,8 @@ public class Thresholding {
  //    private int robot; // 0 for Yellow, 1 for Blue(our robot)  We will use the world state
     
     private ThresholdsState ts;
-    private WorldState ws;
+
+    private EuclideanDistance ed = new EuclideanDistance();
     
 
     
@@ -85,9 +90,12 @@ public class Thresholding {
     		//Vision.logger.debug("Starting thresholding");
     		
     	if (Vision.worldState.isClickingDone()){
+
     		pitch = Vision.worldState.getRoom();
     		width = right-left;
     		height = top-bottom;
+    	    	pastBlueCent = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
+    	  	pastYellCent = Vision.worldState.getOurRobot().getPosition().getCentre();
 		 //  BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
 
            ballCount = 0;
@@ -114,18 +122,17 @@ public class Thresholding {
 						ballCentroid.setLocation(ballCentroid.getX() + i, ballCentroid.getY() + j);
 
 					}
-					else if (isYellow(c)) {
-						//img.setRGB(i, j, Color.yellow.getRGB()); // Yellow robot
-						//p.setLocation(i, j);
-						//yellowRobot.add(p);
-						//TODO: Add a k-nearest neighbour to this to find the biggest?
+					else if (isYellow(c) && (ed.getDistance(pastYellCent, new Point(i,j)) < 25)) {
+						img.setRGB(i, j, Color.yellow.getRGB()); // Yellow robot
+						yellowRobotX.add(i);
+						yellowRobotY.add(j);
 						yellowCount++;
 						yellowCentroid.setLocation(yellowCentroid.getX() + i, yellowCentroid.getY() + j);
 					}
-					else if (isBlue(c)){
+					else if (isBlue(c) && (ed.getDistance(pastBlueCent, new Point(i,j)) < 25)){
 						img.setRGB(i, j, Color.blue.getRGB()); // Blue robot 
 						blueRobotX.add(i);
-						blueRobotY.add(j);						
+						blueRobotY.add(j);
 						blueCount++;
 						blueCentroid.setLocation(blueCentroid.getX() + i, blueCentroid.getY() + j);
 						//make blue thresholds for the different pitches in that [pitch][x] style
@@ -134,7 +141,9 @@ public class Thresholding {
 						img.setRGB(i,j, Color.green.getRGB()); // GreenPlates 
 					}
 					else if (isGrey(c)) {
+
 					   // img.setRGB(i,j, Color.black.getRGB());
+
 					}
 				}
 			}
