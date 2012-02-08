@@ -35,7 +35,7 @@ public class Thresholding {
     private int[][] blueRobotThresh= new int[2][3];
     private int[][] greenPlatesThresh= new int[2][1];
     
-    private int pitch;
+    private int pitch; 
     private int height;
     private int width;
     
@@ -47,45 +47,47 @@ public class Thresholding {
     private int ballCount;
     private int yellowCount;
     private int blueCount;
-    private int robot; // 0 for Yellow, 1 for Blue(our robot) 
+ //    private int robot; // 0 for Yellow, 1 for Blue(our robot)  We will use the world state
     
     private ThresholdsState ts;
+    private WorldState ws;
     
 
     
     
-    public Thresholding(int pitch, ThresholdsState ts) {  // Sets the constants for thresholding for each pitch 
+    public Thresholding(ThresholdsState ts) {  // Sets the constants for thresholding for each pitch 
     	redBallThresh[0][0] = 130;
     	redBallThresh[0][1] = 100;
     	redBallThresh[0][2] = 100;
     	redBallThresh[1][0] = 150;
-    	redBallThresh[1][1] = 110;
-    	redBallThresh[1][2] = 110;
+    	redBallThresh[1][1] = 100;
+    	redBallThresh[1][2] = 100;
     	yellowRobotThresh[0][0] = 140;
     	yellowRobotThresh[0][1] = 140;
     	yellowRobotThresh[0][2] = 170;
 		yellowRobotThresh[1][0] = 150;
 		yellowRobotThresh[1][1] = 190;
 		yellowRobotThresh[1][2] = 140;
-		blueRobotThresh[0][0] = 150;
-		blueRobotThresh[0][1] = 150;
-		blueRobotThresh[0][2] = 100;
-		blueRobotThresh[1][0] = 150;
-		blueRobotThresh[1][1] = 150;
-		blueRobotThresh[1][2] = 100;
-		greenPlatesThresh[0][0] = 155;
-		greenPlatesThresh[1][0] = 155;
+		blueRobotThresh[0][0] = 110;
+		blueRobotThresh[0][1] = 165;
+		blueRobotThresh[0][2] = 110;
+		blueRobotThresh[1][0] = 130;
+		blueRobotThresh[1][1] = 140;
+		blueRobotThresh[1][2] = 90;
+		greenPlatesThresh[0][0] = 140;
+		greenPlatesThresh[1][0] = 140;
 
-    	this.pitch=pitch;
+    	
     	this.ts = ts;
-    	//this.robot = robot;
+
     }
     public BufferedImage getThresh(BufferedImage img, int left, int right, int top, int bottom) { // Method to get thresholded image 
     		//Vision.logger.debug("Starting thresholding");
     		
     	if (Vision.worldState.isClickingDone()){
-		   width = right-left;
-		   height = top-bottom;
+    		pitch = Vision.worldState.getRoom();
+    		width = right-left;
+    		height = top-bottom;
 		 //  BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
 
            ballCount = 0;
@@ -132,7 +134,7 @@ public class Thresholding {
 						img.setRGB(i,j, Color.green.getRGB()); // GreenPlates 
 					}
 					else if (isGrey(c)) {
-					    img.setRGB(i,j, Color.black.getRGB());
+					   // img.setRGB(i,j, Color.black.getRGB());
 					}
 				}
 			}
@@ -187,7 +189,7 @@ public class Thresholding {
     }
     
     public boolean isBlue(Color c){
-        return ( (c.getRed() <= 110) && (c.getBlue()>110)   && (c.getGreen() <= 165));
+        return ( (c.getRed() <= blueRobotThresh[pitch][0]) && (c.getBlue() > blueRobotThresh[pitch][2])   && (c.getGreen() <= blueRobotThresh[pitch][1]));
     }
     
     public boolean isRed(Color c, int GB){
@@ -195,7 +197,7 @@ public class Thresholding {
     }
     
     public boolean isGreen(Color c, int GB, int RG){
-        return ( GB > 50 && RG > 50 && c.getGreen() > 140);
+        return ( GB > 45 && RG > 45 && c.getGreen() > greenPlatesThresh[pitch][0]);
     }
     
     public boolean isGrey(Color c){

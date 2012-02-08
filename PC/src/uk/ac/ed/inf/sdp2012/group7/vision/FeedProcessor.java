@@ -31,7 +31,7 @@ public class FeedProcessor{
         this.height = height;
         this.width = width;
         this.visionFeed = visionFeed;
-        this.doThresh = new Thresholding(0,controlGUI.getThresholdsState());
+        this.doThresh = new Thresholding(controlGUI.getThresholdsState());
         //this.orientationFinder = new OrientationFinder(this.thresholdsState);
         Vision.logger.info("Feed Processor Initialised");
     }

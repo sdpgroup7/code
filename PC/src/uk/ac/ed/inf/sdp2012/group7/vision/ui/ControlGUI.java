@@ -79,10 +79,10 @@ public class ControlGUI implements ChangeListener {
 	private JPanel greenPanel;
 	
 	/* Radio buttons */
-	JRadioButton pitch_0;
-	JRadioButton pitch_1;
-	JRadioButton colour_yellow;
-	JRadioButton colour_blue;
+	JButton pitch_0;
+	JButton pitch_1;
+	JButton colour_yellow;
+	JButton colour_blue;
 	JRadioButton direction_right;
 	JRadioButton direction_left;
 	
@@ -347,17 +347,30 @@ public class ControlGUI implements ChangeListener {
 		pitch_panel.add(pitch_label);
 		
 		ButtonGroup pitch_choice = new ButtonGroup();
-		pitch_0 = new JRadioButton("Main");
-		pitch_1 = new JRadioButton("Side Room");
+		pitch_0 = new JButton("Main");
+		pitch_1 = new JButton("Side Room");
 		pitch_choice.add(pitch_0);
 		pitch_panel.add(pitch_0);
 		pitch_choice.add(pitch_1);
 		pitch_panel.add(pitch_1);
 		
-		pitch_0.setSelected(true);
 		
-		pitch_0.addChangeListener(this);
-		pitch_1.addChangeListener(this);
+		pitch_0.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e){
+				
+				worldState.setRoom(0);
+				System.err.println(worldState.getRoom());
+			}
+		});
+		pitch_1.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e){
+				
+				worldState.setRoom(1);
+				System.err.println(worldState.getRoom());
+			}
+		});
 		
 		defaultPanel.add(pitch_panel);
 		
@@ -367,19 +380,42 @@ public class ControlGUI implements ChangeListener {
 		colour_panel.add(colour_label);
 		
 		ButtonGroup colour_choice = new ButtonGroup();
-		colour_yellow = new JRadioButton("Yellow");
-		colour_blue = new JRadioButton("Blue");
+		colour_yellow = new JButton("Yellow");
+		colour_blue = new JButton("Blue");
+		
+		colour_yellow.setActionCommand("Yellow");
+		colour_blue.setActionCommand("Blue");
+		
 		colour_choice.add(colour_yellow);
 		colour_panel.add(colour_yellow);
 		colour_choice.add(colour_blue);
 		colour_panel.add(colour_blue);
 		
-		colour_yellow.setSelected(true);
+		//colour_yellow.setSelected(true);
 		
-		colour_yellow.addChangeListener(this);
-		colour_blue.addChangeListener(this);
+		colour_yellow.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e){
+				
+				worldState.setColor(Color.yellow);
+				System.err.println(worldState.getColor());
+			}
+		});
+		colour_blue.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				worldState.setColor(Color.blue);
+				System.err.println(worldState.getColor());
 		
+		}
+		
+			
+		});
+			
 		defaultPanel.add(colour_panel);
+		
+	
+
 		
 		/* Direction choice */
 		JPanel direction_panel = new JPanel();
