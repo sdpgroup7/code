@@ -39,6 +39,9 @@ public class Thresholding {
     private int height;
     private int width;
     
+    private Point pastBlueCent = new Point();
+    private Point pastYellCent = new Point();
+    
     private Point ballCentroid = new Point();
     private Point blueCentroid = new Point();
     private Point yellowCentroid = new Point();
