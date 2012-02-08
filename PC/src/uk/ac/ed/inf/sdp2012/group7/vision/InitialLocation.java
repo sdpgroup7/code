@@ -144,9 +144,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     public void getColors(){
         thresholdGUI.setBallValues(getClickColor("Click the ball"));
         thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
-        Vision.worldState.setOurRobotPosition(initCents[1]);
         thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
-        Vision.worldState.setOpponentsRobotPosition(initCents[2]);
         thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
         thresholdGUI.setGreyValues(getClickColor("Click a grey circle"));
     }
@@ -233,5 +231,9 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         } else {
             return image;
         }
+    }
+    
+    public Point[] getInitCentroids(){
+        return initCents;
     }
 }

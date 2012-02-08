@@ -152,8 +152,14 @@ public class Thresholding {
 			yellowCentroid.setLocation(yellowCentroid.getX()/yellowCount, yellowCentroid.getY()/yellowCount);
 			blueCentroid.setLocation(blueCentroid.getX()/blueCount, blueCentroid.getY()/blueCount);
 			
-			Vision.worldState.setOurRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
-			Vision.worldState.setOpponentsRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
+			if (Vision.worldState.getColor() == Color.blue) {
+			    Vision.worldState.setOurRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
+			    Vision.worldState.setOpponentsRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
+			} else {
+			    Vision.worldState.setOpponentsRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
+			    Vision.worldState.setOurRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
+			}
+			
 			Vision.worldState.setBallPosition((int)ballCentroid.getX(),(int)ballCentroid.getY());
 		}
 

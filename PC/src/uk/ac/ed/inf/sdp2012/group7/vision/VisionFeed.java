@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.awt.Color;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -74,6 +75,8 @@ public class VisionFeed extends WindowAdapter {
         Vision.logger.info("VisionFeed Initialised");
         il.getPoints();
         il.getColors();
+        if (Vision.worldState.getColor() == Color.blue){
+        }
         Vision.logger.info("Vision System Calibrated");
         if(Vision.TESTING){
         	Vision.logger.info("Vision testing starting.");
