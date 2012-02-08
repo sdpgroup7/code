@@ -87,8 +87,11 @@ public class Thresholding {
     		//Vision.logger.debug("Starting thresholding");
     		
     	if (Vision.worldState.isClickingDone()){
-		   width = right-left;
-		   height = top-bottom;
+    	    pastBlueCent = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
+    	    pastYellCent = Vision.worldState.getOurRobot().getPosition().getCentre();
+    	
+		    width = right-left;
+		    height = top-bottom;
 		 //  BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
 
            ballCount = 0;
