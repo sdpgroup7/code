@@ -88,8 +88,14 @@ public class WorldState{
     public void setOurGreyPosition(int x, int y){
     	this.ourGrey.setPosition(x, y);
     }
+    public void setOurGreyPosition(Point p){
+    	this.ourGrey.setPosition(p);
+    }
     public void setOpponentsGreyPosition(int x, int y){
     	this.opponentsGrey.setPosition(x, y);
+    }
+    public void setOpponentsGreyPosition(Point p){
+    	this.opponentsGrey.setPosition(p);
     }
     public void setOurRobotPosition(Point p){
     	this.ourRobot.setPosition(p);

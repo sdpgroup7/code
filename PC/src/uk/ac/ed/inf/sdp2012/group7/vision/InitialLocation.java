@@ -22,7 +22,7 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.Pitch;
 public class InitialLocation implements MouseListener, MouseMotionListener {
     
     private int count = 0;
-    private Point[] initCents = new Point[5];
+    private Point[] initCents = new Point[6];
     private Point coords = new Point();
     private boolean mouseClick = false;
     private ControlGUI thresholdGUI;
@@ -179,7 +179,8 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
         thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
         thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
-        thresholdGUI.setGreyValues(getClickColor("Click a grey circle"));
+        thresholdGUI.setGreyValues(getClickColor("Click OUR grey circle"));
+        thresholdGUI.setGreyValues(getClickColor("Click OPPONENT grey circle"));
     }
     /*
     Get the threshold values for the objects in the match i.e. ball.

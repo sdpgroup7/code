@@ -83,6 +83,8 @@ public class VisionFeed extends WindowAdapter {
 		    Vision.worldState.setOpponentsRobotPosition(il.getInitCentroids()[2]);
 		    Vision.worldState.setOurRobotPosition(il.getInitCentroids()[1]);
 		}
+		Vision.worldState.setOurGreyPosition(il.getInitCentroids()[4]);
+		Vision.worldState.setOpponentsGreyPosition(il.getInitCentroids()[5]);
         Vision.logger.info("Vision System Calibrated");
         if(Vision.TESTING){
         	Vision.logger.info("Vision testing starting.");
