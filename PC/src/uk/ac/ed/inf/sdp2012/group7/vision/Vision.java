@@ -20,7 +20,7 @@ public class Vision {
     private static ControlGUI thresholdsGUI;
     public static WorldState worldState;
     public static final Logger logger = Logger.getLogger(Vision.class);
-    public static final boolean TESTING = false;
+    public static final boolean TESTING = true;
     
     
     /**

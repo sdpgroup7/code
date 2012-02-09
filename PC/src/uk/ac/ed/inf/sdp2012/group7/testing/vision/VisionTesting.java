@@ -1,24 +1,28 @@
 package uk.ac.ed.inf.sdp2012.group7.testing.vision;
-import au.edu.jcu.v4l4j.V4L4JConstants;
-import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 
+import java.io.File;
+import javax.swing.*;
 
 public class VisionTesting {
 
     public static void main(String[] args){
-        String videoDevice = "/dev/video0";
-        int width = 640;
-        int height = 480;
-        int channel = 0;
-        int videoStandard = V4L4JConstants.STANDARD_PAL;
-        int compressionQuality = 80;
+    	JFileChooser fc = new JFileChooser();
+    	File file;
+    	
+    	System.out.println("Please select the XML file of the image you wish to test.");
+    	
+    	fc.setFileFilter(new XMLFilter());
+    	int returnVal = fc.showOpenDialog(null);
 
-        try {
-            new VisionFeed(videoDevice, width, height, channel, videoStandard, compressionQuality);
-        } catch (V4L4JException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            file = fc.getSelectedFile();
+            System.out.println("Opening file:");
+            System.out.println(file.getAbsolutePath());
+        } else {
+            System.out.println("Open command cancelled by user.");
+            System.out.println("Quiting...");
+            System.exit(0);
         }
+        
     }
 }
