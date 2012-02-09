@@ -1,5 +1,6 @@
 package uk.ac.ed.inf.sdp2012.group7.testing.vision;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -26,12 +27,16 @@ public class TestSaver {
         	//TODO: verify angles
         	Point[] pts = new Point[points.size()];
         	points.toArray(pts);
-        	Point p = pts[9];
-        	Point q = pts[11];
-        	double blueO = Math.atan(((float)(p.y - q.y))/((float)(p.x - q.x))); //9,11
-        	p = pts[10];
-        	q = pts[12];
-        	double yellowO = Math.atan(((float)(p.y - q.y))/((float)(p.x - q.x))); //9,11
+        	double blueO;
+        	double yellowO;
+        	
+        	if(Vision.worldState.getColor() == Color.blue){
+        		blueO = Vision.worldState.getOurRobot().getVelocity().getDirection();
+        		yellowO = Vision.worldState.getOpponentsRobot().getVelocity().getDirection();
+        	} else {
+        		yellowO = Vision.worldState.getOurRobot().getVelocity().getDirection();
+         		blueO = Vision.worldState.getOpponentsRobot().getVelocity().getDirection();
+        	}
         	
         	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         	DocumentBuilder docBuilder = factory.newDocumentBuilder();

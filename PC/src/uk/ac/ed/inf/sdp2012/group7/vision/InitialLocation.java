@@ -66,39 +66,72 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     	Vision.logger.info("Saving image.");
     	writeImage(image,filename + ".png");
     	Vision.logger.info("Image saved.");
-        /*points.add(getClickPoint("Click the ball"));
-        points.add(getClickPoint("Click a corner on the blue robot"));
-        points.add(getClickPoint("Click another corner on the blue robot"));
-        points.add(getClickPoint("Click another corner on the blue robot"));
-        points.add(getClickPoint("Click another corner on the blue robot"));
-        points.add(getClickPoint("Click a corner on the yellow robot"));
-        points.add(getClickPoint("Click another corner on the yellow robot"));
-        points.add(getClickPoint("Click another corner on the yellow robot"));
-        points.add(getClickPoint("Click another corner on the yellow robot"));
-        points.add(getClickPoint("Click the grey circle on the blue robot"));
-        points.add(getClickPoint("Click the grey circle on the yellow robot"));
-        points.add(getClickPoint("Click the very bottom of the T on the blue robot"));
-        points.add(getClickPoint("Click the very bottom of the T on the yellow robot"));*/
-    	//TODO: The above should be done automatically by querying the vision system.
+
     	points.add(Vision.worldState.getBall().getPosition().getCentre());
-    	//etc.
-    	points.add(new Point(0,0));
-    	points.add(new Point(0,0));
-    	points.add(new Point(0,0));
-    	points.add(new Point(0,0));
-    	points.add(new Point(0,0));
-    	points.add(new Point(0,0));
-    	points.add(new Point(0,0));
-    	points.add(new Point(0,0));
-    	points.add(new Point(0,0));
-    	points.add(new Point(0,0));
-    	points.add(new Point(0,0));
-    	points.add(new Point(0,0));
+    	points.add(getCorner("blue",1));
+    	points.add(getCorner("blue",2));
+    	points.add(getCorner("blue",3));
+    	points.add(getCorner("blue",4));
+    	points.add(getCorner("yellow",1));
+    	points.add(getCorner("yellow",2));
+    	points.add(getCorner("yellow",3));
+    	points.add(getCorner("yellow",4));
         visionFeed.paused = false;
         Vision.logger.info("Vision System unpaused.");
     }
     
-    public void writeImage(BufferedImage image, String fn){
+    private Point getCorner(String c, int i) {
+    	int deltax;
+    	int deltay;
+    	switch(i){
+    	case 1:
+    		deltax = 0;
+    		deltay = -15;
+    		break;
+    	case 2:
+    		deltax = 15;
+    		deltay = 0;
+    		break;
+    	case 3:
+    		deltax = 0;
+    		deltay = 15;
+    		break;
+    	case 4:
+    		deltax = -15;
+    		deltay = 0;
+    		break;
+    	default:
+    		deltax = 0;
+    		deltay = 0;
+    		break;
+    	}
+    	Point p;
+		if(c == "blue"){
+			if(Vision.worldState.getColor().equals(Color.blue)){
+				p = new Point(
+						Vision.worldState.getOurRobot().getPosition().getCentre().x + deltax,
+						Vision.worldState.getOurRobot().getPosition().getCentre().y + deltay);
+			} else {
+				p = new Point(
+						Vision.worldState.getOpponentsRobot().getPosition().getCentre().x + deltax,
+						Vision.worldState.getOpponentsRobot().getPosition().getCentre().y + deltay);
+			}
+		} else {
+			if(Vision.worldState.getColor().equals(Color.yellow)){
+				p = new Point(
+						Vision.worldState.getOurRobot().getPosition().getCentre().x + deltax,
+						Vision.worldState.getOurRobot().getPosition().getCentre().y + deltay);
+			} else {
+				p = new Point(
+						Vision.worldState.getOpponentsRobot().getPosition().getCentre().x + deltax,
+						Vision.worldState.getOpponentsRobot().getPosition().getCentre().y + deltay);
+			}
+		}
+		Vision.logger.debug(p.toString());
+		return p;
+	}
+
+	public void writeImage(BufferedImage image, String fn){
         try {
             File outputFile = new File(fn);
             ImageIO.write(image, "png", outputFile);
