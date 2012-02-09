@@ -1,15 +1,7 @@
 package uk.ac.ed.inf.sdp2012.group7.testing.vision;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
-
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Panel;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -27,8 +19,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException; 
 
 import org.w3c.dom.NodeList;
-
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 
 public class VisionTesting extends Panel implements MouseListener, MouseMotionListener  {
 
@@ -52,7 +42,7 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     public void mouseMoved(MouseEvent e) {}
     public void mouseDragged(MouseEvent e) {}
     public void mouseClicked(MouseEvent e){
-    	Vision.logger.debug(e.getPoint().toString());
+    	System.out.println(e.getPoint().toString());
         coords = correctPoint(e.getPoint());
         mouseClick = true;
     }
@@ -65,28 +55,18 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
             } catch (Exception e) {}
         }
         mouseClick = false;
-        Vision.logger.debug(coords.toString());
+        System.out.println(coords.toString());
         return coords;
     }
 	
     public Point correctPoint(Point p){
-        return new Point(p.x - 4,p.y - 24);
+        return new Point(p.x,p.y);
     }
 	
-	public VisionTesting() {
-		try {
-			File input = new File(imageName);
-			image = ImageIO.read(input);
-		} catch (IOException ie) {
-			System.out.println("Error: " + ie.getMessage());
-		}
-	}
 
-	public void paint(Graphics g) {
-		g.drawImage(image, 0, 0, null);
-	}
 	  
     public static void main(String[] args){
+
     	JFileChooser fc = new JFileChooser();
     	fc.setCurrentDirectory(new File("./testData/"));
     	
@@ -111,10 +91,13 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
         
         JFrame window = new JFrame("Vision Testing System");
     	window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    	VisionTesting panel = new VisionTesting();
+    	VisionPanel panel = new VisionPanel(imageName);
     	window.getContentPane().add(panel);
     	window.setSize(650,500);
     	window.setVisible(true);
+    	
+	    VisionTesting v = new VisionTesting();
+	    v.addMouseListeners(window,panel);
     	
     	ArrayList<Point> clickedCorners = new ArrayList<Point>();
     	Point blueRobot = getClickPoint("Click the centre of the blue robot");
@@ -141,14 +124,22 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     	total += close(clickedCorners.get(7),yellowC.get(3));
     	total += close(ballPos,ball);
     	
+    	System.out.println(Integer.toString(total));
     	System.out.println("Accuracy: " + (100.0*((float)total)/9) + "%");
-    	
     
     }
     
+    public void addMouseListeners(JFrame window, VisionPanel panel){
+    	window.addMouseListener(this);
+    	panel.addMouseListener(this);
+    }
+    
     public static int close(Point a, Point b){
-    	int deltax = 10;
-    	int deltay = 10;
+    	int deltax = 20;
+    	int deltay = 20;
+    	System.out.println("\nNew Point");
+    	System.out.println(a.toString());
+    	System.out.println(b.toString());
     	if((Math.abs(a.x - b.x) < deltax) && (Math.abs(a.y - b.y) < deltay)){
     		return 1;
     	}
