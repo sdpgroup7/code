@@ -204,7 +204,6 @@ public class ControlGUI implements ChangeListener {
 		grey_r.setUpperValue(rUpper);
 		grey_g.setValue(gLower);
 		grey_g.setUpperValue(gUpper);
-		grey_b.setValue(bLower);
 		grey_b.setUpperValue(bUpper);
 	}
 
