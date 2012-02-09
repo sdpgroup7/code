@@ -16,6 +16,9 @@ public class WorldState{
     MovingObject ourRobot = new MovingObject();
     MovingObject opponentsRobot = new MovingObject();
     MovingObject ball = new MovingObject();
+    MovingObject ourGrey = new MovingObject(); 
+    MovingObject opponentsGrey = new MovingObject();
+    
     
  
     public WorldState(){
@@ -50,6 +53,12 @@ public class WorldState{
     public MovingObject getOpponentsRobot(){
         return this.opponentsRobot;
     }
+    public MovingObject getOpponentsGrey(){
+        return this.opponentsGrey;
+    }
+    public MovingObject getOurGrey(){
+        return this.ourGrey;
+    }
 
     public MovingObject getBall(){
         return this.ball;
@@ -66,6 +75,7 @@ public class WorldState{
     public ObjectPosition getOpponentsGoal(){
         return this.opponentsGoal;
     }
+    
 
     public void setOurRobot(ObjectPosition position, Vector2 velocity){
     	this.ourRobot.set(position,velocity);
@@ -75,7 +85,12 @@ public class WorldState{
     	//Vision.logger.debug(Integer.toString(x) + "," + Integer.toString(y));
     	this.ourRobot.setPosition(x,y);
     }
-    
+    public void setOurGreyPosition(int x, int y){
+    	this.ourGrey.setPosition(x, y);
+    }
+    public void setOpponentsGreyPosition(int x, int y){
+    	this.opponentsGrey.setPosition(x, y);
+    }
     public void setOurRobotPosition(Point p){
     	this.ourRobot.setPosition(p);
     }

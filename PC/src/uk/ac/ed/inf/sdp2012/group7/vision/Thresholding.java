@@ -42,6 +42,8 @@ public class Thresholding {
     
     private Point pastBlueCent = new Point();
     private Point pastYellCent = new Point();
+    private Point pastBlueGrayCent = new Point();
+    private Point pastYellowGrayCent = new Point(); 
     
     private Point ballCentroid = new Point();
     private Point blueCentroid = new Point();
@@ -142,7 +144,7 @@ public class Thresholding {
 					}
 					else if (isGrey(c)) {
 
-					   // img.setRGB(i,j, Color.black.getRGB());
+					    img.setRGB(i,j, Color.black.getRGB());
 
 					}
 				}
@@ -218,6 +220,10 @@ public class Thresholding {
     public boolean isGrey(Color c){
         return ((c.getRed() >= ts.getGrey_r_low()) && (c.getRed() <= ts.getGrey_r_high()) && (c.getGreen() >= ts.getGrey_g_low()) && (c.getGreen() <= ts.getGrey_g_high()) && (c.getBlue() >= ts.getGrey_b_low()) && (c.getBlue() <= ts.getGrey_b_high()));
     }
+   /* public boolean isGrey(Color c, int RG){
+        return (RG < 20 && c.getBlue() < 50 && c.getGreen() > 80 && c.getGreen() < 110 && c.getRed() > 80 && c.getRed() < 110);
+    }*/
+    
     
     public boolean isYellow(Color c){
         return ((c.getRed() >= ts.getYellow_r_low()) && (c.getRed() <= ts.getYellow_r_high()) && (c.getGreen() >= ts.getYellow_g_low()) && (c.getGreen() <= ts.getYellow_g_high()) && (c.getBlue() >= ts.getYellow_b_low()) && (c.getBlue() <= ts.getYellow_b_high()));
