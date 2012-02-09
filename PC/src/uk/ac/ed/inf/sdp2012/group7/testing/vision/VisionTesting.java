@@ -124,8 +124,7 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     	total += close(clickedCorners.get(7),yellowC.get(3));
     	total += close(ballPos,ball);
     	
-    	System.out.println(Integer.toString(total));
-    	System.out.println("Accuracy: " + (100.0*((float)total)/9) + "%");
+    	System.out.println("Accuracy: " + (int)((100.0*((float)total)/9)+0.5) + "%");
     
     }
     

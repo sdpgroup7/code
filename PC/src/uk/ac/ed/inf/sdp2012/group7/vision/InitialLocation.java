@@ -43,7 +43,12 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         Vision.logger.info("InitialLocation Initialised");
     }
     
-    public void mouseExited(MouseEvent e){}
+    public InitialLocation(){
+    	
+    }
+    
+
+	public void mouseExited(MouseEvent e){}
     public void mouseEntered(MouseEvent e){}
     public void mousePressed(MouseEvent e){}
     public void mouseReleased(MouseEvent e){}
@@ -248,7 +253,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         System.err.println(avgColor.toString());
         return avgColor;*/
     	Color c = new Color(image.getRGB(p.x,p.y));
-    	Vision.logger.debug(c.toString());
+    	//Vision.logger.debug(c.toString());
     	return c;
     }
     
