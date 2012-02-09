@@ -7,6 +7,8 @@ public class VisionTesting {
 
     public static void main(String[] args){
     	JFileChooser fc = new JFileChooser();
+    	fc.setCurrentDirectory(new File("./testData/"));
+    	
     	File file;
     	
     	System.out.println("Please select the XML file of the image you wish to test.");
