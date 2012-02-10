@@ -45,8 +45,14 @@ public class VisionTest {
 	}
 	
 	@Test
-	public void test2() {
-		assertTrue(true);
+	public void testVisionTestingGetOrientation() {
+		VisionTesting v = new VisionTesting();
+		double O = v.getOrientation(new Point(0,0),new Point(1,1));
+		assertTrue(Math.abs(O-(Math.PI/4.0)) < 0.001);
+		O = v.getOrientation(new Point(0,0),new Point(-1,1));
+		System.out.println(O);
+		assertTrue(Math.abs(O-(7.0*Math.PI/4.0)) < 0.001);
+		System.out.println("Angle Calculation Passed");
 	}
 
 }
