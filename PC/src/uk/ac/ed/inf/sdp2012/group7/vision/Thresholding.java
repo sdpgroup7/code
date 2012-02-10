@@ -67,9 +67,9 @@ public class Thresholding {
     
     
     public Thresholding(ThresholdsState ts) {  // Sets the constants for thresholding for each pitch 
-    	redBallThresh[0][0] = 190;
-    	redBallThresh[0][1] = 130;
-    	redBallThresh[0][2] = 130;
+    	redBallThresh[0][0] = 170;
+    	redBallThresh[0][1] = 120;
+    	redBallThresh[0][2] = 120;
     	redBallThresh[1][0] = 150;
     	redBallThresh[1][1] = 100;
     	redBallThresh[1][2] = 100;
@@ -80,8 +80,8 @@ public class Thresholding {
 		yellowRobotThresh[1][1] = 190;
 		yellowRobotThresh[1][2] = 140;
 		blueRobotThresh[0][0] = 100;
-		blueRobotThresh[0][1] = 200;
-		blueRobotThresh[0][2] = 170;
+		blueRobotThresh[0][1] = 170;
+		blueRobotThresh[0][2] = 100;
 		blueRobotThresh[1][0] = 130;
 		blueRobotThresh[1][1] = 140;
 		blueRobotThresh[1][2] = 90;
@@ -100,8 +100,16 @@ public class Thresholding {
     		pitch = Vision.worldState.getRoom();
     		width = right-left;
     		height = top-bottom;
-    	    pastBlueCent = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
-    	  	pastYellCent = Vision.worldState.getOurRobot().getPosition().getCentre();
+    		if (Vision.worldState.getColor() == Color.yellow) {
+    			  pastBlueCent = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
+    	    	  pastYellCent = Vision.worldState.getOurRobot().getPosition().getCentre();
+    			
+    		}
+    		else {
+    			pastBlueCent = Vision.worldState.getOurRobot().getPosition().getCentre();
+   	    	  	pastYellCent = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
+    		}
+    	  
     	  	pastOurGreyCent = Vision.worldState.getOurGrey().getPosition().getCentre();
     	  	pastOpponentGreyCent = Vision.worldState.getOpponentsGrey().getPosition().getCentre();
 		 //  BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
@@ -154,14 +162,14 @@ public class Thresholding {
 					/*else if (isGreen(c,GB,RG))  {
 						img.setRGB(i,j, Color.green.getRGB()); // GreenPlates 
 					}*/
-					else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 10) ) {
+					else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOurRobot().getPosition().getCentre(), new Point(i,j)) < 23) )  {
 						
 					    img.setRGB(i,j, Color.orange.getRGB());
 					    ourGreyCount++;
 					    ourGreyCentroid.setLocation(ourGreyCentroid.getX() + i, ourGreyCentroid.getY() + j);
 
 					}
-					else if (isGrey(c) && (ed.getDistance(pastOpponentGreyCent, new Point(i,j)) < 10) ) {
+					else if (isGrey(c) && (ed.getDistance(pastOpponentGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOpponentsRobot().getPosition().getCentre(), new Point(i,j)) < 23) ) {
 						
 					    img.setRGB(i,j, Color.pink.getRGB());
 					    opponentGreyCount++;
@@ -246,7 +254,7 @@ public class Thresholding {
     public boolean isGrey(Color c){
         return ((c.getRed() >= ts.getGrey_r_low()) && (c.getRed() <= ts.getGrey_r_high()) && (c.getGreen() >= ts.getGrey_g_low()) && (c.getGreen() <= ts.getGrey_g_high()) && (c.getBlue() >= ts.getGrey_b_low()) && (c.getBlue() <= ts.getGrey_b_high()));
     }
-   /* public boolean isGrey(Color c, int RG){
+    /*public boolean isGrey(Color c, int RG){
         return (RG < 20 && c.getBlue() < 50 && c.getGreen() > 80 && c.getGreen() < 110 && c.getRed() > 80 && c.getRed() < 110);
     }*/
     
