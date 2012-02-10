@@ -76,7 +76,6 @@ public class WorldState{
         return this.opponentsGoal;
     }
     
-
     public void setOurRobot(ObjectPosition position, Vector2 velocity){
     	this.ourRobot.set(position,velocity);
     }

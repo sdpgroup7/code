@@ -1,6 +1,5 @@
 package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.ObjectPosition;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.Vector2;
 import java.awt.Point;
@@ -24,7 +23,7 @@ public class MovingObject {
     }
     
     public void setPosition(Point p){
-    	this.position.setCentre(p);
+    	this.position.setCentre(p.x,p.y);
     }
     
     public void setPosition(int x, int y){

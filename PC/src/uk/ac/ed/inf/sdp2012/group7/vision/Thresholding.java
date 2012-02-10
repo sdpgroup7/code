@@ -162,18 +162,18 @@ public class Thresholding {
 					/*else if (isGreen(c,GB,RG))  {
 						img.setRGB(i,j, Color.green.getRGB()); // GreenPlates 
 					}*/
-					else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOurRobot().getPosition().getCentre(), new Point(i,j)) < 23) )  {
-						
-					    img.setRGB(i,j, Color.orange.getRGB());
-					    ourGreyCount++;
-					    ourGreyCentroid.setLocation(ourGreyCentroid.getX() + i, ourGreyCentroid.getY() + j);
-
-					}
 					else if (isGrey(c) && (ed.getDistance(pastOpponentGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOpponentsRobot().getPosition().getCentre(), new Point(i,j)) < 23) ) {
 						
 					    img.setRGB(i,j, Color.pink.getRGB());
 					    opponentGreyCount++;
 					    opponentGreyCentroid.setLocation(opponentGreyCentroid.getX() + i, opponentGreyCentroid.getY() + j);
+
+					}
+					else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOurRobot().getPosition().getCentre(), new Point(i,j)) < 23) )  {
+						
+					    img.setRGB(i,j, Color.orange.getRGB());
+					    ourGreyCount++;
+					    ourGreyCentroid.setLocation(ourGreyCentroid.getX() + i, ourGreyCentroid.getY() + j);
 
 					}
 				}

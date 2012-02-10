@@ -143,12 +143,12 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     	} else {
     		System.out.println("Ball failed");
     	}
-    	if(Math.abs(blueO-blueOrientation) < 0.175){
+    	if(Math.abs(blueO-blueOrientation) < 0.175){ //Within 10 degrees
     		System.out.println("Blue Orientation Passed");
     	} else {
     		System.out.println("Blue Orientation Failed");
     	}
-    	if(Math.abs(yellowO-yellowOrientation) < 0.175){
+    	if(Math.abs(yellowO-yellowOrientation) < 0.175){ //Within 10 degrees
     		System.out.println("Yellow Orientation Passed");
     	} else {
     		System.out.println("Yellow Orientation Failed");

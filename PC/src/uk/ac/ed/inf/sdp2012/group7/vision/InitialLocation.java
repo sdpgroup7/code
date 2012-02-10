@@ -184,8 +184,8 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
         thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
         thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
-        thresholdGUI.setGreyValues(getClickColor("Click OUR grey circle"));
         thresholdGUI.setGreyValues(getClickColor("Click OPPONENT grey circle"));
+        thresholdGUI.setGreyValues(getClickColor("Click OUR grey circle"));
     }
     /*
     Get the threshold values for the objects in the match i.e. ball.
