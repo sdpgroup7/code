@@ -1,8 +1,8 @@
-package uk.ac.ed.inf.sdp2012.group7.strategy.planning.astar;
+package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 
-import uk.ac.ed.inf.sdp2012.group7.strategy.planning.astar.heuristics.ClosestHeuristic;
-import uk.ac.ed.inf.sdp2012.group7.strategy.planning.astar.utils.Logger;
-import uk.ac.ed.inf.sdp2012.group7.strategy.planning.astar.utils.StopWatch;
+import uk.ac.ed.inf.sdp2012.group7.strategy.astar.heuristics.ClosestHeuristic;
+import uk.ac.ed.inf.sdp2012.group7.strategy.astar.utils.Logger;
+import uk.ac.ed.inf.sdp2012.group7.strategy.astar.utils.StopWatch;
 
 public class TestAStar {
 	

@@ -1,6 +1,6 @@
-package uk.ac.ed.inf.sdp2012.group7.strategy.planning.astar.heuristics;
+package uk.ac.ed.inf.sdp2012.group7.strategy.astar.heuristics;
 
-import uk.ac.ed.inf.sdp2012.group7.strategy.planning.astar.AStarHeuristic;
+import uk.ac.ed.inf.sdp2012.group7.strategy.astar.AStarHeuristic;
 
 /**
  * A heuristic that uses the tile that is closest to the target
