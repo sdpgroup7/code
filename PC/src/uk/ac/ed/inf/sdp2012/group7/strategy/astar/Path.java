@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.sdp2012.group7.strategy.planning.astar;
+package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 
 import java.util.ArrayList;
 
@@ -85,7 +85,7 @@ public class Path {
 	
 	public void printPath() {
 		for(Node node : waypoints) {
-			System.out.print("("+node.getX()+","+node.getY()+") ");
+			System.out.println("("+node.getX()+","+node.getY()+") ");
 		}
 	}
 
