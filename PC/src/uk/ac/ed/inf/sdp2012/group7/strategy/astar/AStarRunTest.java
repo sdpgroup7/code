@@ -8,7 +8,7 @@ public class AStarRunTest {
 		public static void main(String[] args) {
 			
 			// set start and end points of the path
-			Point start = new Point(24,28);
+			Point start = new Point(26,28);
 			Point end = new Point(12,28);
 			
 			// set obstacles
@@ -33,6 +33,6 @@ public class AStarRunTest {
 			// run the algorithm
 			AStarRun run = new AStarRun(58,29, end, start, obstacles);
 			Path path = run.getPath();
-			path.printPath();
+			path.printWaypoints();
 		}
 }

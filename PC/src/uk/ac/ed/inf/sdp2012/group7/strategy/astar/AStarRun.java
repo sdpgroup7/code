@@ -33,7 +33,7 @@ public class AStarRun {
 						System.out.print("O");
 					} else if (node.isStart) {
 						System.out.print("R");
-					} else if (node.isGoal) {
+					} else if (node.isGoal()) {
 						System.out.print("B");
 					} else if (shortestPath.contains(node.getX(), node.getY())) {
 						System.out.print("X");
