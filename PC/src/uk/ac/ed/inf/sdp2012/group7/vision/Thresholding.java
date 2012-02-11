@@ -85,7 +85,7 @@ public class Thresholding {
 		blueRobotThresh[1][0] = 130;
 		blueRobotThresh[1][1] = 140;
 		blueRobotThresh[1][2] = 90;
-		greenPlatesThresh[0][0] = 200;
+		greenPlatesThresh[0][0] = 130;
 		greenPlatesThresh[1][0] = 140;
 
     	
@@ -159,9 +159,9 @@ public class Thresholding {
 						blueCentroid.setLocation(blueCentroid.getX() + i, blueCentroid.getY() + j);
 						//make blue thresholds for the different pitches in that [pitch][x] style
 					}
-					/*else if (isGreen(c,GB,RG))  {
+					else if (isGreen(c,GB,RG))  {
 						img.setRGB(i,j, Color.green.getRGB()); // GreenPlates 
-					}*/
+					}
 					else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOurRobot().getPosition().getCentre(), new Point(i,j)) < 23) )  {
 						
 					    img.setRGB(i,j, Color.orange.getRGB());
@@ -248,7 +248,7 @@ public class Thresholding {
     }
     
     public boolean isGreen(Color c, int GB, int RG){
-        return ( GB > 100 && RG > 100 && c.getGreen() > greenPlatesThresh[pitch][0]);
+        return ( GB > 45 && RG > 45 && c.getGreen() > greenPlatesThresh[pitch][0]);
     }
     
     public boolean isGrey(Color c){
