@@ -33,6 +33,8 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     public static ArrayList<Point> yellowC = new ArrayList<Point>();
     public static double yellowO = 0;
     public static double blueO = 0;
+    public static double blueOrientation = 0;
+    public static double yellowOrientation = 0;
     public static Point ball;
     
     public void mouseExited(MouseEvent e){}
@@ -102,6 +104,11 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     	ArrayList<Point> clickedCorners = new ArrayList<Point>();
     	Point blueRobot = getClickPoint("Click the centre of the blue robot");
     	Point yellowRobot = getClickPoint("Click the centre of the yellow robot");
+    	blueOrientation = getOrientation(	getClickPoint("Click the grey circle on the blue robot"),
+    										getClickPoint("Click the bottom of the T on the blue robot"));
+    	yellowOrientation = getOrientation(	getClickPoint("Click the grey circle on the yellow robot"),
+    										getClickPoint("Click the bottom of the T on the yellow robot"));
+    	
     	Point ballPos = getClickPoint("Click the ball");
     	clickedCorners.add(getCorner(blueRobot,1));
     	clickedCorners.add(getCorner(blueRobot,2));
@@ -114,18 +121,56 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     	
     	int total = 0;
     	
-    	total += close(clickedCorners.get(0),blueC.get(0));
-    	total += close(clickedCorners.get(1),blueC.get(1));
-    	total += close(clickedCorners.get(2),blueC.get(2));
-    	total += close(clickedCorners.get(3),blueC.get(3));
-    	total += close(clickedCorners.get(4),yellowC.get(0));
-    	total += close(clickedCorners.get(5),yellowC.get(1));
-    	total += close(clickedCorners.get(6),yellowC.get(2));
-    	total += close(clickedCorners.get(7),yellowC.get(3));
-    	total += close(ballPos,ball);
     	
-    	System.out.println("Accuracy: " + (int)((100.0*((float)total)/9)+0.5) + "%");
+    	if(	close(clickedCorners.get(0),blueC.get(0)) &&
+    		close(clickedCorners.get(1),blueC.get(1)) &&
+    		close(clickedCorners.get(2),blueC.get(2)) &&
+    		close(clickedCorners.get(3),blueC.get(3))){
+    			System.out.println("Blue passed");
+    	} else {
+    		System.out.println("Blue failed");
+    	}
+    	if(	close(clickedCorners.get(4),yellowC.get(0)) &&
+        		close(clickedCorners.get(5),yellowC.get(1)) &&
+        		close(clickedCorners.get(6),yellowC.get(2)) &&
+        		close(clickedCorners.get(7),yellowC.get(3))){
+        			System.out.println("Yellow passed");
+        } else {
+        	System.out.println("Yellow failed");
+        }
+    	if(close(ballPos,ball)){
+    		System.out.println("Ball passed");
+    	} else {
+    		System.out.println("Ball failed");
+    	}
+    	if(Math.abs(blueO-blueOrientation) < 0.175){ //Within 10 degrees
+    		System.out.println("Blue Orientation Passed");
+    	} else {
+    		System.out.println("Blue Orientation Failed");
+    	}
+    	if(Math.abs(yellowO-yellowOrientation) < 0.175){ //Within 10 degrees
+    		System.out.println("Yellow Orientation Passed");
+    	} else {
+    		System.out.println("Yellow Orientation Failed");
+    	}
+    	
+    	
+    	System.out.println("Accuracy: " + (int)((100.0*((float)total)/11)+0.5) + "%");
     
+    }
+    
+    public static double getOrientation(Point greyCircle,Point top){
+    	double a = Math.atan2(top.y-greyCircle.y,top.x-greyCircle.y);
+    	System.out.println("Debug: " + a);
+    	if(a < 0){
+    		a = -a;
+    	} else {
+    		a = (2.0*Math.PI) - a;
+    	}
+    	System.out.println("Debug: " + a);
+    	a = (a + (Math.PI/2.0)) % (2*Math.PI); 
+    	System.out.println("Debug: " + a);
+    	return a;
     }
     
     public void addMouseListeners(JFrame window, VisionPanel panel){
@@ -133,42 +178,40 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     	panel.addMouseListener(this);
     }
     
-    public static int close(Point a, Point b){
+    public static boolean close(Point a, Point b){
+    	//Tests if two points are within the specified delta distances to each other
     	int deltax = 20;
     	int deltay = 20;
-    	System.out.println("\nNew Point");
-    	System.out.println(a.toString());
-    	System.out.println(b.toString());
     	if((Math.abs(a.x - b.x) < deltax) && (Math.abs(a.y - b.y) < deltay)){
-    		return 1;
+    		return true;
     	}
-    	return 0;
+    	return false;
     }
     
     private static Point getCorner(Point p, int i) {
     	int deltax;
     	int deltay;
     	switch(i){
-    	case 1:
-    		deltax = 0;
-    		deltay = -15;
-    		break;
-    	case 2:
-    		deltax = 15;
-    		deltay = 0;
-    		break;
-    	case 3:
-    		deltax = 0;
-    		deltay = 15;
-    		break;
-    	case 4:
-    		deltax = -15;
-    		deltay = 0;
-    		break;
-    	default:
-    		deltax = 0;
-    		deltay = 0;
-    		break;
+	    	case 1:
+	    		deltax = 0;
+	    		deltay = -15;
+	    		break;
+	    	case 2:
+	    		deltax = 15;
+	    		deltay = 0;
+	    		break;
+	    	case 3:
+	    		deltax = 0;
+	    		deltay = 15;
+	    		break;
+	    	case 4:
+	    		deltax = -15;
+	    		deltay = 0;
+	    		break;
+	    	default:
+	    		deltax = 0;
+	    		deltay = 0;
+	    		break;
     	}
 		return new Point(p.x + deltax, p.y + deltay);
 	}

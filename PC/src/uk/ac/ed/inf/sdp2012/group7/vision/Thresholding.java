@@ -85,7 +85,9 @@ public class Thresholding {
 		blueRobotThresh[1][0] = 130;
 		blueRobotThresh[1][1] = 140;
 		blueRobotThresh[1][2] = 90;
+
 		greenPlatesThresh[0][0] = 130;
+		greenPlatesThresh[0][0] = 140;
 		greenPlatesThresh[1][0] = 140;
 
     	
@@ -161,6 +163,7 @@ public class Thresholding {
 					}
 					else if (isGreen(c,GB,RG))  {
 						img.setRGB(i,j, Color.green.getRGB()); // GreenPlates 
+
 					}
 					else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOurRobot().getPosition().getCentre(), new Point(i,j)) < 23) )  {
 						
@@ -169,11 +172,21 @@ public class Thresholding {
 					    ourGreyCentroid.setLocation(ourGreyCentroid.getX() + i, ourGreyCentroid.getY() + j);
 
 					}
-					else if (isGrey(c) && (ed.getDistance(pastOpponentGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOpponentsRobot().getPosition().getCentre(), new Point(i,j)) < 23) ) {
+					else if (isGrey(c))  {
+						img.setRGB(i,j, Color.black.getRGB()); // GreenPlates 
+					}
+					else if (isGrey(c) && (ed.getDistance(pastOpponentGreyCent, new Point(i,j)) < 10)) {
 						
 					    img.setRGB(i,j, Color.pink.getRGB());
 					    opponentGreyCount++;
 					    opponentGreyCentroid.setLocation(opponentGreyCentroid.getX() + i, opponentGreyCentroid.getY() + j);
+
+					}
+					else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 10))  {
+						
+					    img.setRGB(i,j, Color.orange.getRGB());
+					    ourGreyCount++;
+					    ourGreyCentroid.setLocation(ourGreyCentroid.getX() + i, ourGreyCentroid.getY() + j);
 
 					}
 				}

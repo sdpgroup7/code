@@ -184,8 +184,8 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
         thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
         thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
-        thresholdGUI.setGreyValues(getClickColor("Click OUR grey circle"));
         thresholdGUI.setGreyValues(getClickColor("Click OPPONENT grey circle"));
+        thresholdGUI.setGreyValues(getClickColor("Click OUR grey circle"));
     }
     /*
     Get the threshold values for the objects in the match i.e. ball.
@@ -253,6 +253,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         System.err.println(avgColor.toString());
         return avgColor;*/
     	Color c = new Color(image.getRGB(p.x,p.y));
+    	System.out.println(c);
     	//Vision.logger.debug(c.toString());
     	return c;
     }
