@@ -25,6 +25,11 @@ public class Thresholding {
 	private ArrayList<Integer> blueRobotY = new ArrayList<Integer>();
 
     private Color c;
+    /*The north, south, east and west immediate pixel's colors of c*/
+    private Color cN;
+    private Color cE;
+    private Color cS;
+    private Color cW;
     
 	private int GB;// green - blue
 	private int RG; // red - green
@@ -115,20 +120,23 @@ public class Thresholding {
     	  	pastOurGreyCent = Vision.worldState.getOurGrey().getPosition().getCentre();
     	  	pastOpponentGreyCent = Vision.worldState.getOpponentsGrey().getPosition().getCentre();
 		 //  BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
-
-           ballCount = 0;
+            
+           /*
+           Initialising to one to stop java dividing by 0 when it shouldn't
+           */
+           ballCount = 1;
            ballCentroid.setLocation(0,0);
             
-           blueCount = 0;
+           blueCount = 1;
            blueCentroid.setLocation(0,0);
             
-           yellowCount = 0;
+           yellowCount = 1;
            yellowCentroid.setLocation(0,0);
            
-           ourGreyCount = 0;
+           ourGreyCount = 1;
            ourGreyCentroid.setLocation(0,0);
            
-           opponentGreyCount = 0;
+           opponentGreyCount = 1;
            ourGreyCentroid.setLocation(0,0);
 
            //Vision.logger.debug("Iterating image");
@@ -146,19 +154,25 @@ public class Thresholding {
 						ballCentroid.setLocation(ballCentroid.getX() + i, ballCentroid.getY() + j);
 
 					}
-					else if (isYellow(c) && (ed.getDistance(pastYellCent, new Point(i,j)) < 25)) {
-						img.setRGB(i, j, Color.yellow.getRGB()); // Yellow robot
-						yellowRobotX.add(i);
-						yellowRobotY.add(j);
-						yellowCount++;
-						yellowCentroid.setLocation(yellowCentroid.getX() + i, yellowCentroid.getY() + j);
+					else if (isYellow(c)) {
+					    setCs(i,j,right,left,top,bottom, img);
+					    if (isYellow(cN) && isYellow(cE) && isYellow(cS) && isYellow(cW)){
+						    img.setRGB(i, j, Color.yellow.getRGB()); // Yellow robot
+						    yellowRobotX.add(i);
+						    yellowRobotY.add(j);
+						    yellowCount++;
+						    yellowCentroid.setLocation(yellowCentroid.getX() + i, yellowCentroid.getY() + j);
+						}
 					}
-					else if (isBlue(c) && (ed.getDistance(pastBlueCent, new Point(i,j)) < 25)){
-						img.setRGB(i, j, Color.blue.getRGB()); // Blue robot 
-						blueRobotX.add(i);
-						blueRobotY.add(j);
-						blueCount++;
-						blueCentroid.setLocation(blueCentroid.getX() + i, blueCentroid.getY() + j);
+					else if (isBlue(c)){
+					    setCs(i,j,right,left,top,bottom, img);
+					    if (isBlue(cN) && isBlue(cE) && isBlue(cS) && isBlue(cW)){
+						    img.setRGB(i, j, Color.blue.getRGB()); // Blue robot 
+						    blueRobotX.add(i);
+						    blueRobotY.add(j);
+						    blueCount++;
+						    blueCentroid.setLocation(blueCentroid.getX() + i, blueCentroid.getY() + j);
+						}
 						//make blue thresholds for the different pitches in that [pitch][x] style
 					}
 					else if (isGreen(c,GB,RG))  {
@@ -171,8 +185,10 @@ public class Thresholding {
 					    ourGreyCount++;
 					    ourGreyCentroid.setLocation(ourGreyCentroid.getX() + i, ourGreyCentroid.getY() + j);
 
-					}
 					/*else if (isGrey(c))  {
+						//img.setRGB(i,j, Color.black.getRGB()); // GreenPlates 
+					}
+					else if (isGrey(c))  {
 						img.setRGB(i,j, Color.black.getRGB()); // GreenPlates 
 					}*/
 					else if (isGrey(c) && (ed.getDistance(pastOpponentGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOpponentsRobot().getPosition().getCentre(), new Point(i,j)) < 22.5)) {
@@ -238,6 +254,28 @@ public class Thresholding {
     	return ourGreen;
     }
     */
+    public void setCs(int x, int y, int right, int left, int top, int bottom, BufferedImage img){
+        if (x + 1 < right){
+            cE = new Color(img.getRGB(x+1,y));
+        }else {
+            cE = c;
+        }
+        if (x - 1 > left){
+            cW = new Color(img.getRGB(x-1,y));
+        }else {
+            cW = c;
+        }
+        if (y + 1 < bottom){
+            cS = new Color(img.getRGB(x,y+1));
+        }else {
+            cS = c;
+        }
+        if (y - 1 > top){
+            cN = new Color(img.getRGB(x,y-1));
+        }else {
+            cN = c;
+        }
+    }
     /**
      * 
      * @param listOfPoints
