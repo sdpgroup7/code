@@ -113,20 +113,23 @@ public class Thresholding {
     	  	pastOurGreyCent = Vision.worldState.getOurGrey().getPosition().getCentre();
     	  	pastOpponentGreyCent = Vision.worldState.getOpponentsGrey().getPosition().getCentre();
 		 //  BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
-
-           ballCount = 0;
+            
+           /*
+           Initialising to one to stop java dividing by 0 when it shouldn't
+           */
+           ballCount = 1;
            ballCentroid.setLocation(0,0);
             
-           blueCount = 0;
+           blueCount = 1;
            blueCentroid.setLocation(0,0);
             
-           yellowCount = 0;
+           yellowCount = 1;
            yellowCentroid.setLocation(0,0);
            
-           ourGreyCount = 0;
+           ourGreyCount = 1;
            ourGreyCentroid.setLocation(0,0);
            
-           opponentGreyCount = 0;
+           opponentGreyCount = 1;
            ourGreyCentroid.setLocation(0,0);
 
            //Vision.logger.debug("Iterating image");
