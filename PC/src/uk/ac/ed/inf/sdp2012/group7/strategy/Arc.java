@@ -11,6 +11,23 @@ import java.awt.geom.*;
 public class Arc {
 	
 	private double radius;
+	private boolean direction;
+	
+	public double getRadius() {
+		return radius;
+	}
+	
+	public void setRadius(double radius) {
+		this.radius = radius;
+	}
+	
+	public boolean isDirection() {
+		return direction;
+	}
+	
+	public void setDirection(boolean direction) {
+		this.direction = direction;
+	}
 	
 
 }
