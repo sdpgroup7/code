@@ -9,6 +9,15 @@ public class MovingObject {
     
 	ObjectPosition position = new ObjectPosition();
 	Vector2 velocity = new Vector2();
+	double angle; 
+	
+	public void setAngle(double angle){
+		this.angle = angle; 
+	}
+	
+	public double getAngle(){
+		return angle;
+	}
 	
     public ObjectPosition getPosition(){
         return this.position;

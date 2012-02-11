@@ -20,6 +20,7 @@ public class FeedProcessor{
     private InitialLocation initialLocation;
     private Thresholding doThresh; // Do Thresholding 
     private VisionFeed visionFeed;
+    private OrientationFinder findAngle; // finds the angle
     
     private int height;
     private int width;
@@ -32,6 +33,7 @@ public class FeedProcessor{
         this.width = width;
         this.visionFeed = visionFeed;
         this.doThresh = new Thresholding(controlGUI.getThresholdsState());
+        this.findAngle = new OrientationFinder();
         //this.orientationFinder = new OrientationFinder(this.thresholdsState);
         Vision.logger.info("Feed Processor Initialised");
     }
@@ -42,14 +44,22 @@ public class FeedProcessor{
             Graphics imageGraphics = image.getGraphics();
             calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
     	} else {
+    		image = removeBackground(image,Vision.backgroundImage);
     		image = initialLocation.markImage(image);
             Graphics frameGraphics = label.getGraphics();
             Graphics imageGraphics = doThresh.getThresh(image, Vision.worldState.getPitch().getLeftBuffer(),Vision.worldState.getPitch().getRightBuffer(), Vision.worldState.getPitch().getTopBuffer(),Vision.worldState.getPitch().getBottomBuffer()).getGraphics(); 
             markObjects(imageGraphics);
             calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
+            calculateAngle();
+            //System.err.println(Vision.worldState.getOurRobot().getAngle());
         }
     }
-
+    public void calculateAngle(){
+    	double ourAngle = findAngle.findOrientation(Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y , Vision.worldState.getOurGrey().getPosition().getCentre().x, Vision.worldState.getOurGrey().getPosition().getCentre().y);
+    	double opponentAngle = findAngle.findOrientation(Vision.worldState.getOpponentsRobot().getPosition().getCentre().x,Vision.worldState.getOpponentsRobot().getPosition().getCentre().y , Vision.worldState.getOpponentsGrey().getPosition().getCentre().x, Vision.worldState.getOpponentsGrey().getPosition().getCentre().y);
+    	Vision.worldState.getOurRobot().setAngle(ourAngle);
+    	Vision.worldState.getOpponentsRobot().setAngle(opponentAngle);
+    }
     public void markObjects(Graphics imageGraphics){
             Point ball = Vision.worldState.getBall().getPosition().getCentre();
             Point blue;
@@ -58,6 +68,8 @@ public class FeedProcessor{
             if (Vision.worldState.getColor() == Color.blue){
                 blue = Vision.worldState.getOurRobot().getPosition().getCentre();
                 yellow = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
+                
+                
             } else {
                 yellow = Vision.worldState.getOurRobot().getPosition().getCentre();
                 blue = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
@@ -86,5 +98,60 @@ public class FeedProcessor{
         imageGraphics.drawString("FPS: " + fps, 15, 15);
         frameGraphics.drawImage(image, 0, 0, width, height, null);
     }
+    public BufferedImage removeBackground(BufferedImage image, BufferedImage background){
+    	int black = -16777216;
+    	int pink = -60269;
+    	if(Vision.worldState.isClickingDone()){
+    		for(int x = Vision.worldState.getOurRobot().getPosition().getCentre().x - 40;
+    		x < Vision.worldState.getOurRobot().getPosition().getCentre().x + 40;x++)
+    		{
+    			for(int y = Vision.worldState.getOurRobot().getPosition().getCentre().y - 40;
+    			y < Vision.worldState.getOurRobot().getPosition().getCentre().y + 40; y++)
+    			{
+    				try{
+    					Color imageRGB = new Color(image.getRGB(x,y));
+    					Color backgroundRGB = new Color(background.getRGB(x,y));
+    					if(similarColor(imageRGB,backgroundRGB)){
+    						image.setRGB(x,y,pink); //pure black
+    					}
+    				} catch (Exception e) {
+    					//This is probably just an index out of bounds exception so we can ignore it for now.
+    				}
+    			}
+    		}
+    		for(int x = Vision.worldState.getOpponentsRobot().getPosition().getCentre().x - 40;
+    		x < Vision.worldState.getOpponentsRobot().getPosition().getCentre().x + 40;x++)
+    		{
+    			for(int y = Vision.worldState.getOpponentsRobot().getPosition().getCentre().y - 40;
+    			y < Vision.worldState.getOpponentsRobot().getPosition().getCentre().y + 40; y++)
+    			{
+    				try{
+    					Color imageRGB = new Color(image.getRGB(x,y));
+    					Color backgroundRGB = new Color(background.getRGB(x,y));
+    					if(similarColor(imageRGB,backgroundRGB)){
+    						image.setRGB(x,y,pink); //pure black
+    					}
+    				} catch (Exception e) {
+    					//Again, it is just an out of bounds exception
+    				}
+    			}
+    		}
+    	}
+    	return image;
+    }
+
+    public static boolean similarColor(Color a, Color b){
+    	int rDiff = 20;
+    	int gDiff = 20;
+    	int bDiff = 20;
+    	if(
+    			(Math.abs(a.getRed() - b.getRed()) < rDiff) &&
+    			(Math.abs(a.getBlue() - b.getBlue()) < gDiff) &&
+    			(Math.abs(a.getGreen() - b.getGreen()) < bDiff)
+    	) return true;
+    	return false;
+    }
+
+
 
 }

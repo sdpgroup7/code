@@ -67,9 +67,9 @@ public class Thresholding {
     
     
     public Thresholding(ThresholdsState ts) {  // Sets the constants for thresholding for each pitch 
-    	redBallThresh[0][0] = 170;
-    	redBallThresh[0][1] = 120;
-    	redBallThresh[0][2] = 120;
+    	redBallThresh[0][0] = 150;
+    	redBallThresh[0][1] = 110;
+    	redBallThresh[0][2] = 110;
     	redBallThresh[1][0] = 150;
     	redBallThresh[1][1] = 100;
     	redBallThresh[1][2] = 100;
@@ -165,30 +165,30 @@ public class Thresholding {
 						img.setRGB(i,j, Color.green.getRGB()); // GreenPlates 
 
 					}
-					else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOurRobot().getPosition().getCentre(), new Point(i,j)) < 23) )  {
+					else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOurRobot().getPosition().getCentre(), new Point(i,j)) < 22.5) )  {
 						
 					    img.setRGB(i,j, Color.orange.getRGB());
 					    ourGreyCount++;
 					    ourGreyCentroid.setLocation(ourGreyCentroid.getX() + i, ourGreyCentroid.getY() + j);
 
 					}
-					else if (isGrey(c))  {
+					/*else if (isGrey(c))  {
 						img.setRGB(i,j, Color.black.getRGB()); // GreenPlates 
-					}
-					else if (isGrey(c) && (ed.getDistance(pastOpponentGreyCent, new Point(i,j)) < 10)) {
+					}*/
+					else if (isGrey(c) && (ed.getDistance(pastOpponentGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOpponentsRobot().getPosition().getCentre(), new Point(i,j)) < 22.5)) {
 						
 					    img.setRGB(i,j, Color.pink.getRGB());
 					    opponentGreyCount++;
 					    opponentGreyCentroid.setLocation(opponentGreyCentroid.getX() + i, opponentGreyCentroid.getY() + j);
 
 					}
-					else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 10))  {
+					/*else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 10))  {
 						
 					    img.setRGB(i,j, Color.orange.getRGB());
 					    ourGreyCount++;
 					    ourGreyCentroid.setLocation(ourGreyCentroid.getX() + i, ourGreyCentroid.getY() + j);
 
-					}
+					}*/
 				}
 			}
 	    	//Vision.logger.debug("End Iteration");
@@ -207,8 +207,15 @@ public class Thresholding {
 			}
 			
 			Vision.worldState.setBallPosition((int)ballCentroid.getX(),(int)ballCentroid.getY());
-			Vision.worldState.setOurGreyPosition((int)ourGreyCentroid.getX() ,(int)ourGreyCentroid.getY());
-			Vision.worldState.setOpponentsGreyPosition((int)opponentGreyCentroid.getX(), (int)opponentGreyCentroid.getY());
+			if ( ed.getDistance(Vision.worldState.getOurRobot().getPosition().getCentre(),ourGreyCentroid) < 20 ){
+				Vision.worldState.setOurGreyPosition((int)ourGreyCentroid.getX() ,(int)ourGreyCentroid.getY());
+			}
+			if ( ed.getDistance(Vision.worldState.getOpponentsRobot().getPosition().getCentre(),opponentGreyCentroid) < 20 ){
+				Vision.worldState.setOpponentsGreyPosition((int)opponentGreyCentroid.getX(), (int)opponentGreyCentroid.getY());
+			}
+			
+			
+			
     	}
     		
     	return img;
