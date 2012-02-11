@@ -69,6 +69,10 @@ public class ControlGUI implements ChangeListener {
 	private JButton penaltyDefendButton;
 	private JCheckBox returnToGame;
 	
+	/*Pause and Resume Buttons*/
+	private JButton pauseButton;
+	private JButton resumeButton;
+	
 	/* Tabs. */
 	private JTabbedPane tabPane;
 	private JPanel defaultPanel;
@@ -518,7 +522,7 @@ public class ControlGUI implements ChangeListener {
 			}
 		});
 		
-		saveLoadPanel.add(saveButton);
+		//saveLoadPanel.add(saveButton);
 		
 		loadButton = new JButton("Load Thresholds");
 		loadButton.addActionListener(new ActionListener() {
@@ -540,9 +544,9 @@ public class ControlGUI implements ChangeListener {
 			}
 		});
 		
-		saveLoadPanel.add(loadButton);
+		//saveLoadPanel.add(loadButton);
 		
-		defaultPanel.add(saveLoadPanel);
+		//defaultPanel.add(saveLoadPanel);
 		
 		/*
 		The locate button is pressed to start the locating of the objects
@@ -565,7 +569,7 @@ public class ControlGUI implements ChangeListener {
 		});
 		    
 		
-		defaultPanel.add(locatePanel);
+		//defaultPanel.add(locatePanel);
 		
 		/*
 		Buttons for starting and stopping the match, before starting you have
@@ -597,6 +601,34 @@ public class ControlGUI implements ChangeListener {
 		});
 		
 		defaultPanel.add(startStopPanel);
+		
+		/* Pausing and Resuming play */
+		
+		JPanel pauseResumePanel = new JPanel();
+		
+		pauseButton = new JButton ("Pause Match");
+		resumeButton = new JButton ("Resume Match");
+		
+		pauseResumePanel.add(pauseButton);
+		pauseResumePanel.add(resumeButton);
+		
+		pauseButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        System.out.println("Play paused");
+		    }
+		});
+		
+		resumeButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        System.out.println("Play paused");
+		    }
+		});
+		
+		defaultPanel.add(pauseResumePanel);
 		
 		/*
 		Penalty Mode buttons.  Stop button must be pressed first
