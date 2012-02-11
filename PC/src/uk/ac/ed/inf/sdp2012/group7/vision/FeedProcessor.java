@@ -24,6 +24,8 @@ public class FeedProcessor{
     
     private int height;
     private int width;
+    
+    double prevAngle = 0;
 
     public FeedProcessor(InitialLocation il, int height, int width, ControlGUI controlGUI, VisionFeed visionFeed){
         
@@ -53,6 +55,12 @@ public class FeedProcessor{
             calculateAngle();
             //System.err.println(Vision.worldState.getOurRobot().getAngle());
         }
+    	
+    	if(Math.abs(Vision.worldState.getOurRobot().getAngle() - prevAngle) > 0.01){
+    		prevAngle = Vision.worldState.getOurRobot().getAngle();
+    		System.out.println("Current angle: " + prevAngle);
+    	}
+    	
     }
     public void calculateAngle(){
     	double ourAngle = findAngle.findOrientation(Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y , Vision.worldState.getOurGrey().getPosition().getCentre().x, Vision.worldState.getOurGrey().getPosition().getCentre().y);

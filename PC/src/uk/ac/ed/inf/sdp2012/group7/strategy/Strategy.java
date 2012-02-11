@@ -68,7 +68,7 @@ public class Strategy {
 			Point newPoint = state.getOurRobot().getPosition().getCentre();
 			logger.debug("New point: " + newPoint);
 			double angle = Math.atan2(newPoint.y-oldPoint.y, newPoint.x-oldPoint.x);
-			state.getOurRobot().getVelocity().setDirection(angle);
+			state.getOurRobot().setAngle(angle);
 			logger.debug("Calculated angle: " + Math.toDegrees(angle));
 		}
 
@@ -79,7 +79,7 @@ public class Strategy {
 					controller.changeSpeed(100);
 					Point robot = state.getOurRobot().getPosition().getCentre();
 					Point ball = state.getBall().getPosition().getCentre();
-					double targetangle = Tools.getAngleToFacePoint(robot, state.getOurRobot().getVelocity().getDirection(), ball);
+					double targetangle = Tools.getAngleToFacePoint(robot, state.getOurRobot().getAngle(), ball);
 					if (Point.distance(robot.x,robot.y,ball.x,ball.y) > 30) {
 						if (Math.abs(Math.toDegrees(targetangle)) > 5) {
 							controller.stop();
