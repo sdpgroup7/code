@@ -10,12 +10,12 @@ public class Tools {
 	public static double getAngleFrom0_0(Point pos) {
 		// deals with cases where pos is on the x-axis
 		if (pos.y == 0) {
-			return (pos.x > 0 ? 0 : Math.PI);
+			return (pos.x > 0 ? Math.PI / 2 : 3 * Math.PI / 2);
 		} else {
 			if (pos.x > 0)
-				return (Math.atan(((float) pos.y) / pos.x));
+				return (Math.PI / 2 + Math.atan(((float) pos.y) / pos.x));
 			else
-				return (Math.PI + Math.atan(((float) pos.y) / pos.x));
+				return (3 * Math.PI / 2 + Math.atan(((float) pos.y) / pos.x));
 		}
 	}
 
