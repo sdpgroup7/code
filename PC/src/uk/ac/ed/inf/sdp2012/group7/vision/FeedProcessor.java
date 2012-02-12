@@ -3,7 +3,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
+import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
@@ -24,6 +26,7 @@ public class FeedProcessor{
     
     private int height;
     private int width;
+   
     
     double prevAngle = 0;
 
@@ -58,7 +61,7 @@ public class FeedProcessor{
     	
     	if(Math.abs(Vision.worldState.getOurRobot().getAngle() - prevAngle) > 0.01){
     		prevAngle = Vision.worldState.getOurRobot().getAngle();
-    		System.out.println("Current angle: " + prevAngle);
+    		//System.out.println("Current angle: " + prevAngle);
     	}
     	
     }
@@ -90,7 +93,7 @@ public class FeedProcessor{
             imageGraphics.setColor(Color.yellow);
             imageGraphics.drawOval(yellow.x-15, yellow.y-15, 30,30);
             imageGraphics.setColor(Color.white);
-            imageGraphics.setColor(Color.red);
+            imageGraphics.setColor(Color.white);
             imageGraphics.drawLine(Vision.worldState.getOurGrey().getPosition().getCentre().x,Vision.worldState.getOurGrey().getPosition().getCentre().y,Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y);
             imageGraphics.drawLine(Vision.worldState.getOpponentsGrey().getPosition().getCentre().x,Vision.worldState.getOpponentsGrey().getPosition().getCentre().y,Vision.worldState.getOpponentsRobot().getPosition().getCentre().x,Vision.worldState.getOpponentsRobot().getPosition().getCentre().y);
             //could the above line be shorter with the current worldState state?
@@ -147,11 +150,20 @@ public class FeedProcessor{
     	}
     	return image;
     }
+    
+    public void writeImage(BufferedImage image, String fn){
+        try {
+            File outputFile = new File(fn);
+            ImageIO.write(image, "png", outputFile);
+        } catch (Exception e) {
+        	Vision.logger.error("Failed to write image: " + e.getMessage());
+        }
+    }
 
     public static boolean similarColor(Color a, Color b){
-    	int rDiff = 20;
-    	int gDiff = 20;
-    	int bDiff = 20;
+    	int rDiff = 33;
+    	int gDiff = 33;
+    	int bDiff = 33;
     	if(
     			(Math.abs(a.getRed() - b.getRed()) < rDiff) &&
     			(Math.abs(a.getBlue() - b.getBlue()) < gDiff) &&

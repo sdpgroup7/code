@@ -72,7 +72,7 @@ public class Thresholding {
     
     
     public Thresholding(ThresholdsState ts) {  // Sets the constants for thresholding for each pitch 
-    	redBallThresh[0][0] = 150;
+    	redBallThresh[0][0] = 160;
     	redBallThresh[0][1] = 110;
     	redBallThresh[0][2] = 110;
     	redBallThresh[1][0] = 150;
@@ -84,15 +84,15 @@ public class Thresholding {
 		yellowRobotThresh[1][0] = 150;
 		yellowRobotThresh[1][1] = 190;
 		yellowRobotThresh[1][2] = 140;
-		blueRobotThresh[0][0] = 100;
-		blueRobotThresh[0][1] = 170;
-		blueRobotThresh[0][2] = 100;
+		blueRobotThresh[0][0] = 120;
+		blueRobotThresh[0][1] = 200;
+		blueRobotThresh[0][2] = 120;
 		blueRobotThresh[1][0] = 130;
 		blueRobotThresh[1][1] = 140;
 		blueRobotThresh[1][2] = 90;
 
-		greenPlatesThresh[0][0] = 130;
-		greenPlatesThresh[0][0] = 140;
+	
+		greenPlatesThresh[0][0] = 160;
 		greenPlatesThresh[1][0] = 140;
 
     	
@@ -179,7 +179,7 @@ public class Thresholding {
 						img.setRGB(i,j, Color.green.getRGB()); // GreenPlates 
 
 					}
-					else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOurRobot().getPosition().getCentre(), new Point(i,j)) < 22.5) )  {
+					else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 15) && (ed.getDistance(Vision.worldState.getOurRobot().getPosition().getCentre(), new Point(i,j)) < 22.5) )  {
 						
 					    img.setRGB(i,j, Color.orange.getRGB());
 					    ourGreyCount++;
@@ -191,7 +191,7 @@ public class Thresholding {
 					else if (isGrey(c))  {
 						img.setRGB(i,j, Color.black.getRGB()); // GreenPlates 
 					}*/
-					}else if (isGrey(c) && (ed.getDistance(pastOpponentGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOpponentsRobot().getPosition().getCentre(), new Point(i,j)) < 22.5)) {
+					else if (isGrey(c) && (ed.getDistance(pastOpponentGreyCent, new Point(i,j)) < 15) && (ed.getDistance(Vision.worldState.getOpponentsRobot().getPosition().getCentre(), new Point(i,j)) < 22.5)) {
 						
 					    img.setRGB(i,j, Color.pink.getRGB());
 					    opponentGreyCount++;

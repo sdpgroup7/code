@@ -48,7 +48,7 @@ public class VisionFeed extends WindowAdapter {
     //private ControlGUI thresholdGUI;
     private FeedProcessor processor;
     public boolean paused = false;
-
+    int count = 0;
     /**
      * Default constructor.
      *
@@ -119,7 +119,7 @@ public class VisionFeed extends WindowAdapter {
      */
     private void initFrameGrabber(String videoDevice, int inWidth, int inHeight, int channel, int videoStandard, int compressionQuality) throws V4L4JException {
         videoDev = new VideoDevice(videoDevice);
-
+        
         DeviceInfo deviceInfo = videoDev.getDeviceInfo();
 
         if (deviceInfo.getFormatList().getNativeFormats().isEmpty()) {
@@ -146,6 +146,10 @@ public class VisionFeed extends WindowAdapter {
                 frame.recycle();
                 //processor.processAndUpdateImage(frameImage, before, label, labelThresh);
                 processor.processAndUpdateImage(frameImage, before, label);
+                count++;
+                if (count == 15){
+                	writeImage(frameImage, "backGround");
+                }
             }
         });
 
