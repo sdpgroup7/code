@@ -104,7 +104,7 @@ public class FeedProcessor{
             imageGraphics.setColor(Color.yellow);
             imageGraphics.drawOval(yellow.x-15, yellow.y-15, 30,30);
             imageGraphics.setColor(Color.white);
-            imageGraphics.setColor(Color.red);
+            imageGraphics.setColor(Color.black);
             imageGraphics.drawLine(
                 Vision.worldState.getOurGrey().getPosition().getCentre().x,
                 Vision.worldState.getOurGrey().getPosition().getCentre().y,

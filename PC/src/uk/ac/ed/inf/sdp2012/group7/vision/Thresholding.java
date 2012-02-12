@@ -128,19 +128,19 @@ public class Thresholding {
            /*
            Initialising to one to stop java dividing by 0 when it shouldn't
            */
-           ballCount = 1;
+           ballCount = 0;
            ballCentroid.setLocation(0,0);
             
-           blueCount = 1;
+           blueCount = 0;
            blueCentroid.setLocation(0,0);
             
-           yellowCount = 1;
+           yellowCount = 0;
            yellowCentroid.setLocation(0,0);
            
-           ourGreyCount = 1;
+           ourGreyCount = 0;
            ourGreyCentroid.setLocation(0,0);
            
-           opponentGreyCount = 1;
+           opponentGreyCount = 0;
            ourGreyCentroid.setLocation(0,0);
 
            //Vision.logger.debug("Iterating image");
