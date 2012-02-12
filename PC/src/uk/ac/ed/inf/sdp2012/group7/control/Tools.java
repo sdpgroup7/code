@@ -10,12 +10,12 @@ public class Tools {
 	public static double getAngleFrom0_0(Point pos) {
 		// deals with cases where pos is on the x-axis
 		if (pos.y == 0) {
-			return (pos.x > 0 ? Math.PI / 2 : 3 * Math.PI / 2);
+			return (pos.x > 0 ? 0 : Math.PI);
 		} else {
 			if (pos.x > 0)
-				return (Math.PI / 2 + Math.atan(((float) pos.y) / pos.x));
+				return (Math.atan(((float) pos.y) / pos.x));
 			else
-				return (3 * Math.PI / 2 + Math.atan(((float) pos.y) / pos.x));
+				return (Math.PI + Math.atan(((float) pos.y) / pos.x));
 		}
 	}
 
@@ -31,7 +31,7 @@ public class Tools {
 		Point targetRelativePos = Tools.getRelativePos(ourCoor, target);
 
 		double targetFromNxt = Tools.getAngleFrom0_0(targetRelativePos);
-
+		
 		if (targetFromNxt < 0)
 			targetFromNxt = 2 * Math.PI + targetFromNxt;
 
