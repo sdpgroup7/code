@@ -76,7 +76,7 @@ public class WorldState{
         return this.opponentsGoal;
     }
     
-    public void setOurRobot(ObjectPosition position, Vector2 velocity){
+    public void setOurRobot(ObjectPosition position, double velocity){
     	this.ourRobot.set(position,velocity);
     }
     
@@ -104,7 +104,7 @@ public class WorldState{
     	this.ourRobot.setPosition(position);
     }
     
-    public void setOpponentsRobot(ObjectPosition position, Vector2 velocity){
+    public void setOpponentsRobot(ObjectPosition position, double velocity){
     	this.opponentsRobot.set(position,velocity);
     }
     
@@ -120,7 +120,7 @@ public class WorldState{
     	this.opponentsRobot.setPosition(position);
     }
     
-    public void setBall(ObjectPosition position, Vector2 velocity){
+    public void setBall(ObjectPosition position, double velocity){
     	this.ball.set(position,velocity);
     }
     
@@ -136,7 +136,7 @@ public class WorldState{
     	this.ball.setPosition(position);
     }
     
-    public void setBallVelocity(Vector2 velocity){
+    public void setBallVelocity(double velocity){
     	this.ball.setVelocity(velocity);
     }
     

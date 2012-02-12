@@ -1,5 +1,6 @@
 package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
 import java.lang.Math;
+import java.util.ArrayList;
 import java.awt.Point;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
@@ -30,6 +31,7 @@ public class ObjectPosition{
     	this.centre = p;
     }
     
+
     public ObjectPosition(Point topLeft, Point topRight, Point bottomLeft, Point bottomRight){
     	this(topLeft,topRight,bottomLeft,bottomRight,new Point(((topLeft.x + bottomRight.x) / 2),((topLeft.y + bottomRight.y) / 2)));
     }

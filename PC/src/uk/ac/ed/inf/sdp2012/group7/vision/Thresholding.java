@@ -191,7 +191,7 @@ public class Thresholding {
 					else if (isGrey(c))  {
 						img.setRGB(i,j, Color.black.getRGB()); // GreenPlates 
 					}*/
-					else if (isGrey(c) && (ed.getDistance(pastOpponentGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOpponentsRobot().getPosition().getCentre(), new Point(i,j)) < 22.5)) {
+					}else if (isGrey(c) && (ed.getDistance(pastOpponentGreyCent, new Point(i,j)) < 10) && (ed.getDistance(Vision.worldState.getOpponentsRobot().getPosition().getCentre(), new Point(i,j)) < 22.5)) {
 						
 					    img.setRGB(i,j, Color.pink.getRGB());
 					    opponentGreyCount++;

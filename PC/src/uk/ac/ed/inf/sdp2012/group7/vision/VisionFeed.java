@@ -48,6 +48,7 @@ public class VisionFeed extends WindowAdapter {
     //private ControlGUI thresholdGUI;
     private FeedProcessor processor;
     public boolean paused = false;
+
     /**
      * Default constructor.
      *
@@ -135,6 +136,7 @@ public class VisionFeed extends WindowAdapter {
             }
 
             public void nextFrame(VideoFrame frame) {
+            	
                 long before = System.currentTimeMillis();
                 if(Vision.TESTING){
                 	if(!paused) frameImage = frame.getBufferedImage();
@@ -177,7 +179,7 @@ public class VisionFeed extends WindowAdapter {
     
     
     //can output the buffered image to disk, can normalise if necessary
-    public void writeImage(BufferedImage image, String fn){
+    public static void writeImage(BufferedImage image, String fn){
         try {
             File outputFile = new File(fn);
             ImageIO.write(image, "png", outputFile);
