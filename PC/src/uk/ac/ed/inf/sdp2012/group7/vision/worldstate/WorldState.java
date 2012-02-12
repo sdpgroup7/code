@@ -2,6 +2,7 @@ package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.ArrayList;
 
 public class WorldState{
 
@@ -19,6 +20,24 @@ public class WorldState{
     MovingObject ourGrey = new MovingObject(); 
     MovingObject opponentsGrey = new MovingObject();
     
+    ArrayList<Point> bluePixels = new ArrayList<Point>();
+	ArrayList<Point> yellowPixels = new ArrayList<Point>();
+    
+	public ArrayList<Point> getBluePixels() {
+		return bluePixels;
+	}
+
+	public void setBluePixels(ArrayList<Point> bluePixels) {
+		this.bluePixels = bluePixels;
+	}
+
+	public ArrayList<Point> getYellowPixels() {
+		return yellowPixels;
+	}
+
+	public void setYellowPixels(ArrayList<Point> yellowPixels) {
+		this.yellowPixels = yellowPixels;
+	}    
     
  
     public WorldState(){

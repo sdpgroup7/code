@@ -53,12 +53,12 @@ public class FeedProcessor{
     		image = initialLocation.markImage(image);
             Graphics frameGraphics = label.getGraphics();
             Graphics imageGraphics = doThresh.getThresh(
-                image,
-                Vision.worldState.getPitch().getLeftBuffer(),
-                Vision.worldState.getPitch().getRightBuffer(), 
-                Vision.worldState.getPitch().getTopBuffer(),
-                Vision.worldState.getPitch().getBottomBuffer()
-            ).getGraphics(); 
+							                image,
+							                Vision.worldState.getPitch().getLeftBuffer(),
+							                Vision.worldState.getPitch().getRightBuffer(), 
+							                Vision.worldState.getPitch().getTopBuffer(),
+							                Vision.worldState.getPitch().getBottomBuffer()
+            							).getGraphics();
             markObjects(imageGraphics);
             calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
             calculateAngle();
@@ -67,7 +67,7 @@ public class FeedProcessor{
     	
     	if(Math.abs(Vision.worldState.getOurRobot().getAngle() - prevAngle) > 0.01){
     		prevAngle = Vision.worldState.getOurRobot().getAngle();
-    		//System.out.println("Current angle: " + prevAngle);
+    		System.out.println("Current angle: " + prevAngle);
     	}
     	
     }

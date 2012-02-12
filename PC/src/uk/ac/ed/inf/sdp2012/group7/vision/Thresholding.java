@@ -107,7 +107,8 @@ public class Thresholding {
     		//Vision.logger.debug("Starting thresholding");
     		
     	if (Vision.worldState.isClickingDone()){
-
+    		ArrayList<Point> bluePixels = new ArrayList<Point>();
+    		ArrayList<Point> yellowPixels = new ArrayList<Point>();
     		pitch = Vision.worldState.getRoom();
     		width = right-left;
     		height = top-bottom;
@@ -166,7 +167,8 @@ public class Thresholding {
 						    yellowRobotY.add(j);
 						    yellowCount++;
 						    yellowCentroid.setLocation(yellowCentroid.getX() + i, yellowCentroid.getY() + j);
-						}
+						    yellowPixels.add(new Point(i,j));
+					    }
 					}
 					else if (isBlue(c)){
 					    setCs(i,j,right,left,top,bottom, img);
@@ -176,7 +178,8 @@ public class Thresholding {
 						    blueRobotY.add(j);
 						    blueCount++;
 						    blueCentroid.setLocation(blueCentroid.getX() + i, blueCentroid.getY() + j);
-						}
+						    bluePixels.add(new Point(i,j));
+					    }
 						//make blue thresholds for the different pitches in that [pitch][x] style
 					}
 					else if (isGreen(c,GB,RG))  {
@@ -251,6 +254,8 @@ public class Thresholding {
 				Vision.worldState.setOpponentsGreyPosition((int)opponentGreyCentroid.getX(), (int)opponentGreyCentroid.getY());
 			}
 			
+			Vision.worldState.setBluePixels(bluePixels);
+			Vision.worldState.setYellowPixels(yellowPixels);
 			
 			
     	}
