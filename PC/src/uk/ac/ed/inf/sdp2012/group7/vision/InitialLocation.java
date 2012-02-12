@@ -42,6 +42,9 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         windowFrame.addMouseMotionListener(this);
         Vision.logger.info("InitialLocation Initialised");
     }
+    
+    public InitialLocation(){
+    }
 
 	public void mouseExited(MouseEvent e){}
     public void mouseEntered(MouseEvent e){}
