@@ -184,7 +184,7 @@ public class Thresholding {
 					    img.setRGB(i,j, Color.orange.getRGB());
 					    ourGreyCount++;
 					    ourGreyCentroid.setLocation(ourGreyCentroid.getX() + i, ourGreyCentroid.getY() + j);
-
+					}
 					/*else if (isGrey(c))  {
 						//img.setRGB(i,j, Color.black.getRGB()); // GreenPlates 
 					}
