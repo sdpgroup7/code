@@ -20,7 +20,6 @@ public class ObjectPosition{
     private Point centre = new Point(0,0);
     
     public ObjectPosition(){
-        
     }
 
     public ObjectPosition(int x, int y){

@@ -30,6 +30,10 @@ public class Thresholding {
     private Color cE;
     private Color cS;
     private Color cW;
+    private Color cNE;
+    private Color cSE;
+    private Color cSW;
+    private Color cNW;
     
 	private int GB;// green - blue
 	private int RG; // red - green
@@ -124,19 +128,19 @@ public class Thresholding {
            /*
            Initialising to one to stop java dividing by 0 when it shouldn't
            */
-           ballCount = 1;
+           ballCount = 0;
            ballCentroid.setLocation(0,0);
             
-           blueCount = 1;
+           blueCount = 0;
            blueCentroid.setLocation(0,0);
             
-           yellowCount = 1;
+           yellowCount = 0;
            yellowCentroid.setLocation(0,0);
            
-           ourGreyCount = 1;
+           ourGreyCount = 0;
            ourGreyCentroid.setLocation(0,0);
            
-           opponentGreyCount = 1;
+           opponentGreyCount = 0;
            ourGreyCentroid.setLocation(0,0);
 
            //Vision.logger.debug("Iterating image");
@@ -207,6 +211,23 @@ public class Thresholding {
 					}*/
 				}
 			}
+			
+			if (ballCount == 0){
+			    ballCount++;
+			}
+			if (blueCount == 0){
+			    blueCount++;
+			}
+			if (yellowCount == 0){
+			    yellowCount++;
+			}
+			if (ourGreyCount == 0){
+			    ourGreyCount++;
+			}
+			if (opponentGreyCount == 0){
+			    opponentGreyCount++;
+			}
+			
 	    	//Vision.logger.debug("End Iteration");
 			ballCentroid.setLocation(ballCentroid.getX()/ballCount, ballCentroid.getY()/ballCount);
 			yellowCentroid.setLocation(yellowCentroid.getX()/yellowCount, yellowCentroid.getY()/yellowCount);
@@ -274,6 +295,26 @@ public class Thresholding {
             cN = new Color(img.getRGB(x,y-1));
         }else {
             cN = c;
+        }
+        if ((y - 1 > top) & (x - 1 > left)){
+            cNW = new Color(img.getRGB(x-1,y-1));
+        } else{
+            cNW = c;
+        }
+        if ((y - 1 > top) & (x + 1 < right)){
+            cNE = new Color(img.getRGB(x+1,y-1));
+        } else{
+            cNE = c;
+        }
+        if ((y + 1 > top) & (x - 1 > left)){
+            cSW = new Color(img.getRGB(x-1,y+1));
+        } else{
+            cSW = c;
+        }
+        if ((y + 1 > top) & (x + 1 > left)){
+            cSE = new Color(img.getRGB(x+1,y+1));
+        } else{
+            cSE = c;
         }
     }
     /**

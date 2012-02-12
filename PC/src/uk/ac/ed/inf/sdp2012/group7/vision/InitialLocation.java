@@ -44,9 +44,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     }
     
     public InitialLocation(){
-    	
     }
-    
 
 	public void mouseExited(MouseEvent e){}
     public void mouseEntered(MouseEvent e){}
@@ -110,26 +108,32 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     		deltay = 0;
     		break;
     	}
+    	
     	Point p;
+    	
 		if(c == "blue"){
 			if(Vision.worldState.getColor().equals(Color.blue)){
 				p = new Point(
-						Vision.worldState.getOurRobot().getPosition().getCentre().x + deltax,
-						Vision.worldState.getOurRobot().getPosition().getCentre().y + deltay);
+						    Vision.worldState.getOurRobot().getPosition().getCentre().x + deltax,
+						    Vision.worldState.getOurRobot().getPosition().getCentre().y + deltay
+						);
 			} else {
 				p = new Point(
-						Vision.worldState.getOpponentsRobot().getPosition().getCentre().x + deltax,
-						Vision.worldState.getOpponentsRobot().getPosition().getCentre().y + deltay);
+						    Vision.worldState.getOpponentsRobot().getPosition().getCentre().x + deltax,
+						    Vision.worldState.getOpponentsRobot().getPosition().getCentre().y + deltay
+						);
 			}
 		} else {
 			if(Vision.worldState.getColor().equals(Color.yellow)){
 				p = new Point(
-						Vision.worldState.getOurRobot().getPosition().getCentre().x + deltax,
-						Vision.worldState.getOurRobot().getPosition().getCentre().y + deltay);
+						    Vision.worldState.getOurRobot().getPosition().getCentre().x + deltax,
+						    Vision.worldState.getOurRobot().getPosition().getCentre().y + deltay
+						);
 			} else {
 				p = new Point(
-						Vision.worldState.getOpponentsRobot().getPosition().getCentre().x + deltax,
-						Vision.worldState.getOpponentsRobot().getPosition().getCentre().y + deltay);
+						    Vision.worldState.getOpponentsRobot().getPosition().getCentre().x + deltax,
+						    Vision.worldState.getOpponentsRobot().getPosition().getCentre().y + deltay
+						);
 			}
 		}
 		Vision.logger.debug(p.toString());
@@ -149,16 +153,18 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
 	public void getPoints(){
 	
 		Vision.worldState.setPitch(new Pitch(
-				getClickPoint("Click the top left corner"),
-				getClickPoint("Click the top right corner"),
-				getClickPoint("Click the bottom right corner"),
-				getClickPoint("Click the bottom left corner")));
+				    getClickPoint("Click the top left corner"),
+				    getClickPoint("Click the top right corner"),
+				    getClickPoint("Click the bottom right corner"),
+				    getClickPoint("Click the bottom left corner")
+				));
 		
 		Vision.worldState.setPitchBuffers(
-				getClickPoint("Click the top bulge").y,
-				getClickPoint("Click the right bulge").x,
-				getClickPoint("Click the bottom bulge").y,
-				getClickPoint("Click the left bulge").x);
+				    getClickPoint("Click the top bulge").y,
+				    getClickPoint("Click the right bulge").x,
+				    getClickPoint("Click the bottom bulge").y,
+				    getClickPoint("Click the left bulge").x
+				);
 
 		buffersSet = true;
 		
@@ -223,35 +229,6 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     pixels, but you should try and click centrally in the object still.
     */
     public Color getColor(Point p, BufferedImage image){
-        //writeImage(image,"test.png");
-
-        /*Color[] temp = new Color[9];
-        temp[0] = new Color(image.getRGB(p.x-1,p.y-1));
-        temp[1] = new Color(image.getRGB(p.x-1,p.y));
-        temp[2] = new Color(image.getRGB(p.x-1,p.y+1));
-        temp[3] = new Color(image.getRGB(p.x,p.y-1));
-        temp[4] = new Color(image.getRGB(p.x,p.y));
-        temp[5] = new Color(image.getRGB(p.x,p.y+1));
-        temp[6] = new Color(image.getRGB(p.x+1,p.y-1));
-        temp[7] = new Color(image.getRGB(p.x+1,p.y));
-        temp[8] = new Color(image.getRGB(p.x+1,p.y+1));
-        
-        int avgr = 0;
-        int avgg = 0;
-        int avgb = 0;
-
-        for(int i = 0;i<9;i++){
-            avgr += temp[i].getRed();
-            avgg += temp[i].getGreen();
-            avgb += temp[i].getBlue();
-        }
-        avgr = avgr/9;
-        avgg = avgg/9;
-        avgb = avgb/9;
-
-        Color avgColor = new Color(avgr,avgg,avgb);
-        System.err.println(avgColor.toString());
-        return avgColor;*/
     	Color c = new Color(image.getRGB(p.x,p.y));
     	System.out.println(c);
     	//Vision.logger.debug(c.toString());
@@ -263,10 +240,28 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         int height = 480;
         Graphics2D graphics = image.createGraphics();
         if(buffersSet){
-        	graphics.drawLine(Vision.worldState.getPitch().getLeftBuffer(),0,Vision.worldState.getPitch().getLeftBuffer(),height);
-        	graphics.drawLine(Vision.worldState.getPitch().getRightBuffer(),0,Vision.worldState.getPitch().getRightBuffer(),height);
-        	graphics.drawLine(0,Vision.worldState.getPitch().getTopBuffer(),width,Vision.worldState.getPitch().getTopBuffer());
-        	graphics.drawLine(0,Vision.worldState.getPitch().getBottomBuffer(),width,Vision.worldState.getPitch().getBottomBuffer());
+        	graphics.drawLine(
+        	    Vision.worldState.getPitch().getLeftBuffer(),
+        	    0,
+        	    Vision.worldState.getPitch().getLeftBuffer(),
+        	    height
+        	);
+        	graphics.drawLine(
+        	    Vision.worldState.getPitch().getRightBuffer(),
+        	    0,
+        	    Vision.worldState.getPitch().getRightBuffer(),
+        	    height
+        	);
+        	graphics.drawLine(
+        	    0,
+        	    Vision.worldState.getPitch().getTopBuffer(),
+        	    width,Vision.worldState.getPitch().getTopBuffer()
+        	);
+        	graphics.drawLine(
+        	    0,
+        	    Vision.worldState.getPitch().getBottomBuffer(),
+        	    width,Vision.worldState.getPitch().getBottomBuffer()
+        	);
             return image;
         } else {
             return image;
