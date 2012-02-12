@@ -211,6 +211,23 @@ public class Thresholding {
 					}*/
 				}
 			}
+			
+			if (ballCount == 0){
+			    ballCount++;
+			}
+			if (blueCount == 0){
+			    blueCount++;
+			}
+			if (yellowCount == 0){
+			    yellowCount++;
+			}
+			if (ourGreyCount == 0){
+			    ourGreyCount++;
+			}
+			if (opponentGreyCount == 0){
+			    opponentGreyCount++;
+			}
+			
 	    	//Vision.logger.debug("End Iteration");
 			ballCentroid.setLocation(ballCentroid.getX()/ballCount, ballCentroid.getY()/ballCount);
 			yellowCentroid.setLocation(yellowCentroid.getX()/yellowCount, yellowCentroid.getY()/yellowCount);
