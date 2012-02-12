@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.Point;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.InitialLocation;
+import uk.ac.ed.inf.sdp2012.group7.vision.EuclideanDistance;
 import org.junit.Test;
 
 public class VisionTest {
@@ -22,8 +23,11 @@ public class VisionTest {
 	}
 
 	@Test
-	public void testMarkObjects() {
-		assertTrue(true);
+	public void testEuclideanDistance() {
+		EuclideanDistance e = new EuclideanDistance();
+		double d = e.getDistance(new Point(0,0),new Point(3,4));
+		assertTrue(Math.abs(d-5) < 0.0001);
+		System.out.println("Euclidean Distance Passed");
 	}
 	
 	@Test
@@ -50,7 +54,6 @@ public class VisionTest {
 		double O = v.getOrientation(new Point(0,0),new Point(1,1));
 		assertTrue(Math.abs(O-(Math.PI/4.0)) < 0.001);
 		O = v.getOrientation(new Point(0,0),new Point(-1,1));
-		System.out.println(O);
 		assertTrue(Math.abs(O-(7.0*Math.PI/4.0)) < 0.001);
 		System.out.println("Angle Calculation Passed");
 	}

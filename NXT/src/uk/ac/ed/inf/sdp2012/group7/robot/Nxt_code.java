@@ -24,7 +24,7 @@ public class Nxt_code implements Runnable {
 	private static volatile boolean kicking = false;
 
 	// constants for the pilot class 
-	private static final float TRACK_WIDTH = (float) 13.0;
+	private static final float TRACK_WIDTH = (float) 13.7;
 	private static final float WHEEL_DIAMETER = (float) 8.16;
 
 	// NXT Opcodes

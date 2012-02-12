@@ -49,10 +49,6 @@ public class ControlGUI implements ChangeListener {
 	/* The main frame holding the Control GUI. */
 	private JFrame frame;
 	
-	/* Load/Save buttons. */
-	private JButton saveButton;
-	private JButton loadButton;
-	
 	/* Kick and drive buttons - for M1 but can change function as neccessary*/
 	private JButton kickButton;
 	private JButton driveButton;
@@ -68,6 +64,10 @@ public class ControlGUI implements ChangeListener {
 	private JButton penaltyAttackButton;
 	private JButton penaltyDefendButton;
 	private JCheckBox returnToGame;
+	
+	/*Pause and Resume Buttons*/
+	private JButton pauseButton;
+	private JButton resumeButton;
 	
 	/* Tabs. */
 	private JTabbedPane tabPane;
@@ -436,119 +436,13 @@ public class ControlGUI implements ChangeListener {
 		
 		defaultPanel.add(direction_panel);
 		
-		/* Save/load buttons */
-		JPanel saveLoadPanel = new JPanel();
-		
-		saveButton = new JButton("Save Thresholds");
-		saveButton.addActionListener(new ActionListener() {
-			
-			/* Attempt to write all of the current thresholds to a file with a name 
-			 * based on the currently selected pitch. */
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				int pitchNum = (pitch_0.isSelected()) ? 0 : 1;
-				
-				int result = JOptionPane.showConfirmDialog(frame, 
-								"Are you sure you want to save current constants for pitch " + pitchNum + "?");
-				
-				if (result == JOptionPane.NO_OPTION || result == JOptionPane.CANCEL_OPTION) return;
-				
-				try {
-					FileWriter writer = new FileWriter(new File("constants/pitch" + pitchNum));
-					
-					/* Ball */
-					writer.write(String.valueOf(ball_r.getValue()) + "\n");
-					writer.write(String.valueOf(ball_r.getUpperValue()) + "\n");
-					writer.write(String.valueOf(ball_g.getValue()) + "\n");
-					writer.write(String.valueOf(ball_g.getUpperValue()) + "\n");
-					writer.write(String.valueOf(ball_b.getValue()) + "\n");
-					writer.write(String.valueOf(ball_b.getUpperValue()) + "\n");
-					
-					/* Blue */
-					writer.write(String.valueOf(blue_r.getValue()) + "\n");
-					writer.write(String.valueOf(blue_r.getUpperValue()) + "\n");
-					writer.write(String.valueOf(blue_g.getValue()) + "\n");
-					writer.write(String.valueOf(blue_g.getUpperValue()) + "\n");
-					writer.write(String.valueOf(blue_b.getValue()) + "\n");
-					writer.write(String.valueOf(blue_b.getUpperValue()) + "\n");
-					
-					/* Yellow */
-					writer.write(String.valueOf(yellow_r.getValue()) + "\n");
-					writer.write(String.valueOf(yellow_r.getUpperValue()) + "\n");
-					writer.write(String.valueOf(yellow_g.getValue()) + "\n");
-					writer.write(String.valueOf(yellow_g.getUpperValue()) + "\n");
-					writer.write(String.valueOf(yellow_b.getValue()) + "\n");
-					writer.write(String.valueOf(yellow_b.getUpperValue()) + "\n");;
-					
-					/* Grey */
-					writer.write(String.valueOf(grey_r.getValue()) + "\n");
-					writer.write(String.valueOf(grey_r.getUpperValue()) + "\n");
-					writer.write(String.valueOf(grey_g.getValue()) + "\n");
-					writer.write(String.valueOf(grey_g.getUpperValue()) + "\n");
-					writer.write(String.valueOf(grey_b.getValue()) + "\n");
-					writer.write(String.valueOf(grey_b.getUpperValue()) + "\n");
-					
-					/* Green */
-					writer.write(String.valueOf(green_r.getValue()) + "\n");
-					writer.write(String.valueOf(green_r.getUpperValue()) + "\n");
-					writer.write(String.valueOf(green_g.getValue()) + "\n");
-					writer.write(String.valueOf(green_g.getUpperValue()) + "\n");
-					writer.write(String.valueOf(green_b.getValue()) + "\n");
-					writer.write(String.valueOf(green_b.getUpperValue()) + "\n");
-					
-					/* We need to re-write the pitch dimensions. 
-					 * TODO: This currently means that cross-saving values
-					 * is basically unsupported as they will overwrite the
-					 * pitch dimensions incorrectly.*/
-					writer.write(String.valueOf(Vision.worldState.getPitch().getTopBuffer()) + "\n");
-					writer.write(String.valueOf(Vision.worldState.getPitch().getBottomBuffer()) + "\n");
-					writer.write(String.valueOf(Vision.worldState.getPitch().getLeftBuffer()) + "\n");
-					writer.write(String.valueOf(Vision.worldState.getPitch().getRightBuffer()) + "\n");
-					
-					writer.flush();
-					writer.close();
-					
-					System.out.println("Wrote successfully!");
-					
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				
-			}
-		});
-		
-		saveLoadPanel.add(saveButton);
-		
-		loadButton = new JButton("Load Thresholds");
-		loadButton.addActionListener(new ActionListener() {
-			
-			/* Override the current threshold settings from those set in
-			 * the correct constants file for the current pitch. */
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				int pitchNum = (pitch_0.isSelected()) ? 0 : 1;
-				
-				int result = JOptionPane.showConfirmDialog(frame, 
-								"Are you sure you want to load pre-saved constants for pitch " + pitchNum + "?");
-				
-				if (result == JOptionPane.NO_OPTION || result == JOptionPane.CANCEL_OPTION) return;
-				
-				reloadSliderDefaults();
-				
-			}
-		});
-		
-		saveLoadPanel.add(loadButton);
-		
-		defaultPanel.add(saveLoadPanel);
+
 		
 		/*
 		The locate button is pressed to start the locating of the objects
 		and pitch boundaries
 		*/
-		
+		/*
 		JPanel locatePanel = new JPanel();
 		
 		locateButton = new JButton("Locate Objects");
@@ -566,7 +460,7 @@ public class ControlGUI implements ChangeListener {
 		    
 		
 		defaultPanel.add(locatePanel);
-		
+		*/
 		/*
 		Buttons for starting and stopping the match, before starting you have
 		to have done locate.  Stop will be used for breaks in play etc.
@@ -597,6 +491,34 @@ public class ControlGUI implements ChangeListener {
 		});
 		
 		defaultPanel.add(startStopPanel);
+		
+		/* Pausing and Resuming play */
+		
+		JPanel pauseResumePanel = new JPanel();
+		
+		pauseButton = new JButton ("Pause Match");
+		resumeButton = new JButton ("Resume Match");
+		
+		pauseResumePanel.add(pauseButton);
+		pauseResumePanel.add(resumeButton);
+		
+		pauseButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        System.out.println("Play paused");
+		    }
+		});
+		
+		resumeButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        System.out.println("Play paused");
+		    }
+		});
+		
+		defaultPanel.add(pauseResumePanel);
 		
 		/*
 		Penalty Mode buttons.  Stop button must be pressed first

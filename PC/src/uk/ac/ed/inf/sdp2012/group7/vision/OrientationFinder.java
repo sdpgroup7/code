@@ -10,6 +10,9 @@ public class OrientationFinder{
     public OrientationFinder(ThresholdsState thresholdsState){
         this.thresholdsState = thresholdsState;
     }
+    public OrientationFinder() {
+    	super();
+    }
 
     /**
      * Finds the orientation of a robot, given a list of the points contained within it's
@@ -43,11 +46,18 @@ public class OrientationFinder{
 
         return angle;
     }
-    public float findOrientation(int robotX, int robotY, int greyX, int greyY){
+    public double findOrientation(int robotX, int robotY, int greyX, int greyY){
     	
     	double ans = Math.atan2(robotY - greyY, robotX - greyX);
-    	ans = (( (ans * (180/Math.PI)) + 90) + 360) % 360;
-    	return (float) ans; 
+    	//ans = (( (ans * (180/Math.PI)) + 90) + 360) % 360;
+    	ans = Math.toDegrees(ans);
+    /*	if(ans < 0){
+    		ans = -ans;
+    	} else {
+    		ans = (2.0*Math.PI) - ans;
+    	}
+    	ans = (ans + (3*Math.PI/2.0)) % (2*Math.PI); */
+    	return  ans; 
     }
     public float findOrientation(ArrayList<Integer> xpoints, ArrayList<Integer> ypoints,
             int meanX, int meanY, BufferedImage image, boolean showImage) throws NoAngleException {

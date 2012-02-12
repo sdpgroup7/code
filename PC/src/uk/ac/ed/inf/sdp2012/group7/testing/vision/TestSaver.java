@@ -31,11 +31,11 @@ public class TestSaver {
         	double yellowO;
         	
         	if(Vision.worldState.getColor() == Color.blue){
-        		blueO = Vision.worldState.getOurRobot().getVelocity().getDirection();
-        		yellowO = Vision.worldState.getOpponentsRobot().getVelocity().getDirection();
+        		blueO = Vision.worldState.getOurRobot().getAngle();
+        		yellowO = Vision.worldState.getOpponentsRobot().getAngle();
         	} else {
-        		yellowO = Vision.worldState.getOurRobot().getVelocity().getDirection();
-         		blueO = Vision.worldState.getOpponentsRobot().getVelocity().getDirection();
+        		yellowO = Vision.worldState.getOurRobot().getAngle();
+         		blueO = Vision.worldState.getOpponentsRobot().getAngle();
         	}
         	
         	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
