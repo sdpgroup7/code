@@ -20,7 +20,9 @@ public class MovingObject {
     	if(positions.size() > 5){
     		positions.remove(0);
     	}
-    	updateVelocity();
+    	if(positions.size() == 5){ 
+    	    updateVelocity();
+    	}
     }
     
     public void updateVelocity(){
