@@ -3,9 +3,6 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -13,7 +10,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
@@ -22,9 +18,7 @@ import javax.swing.event.ChangeListener;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
-import uk.ac.ed.inf.sdp2012.group7.vision.ui.RangeSlider;
 
 /**
  * Creates and maintains the swing-based Control GUI, which 
@@ -48,10 +42,6 @@ public class ControlGUI implements ChangeListener {
 	
 	/* The main frame holding the Control GUI. */
 	private JFrame frame;
-	
-	/* Load/Save buttons. */
-	private JButton saveButton;
-	private JButton loadButton;
 	
 	/* Kick and drive buttons - for M1 but can change function as neccessary*/
 	private JButton kickButton;
@@ -273,7 +263,7 @@ public class ControlGUI implements ChangeListener {
 		
 		this.thresholdsState = thresholdsState;
 		this.worldState = worldState;
-		strat = new Strategy(worldState);
+		strat = new Strategy();
 	}
 	
 	/**
@@ -440,119 +430,13 @@ public class ControlGUI implements ChangeListener {
 		
 		defaultPanel.add(direction_panel);
 		
-		/* Save/load buttons */
-		JPanel saveLoadPanel = new JPanel();
-		
-		saveButton = new JButton("Save Thresholds");
-		saveButton.addActionListener(new ActionListener() {
-			
-			/* Attempt to write all of the current thresholds to a file with a name 
-			 * based on the currently selected pitch. */
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				int pitchNum = (pitch_0.isSelected()) ? 0 : 1;
-				
-				int result = JOptionPane.showConfirmDialog(frame, 
-								"Are you sure you want to save current constants for pitch " + pitchNum + "?");
-				
-				if (result == JOptionPane.NO_OPTION || result == JOptionPane.CANCEL_OPTION) return;
-				
-				try {
-					FileWriter writer = new FileWriter(new File("constants/pitch" + pitchNum));
-					
-					/* Ball */
-					writer.write(String.valueOf(ball_r.getValue()) + "\n");
-					writer.write(String.valueOf(ball_r.getUpperValue()) + "\n");
-					writer.write(String.valueOf(ball_g.getValue()) + "\n");
-					writer.write(String.valueOf(ball_g.getUpperValue()) + "\n");
-					writer.write(String.valueOf(ball_b.getValue()) + "\n");
-					writer.write(String.valueOf(ball_b.getUpperValue()) + "\n");
-					
-					/* Blue */
-					writer.write(String.valueOf(blue_r.getValue()) + "\n");
-					writer.write(String.valueOf(blue_r.getUpperValue()) + "\n");
-					writer.write(String.valueOf(blue_g.getValue()) + "\n");
-					writer.write(String.valueOf(blue_g.getUpperValue()) + "\n");
-					writer.write(String.valueOf(blue_b.getValue()) + "\n");
-					writer.write(String.valueOf(blue_b.getUpperValue()) + "\n");
-					
-					/* Yellow */
-					writer.write(String.valueOf(yellow_r.getValue()) + "\n");
-					writer.write(String.valueOf(yellow_r.getUpperValue()) + "\n");
-					writer.write(String.valueOf(yellow_g.getValue()) + "\n");
-					writer.write(String.valueOf(yellow_g.getUpperValue()) + "\n");
-					writer.write(String.valueOf(yellow_b.getValue()) + "\n");
-					writer.write(String.valueOf(yellow_b.getUpperValue()) + "\n");;
-					
-					/* Grey */
-					writer.write(String.valueOf(grey_r.getValue()) + "\n");
-					writer.write(String.valueOf(grey_r.getUpperValue()) + "\n");
-					writer.write(String.valueOf(grey_g.getValue()) + "\n");
-					writer.write(String.valueOf(grey_g.getUpperValue()) + "\n");
-					writer.write(String.valueOf(grey_b.getValue()) + "\n");
-					writer.write(String.valueOf(grey_b.getUpperValue()) + "\n");
-					
-					/* Green */
-					writer.write(String.valueOf(green_r.getValue()) + "\n");
-					writer.write(String.valueOf(green_r.getUpperValue()) + "\n");
-					writer.write(String.valueOf(green_g.getValue()) + "\n");
-					writer.write(String.valueOf(green_g.getUpperValue()) + "\n");
-					writer.write(String.valueOf(green_b.getValue()) + "\n");
-					writer.write(String.valueOf(green_b.getUpperValue()) + "\n");
-					
-					/* We need to re-write the pitch dimensions. 
-					 * TODO: This currently means that cross-saving values
-					 * is basically unsupported as they will overwrite the
-					 * pitch dimensions incorrectly.*/
-					writer.write(String.valueOf(Vision.worldState.getPitch().getTopBuffer()) + "\n");
-					writer.write(String.valueOf(Vision.worldState.getPitch().getBottomBuffer()) + "\n");
-					writer.write(String.valueOf(Vision.worldState.getPitch().getLeftBuffer()) + "\n");
-					writer.write(String.valueOf(Vision.worldState.getPitch().getRightBuffer()) + "\n");
-					
-					writer.flush();
-					writer.close();
-					
-					System.out.println("Wrote successfully!");
-					
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				
-			}
-		});
-		
-		//saveLoadPanel.add(saveButton);
-		
-		loadButton = new JButton("Load Thresholds");
-		loadButton.addActionListener(new ActionListener() {
-			
-			/* Override the current threshold settings from those set in
-			 * the correct constants file for the current pitch. */
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				int pitchNum = (pitch_0.isSelected()) ? 0 : 1;
-				
-				int result = JOptionPane.showConfirmDialog(frame, 
-								"Are you sure you want to load pre-saved constants for pitch " + pitchNum + "?");
-				
-				if (result == JOptionPane.NO_OPTION || result == JOptionPane.CANCEL_OPTION) return;
-				
-				reloadSliderDefaults();
-				
-			}
-		});
-		
-		//saveLoadPanel.add(loadButton);
-		
-		//defaultPanel.add(saveLoadPanel);
+
 		
 		/*
 		The locate button is pressed to start the locating of the objects
 		and pitch boundaries
 		*/
-		
+		/*
 		JPanel locatePanel = new JPanel();
 		
 		locateButton = new JButton("Locate Objects");
@@ -569,8 +453,8 @@ public class ControlGUI implements ChangeListener {
 		});
 		    
 		
-		//defaultPanel.add(locatePanel);
-		
+		defaultPanel.add(locatePanel);
+		*/
 		/*
 		Buttons for starting and stopping the match, before starting you have
 		to have done locate.  Stop will be used for breaks in play etc.

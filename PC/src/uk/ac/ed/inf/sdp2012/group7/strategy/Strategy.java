@@ -6,11 +6,11 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ed.inf.sdp2012.group7.control.RobotControl;
 import uk.ac.ed.inf.sdp2012.group7.control.Tools;
-import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
+import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 
 /**
  * 
- * TODO: rewrite - also WorldState doesn't need to be passed anymore, it's publicly accessed from Vision
+ * Milestones so far
  *
  */
 public class Strategy {
@@ -21,7 +21,7 @@ public class Strategy {
 		if (kick) {
 			controller.kick();
 		} else {
-			controller.moveForward(135);
+			controller.moveForward(60);
 		}
 	}
 
@@ -40,10 +40,8 @@ public class Strategy {
 
 	private RobotControl controller;
 
-	private final WorldState state;
 
-	public Strategy(WorldState ws) {
-		state = ws;
+	public Strategy() {
 		controller = new RobotControl();
 		controller.startCommunications();
 		navigateThread.start();
@@ -66,7 +64,7 @@ public class Strategy {
 		 * The vision can't get angles at the moment and I wanted to test it
 		 */
 		private void setAngleHack() {
-			Point oldPoint = state.getOurRobot().getPosition().getCentre();
+			Point oldPoint = Vision.worldState.getOurRobot().getPosition().getCentre();
 			logger.debug("Old point: " + oldPoint);
 			controller.moveForward(10);
 			try {
@@ -74,7 +72,7 @@ public class Strategy {
 			} catch (InterruptedException e) {
 				logger.error(e);
 			}
-			Point newPoint = state.getOurRobot().getPosition().getCentre();
+			Point newPoint = Vision.worldState.getOurRobot().getPosition().getCentre();
 			logger.debug("New point: " + newPoint);
 			angle = Math.atan2(newPoint.y-oldPoint.y, newPoint.x-oldPoint.x);
 			ratio = 10/Point.distance(newPoint.x, newPoint.y, oldPoint.x, oldPoint.y);
@@ -88,9 +86,9 @@ public class Strategy {
 				while (runFlag) {
 					
 					setAngleHack();
-					Point robot = state.getOurRobot().getPosition().getCentre();
-					Point ball = state.getBall().getPosition().getCentre();
-					
+					Point robot = Vision.worldState.getOurRobot().getPosition().getCentre();
+					Point ball = Vision.worldState.getBall().getPosition().getCentre();
+
 					//logger.debug("Vision angle: " + Math.toDegrees(state.getOurRobot().getAngle()));
 					double targetangle = Tools.getAngleToFacePoint(robot, angle, ball);
 					/* should we drive to the robot? */

@@ -50,12 +50,13 @@ public class OrientationFinder{
     	
     	double ans = Math.atan2(robotY - greyY, robotX - greyX);
     	//ans = (( (ans * (180/Math.PI)) + 90) + 360) % 360;
-    	if(ans < 0){
+    	ans = Math.toDegrees(ans);
+    /*	if(ans < 0){
     		ans = -ans;
-    		} else {
+    	} else {
     		ans = (2.0*Math.PI) - ans;
-    		}
-    		ans = (ans + (3*Math.PI/2.0)) % (2*Math.PI); 
+    	}
+    	ans = (ans + (3*Math.PI/2.0)) % (2*Math.PI); */
     	return  ans; 
     }
     public float findOrientation(ArrayList<Integer> xpoints, ArrayList<Integer> ypoints,

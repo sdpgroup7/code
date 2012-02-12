@@ -1,7 +1,5 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 
-import java.util.ArrayList;
-
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.utils.Logger;
 
 
@@ -9,7 +7,8 @@ public class AreaMap {
 
 	private int mapWidth;
 	private int mapHeight;
-	private ArrayList<ArrayList<Node>> map;
+	//private ArrayList<ArrayList<Node>> map;
+	private Node[][] map;
 	private int startLocationX = 0;
 	private int startLocationY = 0;
 	private int goalLocationX = 0;
@@ -23,69 +22,51 @@ public class AreaMap {
 		
 		createMap();
 		log.addToLog("\tMap Created");
-		registerEdges();
 		log.addToLog("\tMap Node edges registered");
 	}
 	private void createMap() {
-		map = new ArrayList<ArrayList<Node>>();
+		map = new Node[mapWidth][mapHeight];
+		//map = new ArrayList<ArrayList<Node>>();
 		for (int x=0; x<mapWidth; x++) {
-			map.add(new ArrayList<Node>());
+			//map.add(new ArrayList<Node>());
 			for (int y=0; y<mapHeight; y++) {
-				map.get(x).add(new Node(x,y));
-			}
-		}
-	}
-
-	/**
-	 * Registers the nodes edges (connections to its neighbors).
-	 */
-	private void registerEdges() {
-		for ( int x = 0; x < mapWidth-1; x++ ) {
-			for ( int y = 0; y < mapHeight-1; y++ ) {
-				Node node = map.get(x).get(y);
-				if (!(y==0))
-					node.setNorth(map.get(x).get(y-1));
-				if (!(y==0) && !(x==mapWidth))
-					node.setNorthEast(map.get(x+1).get(y-1));
-				if (!(x==mapWidth))
-					node.setEast(map.get(x+1).get(y));
-				if (!(x==mapWidth) && !(y==mapHeight))
-					node.setSouthEast(map.get(x+1).get(y+1));
-				if (!(y==mapHeight))
-					node.setSouth(map.get(x).get(y+1));
-				if (!(x==0) && !(y==mapHeight))
-					node.setSouthWest(map.get(x-1).get(y+1));
-				if (!(x==0))
-					node.setWest(map.get(x-1).get(y));
-				if (!(x==0) && !(y==0))
-					node.setNorthWest(map.get(x-1).get(y-1));
+				//map.get(x).add(new Node(x,y));
+				map[x][y] = new Node(x,y);
 			}
 		}
 	}
 	
-	
 
-	public ArrayList<ArrayList<Node>> getNodes() {
+	public Node[][] getNodes() {
 		return map;
 	}
 	public void setObstical(int x, int y, boolean isObstical) {
-		map.get(x).get(y).setObstical(isObstical);
+		map[x][y].setObstical(isObstical);
+		//map.get(x).get(y).setObstical(isObstical);
 	}
 
 	public Node getNode(int x, int y) {
-		return map.get(x).get(y);
+		if (x<0 || x>=mapWidth || y<0 || y>=mapHeight) {
+			return null;
+		}
+		return map[x][y];
 	}
 
 	public void setStartLocation(int x, int y) {
-		map.get(startLocationX).get(startLocationY).setStart(false);
-		map.get(x).get(y).setStart(true);
+		map[startLocationX][startLocationY].setStart(false);
+		map[x][y].setStart(true);
+		//map.get(startLocationX).get(startLocationY).setStart(false);
+		//map.get(x).get(y).setStart(true);
 		startLocationX = x;
 		startLocationY = y;
 	}
 
 	public void setGoalLocation(int x, int y) {
-		map.get(goalLocationX).get(goalLocationY).setGoal(false);
-		map.get(x).get(y).setGoal(true);
+
+		map[goalLocationX][goalLocationY].setGoal(false);
+		map[x][y].setGoal(true);
+		//map.get(goalLocationX).get(goalLocationY).setGoal(false);
+		//map.get(x).get(y).setGoal(true);
 		goalLocationX = x;
 		goalLocationY = y;
 	}
@@ -99,7 +80,7 @@ public class AreaMap {
 	}
 	
 	public Node getStartNode() {
-		return map.get(startLocationX).get(startLocationY);
+		return map[startLocationX][startLocationY];
 	}
 
 	public int getGoalLocationX() {
@@ -111,7 +92,7 @@ public class AreaMap {
 	}
 	
 	public Node getGoalLocation() {
-		return map.get(goalLocationX).get(goalLocationY);
+		return map[goalLocationX][goalLocationY];
 	}
 	
 	public float getDistanceBetween(Node node1, Node node2) {
@@ -135,6 +116,5 @@ public class AreaMap {
 		goalLocationX = 0;
 		goalLocationY = 0;
 		createMap();
-		registerEdges();
 	}
 }

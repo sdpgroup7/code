@@ -2,6 +2,7 @@ package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.ArrayList;
 
 public class WorldState{
 
@@ -19,6 +20,24 @@ public class WorldState{
     MovingObject ourGrey = new MovingObject(); 
     MovingObject opponentsGrey = new MovingObject();
     
+    ArrayList<Point> bluePixels = new ArrayList<Point>();
+	ArrayList<Point> yellowPixels = new ArrayList<Point>();
+    
+	public ArrayList<Point> getBluePixels() {
+		return bluePixels;
+	}
+
+	public void setBluePixels(ArrayList<Point> bluePixels) {
+		this.bluePixels = bluePixels;
+	}
+
+	public ArrayList<Point> getYellowPixels() {
+		return yellowPixels;
+	}
+
+	public void setYellowPixels(ArrayList<Point> yellowPixels) {
+		this.yellowPixels = yellowPixels;
+	}    
     
  
     public WorldState(){
@@ -76,7 +95,7 @@ public class WorldState{
         return this.opponentsGoal;
     }
     
-    public void setOurRobot(ObjectPosition position, Vector2 velocity){
+    public void setOurRobot(ObjectPosition position, double velocity){
     	this.ourRobot.set(position,velocity);
     }
     
@@ -104,7 +123,7 @@ public class WorldState{
     	this.ourRobot.setPosition(position);
     }
     
-    public void setOpponentsRobot(ObjectPosition position, Vector2 velocity){
+    public void setOpponentsRobot(ObjectPosition position, double velocity){
     	this.opponentsRobot.set(position,velocity);
     }
     
@@ -120,7 +139,7 @@ public class WorldState{
     	this.opponentsRobot.setPosition(position);
     }
     
-    public void setBall(ObjectPosition position, Vector2 velocity){
+    public void setBall(ObjectPosition position, double velocity){
     	this.ball.set(position,velocity);
     }
     
@@ -136,7 +155,7 @@ public class WorldState{
     	this.ball.setPosition(position);
     }
     
-    public void setBallVelocity(Vector2 velocity){
+    public void setBallVelocity(double velocity){
     	this.ball.setVelocity(velocity);
     }
     

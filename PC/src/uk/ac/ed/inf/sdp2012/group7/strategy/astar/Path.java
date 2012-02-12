@@ -3,6 +3,7 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 import java.util.ArrayList;
 
 public class Path {
+	
 	// The waypoints in the path (list of coordinates making up the path)
 	private ArrayList<Node> waypoints = new ArrayList<Node>();
 	
@@ -18,7 +19,7 @@ public class Path {
 	}
 
 	/**
-	 * Get the x-coordinate for the waypoiny at the given index.
+	 * Get the x-coordinate for the waypoint at the given index.
 	 * 
 	 * @param index The index of the waypoint to get the x-coordinate of.
 	 * @return The x coordinate at the waypoint.
@@ -83,7 +84,7 @@ public class Path {
 		return points;
 	} */
 	
-	public void printPath() {
+	public void printWaypoints() {
 		for(Node node : waypoints) {
 			System.out.println("("+node.getX()+","+node.getY()+") ");
 		}

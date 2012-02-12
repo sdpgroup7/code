@@ -56,7 +56,12 @@ public class Vision {
             backgroundImage = ImageIO.read(new File("testData/.background.png"));
             Vision.logger.info("Loaded background image.");
         } catch (Exception e) {
-         Vision.logger.fatal("Failed to load backgroundImage");
+        	Vision.logger.fatal("Failed to load backgroundImage");
+        } finally {
+        	if(backgroundImage == null){
+        		Vision.logger.fatal("Background Image is null. Program ending.");
+        		//System.exit(0);
+        	}
         }
         //Vision.logger.debug("Sample debug message");
         //Vision.logger.info("Sample info message");
