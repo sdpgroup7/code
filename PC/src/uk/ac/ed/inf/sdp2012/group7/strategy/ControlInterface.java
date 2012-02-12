@@ -1,30 +1,82 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy;
 
+import java.awt.Point;
+import java.util.ArrayList;
+import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
+
 /**
- * This takes a small section of the plan from Control Management and turns it 
- * into actual commands. 
+ * This takes a small section of the plan from Control Management and turns it
+ * into actual commands.
+ * 
  * @author David Fraser -s0912336
- *
+ * 
  */
 public class ControlInterface {
-	
-	
+
+	private int lookahead;
+
+	public ControlInterface(int lookahead) {
+		this.lookahead = lookahead;
+	}
+
 	/**
-	 * Takes a small number of waypoints from Control Management 
+	 * Takes a small number of waypoints from Control Management. These are in
+	 * an ArrayList<Points>
 	 */
 	public void getNextMovement() {
-		
+
 	}
-	
+
 	public void getDistanceTravelled() {
-		
+
 	}
-	
-	public void chooseArc() {
+
+	/*
+	 * Calculates the Arc that the robot has to follow for the set of points
+	 * given using the pure pursuit algorithm
+	 */
+	public Arc chooseArc(ArrayList<Point> pointPath, double v) {
+		// The paper where this maths comes from can be found here
+		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
+
+		Point p = new Point();
+		// TODO: Ask Grid for this position
+
+		if (pointPath.size() < 5) {
+			Point h = pointPath.get(pointPath.size() - 1);
+		} else {
+			Point h = pointPath.get(this.lookahead - 1);
+		}
 		
-	}
+		double alpha = Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))
+				- v;
+
+		double d = p.distance(h);
 	
-	public void implimentArc() {
+		double xhc = d * Math.cos(alpha);
+
+		double R = (Math.pow(d, 2) / 2 * xhc);
+
+		boolean dir;
+
+		// If the arc is to the left (relative to the robot) then dir is true,
+		// else if it is going to the right then it is false
+		if (xhc >= 0) {
+			dir = false;
+		} else {
+			dir = true;
+		}
+
+		Arc arc = new Arc(R, dir);
+
+		return arc;
+
+	}
+
+	public void implimentArc(Arc path) {
+		
+		controller.
+		
 		
 	}
 
