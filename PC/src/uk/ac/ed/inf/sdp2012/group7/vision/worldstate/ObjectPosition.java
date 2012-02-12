@@ -19,9 +19,6 @@ public class ObjectPosition{
     private Point bottomRight = new Point(0,0);
     private Point centre = new Point(0,0);
     
-    public ObjectPosition(){
-        
-    }
 
     public ObjectPosition(int x, int y){
         this.centre = new Point(x,y);
