@@ -30,6 +30,10 @@ public class Thresholding {
     private Color cE;
     private Color cS;
     private Color cW;
+    private Color cNE;
+    private Color cSE;
+    private Color cSW;
+    private Color cNW;
     
 	private int GB;// green - blue
 	private int RG; // red - green
@@ -274,6 +278,26 @@ public class Thresholding {
             cN = new Color(img.getRGB(x,y-1));
         }else {
             cN = c;
+        }
+        if ((y - 1 > top) & (x - 1 > left)){
+            cNW = new Color(img.getRGB(x-1,y-1));
+        } else{
+            cNW = c;
+        }
+        if ((y - 1 > top) & (x + 1 < right)){
+            cNE = new Color(img.getRGB(x+1,y-1));
+        } else{
+            cNE = c;
+        }
+        if ((y + 1 > top) & (x - 1 > left)){
+            cSW = new Color(img.getRGB(x-1,y+1));
+        } else{
+            cSW = c;
+        }
+        if ((y + 1 > top) & (x + 1 > left)){
+            cSE = new Color(img.getRGB(x+1,y+1));
+        } else{
+            cSE = c;
         }
     }
     /**
