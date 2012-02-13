@@ -15,12 +15,12 @@ public class MainRunner {
     public static void main(String[] args){
     	Logger.getLogger("com.intel.bluetooth").setLevel(Level.WARN);
         Vision v = new Vision();
-        while(true){
+       /* while(true){
             System.out.println("Ball Velocity: " + Vision.worldState.getBall().getVelocity());
             try{
                 Thread.sleep(100);
             } catch (Exception e) {}
-        }
+        }*/
     }
 
 }

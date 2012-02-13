@@ -6,6 +6,9 @@ import java.lang.Math;
 public class EuclideanDistance {
     
     public double getDistance(Point a, Point b){
+    	a = (a == null) ? a = new Point(0,0) : a;
+    	b = (b == null) ? b = new Point(0,0) : b;
+    	
         return Math.sqrt((((a.getX()-b.getX())*(a.getX()-b.getX())) + ((a.getY()-b.getY())*(a.getY()-b.getY()))));
     }
 

@@ -22,6 +22,21 @@ public class WorldState{
     
     ArrayList<Point> bluePixels = new ArrayList<Point>();
 	ArrayList<Point> yellowPixels = new ArrayList<Point>();
+	Point ourKeyPoint = new Point();
+	Point opponentsKeyPoint = new Point();
+	
+	public Point getOurKeyPoint(){
+		return this.ourKeyPoint;
+	}
+	public Point getOpponentsKeyPoint(){
+		return this.opponentsKeyPoint;
+	} 
+	public void setOurKeyPoint(Point p){
+		ourKeyPoint = p;
+	}
+	public void setOpponentsKeyPoint(Point p){
+		opponentsKeyPoint = p;
+	}
     
 	public ArrayList<Point> getBluePixels() {
 		return bluePixels;

@@ -23,6 +23,9 @@ public class Thresholding {
 	private ArrayList<Integer> blueRobotX = new ArrayList<Integer>();
 	private ArrayList<Integer> yellowRobotY = new ArrayList<Integer>();
 	private ArrayList<Integer> blueRobotY = new ArrayList<Integer>();
+	private ArrayList<Point> ourGreenPlate = new ArrayList<Point>();
+	private ArrayList<Point> opponentGreenPlate = new ArrayList<Point>();
+	
 
     private Color c;
     /*The north, south, east and west immediate pixel's colors of c*/
@@ -88,15 +91,15 @@ public class Thresholding {
 		yellowRobotThresh[1][0] = 150;
 		yellowRobotThresh[1][1] = 190;
 		yellowRobotThresh[1][2] = 140;
-		blueRobotThresh[0][0] = 120;
-		blueRobotThresh[0][1] = 200;
-		blueRobotThresh[0][2] = 120;
+		blueRobotThresh[0][0] = 90;
+		blueRobotThresh[0][1] = 160;
+		blueRobotThresh[0][2] = 90;
 		blueRobotThresh[1][0] = 130;
 		blueRobotThresh[1][1] = 140;
 		blueRobotThresh[1][2] = 90;
 
 	
-		greenPlatesThresh[0][0] = 160;
+		greenPlatesThresh[0][0] = 120;
 		greenPlatesThresh[1][0] = 140;
 
     	
@@ -184,6 +187,12 @@ public class Thresholding {
 					}
 					else if (isGreen(c,GB,RG))  {
 						img.setRGB(i,j, Color.green.getRGB()); // GreenPlates 
+						if (ed.getDistance(Vision.worldState.getOurRobot().getPosition().getCentre(), new Point(i,j)) < 25) {
+							ourGreenPlate.add(new Point(i,j));
+						}
+						else {
+							opponentGreenPlate.add(new Point(i,j));
+						}
 
 					}
 					else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 15) && (ed.getDistance(Vision.worldState.getOurRobot().getPosition().getCentre(), new Point(i,j)) < 22.5) )  {
@@ -238,6 +247,9 @@ public class Thresholding {
 			ourGreyCentroid.setLocation(ourGreyCentroid.getX()/ourGreyCount, ourGreyCentroid.getY()/ourGreyCount);
 			opponentGreyCentroid.setLocation(opponentGreyCentroid.getX()/opponentGreyCount, opponentGreyCentroid.getY()/opponentGreyCount);
 			
+			
+			Vision.worldState.setOurKeyPoint(findKeyPoint(findTheFourPoints(ourGreenPlate),Vision.worldState.getOurRobot().getPosition().getCentre()));
+			
 			if (Vision.worldState.getColor() == Color.blue) {
 			    Vision.worldState.setOurRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
 			    Vision.worldState.setOpponentsRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
@@ -257,7 +269,7 @@ public class Thresholding {
 			Vision.worldState.setBluePixels(bluePixels);
 			Vision.worldState.setYellowPixels(yellowPixels);
 			
-			
+			ourGreenPlate.clear();
     	}
     		
     	return img;
@@ -352,7 +364,7 @@ public class Thresholding {
     }
     
     public boolean isGreen(Color c, int GB, int RG){
-        return ( GB > 45 && RG > 45 && c.getGreen() > greenPlatesThresh[pitch][0]);
+        return ( GB > 70 && RG > 70 && c.getGreen() > greenPlatesThresh[pitch][0]);
     }
     
     public boolean isGrey(Color c){
@@ -383,5 +395,78 @@ public class Thresholding {
         return yellowRobotY;
     }
 	    
-	    
+    public Point[] findTheFourPoints(ArrayList<Point> points){
+    	Point[] ans = new Point[]{new Point(0,0),new Point(0,0),new Point(0,0),new Point(0,0)}; 
+    	/*
+    	 * ans[0] = xminP,
+    	 * ans[1] = xmaxP,
+    	 * ans[2] = yminP,
+    	 * ans[3] = ymaxP. 
+    	 */
+    	int minX = Integer.MAX_VALUE;
+    	int maxX = Integer.MIN_VALUE;
+    	int minY = Integer.MAX_VALUE;
+    	int maxY = Integer.MIN_VALUE;
+    	
+    	for (int i = 0; i < points.size(); i++) {
+			if(points.get(i).x < minX){
+				ans[0] = points.get(i);
+				minX = points.get(i).x;
+			}
+			if(points.get(i).x > maxX){
+				ans[1] = points.get(i);
+				maxX = points.get(i).x;
+			}
+			if(points.get(i).y < minY){
+				ans[2] = points.get(i);
+				minY = points.get(i).y;
+			}
+			if(points.get(i).y > maxY){
+				ans[3] = points.get(i);
+				maxY = points.get(i).y;
+			}
+		}
+    	/*for (int i = 0; i < ans.length; i++) {
+			System.err.println(i+" "+ans[i]);
+		}*/
+    	
+    	return ans;
+    }
+	public Point findKeyPoint(Point[] points, Point cent){
+		/*
+		double one = ed.getDistance(points[0], cent);
+		double two = ed.getDistance(points[1], cent);
+		double three = ed.getDistance(points[2], cent);
+		double four = ed.getDistance(points[3], cent);
+		
+		double min = Math.min(Math.min(Math.min(one, two), three), four);
+		
+		double nextMin = Double.MAX_VALUE;
+		 */
+		
+		
+		
+		Point ans = new Point();
+		double firstMin = Integer.MAX_VALUE;
+		double secondMin = Integer.MAX_VALUE;
+		Point firstMinP = new Point(0,0);
+		Point secondMinP = new Point(0,0);
+
+		for (int i = 0; i < points.length; i++) {
+			if(ed.getDistance(points[i], cent) < firstMin){
+				firstMinP = points[i];
+				firstMin = ed.getDistance(points[i], cent);
+			}
+		}
+		for (int i = 0; i < points.length; i++) {
+			if( ed.getDistance(points[i], cent) > ed.getDistance(firstMinP, cent) && (secondMin > firstMin)){
+				secondMinP = points[i];
+				secondMin =  ed.getDistance(points[i], cent);
+			}
+		}
+		//System.err.println("First point"+ firstMinP.x+","+firstMinP.y);
+		//System.err.println("Second point"+ secondMinP.x+","+secondMinP.y);
+		ans.setLocation( (firstMinP.x + secondMinP.x)/2, (firstMinP.y + secondMinP.y)/2);
+		return ans;
+	}
 }

@@ -49,7 +49,7 @@ public class FeedProcessor{
             Graphics imageGraphics = image.getGraphics();
             calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
     	} else {
-    		image = removeBackground(image,Vision.backgroundImage);
+    		//image = removeBackground(image,Vision.backgroundImage);
     		image = initialLocation.markImage(image);
             Graphics frameGraphics = label.getGraphics();
             Graphics imageGraphics = doThresh.getThresh(
@@ -73,10 +73,11 @@ public class FeedProcessor{
     }
     public void calculateAngle(){
     	double ourAngle = findAngle.findOrientation(
+    		Vision.worldState.getOurKeyPoint().x, 
+    	    Vision.worldState.getOurKeyPoint().y,
     	    Vision.worldState.getOurRobot().getPosition().getCentre().x,
-    	    Vision.worldState.getOurRobot().getPosition().getCentre().y,
-    	    Vision.worldState.getOurGrey().getPosition().getCentre().x, 
-    	    Vision.worldState.getOurGrey().getPosition().getCentre().y
+    	    Vision.worldState.getOurRobot().getPosition().getCentre().y
+    	   
     	);
     	double opponentAngle = findAngle.findOrientation(
     	    Vision.worldState.getOpponentsRobot().getPosition().getCentre().x,
@@ -108,9 +109,9 @@ public class FeedProcessor{
             imageGraphics.drawOval(yellow.x-15, yellow.y-15, 30,30);
             imageGraphics.setColor(Color.white);
             imageGraphics.setColor(Color.white);
-            imageGraphics.drawLine(Vision.worldState.getOurGrey().getPosition().getCentre().x,Vision.worldState.getOurGrey().getPosition().getCentre().y,Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y);
-            imageGraphics.drawLine(Vision.worldState.getOpponentsGrey().getPosition().getCentre().x,Vision.worldState.getOpponentsGrey().getPosition().getCentre().y,Vision.worldState.getOpponentsRobot().getPosition().getCentre().x,Vision.worldState.getOpponentsRobot().getPosition().getCentre().y);
-
+            //imageGraphics.drawLine(Vision.worldState.getOurGrey().getPosition().getCentre().x,Vision.worldState.getOurGrey().getPosition().getCentre().y,Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y);
+            //imageGraphics.drawLine(Vision.worldState.getOpponentsGrey().getPosition().getCentre().x,Vision.worldState.getOpponentsGrey().getPosition().getCentre().y,Vision.worldState.getOpponentsRobot().getPosition().getCentre().x,Vision.worldState.getOpponentsRobot().getPosition().getCentre().y);
+            imageGraphics.drawLine(Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y, Vision.worldState.getOurKeyPoint().x,Vision.worldState.getOurKeyPoint().y);
             //could the above line be shorter with the current worldState state?
     }
 
