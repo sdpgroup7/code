@@ -41,16 +41,24 @@ public class WorldState{
     
  
     public WorldState(){
-    	
+    	this(Color.blue,0);
     }
     
     public WorldState(Color c, int room) {
-    	this.ourColor = c;
     	this.room = room;
+    	if(room == 0){
+    		pitch = new Pitch(	new Point(40,104),
+    							new Point(600,98),
+    							new Point(40,394),
+    							new Point(607,384));
+    		pitch.setBuffers(86,612,402,24);
+    	} else {
+    		//TODO: Add the constants for pitch 2.
+    	}
     }
     
     public void setRoom(int room){
-    	this.room = room;
+
     }
     
     public int getRoom(){
@@ -160,10 +168,20 @@ public class WorldState{
     }
     
     public void setPitch(Pitch pitch){
+    	System.out.println("PITCH: \n" + 
+				pitch.getTopLeft() + "\n" + 
+				pitch.getTopRight() + "\n" + 
+				pitch.getBottomRight() + "\n" + 
+				pitch.getBottomLeft());
     	this.pitch = pitch;
     }
     
     public void setPitchBuffers(int top, int right, int bottom, int left){
+    	System.out.println("BUFFERS: \n" + 
+    							Integer.toString(top) + "\n" + 
+    							Integer.toString(right) + "\n" + 
+    							Integer.toString(bottom) + "\n" + 
+    							Integer.toString(left));
     	this.pitch.setBuffers(top, right, bottom, left);
     }
     
