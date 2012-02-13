@@ -236,6 +236,16 @@ public class Thresholding {
 			ourGreyCentroid.setLocation(ourGreyCentroid.getX()/ourGreyCount, ourGreyCentroid.getY()/ourGreyCount);
 			opponentGreyCentroid.setLocation(opponentGreyCentroid.getX()/opponentGreyCount, opponentGreyCentroid.getY()/opponentGreyCount);
 			
+            /*
+            Idea is if centroid moves too much in one frame then set it at the previous location.  Doesn't seem to work
+            not sure why needs some investigating.  This should work because it can reacquire the robot centres automatically
+            this time.  I don't have the time to test this till tuesday though.  But in general the detection should be better
+            
+			if (ed.getDistance(yellowCentroid,pastYellCent) > 25) {
+			    yellowCentroid.setLocation(pastYellCent.getX(),pastYellCent.getY());
+			}
+			*/
+			
 			if (Vision.worldState.getColor() == Color.blue) {
 			    Vision.worldState.setOurRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
 			    Vision.worldState.setOpponentsRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
