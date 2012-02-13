@@ -27,7 +27,6 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     private boolean mouseClick = false;
     private ControlGUI thresholdGUI;
     private VisionFeed visionFeed;
-    private boolean buffersSet = false;
     //private JFrame windowFrame;
     //The below variables are for the testing system
     private ArrayList<Point> points = new ArrayList<Point>();
@@ -166,7 +165,6 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
 				    getClickPoint("Click the left bulge").x
 				);
 
-		buffersSet = true;
 		
 	}
     /*
@@ -239,7 +237,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         int width = 640;
         int height = 480;
         Graphics2D graphics = image.createGraphics();
-        if(buffersSet){
+        if(Vision.worldState.getPitch().getBuffersSet()){
         	graphics.drawLine(
         	    Vision.worldState.getPitch().getLeftBuffer(),
         	    0,

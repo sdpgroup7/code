@@ -29,14 +29,12 @@ public class Thresholding {
 
     private Color c;
     /*The north, south, east and west immediate pixel's colors of c*/
-    private Color cN;
-    private Color cE;
     private Color cS;
-    private Color cW;
-    private Color cNE;
-    private Color cSE;
+    private Color cE;
+    private Color cEN;
+    private Color cEE;
+    private Color cSS;
     private Color cSW;
-    private Color cNW;
     
 	private int GB;// green - blue
 	private int RG; // red - green
@@ -164,7 +162,7 @@ public class Thresholding {
 					}
 					else if (isYellow(c)) {
 					    setCs(i,j,right,left,top,bottom, img);
-					    if (isYellow(cN) && isYellow(cE) && isYellow(cS) && isYellow(cW)){
+					    if (isYellow(cS) && isYellow(cE) && isYellow(cEE) && isYellow(cEN) && isYellow(cSS) && isYellow(cSW)){
 						    img.setRGB(i, j, Color.yellow.getRGB()); // Yellow robot
 						    yellowRobotX.add(i);
 						    yellowRobotY.add(j);
@@ -175,7 +173,7 @@ public class Thresholding {
 					}
 					else if (isBlue(c)){
 					    setCs(i,j,right,left,top,bottom, img);
-					    if (isBlue(cN) && isBlue(cE) && isBlue(cS) && isBlue(cW)){
+					    if (isBlue(cS) && isBlue(cE) && isBlue(cEE) && isBlue(cEN) && isBlue(cSS) && isBlue(cSW)){
 						    img.setRGB(i, j, Color.blue.getRGB()); // Blue robot 
 						    blueRobotX.add(i);
 						    blueRobotY.add(j);
@@ -247,9 +245,19 @@ public class Thresholding {
 			ourGreyCentroid.setLocation(ourGreyCentroid.getX()/ourGreyCount, ourGreyCentroid.getY()/ourGreyCount);
 			opponentGreyCentroid.setLocation(opponentGreyCentroid.getX()/opponentGreyCount, opponentGreyCentroid.getY()/opponentGreyCount);
 			
+
 			
 			Vision.worldState.setOurKeyPoint(findKeyPoint(findTheFourPoints(ourGreenPlate),Vision.worldState.getOurRobot().getPosition().getCentre()));
-			
+
+            /*
+            Idea is if centroid moves too much in one frame then set it at the previous location.  Doesn't seem to work
+            not sure why needs some investigating.  This should work because it can reacquire the robot centres automatically
+            this time.  I don't have the time to test this till tuesday though.  But in general the detection should be better
+            
+			if (ed.getDistance(yellowCentroid,pastYellCent) > 25) {
+			    yellowCentroid.setLocation(pastYellCent.getX(),pastYellCent.getY());
+			}
+			*/	
 			if (Vision.worldState.getColor() == Color.blue) {
 			    Vision.worldState.setOurRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
 			    Vision.worldState.setOpponentsRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
@@ -298,41 +306,32 @@ public class Thresholding {
         }else {
             cE = c;
         }
-        if (x - 1 > left){
-            cW = new Color(img.getRGB(x-1,y));
-        }else {
-            cW = c;
-        }
         if (y + 1 < bottom){
             cS = new Color(img.getRGB(x,y+1));
         }else {
             cS = c;
         }
-        if (y - 1 > top){
-            cN = new Color(img.getRGB(x,y-1));
+        if ((x + 1 < right) && (y - 1 > top)){
+            cEN = new Color(img.getRGB(x+1,y-1));
         }else {
-            cN = c;
+            cEN = c;
         }
-        if ((y - 1 > top) & (x - 1 > left)){
-            cNW = new Color(img.getRGB(x-1,y-1));
-        } else{
-            cNW = c;
+        if ((x + 2 < right)){
+            cEE = new Color(img.getRGB(x+2,y));
+        }else {
+            cEE = c;
         }
-        if ((y - 1 > top) & (x + 1 < right)){
-            cNE = new Color(img.getRGB(x+1,y-1));
-        } else{
-            cNE = c;
+        if ((y + 2 < bottom)){
+            cSS = new Color(img.getRGB(x,y+2));
+        }else {
+            cSS = c;
         }
-        if ((y + 1 > top) & (x - 1 > left)){
+        if ((x - 1 > left) && (y + 1 < bottom)){
             cSW = new Color(img.getRGB(x-1,y+1));
-        } else{
+        }else {
             cSW = c;
         }
-        if ((y + 1 > top) & (x + 1 > left)){
-            cSE = new Color(img.getRGB(x+1,y+1));
-        } else{
-            cSE = c;
-        }
+        
     }
     /**
      * 

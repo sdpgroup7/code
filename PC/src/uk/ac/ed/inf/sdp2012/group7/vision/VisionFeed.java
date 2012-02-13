@@ -75,7 +75,7 @@ public class VisionFeed extends WindowAdapter {
         processor = new FeedProcessor(il, height, width, thresholdsGUI, this);
         Vision.logger.info("VisionFeed Initialised");
         System.out.println("Please select what colour we are using the GUI.");
-        il.getPoints();
+        //il.getPoints();
         il.getColors();
 		if (Vision.worldState.getColor() == Color.blue) {
 		    Vision.worldState.setOurRobotPosition(il.getInitCentroids()[2]);

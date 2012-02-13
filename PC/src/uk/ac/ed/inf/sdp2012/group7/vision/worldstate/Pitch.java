@@ -10,6 +10,7 @@ public class Pitch extends ObjectPosition{
 	private int bottomBuffer = 480;
 	private int leftBuffer = 0;
 	private int rightBuffer = 640;
+	private boolean buffersSet = false;
 
 	public Pitch(){
 		super();
@@ -31,6 +32,15 @@ public class Pitch extends ObjectPosition{
 		this.rightBuffer = right;
 		this.bottomBuffer = bottom;
 		this.leftBuffer = left;
+		this.buffersSet = true;
+	}
+	
+	public boolean getBuffersSet(){
+		return this.buffersSet;
+	}
+	
+	public void setBuffersSet(boolean buffersSet){
+		this.buffersSet = buffersSet;
 	}
 	
     public int getTopBuffer(){
