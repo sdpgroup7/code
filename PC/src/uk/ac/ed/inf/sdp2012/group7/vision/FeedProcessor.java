@@ -67,7 +67,13 @@ public class FeedProcessor{
     	
     	if(Math.abs(Vision.worldState.getOurRobot().getAngle() - prevAngle) > 0.01){
     		prevAngle = Vision.worldState.getOurRobot().getAngle();
-    		System.out.println("Current angle: " + prevAngle);
+    		/* 
+    		 * go and fuck yourself with a broom handle
+    		 * use the logger for this stuff, so we could just turn it off with an increased level of logging
+    		 * rather than searching all source files for System.out.println which spams the whole output
+    		 * thanks a lot 
+    		 */
+    		//System.out.println("Current angle: " + prevAngle);
     	}
     	
     }

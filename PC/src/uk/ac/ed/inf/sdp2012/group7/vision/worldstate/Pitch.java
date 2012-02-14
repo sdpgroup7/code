@@ -6,11 +6,11 @@ import java.awt.Point;
 public class Pitch extends ObjectPosition{
 	
 	
-	private int topBuffer = 0;
-	private int bottomBuffer = 480;
-	private int leftBuffer = 0;
-	private int rightBuffer = 640;
-	private boolean buffersSet = false;
+	private volatile int topBuffer = 0;
+	private volatile int bottomBuffer = 480;
+	private volatile int leftBuffer = 0;
+	private volatile int rightBuffer = 640;
+	private volatile boolean buffersSet = false;
 
 	public Pitch(){
 		super();

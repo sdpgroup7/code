@@ -1,19 +1,15 @@
 package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.ObjectPosition;
-import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.Vector2;
-import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.TimePoint;
-
 import java.awt.Point;
 import java.util.ArrayList;
 
 
 public class MovingObject {
     
-	ObjectPosition position = new ObjectPosition();
-	double velocity;
-	double angle; 
-	public ArrayList<TimePoint> positions = new ArrayList<TimePoint>();
+	volatile ObjectPosition position = new ObjectPosition();
+	volatile double velocity;
+	volatile double angle; 
+	volatile public ArrayList<TimePoint> positions = new ArrayList<TimePoint>();
 	
     public void addPosition(Point p){
     	positions.add(new TimePoint(p,System.currentTimeMillis()));
