@@ -4,7 +4,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
-import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 public class MainRunner {
 
@@ -16,13 +15,6 @@ public class MainRunner {
     	Logger.getLogger("com.intel.bluetooth").setLevel(Level.WARN);
         Vision v = new Vision();
 
-        /*while(true){
-
-            System.out.println("Ball Velocity: " + Vision.worldState.getBall().getVelocity());
-            try{
-                Thread.sleep(100);
-            } catch (Exception e) {}
-        }*/
     }
 
 }

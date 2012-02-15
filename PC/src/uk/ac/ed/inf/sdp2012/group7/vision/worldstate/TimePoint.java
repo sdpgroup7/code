@@ -4,7 +4,9 @@ import java.awt.Point;
 
 public class TimePoint extends Point{
 
-	long timestamp;
+	private static final long serialVersionUID = -3693845226820198796L;
+
+	volatile long timestamp;
 	
 	public TimePoint(int x, int y, long t){
 		super(x,y);

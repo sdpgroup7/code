@@ -6,8 +6,8 @@ package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
  */
 public class Vector2{
 
-	private int magnitude; //Magnitude 9.  It's super effective.  Pikachu fainted
-	private double direction;
+	private volatile int magnitude; //Magnitude 9.  It's super effective.  Pikachu fainted
+	private volatile double direction;
 	
 	public Vector2(){
 		this(0,0); // Lol owl.

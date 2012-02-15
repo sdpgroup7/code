@@ -21,6 +21,7 @@ public class Strategy {
 		if (kick) {
 			controller.kick();
 		} else {
+			controller.changeSpeed(30);
 			controller.moveForward(60);
 		}
 	}
@@ -28,14 +29,13 @@ public class Strategy {
 	// to start/stop the navigation
 	private boolean runFlag = false;
 
-	public void mileStone2NavigateOn() {
+	public synchronized void mileStone2NavigateOn() {
 		runFlag = true;
 	}
 
-	public void mileStone2NavigateOff() {
+	public synchronized void mileStone2NavigateOff() {
 		runFlag = false;
 		controller.stop();
-		
 	}
 
 	private RobotControl controller;
@@ -56,40 +56,50 @@ public class Strategy {
 
 		/* angle calculated by the "hack" */
 		private double angle;
-
-		/* cm/pixels ratio */
-		private double ratio;
 		
+		/* cm/pixels ratio */
+		private double ratio = 0;
+
 		/**
 		 * The vision can't get angles at the moment and I wanted to test it
 		 */
 		private void setAngleHack() {
-			Point oldPoint = Vision.worldState.getOurRobot().getPosition().getCentre();
-			logger.debug("Old point: " + oldPoint);
-			controller.moveForward(10);
-			try {
-				sleep(1000);
-			} catch (InterruptedException e) {
-				logger.error(e);
-			}
-			Point newPoint = Vision.worldState.getOurRobot().getPosition().getCentre();
-			logger.debug("New point: " + newPoint);
-			angle = Math.atan2(newPoint.y-oldPoint.y, newPoint.x-oldPoint.x);
-			ratio = 10/Point.distance(newPoint.x, newPoint.y, oldPoint.x, oldPoint.y);
-			logger.debug("Calculated angle: " + Math.toDegrees(angle));
-		}		
+			if (runFlag) {
+				controller.stop();
+				try {
+					sleep(100);
+				} catch (InterruptedException e) {
+					logger.error(e);
+				}
+				Point oldPoint = (Point) Vision.worldState.getOurRobot().getPosition().getCentre().clone();
+				logger.debug("Old point: " + oldPoint);	
 
+				controller.moveForward(10);
+				try {
+					sleep(1000);
+				} catch (InterruptedException e) {
+					logger.error(e);
+				}
+				Point newPoint = (Point) Vision.worldState.getOurRobot().getPosition().getCentre().clone();
+				logger.debug("New point: " + newPoint);
+				angle = Math.atan2(newPoint.y-oldPoint.y, newPoint.x-oldPoint.x);
+				ratio = 10/Point.distance(newPoint.x, newPoint.y, oldPoint.x, oldPoint.y);
+				logger.debug("Calculated angle: " + Math.toDegrees(angle));
+				
+			}
+		}
 
 		public void run() {
 			while (true) {
-				
 				while (runFlag) {
-					
+					controller.changeSpeed(30);
+					Point ball = Vision.worldState.getBall().getPosition().getCentre();
+					if (ball.x == 0 && ball.y == 0) { //"bullshit checks"
+						runFlag = false;
+					}
 					setAngleHack();
 					Point robot = Vision.worldState.getOurRobot().getPosition().getCentre();
-					Point ball = Vision.worldState.getBall().getPosition().getCentre();
-
-					//logger.debug("Vision angle: " + Math.toDegrees(state.getOurRobot().getAngle()));
+					
 					double targetangle = Tools.getAngleToFacePoint(robot, angle, ball);
 					/* should we drive to the robot? */
 					if (Point.distance(robot.x,robot.y,ball.x,ball.y) > 50) {
@@ -105,17 +115,22 @@ public class Strategy {
 							logger.debug("Robot: " + robot);
 							logger.debug("Ball: " + ball);
 							logger.debug("Rotate by: " + Math.toDegrees(targetangle));
-							controller.rotateBy(targetangle);
-
+							if ((runFlag) && ((ball.x != 0 && ball.y != 0))) {
+								controller.rotateBy(targetangle);
+							}
 							try {
 								sleep(200);
 							} catch (InterruptedException e) {
 								logger.error(e);
 							}
-							controller.moveForward((int) (ratio*Point.distance(robot.x,robot.y,ball.x,ball.y)/3));	
+							if ((runFlag) && ((ball.x != 0 && ball.y != 0))) {
+								controller.moveForward((int) (ratio*Point.distance(robot.x,robot.y,ball.x,ball.y)/3));
+							}
 						} else {
 							logger.debug("It seems fine within 5 degrees: " + Math.toDegrees(targetangle));
-							controller.moveForward((int) (ratio*Point.distance(robot.x,robot.y,ball.x,ball.y)/3));	
+							if ((runFlag) && ((ball.x != 0 && ball.y != 0))) {
+								controller.moveForward((int) (ratio*Point.distance(robot.x,robot.y,ball.x,ball.y)/3));
+							}
 						}
 					} else {
 						/* we're close to the robot, so we should just turn if needed */
@@ -132,13 +147,14 @@ public class Strategy {
 							logger.debug("Rotate by: " + Math.toDegrees(targetangle));
 							controller.rotateBy(targetangle);
 							
+
 						}
 						runFlag = false;
 					}
 
 
 					try {
-						sleep(1000);
+						sleep(1500);
 					} catch (InterruptedException e) {
 						logger.error(e);
 					}
@@ -150,7 +166,7 @@ public class Strategy {
 				} catch (InterruptedException e) {
 					logger.error(e);
 				}
-			} 
+			}
 		} 
 	};
 

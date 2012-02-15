@@ -1,9 +1,5 @@
 package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
-import java.lang.Math;
-import java.util.ArrayList;
 import java.awt.Point;
-
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 
 /**
  * Represents the position of an object, for example the ball or a robot.
@@ -13,11 +9,11 @@ import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 public class ObjectPosition{
 
 	private static final long serialVersionUID = -31952448440473456L;
-	private Point topLeft = new Point(0,0);
-    private Point topRight = new Point(0,0);
-    private Point bottomLeft = new Point(0,0);
-    private Point bottomRight = new Point(0,0);
-    private Point centre = new Point(0,0);
+	private volatile  Point topLeft = new Point(0,0);
+    private volatile  Point topRight = new Point(0,0);
+    private volatile  Point bottomLeft = new Point(0,0);
+    private volatile Point bottomRight = new Point(0,0);
+    private volatile Point centre = new Point(0,0);
     
     public ObjectPosition(){
     }

@@ -6,24 +6,24 @@ import java.util.ArrayList;
 
 public class WorldState{
 
-	Color ourColor;
-	int room; //0 == main room, 1 == side room
-	boolean clickingDone = false;
+	volatile Color ourColor;
+	volatile int room; //0 == main room, 1 == side room
+	volatile boolean clickingDone = false;
 
-    Pitch pitch = new Pitch();
-    ObjectPosition ourGoal = new ObjectPosition();
-    ObjectPosition opponentsGoal = new ObjectPosition();
+	volatile Pitch pitch = new Pitch();
+	volatile ObjectPosition ourGoal = new ObjectPosition();
+	volatile ObjectPosition opponentsGoal = new ObjectPosition();
     
-    MovingObject ourRobot = new MovingObject();
-    MovingObject opponentsRobot = new MovingObject();
-    MovingObject ball = new MovingObject();
-    MovingObject ourGrey = new MovingObject(); 
-    MovingObject opponentsGrey = new MovingObject();
+	volatile MovingObject ourRobot = new MovingObject();
+	volatile MovingObject opponentsRobot = new MovingObject();
+	volatile MovingObject ball = new MovingObject();
+	volatile MovingObject ourGrey = new MovingObject(); 
+	volatile MovingObject opponentsGrey = new MovingObject();
     
-    ArrayList<Point> bluePixels = new ArrayList<Point>();
-	ArrayList<Point> yellowPixels = new ArrayList<Point>();
-	Point ourKeyPoint = new Point();
-	Point opponentsKeyPoint = new Point();
+	volatile ArrayList<Point> bluePixels = new ArrayList<Point>();
+	volatile ArrayList<Point> yellowPixels = new ArrayList<Point>();
+	volatile Point ourKeyPoint = new Point();
+	volatile Point opponentsKeyPoint = new Point();
 	
 	public Point getOurKeyPoint(){
 		return this.ourKeyPoint;
