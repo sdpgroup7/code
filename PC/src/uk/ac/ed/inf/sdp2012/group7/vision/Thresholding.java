@@ -77,9 +77,9 @@ public class Thresholding {
     
     
     public Thresholding(ThresholdsState ts) {  // Sets the constants for thresholding for each pitch 
-    	redBallThresh[0][0] = 160;
-    	redBallThresh[0][1] = 110;
-    	redBallThresh[0][2] = 110;
+    	redBallThresh[0][0] = 130;
+    	redBallThresh[0][1] = 90;
+    	redBallThresh[0][2] = 90;
     	redBallThresh[1][0] = 150;
     	redBallThresh[1][1] = 100;
     	redBallThresh[1][2] = 100;
@@ -89,7 +89,7 @@ public class Thresholding {
 		yellowRobotThresh[1][0] = 150;
 		yellowRobotThresh[1][1] = 190;
 		yellowRobotThresh[1][2] = 140;
-		blueRobotThresh[0][0] = 90;
+		blueRobotThresh[0][0] = 100;
 		blueRobotThresh[0][1] = 160;
 		blueRobotThresh[0][2] = 90;
 		blueRobotThresh[1][0] = 130;
