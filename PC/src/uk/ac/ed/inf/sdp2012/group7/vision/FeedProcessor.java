@@ -3,110 +3,115 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
+import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
-import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
+import uk.ac.ed.inf.sdp2012.group7.vision.Thresholding;
+import uk.ac.ed.inf.sdp2012.group7.vision.VisionFeed;
+
+
 
 public class FeedProcessor{
     
-    private WorldState worldState;
     //private ThresholdsState thresholdsState; //might not be needed any more
-    private PitchConstants pitchConstants;
     //private OrientationFinder orientationFinder; //might not be needed anymore
 
     private InitialLocation initialLocation;
-    private Thresholding doThresh = new Thresholding(0); // Do Thresholding 
+    private Thresholding doThresh; // Do Thresholding 
+    private VisionFeed visionFeed;
+    private OrientationFinder findAngle; // finds the angle
     
     private int height;
     private int width;
+   
+    
+    double prevAngle = 0;
 
-    public FeedProcessor(InitialLocation il, int height, int width, PitchConstants pitchConstants, ControlGUI controlGUI){
+    public FeedProcessor(InitialLocation il, int height, int width, ControlGUI controlGUI, VisionFeed visionFeed){
         
     	//this.thresholdsState = controlGUI.getThresholdsState();
-        this.worldState = controlGUI.getWorldState();
         this.initialLocation = il;
         this.height = height;
         this.width = width;
-        this.pitchConstants = pitchConstants;
+        this.visionFeed = visionFeed;
+        this.doThresh = new Thresholding(controlGUI.getThresholdsState());
+        this.findAngle = new OrientationFinder();
         //this.orientationFinder = new OrientationFinder(this.thresholdsState);
         Vision.logger.info("Feed Processor Initialised");
     }
 
     public void processAndUpdateImage(BufferedImage image, long before, JLabel label) {
-
-        image = initialLocation.markImage(image);
-
-        //int topBuffer = pitchConstants.getTopBuffer();
-        //int bottomBuffer = pitchConstants.getBottomBuffer();
-        //int leftBuffer = pitchConstants.getLeftBuffer();
-        //int rightBuffer = pitchConstants.getRightBuffer();
-
-        /* For every pixel within the pitch, test to see if it belongs to the ball,
-         * the yellow T, the blue T, either green plate or a grey circle. */
-        //Color c;
-        /* Position objects to hold the centre point of the ball and both robots. */
-        
-
-        /* If we have only found a few 'Ball' pixels, chances are that the ball has not
-         * actually been detected. */
-        /* Attempt to find the blue robot's orientation. */
-        /*
-        try {
-            float blueOrientation = orientationFinder.findOrientation(blueXPoints, blueYPoints, blue.getX(), blue.getY(), image, true);
-            worldState.setBlueOrientation(blueOrientation);
-        } catch (NoAngleException e) {
-
+    	if(Vision.TESTING && visionFeed.paused){
+    		Graphics frameGraphics = label.getGraphics();
+            Graphics imageGraphics = image.getGraphics();
+            calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
+    	} else {
+    		image = removeBackground(image,Vision.backgroundImage);
+    		image = initialLocation.markImage(image);
+            Graphics frameGraphics = label.getGraphics();
+            Graphics imageGraphics = doThresh.getThresh(
+							                image,
+							                Vision.worldState.getPitch().getLeftBuffer(),
+							                Vision.worldState.getPitch().getRightBuffer(), 
+							                Vision.worldState.getPitch().getTopBuffer(),
+							                Vision.worldState.getPitch().getBottomBuffer()
+            							).getGraphics();
+            markObjects(imageGraphics);
+            calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
+            calculateAngle();
+            //System.err.println(Vision.worldState.getOurRobot().getAngle());
         }
-        */
-
-        /* Attempt to find the yellow robot's orientation. */
-        /*
-        try {
-            float yellowOrientation = orientationFinder.findOrientation(yellowXPoints, yellowYPoints, yellow.getX(), yellow.getY(), image, true);
-            worldState.setYellowOrientation(yellowOrientation);
-        } catch (NoAngleException e) {
-
-        }
-        */
-                /* Draw the image onto the vision frame. As well as the threshed image*/
-        Graphics frameGraphics = label.getGraphics();
-       // Graphics frameGraphicsThresh = labelThresh.getGraphics();
-       // Graphics imageGraphics = image.getGraphics();
-        Graphics imageGraphics = doThresh.getThresh(image, pitchConstants.getLeftBuffer(),pitchConstants.getRightBuffer(), pitchConstants.getTopBuffer(),pitchConstants.getBottomBuffer()).getGraphics();
-        
-        Point ballCent = doThresh.getBallCentroid();
-        Point blueCent = doThresh.getBlueCentroid();
-        Point yellowCent = doThresh.getYellowCentroid();
-        Point blueGreenPlate = doThresh.getBlueGreenPlateCentori();
-
-        worldState.setBallPosition(ballCent);
-        if(true){ //TODO: make this check if we are blue
-        	worldState.setOurRobotPosition(blueCent);
-        	worldState.setOpponentsRobotPosition(yellowCent);
-        } else {
-        	worldState.setOurRobotPosition(yellowCent);
-        	worldState.setOpponentsRobotPosition(blueCent);
-        }
-                    
-        markObjects(imageGraphics,ballCent,blueCent,yellowCent);
-
-        calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
+    	
+    	if(Math.abs(Vision.worldState.getOurRobot().getAngle() - prevAngle) > 0.01){
+    		prevAngle = Vision.worldState.getOurRobot().getAngle();
+    		System.out.println("Current angle: " + prevAngle);
+    	}
+    	
     }
-
-    public void markObjects(Graphics imageGraphics, Point ball, Point blue, Point yellow){
-        /* Only display these markers in non-debug mode. */
+    public void calculateAngle(){
+    	double ourAngle = findAngle.findOrientation(
+    	    Vision.worldState.getOurRobot().getPosition().getCentre().x,
+    	    Vision.worldState.getOurRobot().getPosition().getCentre().y,
+    	    Vision.worldState.getOurGrey().getPosition().getCentre().x, 
+    	    Vision.worldState.getOurGrey().getPosition().getCentre().y
+    	);
+    	double opponentAngle = findAngle.findOrientation(
+    	    Vision.worldState.getOpponentsRobot().getPosition().getCentre().x,
+    	    Vision.worldState.getOpponentsRobot().getPosition().getCentre().y, 
+    	    Vision.worldState.getOpponentsGrey().getPosition().getCentre().x, 
+    	    Vision.worldState.getOpponentsGrey().getPosition().getCentre().y
+    	);
+    	Vision.worldState.getOurRobot().setAngle(ourAngle);
+    	Vision.worldState.getOpponentsRobot().setAngle(opponentAngle);
+    }
+    public void markObjects(Graphics imageGraphics){
+            Point ball = Vision.worldState.getBall().getPosition().getCentre();
+            Point blue;
+            Point yellow;
+            
+            if (Vision.worldState.getColor() == Color.blue){
+                blue = Vision.worldState.getOurRobot().getPosition().getCentre();
+                yellow = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
+            } else {
+                yellow = Vision.worldState.getOurRobot().getPosition().getCentre();
+                blue = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
+            }
             imageGraphics.setColor(Color.red);
-            imageGraphics.drawLine(0, (int)ball.getY(), 640, (int)ball.getY());
-            imageGraphics.drawLine((int)ball.getX(), 0, (int)ball.getX(), 480);
+            imageGraphics.drawLine(0, ball.y, 640, ball.y);
+            imageGraphics.drawLine(ball.x, 0, ball.x, 480);
             imageGraphics.setColor(Color.blue);
-            imageGraphics.drawOval((int)blue.getX()-15, (int)blue.getY()-15, 30,30);
+            imageGraphics.drawOval(blue.x-15, blue.y-15, 30,30);
             imageGraphics.setColor(Color.yellow);
-            imageGraphics.drawOval((int)yellow.getX()-15, (int)yellow.getY()-15, 30,30);
+            imageGraphics.drawOval(yellow.x-15, yellow.y-15, 30,30);
             imageGraphics.setColor(Color.white);
-            imageGraphics.setColor(Color.red);
-            //imageGraphics.drawLine(worldState.getBall().getPosition().getCentre().x,worldState.getBall().getPosition().getCentre().y,worldState.getOurRobot().getPosition().getCentre().x,worldState.getOurRobot().getPosition().getCentre().y);
+            imageGraphics.setColor(Color.white);
+            imageGraphics.drawLine(Vision.worldState.getOurGrey().getPosition().getCentre().x,Vision.worldState.getOurGrey().getPosition().getCentre().y,Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y);
+            imageGraphics.drawLine(Vision.worldState.getOpponentsGrey().getPosition().getCentre().x,Vision.worldState.getOpponentsGrey().getPosition().getCentre().y,Vision.worldState.getOpponentsRobot().getPosition().getCentre().x,Vision.worldState.getOpponentsRobot().getPosition().getCentre().y);
+
+            //could the above line be shorter with the current worldState state?
     }
 
     public static void calculateFPS(long before, Graphics imageGraphics, Graphics frameGraphics, BufferedImage image, int width, int height){
@@ -118,7 +123,71 @@ public class FeedProcessor{
         imageGraphics.setColor(Color.white);
         imageGraphics.drawString("FPS: " + fps, 15, 15);
         frameGraphics.drawImage(image, 0, 0, width, height, null);
-        //TODO: Check that the above isn't needed.
     }
+    
+    public BufferedImage removeBackground(BufferedImage image, BufferedImage background){
+    	int black = -16777216;
+    	int pink = -60269;
+    	if(Vision.worldState.isClickingDone()){
+    		for(int x = Vision.worldState.getOurRobot().getPosition().getCentre().x - 40;
+    		x < Vision.worldState.getOurRobot().getPosition().getCentre().x + 40;x++)
+    		{
+    			for(int y = Vision.worldState.getOurRobot().getPosition().getCentre().y - 40;
+    			y < Vision.worldState.getOurRobot().getPosition().getCentre().y + 40; y++)
+    			{
+    				try{
+    					Color imageRGB = new Color(image.getRGB(x,y));
+    					Color backgroundRGB = new Color(background.getRGB(x,y));
+    					if(similarColor(imageRGB,backgroundRGB)){
+    						image.setRGB(x,y,pink); //pure black
+    					}
+    				} catch (Exception e) {
+    					//This is probably just an index out of bounds exception so we can ignore it for now.
+    				}
+    			}
+    		}
+    		for(int x = Vision.worldState.getOpponentsRobot().getPosition().getCentre().x - 40;
+    		x < Vision.worldState.getOpponentsRobot().getPosition().getCentre().x + 40;x++)
+    		{
+    			for(int y = Vision.worldState.getOpponentsRobot().getPosition().getCentre().y - 40;
+    			y < Vision.worldState.getOpponentsRobot().getPosition().getCentre().y + 40; y++)
+    			{
+    				try{
+    					Color imageRGB = new Color(image.getRGB(x,y));
+    					Color backgroundRGB = new Color(background.getRGB(x,y));
+    					if(similarColor(imageRGB,backgroundRGB)){
+    						image.setRGB(x,y,pink); //pure black
+    					}
+    				} catch (Exception e) {
+    					//Again, it is just an out of bounds exception
+    				}
+    			}
+    		}
+    	}
+    	return image;
+    }
+    
+    public void writeImage(BufferedImage image, String fn){
+        try {
+            File outputFile = new File(fn);
+            ImageIO.write(image, "png", outputFile);
+        } catch (Exception e) {
+        	Vision.logger.error("Failed to write image: " + e.getMessage());
+        }
+    }
+
+    public static boolean similarColor(Color a, Color b){
+    	int rDiff = 33;
+    	int gDiff = 33;
+    	int bDiff = 33;
+    	if(
+    			(Math.abs(a.getRed() - b.getRed()) < rDiff) &&
+    			(Math.abs(a.getBlue() - b.getBlue()) < gDiff) &&
+    			(Math.abs(a.getGreen() - b.getGreen()) < bDiff)
+    	) return true;
+    	return false;
+    }
+
+
 
 }

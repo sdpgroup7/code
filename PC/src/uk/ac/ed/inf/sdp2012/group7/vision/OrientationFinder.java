@@ -10,6 +10,9 @@ public class OrientationFinder{
     public OrientationFinder(ThresholdsState thresholdsState){
         this.thresholdsState = thresholdsState;
     }
+    public OrientationFinder() {
+    	super();
+    }
 
     /**
      * Finds the orientation of a robot, given a list of the points contained within it's
@@ -27,6 +30,35 @@ public class OrientationFinder{
      * @return                  An orientation from -Pi to Pi degrees.
      * @throws NoAngleException
      */
+    public float findOrientation1(int robotX, int robotY, int greyX, int greyY){
+    	float length = (float) Math.sqrt(Math.pow(robotX - greyX, 2)
+                + Math.pow(robotY - greyY, 2));
+        float ax = (robotX - greyX) / length;
+        float ay = (robotY - greyY) / length;
+        float angle = (float) Math.acos(ax);
+
+        if (robotY < greyY) {
+            angle = -angle;
+        }
+        if (angle == 0) {
+            return (float) 0.001;
+        }
+
+        return angle;
+    }
+    public double findOrientation(int robotX, int robotY, int greyX, int greyY){
+    	
+    	double ans = Math.atan2(robotY - greyY, robotX - greyX);
+    	//ans = (( (ans * (180/Math.PI)) + 90) + 360) % 360;
+    	ans = Math.toDegrees(ans);
+    /*	if(ans < 0){
+    		ans = -ans;
+    	} else {
+    		ans = (2.0*Math.PI) - ans;
+    	}
+    	ans = (ans + (3*Math.PI/2.0)) % (2*Math.PI); */
+    	return  ans; 
+    }
     public float findOrientation(ArrayList<Integer> xpoints, ArrayList<Integer> ypoints,
             int meanX, int meanY, BufferedImage image, boolean showImage) throws NoAngleException {
         assert (xpoints.size() == ypoints.size()) :

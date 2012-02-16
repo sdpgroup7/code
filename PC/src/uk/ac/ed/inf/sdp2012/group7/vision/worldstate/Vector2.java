@@ -6,14 +6,14 @@ package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
  */
 public class Vector2{
 
-	private int magnitude;
-	private int direction;
+	private int magnitude; //Magnitude 9.  It's super effective.  Pikachu fainted
+	private double direction;
 	
 	public Vector2(){
 		this(0,0); // Lol owl.
 	}
 
-	public Vector2(int magnitude, int direction){
+	public Vector2(int magnitude, double direction){
 		this.magnitude = magnitude;
 		this.direction = direction;
 	}
@@ -26,11 +26,11 @@ public class Vector2{
 		this.magnitude = magnitude;
 	}
 
-	public int getDirection(){
+	public double getDirection(){
 		return this.direction;
 	}
 
-	public void setDirection(int direction){
+	public void setDirection(double direction){
 		this.direction = direction;
 	}
 

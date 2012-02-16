@@ -1,6 +1,9 @@
 package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
 import java.lang.Math;
+import java.util.ArrayList;
 import java.awt.Point;
+
+import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 
 /**
  * Represents the position of an object, for example the ball or a robot.
@@ -17,7 +20,6 @@ public class ObjectPosition{
     private Point centre = new Point(0,0);
     
     public ObjectPosition(){
-        
     }
 
     public ObjectPosition(int x, int y){
@@ -28,6 +30,7 @@ public class ObjectPosition{
     	this.centre = p;
     }
     
+
     public ObjectPosition(Point topLeft, Point topRight, Point bottomLeft, Point bottomRight){
     	this(topLeft,topRight,bottomLeft,bottomRight,new Point(((topLeft.x + bottomRight.x) / 2),((topLeft.y + bottomRight.y) / 2)));
     }
@@ -73,6 +76,7 @@ public class ObjectPosition{
     }
     
     public Point getCentre(){
+    	//Vision.logger.debug(Integer.toString(this.centre.x) + "," + Integer.toString(this.centre.y));
     	return this.centre;
     }
 
