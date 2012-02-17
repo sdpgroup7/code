@@ -26,7 +26,7 @@ public class FeedProcessor{
     
     private int height;
     private int width;
-   
+
     
     double prevAngle = 0;
 
@@ -114,11 +114,25 @@ public class FeedProcessor{
             imageGraphics.setColor(Color.yellow);
             imageGraphics.drawOval(yellow.x-15, yellow.y-15, 30,30);
             imageGraphics.setColor(Color.white);
-            imageGraphics.setColor(Color.white);
             //imageGraphics.drawLine(Vision.worldState.getOurGrey().getPosition().getCentre().x,Vision.worldState.getOurGrey().getPosition().getCentre().y,Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y);
             //imageGraphics.drawLine(Vision.worldState.getOpponentsGrey().getPosition().getCentre().x,Vision.worldState.getOpponentsGrey().getPosition().getCentre().y,Vision.worldState.getOpponentsRobot().getPosition().getCentre().x,Vision.worldState.getOpponentsRobot().getPosition().getCentre().y);
-            imageGraphics.drawLine(Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y, Vision.worldState.getOurKeyPoint().x,Vision.worldState.getOurKeyPoint().y);
+            //imageGraphics.drawLine(Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y, Vision.worldState.getOurKeyPoint().x,Vision.worldState.getOurKeyPoint().y);
             //could the above line be shorter with the current worldState state?
+            Point p = findAngle.findOrientation(Vision.worldState.getBluePixels(),Color.blue);
+            imageGraphics.drawLine(
+            		Vision.worldState.getOurRobot().getPosition().getCentre().x,
+            		Vision.worldState.getOurRobot().getPosition().getCentre().y,
+            		p.x,
+            		p.y);
+            imageGraphics.setColor(Color.red);
+            p = findAngle.findOrientation(Vision.worldState.getYellowPixels(), Color.yellow);
+            imageGraphics.drawLine(
+            		Vision.worldState.getOpponentsRobot().getPosition().getCentre().x,
+            		Vision.worldState.getOpponentsRobot().getPosition().getCentre().y,
+            		p.x,
+            		p.y);
+            
+    
     }
 
     public static void calculateFPS(long before, Graphics imageGraphics, Graphics frameGraphics, BufferedImage image, int width, int height){

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class WorldState{
 
-	volatile Color ourColor;
+	volatile Color ourColor = Color.blue;
 	volatile int room; //0 == main room, 1 == side room
 	volatile boolean clickingDone = false;
 
