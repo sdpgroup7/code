@@ -2,8 +2,14 @@ package uk.ac.ed.inf.sdp2012.group7.strategy;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collection;
+
 import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
 import org.apache.log4j.Logger;
+
+import math.geom2d.Point2D;
+import math.geom2d.conic.Circle2D;
+import math.geom2d.line.LineSegment2D;
 
 /**
  * This takes a small section of the plan from Control Management and turns it
@@ -79,8 +85,6 @@ public class ControlInterface {
 
 	public void implimentArc(Arc path) {
 		
-		controller.
-		
 		
 	}
 	
@@ -91,9 +95,55 @@ public class ControlInterface {
 	 *  @return The converted angle so it is measured off the y axis rather than the x
 	 */
 	private double convertAngle(double angle) {
+		//TODO add the conversion on here
 		double newAngle = 0;
 		logger.debug(String.format("Converted angle from %f to %f", angle, newAngle));
 		return newAngle;
+	}
+	
+	/*
+	 * Returns the goal point which is 1 lookahead distance away from the robot
+	 * @param	points	The list of points on the path
+	 * @param	robotPosition	The current robot position
+	 * 
+	 * @return The goal point
+	 */
+	private Point findGoalPoint(ArrayList<Point> points, Point robotPosition) throws Exception {
+		
+		Circle2D zone = new Circle2D(robotPosition.getX(), robotPosition.getY(), this.lookahead);
+		boolean run = true;
+		int size = points.size();
+		int i = size -1;
+		
+		while(run) {
+			
+			if (i == size) {
+				logger.error("Lookahead point unable to be found");
+				break;
+				//Insert exception here
+			}
+			
+			LineSegment2D line = new LineSegment2D(points.get(i).getX(), points.get(i).getY(), points.get(i+1).getX(), points.get(i+1).getY());
+			Collection<Point2D> intersections = zone.getIntersections(line);
+			
+			if (intersections.size() == 1) {
+				
+				for (Point2D p : intersections) {
+					Point2D intersect = new Point2D(p);
+				}
+				logger.debug(String.format("Goal point found at (%f,%f)", intersect.getX(), intersect.getY()));
+				run = false;
+				
+			} else if (intersections.size() == 2) {
+				logger.debug("Something went wrong, I found 2 points");
+			} else {
+				i++;
+				logger.debug("No points found, going to next line segment");
+			}
+			
+		}
+		
+		return
 	}
 
 }
