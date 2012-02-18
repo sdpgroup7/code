@@ -256,11 +256,11 @@ public class Nxt_code implements Runnable {
 					// flag sensor hit as being dealt with and save the speed
 					// we were going before the collision occurred
 					reacting = true;
-				//	tempCurSpeed = (float) pilot.getTravelSpeed();
+					tempCurSpeed = (float) pilot.getTravelSpeed();
 
 					// move back a little bit away from the wall
-				//	pilot.setTravelSpeed(200);
-				//	pilot.travel(-20);
+					pilot.setTravelSpeed(200);
+					pilot.travel(-20);
 					Thread.sleep(10);
 					pilot.stop();
 
@@ -269,7 +269,7 @@ public class Nxt_code implements Runnable {
 					os.flush();
 
 					// reset speed back to what it was before the collision
-				//	pilot.setTravelSpeed(tempCurSpeed);
+					pilot.setTravelSpeed(tempCurSpeed);
 
 				} else if (reacting
 						&& !(touchA.isPressed() || touchB.isPressed())) {
