@@ -72,9 +72,9 @@ public class OrientationFinder{
 	    	Point furthest = new Point(0,0);
 	    	double dist = 0;
 	    	for(Point p : pixels){
-	    		if(Point.distance(p.x, p.x, centroid.x, centroid.y) > dist){
+	    		if(Point.distance(p.x, p.y, centroid.x, centroid.y) > dist){
 	    			furthest = p;
-	    			dist = Point.distance(p.x, p.x, centroid.x, centroid.y);
+	    			dist = Point.distance(p.x, p.y, centroid.x, centroid.y);
 	    		}
 	    	}
 	    	return furthest;
