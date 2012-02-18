@@ -62,6 +62,7 @@ public class OrientationFinder{
     }
 
     public Point findOrientation(ArrayList<Point> pixels, Color c){
+    	//TODO: Convert this into an orientation instead of a point
     	Point centroid;
     	if(Vision.worldState.getColor().equals(c)){
     		centroid = Vision.worldState.getOurRobot().getPosition().getCentre();
