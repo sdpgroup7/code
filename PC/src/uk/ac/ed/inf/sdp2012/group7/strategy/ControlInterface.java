@@ -3,6 +3,7 @@ package uk.ac.ed.inf.sdp2012.group7.strategy;
 import java.awt.Point;
 import java.util.ArrayList;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
+import org.apache.log4j.Logger;
 
 /**
  * This takes a small section of the plan from Control Management and turns it
@@ -13,6 +14,9 @@ import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
  */
 public class ControlInterface {
 
+	
+	public static final Logger logger = Logger.getLogger(ControlInterface.class);
+	
 	private int lookahead;
 
 	public ControlInterface(int lookahead) {
@@ -78,6 +82,18 @@ public class ControlInterface {
 		controller.
 		
 		
+	}
+	
+	/*
+	 * Changes the angle provided by vision into one required by the calculations
+	 * @param	angle	the original angle to be converted in radians
+	 * 
+	 *  @return The converted angle so it is measured off the y axis rather than the x
+	 */
+	private double convertAngle(double angle) {
+		double newAngle = 0;
+		logger.debug(String.format("Converted angle from %f to %f", angle, newAngle));
+		return newAngle;
 	}
 
 }
