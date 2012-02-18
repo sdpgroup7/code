@@ -101,6 +101,8 @@ public class FeedProcessor{
             //imageGraphics.drawLine(Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y, Vision.worldState.getOurKeyPoint().x,Vision.worldState.getOurKeyPoint().y);
             //could the above line be shorter with the current worldState state?
             Point p = findAngle.findOrientation(Vision.worldState.getBluePixels(),Vision.worldState.getBlueRobot().getPosition().getCentre());
+            Vision.worldState.getBlueRobot().addAngle(p);
+            p = Vision.worldState.getBlueRobot().getAngle();
             imageGraphics.drawLine(
             		Vision.worldState.getBlueRobot().getPosition().getCentre().x,
             		Vision.worldState.getBlueRobot().getPosition().getCentre().y,
@@ -108,6 +110,8 @@ public class FeedProcessor{
             		p.y);
             imageGraphics.setColor(Color.red);
             p = findAngle.findOrientation(Vision.worldState.getYellowPixels(), Vision.worldState.getYellowRobot().getPosition().getCentre());
+            Vision.worldState.getYellowRobot().addAngle(p);
+            p = Vision.worldState.getYellowRobot().getAngle();
             imageGraphics.drawLine(
             		Vision.worldState.getYellowRobot().getPosition().getCentre().x,
             		Vision.worldState.getYellowRobot().getPosition().getCentre().y,

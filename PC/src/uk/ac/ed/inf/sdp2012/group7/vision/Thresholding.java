@@ -89,8 +89,8 @@ public class Thresholding {
 		yellowRobotThresh[1][0] = 150;
 		yellowRobotThresh[1][1] = 190;
 		yellowRobotThresh[1][2] = 140;
-		blueRobotThresh[0][0] = 90;
-		blueRobotThresh[0][1] = 160;
+		blueRobotThresh[0][0] = 80;
+		blueRobotThresh[0][1] = 140;
 		blueRobotThresh[0][2] = 90;
 		blueRobotThresh[1][0] = 130;
 		blueRobotThresh[1][1] = 140;
@@ -213,7 +213,6 @@ public class Thresholding {
 			blueGreyCentroid.setLocation(blueGreyCentroid.getX()/blueGreyCount, blueGreyCentroid.getY()/blueGreyCount);
 			yellowGreyCentroid.setLocation(yellowGreyCentroid.getX()/yellowGreyCount, yellowGreyCentroid.getY()/yellowGreyCount);
 			
-
 			
 			Vision.worldState.setBlueKeyPoint(findKeyPoint(findTheFourPoints(blueGreenPlate),Vision.worldState.getBlueRobot().getPosition().getCentre()));
 
