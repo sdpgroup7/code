@@ -77,15 +77,10 @@ public class VisionFeed extends WindowAdapter {
         System.out.println("Please select what colour we are using the GUI.");
         //il.getPoints();
         il.getColors();
-		if (Vision.worldState.getColor() == Color.blue) {
-		    Vision.worldState.setOurRobotPosition(il.getInitCentroids()[2]);
-		    Vision.worldState.setOpponentsRobotPosition(il.getInitCentroids()[1]);
-		} else {
-		    Vision.worldState.setOpponentsRobotPosition(il.getInitCentroids()[2]);
-		    Vision.worldState.setOurRobotPosition(il.getInitCentroids()[1]);
-		}
-		Vision.worldState.setOurGreyPosition(il.getInitCentroids()[5]);
-		Vision.worldState.setOpponentsGreyPosition(il.getInitCentroids()[4]);
+        Vision.worldState.setBlueRobotPosition(il.getInitCentroids()[2]);
+        Vision.worldState.setYellowRobotPosition(il.getInitCentroids()[1]);
+		Vision.worldState.setBlueGreyPosition(il.getInitCentroids()[4]);
+		Vision.worldState.setYellowGreyPosition(il.getInitCentroids()[5]);
         Vision.logger.info("Vision System Calibrated");
         if(Vision.TESTING){
         	Vision.logger.info("Vision testing starting.");

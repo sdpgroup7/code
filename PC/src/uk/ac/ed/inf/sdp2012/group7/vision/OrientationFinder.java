@@ -61,14 +61,8 @@ public class OrientationFinder{
     	return ans; 
     }
 
-    public Point findOrientation(ArrayList<Point> pixels, Color c){
+    public Point findOrientation(ArrayList<Point> pixels, Point centroid){
     	//TODO: Convert this into an orientation instead of a point
-    	Point centroid;
-    	if(Vision.worldState.getColor().equals(c)){
-    		centroid = Vision.worldState.getOurRobot().getPosition().getCentre();
-    	} else {
-    		centroid = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
-    	}
     	if(pixels.size() > 0){
 	    	Point furthest = new Point(0,0);
 	    	double dist = 0;

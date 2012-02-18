@@ -14,28 +14,28 @@ public class WorldState{
 	volatile ObjectPosition ourGoal = new ObjectPosition(); //The position of our goal
 	volatile ObjectPosition opponentsGoal = new ObjectPosition(); //The position of our opponents goal
     
-	volatile MovingObject ourRobot = new MovingObject(); //our Robot including postion, orienation and eventually velocity
-	volatile MovingObject opponentsRobot = new MovingObject(); //our opponents Robot including postion, orienation and eventually velocity
+	volatile MovingObject blueRobot = new MovingObject(); //blue robot including postion, orienation and eventually velocity
+	volatile MovingObject yellowRobot = new MovingObject(); //yellow robot including postion, orienation and eventually velocity
 	volatile MovingObject ball = new MovingObject(); //same as robots but represents the ball
-	volatile MovingObject ourGrey = new MovingObject(); //The grey circle on our robot
-	volatile MovingObject opponentsGrey = new MovingObject(); //the grey circle on our opponents robot
+	volatile MovingObject blueGrey = new MovingObject(); //The grey circle on the blue robot
+	volatile MovingObject yellowGrey = new MovingObject(); //the grey circle on the yellow robot
     
 	volatile ArrayList<Point> bluePixels = new ArrayList<Point>(); //Holds all the blue pixels (the T)
 	volatile ArrayList<Point> yellowPixels = new ArrayList<Point>(); //Holds all the yellow pixels (the T)
-	volatile Point ourKeyPoint = new Point();
-	volatile Point opponentsKeyPoint = new Point();
+	volatile Point blueKeyPoint = new Point();
+	volatile Point yellowKeyPoint = new Point();
 	
-	public Point getOurKeyPoint(){
-		return this.ourKeyPoint;
+	public Point getBlueKeyPoint(){
+		return this.blueKeyPoint;
 	}
-	public Point getOpponentsKeyPoint(){
-		return this.opponentsKeyPoint;
+	public Point getYellowKeyPoint(){
+		return this.yellowKeyPoint;
 	} 
-	public void setOurKeyPoint(Point p){
-		ourKeyPoint = p;
+	public void setBlueKeyPoint(Point p){
+		blueKeyPoint = p;
 	}
-	public void setOpponentsKeyPoint(Point p){
-		opponentsKeyPoint = p;
+	public void setYellowKeyPoint(Point p){
+		yellowKeyPoint = p;
 	}
     
 	public ArrayList<Point> getBluePixels() {
@@ -88,22 +88,22 @@ public class WorldState{
     	return this.ourColor;
     }
     
-    public MovingObject getOurRobot(){
-    	//Returns an object representing our robot
-        return this.ourRobot;
+    public MovingObject getBlueRobot(){
+    	//Returns an object representing blue robot
+        return this.blueRobot;
     }
 
-    public MovingObject getOpponentsRobot(){
-    	//Returns an object representing our opponents robot
-        return this.opponentsRobot;
+    public MovingObject getYellowRobot(){
+    	//Returns an object representing our yellow robot
+        return this.yellowRobot;
     }
-    public MovingObject getOpponentsGrey(){
-    	//Returns an object representing the grey circle on our opponents robot
-        return this.opponentsGrey;
+    public MovingObject getYellowGrey(){
+    	//Returns an object representing the grey circle on our yellow robot
+        return this.yellowGrey;
     }
-    public MovingObject getOurGrey(){
-    	//Returns an object representing the grey circle on our robot
-        return this.ourGrey;
+    public MovingObject getBlueGrey(){
+    	//Returns an object representing the grey circle on blue robot
+        return this.blueGrey;
     }
 
     public MovingObject getBall(){
@@ -126,60 +126,60 @@ public class WorldState{
         return this.opponentsGoal;
     }
     
-    public void setOurRobot(ObjectPosition position, double velocity){
-    	//Lets you set our robot by providing a position and a velocity
-    	this.ourRobot.set(position,velocity);
+    public void setBlueRobot(ObjectPosition position, double velocity){
+    	//Lets you set blue robot by providing a position and a velocity
+    	this.blueRobot.set(position,velocity);
     }
     
-    public void setOurRobotPosition(int x, int y){
-    	//Set our robots centre point with the x and y values
+    public void setBlueRobotPosition(int x, int y){
+    	//Set blue robots centre point with the x and y values
     	//Vision.logger.debug(Integer.toString(x) + "," + Integer.toString(y));
-    	this.ourRobot.setPosition(x,y);
+    	this.blueRobot.setPosition(x,y);
     }
-    public void setOurGreyPosition(int x, int y){
-    	//Sets the position of our grey circle using the x and y values
-    	this.ourGrey.setPosition(x, y);
+    public void setBlueGreyPosition(int x, int y){
+    	//Sets the position of blue grey circle using the x and y values
+    	this.blueGrey.setPosition(x, y);
     }
-    public void setOurGreyPosition(Point p){
-    	//Sets our grey position using a point
-    	this.ourGrey.setPosition(p);
+    public void setBlueGreyPosition(Point p){
+    	//Sets blue grey position using a point
+    	this.blueGrey.setPosition(p);
     }
-    public void setOpponentsGreyPosition(int x, int y){
-    	//Sets the position of our opponents grey circle using the x and y values
-    	this.opponentsGrey.setPosition(x, y);
+    public void setYellowGreyPosition(int x, int y){
+    	//Sets the position of our yellow grey circle using the x and y values
+    	this.yellowGrey.setPosition(x, y);
     }
-    public void setOpponentsGreyPosition(Point p){
-    	//Sets the position of our opponents grey cirlce using a point
-    	this.opponentsGrey.setPosition(p);
+    public void setYellowGreyPosition(Point p){
+    	//Sets the position of our yellow grey cirlce using a point
+    	this.yellowGrey.setPosition(p);
     }
-    public void setOurRobotPosition(Point p){
-    	//Sets the centre of our robot using a point
-    	this.ourRobot.setPosition(p);
-    }
-    
-    public void setOurRobotPosition(ObjectPosition position){
-    	//Sets our robot position by passing in the given ObjectPosition
-    	this.ourRobot.setPosition(position);
+    public void setBlueRobotPosition(Point p){
+    	//Sets the centre of blue robot using a point
+    	this.blueRobot.setPosition(p);
     }
     
-    public void setOpponentsRobot(ObjectPosition position, double velocity){
-    	//Sets the opponents robot by giving a position and a velocity
-    	this.opponentsRobot.set(position,velocity);
+    public void setBlueRobotPosition(ObjectPosition position){
+    	//Sets blue robot position by passing in the given ObjectPosition
+    	this.blueRobot.setPosition(position);
     }
     
-    public void setOpponentsRobotPosition(int x, int y){
-    	//Sets the opponents robot centre using the given x and y values
-    	this.opponentsRobot.setPosition(x,y);
+    public void setYellowRobot(ObjectPosition position, double velocity){
+    	//Sets the yellow robot by giving a position and a velocity
+    	this.yellowRobot.set(position,velocity);
     }
     
-    public void setOpponentsRobotPosition(Point p){
-    	//Sets the opponents robot centre using the given point
-    	this.opponentsRobot.setPosition(p);
+    public void setYellowRobotPosition(int x, int y){
+    	//Sets the yellow robot centre using the given x and y values
+    	this.yellowRobot.setPosition(x,y);
     }
     
-    public void setOpponentsRobotPosition(ObjectPosition position){
-    	//Set the opponents robot given an ObjectPosition
-    	this.opponentsRobot.setPosition(position);
+    public void setYellowRobotPosition(Point p){
+    	//Sets the yellow robot centre using the given point
+    	this.yellowRobot.setPosition(p);
+    }
+    
+    public void setYellowRobotPosition(ObjectPosition position){
+    	//Set the yellow robot given an ObjectPosition
+    	this.yellowRobot.setPosition(position);
     }
     
     public void setBall(ObjectPosition position, double velocity){

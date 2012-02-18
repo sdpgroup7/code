@@ -71,7 +71,7 @@ public class Strategy {
 				} catch (InterruptedException e) {
 					logger.error(e);
 				}
-				Point oldPoint = (Point) Vision.worldState.getOurRobot().getPosition().getCentre().clone();
+				Point oldPoint = (Point) Vision.worldState.getBlueRobot().getPosition().getCentre().clone();
 				logger.debug("Old point: " + oldPoint);	
 
 				controller.moveForward(10);
@@ -80,7 +80,7 @@ public class Strategy {
 				} catch (InterruptedException e) {
 					logger.error(e);
 				}
-				Point newPoint = (Point) Vision.worldState.getOurRobot().getPosition().getCentre().clone();
+				Point newPoint = (Point) Vision.worldState.getBlueRobot().getPosition().getCentre().clone();
 				logger.debug("New point: " + newPoint);
 				angle = Math.atan2(newPoint.y-oldPoint.y, newPoint.x-oldPoint.x);
 				ratio = 10/Point.distance(newPoint.x, newPoint.y, oldPoint.x, oldPoint.y);
@@ -98,7 +98,7 @@ public class Strategy {
 						runFlag = false;
 					}
 					setAngleHack();
-					Point robot = Vision.worldState.getOurRobot().getPosition().getCentre();
+					Point robot = Vision.worldState.getBlueRobot().getPosition().getCentre();
 					
 					double targetangle = Tools.getAngleToFacePoint(robot, angle, ball);
 					/* should we drive to the robot? */
