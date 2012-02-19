@@ -94,7 +94,7 @@ public class ControlInterface {
 	 * 
 	 *  @return The converted angle so it is measured off the y axis rather than the x
 	 */
-	private double convertAngle(double angle) {
+	public double convertAngle(double angle) {
 		//TODO add the conversion on here
 		double newAngle = 0;
 		logger.debug(String.format("Converted angle from %f to %f", angle, newAngle));
@@ -108,7 +108,7 @@ public class ControlInterface {
 	 * 
 	 * @return The goal point
 	 */
-	private Point findGoalPoint(ArrayList<Point> points, Point robotPosition) throws Exception {
+	public Point findGoalPoint(ArrayList<Point> points, Point robotPosition) throws Exception {
 		
 		Circle2D zone = new Circle2D(robotPosition.getX(), robotPosition.getY(), this.lookahead);
 		boolean run = true;
@@ -119,8 +119,8 @@ public class ControlInterface {
 			
 			if (i == size) {
 				logger.error("Lookahead point unable to be found");
+				throw new Exception("Lookahead point unable to be found");
 				break;
-				//Insert exception here
 			}
 			
 			LineSegment2D line = new LineSegment2D(points.get(i).getX(), points.get(i).getY(), points.get(i+1).getX(), points.get(i+1).getY());
