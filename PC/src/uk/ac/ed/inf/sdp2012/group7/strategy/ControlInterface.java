@@ -49,19 +49,19 @@ public class ControlInterface {
 		// The paper where this maths comes from can be found here
 		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
 
-		Point p = new Point();
+		Point2D h = null;
+		Point2D p = new Point2D();
 		// TODO: Ask Grid for this position
-
-		if (pointPath.size() < 5) {
-			Point h = pointPath.get(pointPath.size() - 1);
-		} else {
-			Point h = pointPath.get(this.lookahead - 1);
+		
+		try {
+			h = this.findGoalPoint(pointPath, p);
+		} catch(Exception e) {
 		}
 		
 		double alpha = Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))
 				- v;
 
-		double d = p.distance(h);
+		double d = h.getDistance(p);
 	
 		double xhc = d * Math.cos(alpha);
 
@@ -108,42 +108,47 @@ public class ControlInterface {
 	 * 
 	 * @return The goal point
 	 */
-	public Point findGoalPoint(ArrayList<Point> points, Point robotPosition) throws Exception {
+	public Point2D findGoalPoint(ArrayList<Point> points, Point2D p) throws Exception {
 		
-		Circle2D zone = new Circle2D(robotPosition.getX(), robotPosition.getY(), this.lookahead);
+		Circle2D zone = new Circle2D(p.getX(), p.getY(), this.lookahead);
 		boolean run = true;
 		int size = points.size();
 		int i = size -1;
+		
+		Point2D intersect = null;
 		
 		while(run) {
 			
 			if (i == size) {
 				logger.error("Lookahead point unable to be found");
 				throw new Exception("Lookahead point unable to be found");
-				break;
 			}
 			
 			LineSegment2D line = new LineSegment2D(points.get(i).getX(), points.get(i).getY(), points.get(i+1).getX(), points.get(i+1).getY());
 			Collection<Point2D> intersections = zone.getIntersections(line);
 			
-			if (intersections.size() == 1) {
+			
+			if (intersections.size() == 1 || intersections.size() == 2) {
 				
-				for (Point2D p : intersections) {
-					Point2D intersect = new Point2D(p);
+				if (intersections.size() == 2) {
+					logger.debug("I found 2 points, taking the last point.");
+				}
+				for (Point2D point : intersections) {
+					intersect = new Point2D(point);
 				}
 				logger.debug(String.format("Goal point found at (%f,%f)", intersect.getX(), intersect.getY()));
 				run = false;
 				
-			} else if (intersections.size() == 2) {
-				logger.debug("Something went wrong, I found 2 points");
 			} else {
-				i++;
 				logger.debug("No points found, going to next line segment");
 			}
-			
+			i++;
+
 		}
-		
-		return
+				
+		return intersect;
 	}
+	
+
 
 }

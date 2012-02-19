@@ -2,9 +2,12 @@ package uk.ac.ed.inf.sdp2012.group7.testing.strategy;
 
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import math.geom2d.Point2D;
+
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.ControlInterface;
 
@@ -13,8 +16,8 @@ public class ControlInterfaceTest {
 	
 	private int look;
 	private ControlInterface inter;
-	private Point expected;
-	private Point position;
+	private Point2D expected;
+	private Point2D position;
 	private ArrayList<Point> path;
 	
 	/*
@@ -23,32 +26,74 @@ public class ControlInterfaceTest {
 	@Test public void goalTest1() {
 		look = 3;
 		inter = new ControlInterface(look);
-		expected = new Point(0,3);
-		position = new Point (0,0);
+		expected = new Point2D(0,3);
+		position = new Point2D (0,0);
 		path = new ArrayList<Point>();
 		path.add(new Point(0,1));
 		path.add(new Point(0,5));
 		
-		Point actual = inter.findGoalPoint(path, position);
-		assertTrue(expected == actual);
+		try {
+			Point2D actual = inter.findGoalPoint(path, position);
+			assertTrue(expected.equals(actual));
+		} catch (Exception e) {
+		}
+		
 	}
 	
 	/*
 	 * Ensures that if the path cannot be found then it complains
 	 */
-	@Test(expected = Exception.class) public void goaltest2() {
+	@Test(expected = Exception.class) public void goalTest2() throws Exception {
 		look = 3;
 		inter = new ControlInterface(look);
-		position = new Point(0,3);
+		position = new Point2D(0,3);
 		path = new ArrayList<Point>();
 		path.add(new Point(22,22));
 		path.add(new Point(24,24));
 		
-		Point actual = inter.findGoalPoint(path, position);
+		Point2D actual = inter.findGoalPoint(path, position);
+	
 	}
+	
+	/*
+	 * Ensures that it can deal with the point at the end of the path
+	 */
+	@Test public void goalTest3() {
+		look = 5;
+		inter = new ControlInterface(look);
+		expected = new Point2D(25,30);
+		position = new Point2D(25,25);
+		path = new ArrayList<Point>();
+		path.add(new Point(22,25));
+		path.add(new Point(25,26));
+		path.add(new Point(25,28));
+		path.add(new Point(25,32));
+		
+		try {
+			Point2D actual = inter.findGoalPoint(path, position);
+			assertTrue(expected.equals(actual));
+		} catch (Exception e) {
+		}
+	}
+	
+	/*
+	 * Ensure that it can deal with 2 points on the same path
+	 */
+	@Test public void goalTest4() {
+		look = 3;
+		inter = new ControlInterface(look);
+		expected = new Point2D(25,28);
+		position = new Point2D(25,25);
+		path = new ArrayList<Point>();
+		path.add(new Point(20,23));
+		path.add(new Point(27,30));
+		
+		try {
+			Point2D actual = inter.findGoalPoint(path, position);
+			assertTrue(expected.equals(actual));
+		} catch (Exception e){
+		}
+		
+		
+		}
 }
-	
-	
-	
-
-
