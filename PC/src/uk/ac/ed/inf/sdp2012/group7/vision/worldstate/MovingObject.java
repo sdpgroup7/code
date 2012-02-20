@@ -10,6 +10,11 @@ public class MovingObject {
 	volatile double velocity;
 	volatile double angle; 
 	volatile public ArrayList<TimePoint> positions = new ArrayList<TimePoint>();
+	volatile public ArrayList<Point> angles = new ArrayList<Point>();
+	volatile public ArrayList<Point> movedAngles = new ArrayList<Point>();
+	volatile public ArrayList<Point> centroids = new ArrayList<Point>();
+	volatile public ArrayList<Point> movedCentroids = new ArrayList<Point>();
+	
 	
     public void addPosition(Point p){
     	positions.add(new TimePoint(p,System.currentTimeMillis()));
@@ -34,9 +39,43 @@ public class MovingObject {
 		this.angle = angle; 
 	}
 	
-	public double getAngle(){
-		return angle;
+	public void addAngle(Point p){
+		if(angles.size() > 1){
+			if(Point.distance(p.x, p.y, angles.get(1).x, angles.get(1).y) < 10){
+				angles.add(p);
+				movedAngles.clear();
+			} else {
+				movedAngles.add(p);
+			}
+		} else {
+			angles.add(p);
+		}
+		if(movedAngles.size() > 10){
+			angles.clear();
+			Point c = new Point(0,0);
+			for(Point m : movedAngles){
+				c = new Point(c.x + m.x , c.y + m.y);
+			}
+			c = new Point(c.x / movedAngles.size() , c.y / movedAngles.size());
+			angles.add(c);
+			movedAngles.clear();
+		}
+		if(angles.size() > 2) angles.remove(0);
 	}
+	
+	public Point getAngle(){
+		if(angles.size() > 0){
+			Point a = new Point(0,0);
+			for(Point p : angles){
+				a = new Point(a.x + p.x, a.y + p.y);
+			}
+			a = new Point(a.x / angles.size(), a.y / angles.size());
+			return a;
+		} else {
+			return new Point(0,0);
+		}
+	}
+	
 	
     public ObjectPosition getPosition(){
         return this.position;

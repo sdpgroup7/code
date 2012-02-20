@@ -23,8 +23,8 @@ public class Thresholding {
 	private ArrayList<Integer> blueRobotX = new ArrayList<Integer>();
 	private ArrayList<Integer> yellowRobotY = new ArrayList<Integer>();
 	private ArrayList<Integer> blueRobotY = new ArrayList<Integer>();
-	private ArrayList<Point> ourGreenPlate = new ArrayList<Point>();
-	private ArrayList<Point> opponentGreenPlate = new ArrayList<Point>();
+	private ArrayList<Point> blueGreenPlate = new ArrayList<Point>();
+	private ArrayList<Point> yellowGreenPlate = new ArrayList<Point>();
 	
 
     private Color c;
@@ -52,21 +52,21 @@ public class Thresholding {
     
     private Point pastBlueCent = new Point();
     private Point pastYellCent = new Point();
-    private Point pastOurGreyCent = new Point();
-    private Point pastOpponentGreyCent = new Point(); 
+    private Point pastBlueGreyCent = new Point();
+    private Point pastYellowGreyCent = new Point(); 
     
     private Point ballCentroid = new Point();
     private Point blueCentroid = new Point();
     private Point yellowCentroid = new Point();
     private Point blueGreenPlateCentroid = new Point();
-    private Point ourGreyCentroid = new Point();
-    private Point opponentGreyCentroid = new Point();
+    private Point blueGreyCentroid = new Point();
+    private Point yellowGreyCentroid = new Point();
     
     private int ballCount;
     private int yellowCount;
     private int blueCount;
-    private int ourGreyCount;
-    private int opponentGreyCount;
+    private int blueGreyCount;
+    private int yellowGreyCount;
  //    private int robot; // 0 for Yellow, 1 for Blue(our robot)  We will use the world state
     
     private ThresholdsState ts;
@@ -113,18 +113,11 @@ public class Thresholding {
     		pitch = Vision.worldState.getRoom();
     		width = right-left;
     		height = top-bottom;
-    		if (Vision.worldState.getColor() == Color.yellow) {
-    			  pastBlueCent = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
-    	    	  pastYellCent = Vision.worldState.getOurRobot().getPosition().getCentre();
-    			
-    		}
-    		else {
-    			pastBlueCent = Vision.worldState.getOurRobot().getPosition().getCentre();
-   	    	  	pastYellCent = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
-    		}
+    		pastBlueCent = Vision.worldState.getBlueRobot().getPosition().getCentre();
+    	    pastYellCent = Vision.worldState.getYellowRobot().getPosition().getCentre();
     	  
-    	  	pastOurGreyCent = Vision.worldState.getOurGrey().getPosition().getCentre();
-    	  	pastOpponentGreyCent = Vision.worldState.getOpponentsGrey().getPosition().getCentre();
+    	  	pastBlueGreyCent = Vision.worldState.getBlueGrey().getPosition().getCentre();
+    	  	pastYellowGreyCent = Vision.worldState.getYellowGrey().getPosition().getCentre();
 		 //  BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
             
            /*
@@ -139,11 +132,11 @@ public class Thresholding {
            yellowCount = 0;
            yellowCentroid.setLocation(0,0);
            
-           ourGreyCount = 0;
-           ourGreyCentroid.setLocation(0,0);
+           blueGreyCount = 0;
+           blueGreyCentroid.setLocation(0,0);
            
-           opponentGreyCount = 0;
-           ourGreyCentroid.setLocation(0,0);
+           yellowGreyCount = 0;
+           blueGreyCentroid.setLocation(0,0);
 
            //Vision.logger.debug("Iterating image");
 	    	for (int i = left; i < right; i++) {
@@ -185,69 +178,43 @@ public class Thresholding {
 					}
 					else if (isGreen(c,GB,RG))  {
 						img.setRGB(i,j, Color.green.getRGB()); // GreenPlates 
-						if (ed.getDistance(Vision.worldState.getOurRobot().getPosition().getCentre(), new Point(i,j)) < 25) {
-							ourGreenPlate.add(new Point(i,j));
-						}
-						else {
-							opponentGreenPlate.add(new Point(i,j));
+						if (ed.getDistance(Vision.worldState.getBlueRobot().getPosition().getCentre(), new Point(i,j)) < 25) {
+							blueGreenPlate.add(new Point(i,j));
+						} else {
+							yellowGreenPlate.add(new Point(i,j));
 						}
 
 					}
-					else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 15) && (ed.getDistance(Vision.worldState.getOurRobot().getPosition().getCentre(), new Point(i,j)) < 22.5) )  {
+					else if (isGrey(c) && (ed.getDistance(pastBlueGreyCent, new Point(i,j)) < 15) && (ed.getDistance(Vision.worldState.getBlueRobot().getPosition().getCentre(), new Point(i,j)) < 22.5) )  {
 						
 					    img.setRGB(i,j, Color.orange.getRGB());
-					    ourGreyCount++;
-					    ourGreyCentroid.setLocation(ourGreyCentroid.getX() + i, ourGreyCentroid.getY() + j);
-					}
-					/*else if (isGrey(c))  {
-						//img.setRGB(i,j, Color.black.getRGB()); // GreenPlates 
-					}
-					else if (isGrey(c))  {
-						img.setRGB(i,j, Color.black.getRGB()); // GreenPlates 
-					}*/
-					else if (isGrey(c) && (ed.getDistance(pastOpponentGreyCent, new Point(i,j)) < 15) && (ed.getDistance(Vision.worldState.getOpponentsRobot().getPosition().getCentre(), new Point(i,j)) < 22.5)) {
+					    blueGreyCount++;
+					    blueGreyCentroid.setLocation(blueGreyCentroid.getX() + i, blueGreyCentroid.getY() + j);
+					} else if (isGrey(c) && (ed.getDistance(pastYellowGreyCent, new Point(i,j)) < 15) && (ed.getDistance(Vision.worldState.getYellowRobot().getPosition().getCentre(), new Point(i,j)) < 22.5)) {
 						
 					    img.setRGB(i,j, Color.pink.getRGB());
-					    opponentGreyCount++;
-					    opponentGreyCentroid.setLocation(opponentGreyCentroid.getX() + i, opponentGreyCentroid.getY() + j);
+					    yellowGreyCount++;
+					    yellowGreyCentroid.setLocation(yellowGreyCentroid.getX() + i, yellowGreyCentroid.getY() + j);
 
 					}
-					/*else if (isGrey(c) && (ed.getDistance(pastOurGreyCent, new Point(i,j)) < 10))  {
-						
-					    img.setRGB(i,j, Color.orange.getRGB());
-					    ourGreyCount++;
-					    ourGreyCentroid.setLocation(ourGreyCentroid.getX() + i, ourGreyCentroid.getY() + j);
-
-					}*/
 				}
 			}
 			
-			if (ballCount == 0){
-			    ballCount++;
-			}
-			if (blueCount == 0){
-			    blueCount++;
-			}
-			if (yellowCount == 0){
-			    yellowCount++;
-			}
-			if (ourGreyCount == 0){
-			    ourGreyCount++;
-			}
-			if (opponentGreyCount == 0){
-			    opponentGreyCount++;
-			}
+			if (ballCount == 0) ballCount++;
+			if (blueCount == 0) blueCount++;
+			if (yellowCount == 0) yellowCount++;
+			if (blueGreyCount == 0) blueGreyCount++;
+			if (yellowGreyCount == 0) yellowGreyCount++;
 			
 	    	//Vision.logger.debug("End Iteration");
 			ballCentroid.setLocation(ballCentroid.getX()/ballCount, ballCentroid.getY()/ballCount);
 			yellowCentroid.setLocation(yellowCentroid.getX()/yellowCount, yellowCentroid.getY()/yellowCount);
 			blueCentroid.setLocation(blueCentroid.getX()/blueCount, blueCentroid.getY()/blueCount);
-			ourGreyCentroid.setLocation(ourGreyCentroid.getX()/ourGreyCount, ourGreyCentroid.getY()/ourGreyCount);
-			opponentGreyCentroid.setLocation(opponentGreyCentroid.getX()/opponentGreyCount, opponentGreyCentroid.getY()/opponentGreyCount);
+			blueGreyCentroid.setLocation(blueGreyCentroid.getX()/blueGreyCount, blueGreyCentroid.getY()/blueGreyCount);
+			yellowGreyCentroid.setLocation(yellowGreyCentroid.getX()/yellowGreyCount, yellowGreyCentroid.getY()/yellowGreyCount);
 			
-
 			
-			Vision.worldState.setOurKeyPoint(findKeyPoint(findTheFourPoints(ourGreenPlate),Vision.worldState.getOurRobot().getPosition().getCentre()));
+			Vision.worldState.setBlueKeyPoint(findKeyPoint(findTheFourPoints(blueGreenPlate),Vision.worldState.getBlueRobot().getPosition().getCentre()));
 
             /*
             Idea is if centroid moves too much in one frame then set it at the previous location.  Doesn't seem to work
@@ -258,48 +225,27 @@ public class Thresholding {
 			    yellowCentroid.setLocation(pastYellCent.getX(),pastYellCent.getY());
 			}
 			*/	
-			if (Vision.worldState.getColor() == Color.blue) {
-			    Vision.worldState.setOurRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
-			    Vision.worldState.setOpponentsRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
-			} else {
-			    Vision.worldState.setOpponentsRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
-			    Vision.worldState.setOurRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
-			}
+			Vision.worldState.setBlueRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
+			Vision.worldState.setYellowRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
 			
 			Vision.worldState.setBallPosition((int)ballCentroid.getX(),(int)ballCentroid.getY());
-			if ( ed.getDistance(Vision.worldState.getOurRobot().getPosition().getCentre(),ourGreyCentroid) < 20 ){
-				Vision.worldState.setOurGreyPosition((int)ourGreyCentroid.getX() ,(int)ourGreyCentroid.getY());
+			if(ed.getDistance(Vision.worldState.getBlueRobot().getPosition().getCentre(),blueGreyCentroid) < 20 ){
+				Vision.worldState.setBlueGreyPosition((int)blueGreyCentroid.getX() ,(int)blueGreyCentroid.getY());
 			}
-			if ( ed.getDistance(Vision.worldState.getOpponentsRobot().getPosition().getCentre(),opponentGreyCentroid) < 20 ){
-				Vision.worldState.setOpponentsGreyPosition((int)opponentGreyCentroid.getX(), (int)opponentGreyCentroid.getY());
+			if(ed.getDistance(Vision.worldState.getYellowRobot().getPosition().getCentre(),yellowGreyCentroid) < 20 ){
+				Vision.worldState.setYellowGreyPosition((int)yellowGreyCentroid.getX(), (int)yellowGreyCentroid.getY());
 			}
 			
 			Vision.worldState.setBluePixels(bluePixels);
 			Vision.worldState.setYellowPixels(yellowPixels);
 			
-			ourGreenPlate.clear();
+			blueGreenPlate.clear();
     	}
     		
     	return img;
 	    	
     }
-    /**
-     * 
-     * @param allGreenThings
-     * @return ourGreen
-     *  Given all green points return the green points around the blue robot
-     */
-     /*
-    public ArrayList<Point> getGreenPlateBlue(ArrayList<Point> allGreenThings){
-    	ArrayList<Point> ourGreen = new ArrayList<Point>();
-    	for (int i = 0; i < greenPlates.size(); i++) {
-			if( (greenPlates.get(i).x > blueCentroid.x - 40) && (greenPlates.get(i).x < blueCentroid.x + 40) &&(greenPlates.get(i).y > blueCentroid.y - 40) && (greenPlates.get(i).y < blueCentroid.y + 40 ) ){
-				ourGreen.add(greenPlates.get(i));
-			}
-		}
-    	return ourGreen;
-    }
-    */
+
     public void setCs(int x, int y, int right, int left, int top, int bottom, BufferedImage img){
         if (x + 1 < right){
             cE = new Color(img.getRGB(x+1,y));
@@ -350,7 +296,7 @@ public class Thresholding {
     	return new Point((int) (sumX/(double)listOfPoints.size() ), (int) (sumY/(double)listOfPoints.size()));
     }
 
-    public Point getBlueGreenPlateCentori(){ 
+    public Point getBlueGreenPlateCentorid(){ 
     	return blueGreenPlateCentroid;
     }
     

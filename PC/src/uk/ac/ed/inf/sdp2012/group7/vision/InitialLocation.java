@@ -111,29 +111,15 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     	Point p;
     	
 		if(c == "blue"){
-			if(Vision.worldState.getColor().equals(Color.blue)){
-				p = new Point(
-						    Vision.worldState.getOurRobot().getPosition().getCentre().x + deltax,
-						    Vision.worldState.getOurRobot().getPosition().getCentre().y + deltay
-						);
-			} else {
-				p = new Point(
-						    Vision.worldState.getOpponentsRobot().getPosition().getCentre().x + deltax,
-						    Vision.worldState.getOpponentsRobot().getPosition().getCentre().y + deltay
-						);
-			}
+			p = new Point(
+					Vision.worldState.getBlueRobot().getPosition().getCentre().x + deltax,
+					Vision.worldState.getYellowRobot().getPosition().getCentre().y + deltay
+			);
 		} else {
-			if(Vision.worldState.getColor().equals(Color.yellow)){
-				p = new Point(
-						    Vision.worldState.getOurRobot().getPosition().getCentre().x + deltax,
-						    Vision.worldState.getOurRobot().getPosition().getCentre().y + deltay
-						);
-			} else {
-				p = new Point(
-						    Vision.worldState.getOpponentsRobot().getPosition().getCentre().x + deltax,
-						    Vision.worldState.getOpponentsRobot().getPosition().getCentre().y + deltay
-						);
-			}
+			p = new Point(
+					Vision.worldState.getYellowRobot().getPosition().getCentre().x + deltax,
+					Vision.worldState.getYellowRobot().getPosition().getCentre().y + deltay
+			);
 		}
 		Vision.logger.debug(p.toString());
 		return p;
@@ -188,8 +174,8 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
         thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
         thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
-        thresholdGUI.setGreyValues(getClickColor("Click OPPONENT grey circle"));
-        thresholdGUI.setGreyValues(getClickColor("Click OUR grey circle"));
+        thresholdGUI.setGreyValues(getClickColor("Click blue's grey circle"));
+        thresholdGUI.setGreyValues(getClickColor("Click yellow's grey circle"));
     }
     /*
     Get the threshold values for the objects in the match i.e. ball.

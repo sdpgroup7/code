@@ -26,7 +26,7 @@ public class FeedProcessor{
     
     private int height;
     private int width;
-   
+
     
     double prevAngle = 0;
 
@@ -64,48 +64,30 @@ public class FeedProcessor{
             calculateAngle();
             //System.err.println(Vision.worldState.getOurRobot().getAngle());
         }
-    	
-    	if(Math.abs(Vision.worldState.getOurRobot().getAngle() - prevAngle) > 0.01){
-    		prevAngle = Vision.worldState.getOurRobot().getAngle();
-    		/* 
-    		 * go and fuck yourself with a broom handle
-    		 * use the logger for this stuff, so we could just turn it off with an increased level of logging
-    		 * rather than searching all source files for System.out.println which spams the whole output
-    		 * thanks a lot 
-    		 */
-    		//System.out.println("Current angle: " + prevAngle);
-    	}
-    	
+
     }
     public void calculateAngle(){
-    	double ourAngle = findAngle.findOrientation(
-    		Vision.worldState.getOurKeyPoint().x, 
-    	    Vision.worldState.getOurKeyPoint().y,
-    	    Vision.worldState.getOurRobot().getPosition().getCentre().x,
-    	    Vision.worldState.getOurRobot().getPosition().getCentre().y
+    	double blueAngle = findAngle.findOrientation(
+    		Vision.worldState.getBlueKeyPoint().x, 
+    	    Vision.worldState.getBlueKeyPoint().y,
+    	    Vision.worldState.getBlueRobot().getPosition().getCentre().x,
+    	    Vision.worldState.getBlueRobot().getPosition().getCentre().y
     	   
     	);
-    	double opponentAngle = findAngle.findOrientation(
-    	    Vision.worldState.getOpponentsRobot().getPosition().getCentre().x,
-    	    Vision.worldState.getOpponentsRobot().getPosition().getCentre().y, 
-    	    Vision.worldState.getOpponentsGrey().getPosition().getCentre().x, 
-    	    Vision.worldState.getOpponentsGrey().getPosition().getCentre().y
+    	double yellowAngle = findAngle.findOrientation(
+    	    Vision.worldState.getYellowRobot().getPosition().getCentre().x,
+    	    Vision.worldState.getYellowRobot().getPosition().getCentre().y, 
+    	    Vision.worldState.getYellowGrey().getPosition().getCentre().x, 
+    	    Vision.worldState.getYellowGrey().getPosition().getCentre().y
     	);
-    	Vision.worldState.getOurRobot().setAngle(ourAngle);
-    	Vision.worldState.getOpponentsRobot().setAngle(opponentAngle);
+    	Vision.worldState.getBlueRobot().setAngle(blueAngle);
+    	Vision.worldState.getYellowRobot().setAngle(yellowAngle);
     }
     public void markObjects(Graphics imageGraphics){
             Point ball = Vision.worldState.getBall().getPosition().getCentre();
-            Point blue;
-            Point yellow;
-            
-            if (Vision.worldState.getColor() == Color.blue){
-                blue = Vision.worldState.getOurRobot().getPosition().getCentre();
-                yellow = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
-            } else {
-                yellow = Vision.worldState.getOurRobot().getPosition().getCentre();
-                blue = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
-            }
+            Point blue = Vision.worldState.getBlueRobot().getPosition().getCentre();
+            Point yellow = Vision.worldState.getYellowRobot().getPosition().getCentre();
+
             imageGraphics.setColor(Color.red);
             imageGraphics.drawLine(0, ball.y, 640, ball.y);
             imageGraphics.drawLine(ball.x, 0, ball.x, 480);
@@ -114,11 +96,29 @@ public class FeedProcessor{
             imageGraphics.setColor(Color.yellow);
             imageGraphics.drawOval(yellow.x-15, yellow.y-15, 30,30);
             imageGraphics.setColor(Color.white);
-            imageGraphics.setColor(Color.white);
             //imageGraphics.drawLine(Vision.worldState.getOurGrey().getPosition().getCentre().x,Vision.worldState.getOurGrey().getPosition().getCentre().y,Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y);
             //imageGraphics.drawLine(Vision.worldState.getOpponentsGrey().getPosition().getCentre().x,Vision.worldState.getOpponentsGrey().getPosition().getCentre().y,Vision.worldState.getOpponentsRobot().getPosition().getCentre().x,Vision.worldState.getOpponentsRobot().getPosition().getCentre().y);
-            imageGraphics.drawLine(Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y, Vision.worldState.getOurKeyPoint().x,Vision.worldState.getOurKeyPoint().y);
+            //imageGraphics.drawLine(Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y, Vision.worldState.getOurKeyPoint().x,Vision.worldState.getOurKeyPoint().y);
             //could the above line be shorter with the current worldState state?
+            Point p = findAngle.findOrientation(Vision.worldState.getBluePixels(),Vision.worldState.getBlueRobot().getPosition().getCentre());
+            Vision.worldState.getBlueRobot().addAngle(p);
+            p = Vision.worldState.getBlueRobot().getAngle();
+            imageGraphics.drawLine(
+            		Vision.worldState.getBlueRobot().getPosition().getCentre().x,
+            		Vision.worldState.getBlueRobot().getPosition().getCentre().y,
+            		p.x,
+            		p.y);
+            imageGraphics.setColor(Color.red);
+            p = findAngle.findOrientation(Vision.worldState.getYellowPixels(), Vision.worldState.getYellowRobot().getPosition().getCentre());
+            Vision.worldState.getYellowRobot().addAngle(p);
+            p = Vision.worldState.getYellowRobot().getAngle();
+            imageGraphics.drawLine(
+            		Vision.worldState.getYellowRobot().getPosition().getCentre().x,
+            		Vision.worldState.getYellowRobot().getPosition().getCentre().y,
+            		p.x,
+            		p.y);
+            
+    
     }
 
     public static void calculateFPS(long before, Graphics imageGraphics, Graphics frameGraphics, BufferedImage image, int width, int height){
@@ -136,11 +136,11 @@ public class FeedProcessor{
     	int black = -16777216;
     	int pink = -60269;
     	if(Vision.worldState.isClickingDone()){
-    		for(int x = Vision.worldState.getOurRobot().getPosition().getCentre().x - 40;
-    		x < Vision.worldState.getOurRobot().getPosition().getCentre().x + 40;x++)
+    		for(int x = Vision.worldState.getBlueRobot().getPosition().getCentre().x - 40;
+    		x < Vision.worldState.getBlueRobot().getPosition().getCentre().x + 40;x++)
     		{
-    			for(int y = Vision.worldState.getOurRobot().getPosition().getCentre().y - 40;
-    			y < Vision.worldState.getOurRobot().getPosition().getCentre().y + 40; y++)
+    			for(int y = Vision.worldState.getBlueRobot().getPosition().getCentre().y - 40;
+    			y < Vision.worldState.getBlueRobot().getPosition().getCentre().y + 40; y++)
     			{
     				try{
     					Color imageRGB = new Color(image.getRGB(x,y));
@@ -153,11 +153,11 @@ public class FeedProcessor{
     				}
     			}
     		}
-    		for(int x = Vision.worldState.getOpponentsRobot().getPosition().getCentre().x - 40;
-    		x < Vision.worldState.getOpponentsRobot().getPosition().getCentre().x + 40;x++)
+    		for(int x = Vision.worldState.getYellowRobot().getPosition().getCentre().x - 40;
+    		x < Vision.worldState.getYellowRobot().getPosition().getCentre().x + 40;x++)
     		{
-    			for(int y = Vision.worldState.getOpponentsRobot().getPosition().getCentre().y - 40;
-    			y < Vision.worldState.getOpponentsRobot().getPosition().getCentre().y + 40; y++)
+    			for(int y = Vision.worldState.getYellowRobot().getPosition().getCentre().y - 40;
+    			y < Vision.worldState.getYellowRobot().getPosition().getCentre().y + 40; y++)
     			{
     				try{
     					Color imageRGB = new Color(image.getRGB(x,y));

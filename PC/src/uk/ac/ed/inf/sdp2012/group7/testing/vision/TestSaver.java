@@ -27,17 +27,12 @@ public class TestSaver {
         	//TODO: verify angles
         	Point[] pts = new Point[points.size()];
         	points.toArray(pts);
-        	double blueO;
-        	double yellowO;
+        	double blueO = 0;
+        	double yellowO = 0;
         	
-        	if(Vision.worldState.getColor() == Color.blue){
-        		blueO = Vision.worldState.getOurRobot().getAngle();
-        		yellowO = Vision.worldState.getOpponentsRobot().getAngle();
-        	} else {
-        		yellowO = Vision.worldState.getOurRobot().getAngle();
-         		blueO = Vision.worldState.getOpponentsRobot().getAngle();
-        	}
-        	
+        	//blueO = Vision.worldState.getBlueRobot().getAngle();
+        	//yellowO = Vision.worldState.getYellowRobot().getAngle();
+
         	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         	DocumentBuilder docBuilder = factory.newDocumentBuilder();
         	Document doc = docBuilder.newDocument();
