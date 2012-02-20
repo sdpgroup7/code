@@ -11,9 +11,9 @@ import uk.ac.ed.inf.sdp2012.group7.vision.EuclideanDistance;
 /**
  * 
  * @author s0951580
- * TODO: get WHICH ROBOT ARE WE? and find the centroid of the plate that is ours
+ * 
  * TODO: clustering algorithm to get the T right 
- * TODO: BLUE ROBOT IS CURRENTLY HARD CODED, needs to be done for the other pitch as well 
+ * 
  */
 
 
@@ -25,6 +25,8 @@ public class Thresholding {
 	private ArrayList<Integer> blueRobotY = new ArrayList<Integer>();
 	private ArrayList<Point> blueGreenPlate = new ArrayList<Point>();
 	private ArrayList<Point> yellowGreenPlate = new ArrayList<Point>();
+	private Point[] blueGreenPlate4Points = new Point[]{new Point(0,0),new Point(0,0),new Point(0,0),new Point(0,0)};
+	private Point[] yellowGreenPlate4Points = new Point[]{new Point(0,0),new Point(0,0),new Point(0,0),new Point(0,0)};
 	
 
     private Color c;
@@ -178,9 +180,10 @@ public class Thresholding {
 					}
 					else if (isGreen(c,GB,RG))  {
 						img.setRGB(i,j, Color.green.getRGB()); // GreenPlates 
-						if (ed.getDistance(Vision.worldState.getBlueRobot().getPosition().getCentre(), new Point(i,j)) < 25) {
+						if (ed.getDistance(Vision.worldState.getBlueRobot().getPosition().getCentre(), new Point(i,j)) < 34) {
 							blueGreenPlate.add(new Point(i,j));
-						} else {
+						} 
+						if (ed.getDistance(Vision.worldState.getYellowRobot().getPosition().getCentre(), new Point(i,j)) < 34){
 							yellowGreenPlate.add(new Point(i,j));
 						}
 
@@ -213,9 +216,9 @@ public class Thresholding {
 			blueGreyCentroid.setLocation(blueGreyCentroid.getX()/blueGreyCount, blueGreyCentroid.getY()/blueGreyCount);
 			yellowGreyCentroid.setLocation(yellowGreyCentroid.getX()/yellowGreyCount, yellowGreyCentroid.getY()/yellowGreyCount);
 			
+			blueGreenPlate4Points = findTheFourPoints(blueGreenPlate);
+			yellowGreenPlate4Points = findTheFourPoints(yellowGreenPlate);
 			
-			Vision.worldState.setBlueKeyPoint(findKeyPoint(findTheFourPoints(blueGreenPlate),Vision.worldState.getBlueRobot().getPosition().getCentre()));
-
             /*
             Idea is if centroid moves too much in one frame then set it at the previous location.  Doesn't seem to work
             not sure why needs some investigating.  This should work because it can reacquire the robot centres automatically
@@ -240,6 +243,7 @@ public class Thresholding {
 			Vision.worldState.setYellowPixels(yellowPixels);
 			
 			blueGreenPlate.clear();
+			yellowGreenPlate.clear();
     	}
     		
     	return img;
@@ -309,7 +313,7 @@ public class Thresholding {
     }
     
     public boolean isGreen(Color c, int GB, int RG){
-        return ( GB > 70 && RG > 70 && c.getGreen() > greenPlatesThresh[pitch][0]);
+        return ( GB > 55 && RG > 55 && c.getGreen() > greenPlatesThresh[pitch][0]);
     }
     
     public boolean isGrey(Color c){
@@ -358,7 +362,7 @@ public class Thresholding {
 				ans[0] = points.get(i);
 				minX = points.get(i).x;
 			}
-			if(points.get(i).x > maxX){
+			if(points.get(i).x >= maxX){
 				ans[1] = points.get(i);
 				maxX = points.get(i).x;
 			}
@@ -366,7 +370,7 @@ public class Thresholding {
 				ans[2] = points.get(i);
 				minY = points.get(i).y;
 			}
-			if(points.get(i).y > maxY){
+			if(points.get(i).y >= maxY){
 				ans[3] = points.get(i);
 				maxY = points.get(i).y;
 			}
@@ -413,5 +417,11 @@ public class Thresholding {
 		//System.err.println("Second point"+ secondMinP.x+","+secondMinP.y);
 		ans.setLocation( (firstMinP.x + secondMinP.x)/2, (firstMinP.y + secondMinP.y)/2);
 		return ans;
+	}
+	public Point[] getBlueGreenPlate4Points(){
+		return blueGreenPlate4Points;
+	}
+	public Point[] getYellowGreenPlate4Points(){
+		return yellowGreenPlate4Points;
 	}
 }

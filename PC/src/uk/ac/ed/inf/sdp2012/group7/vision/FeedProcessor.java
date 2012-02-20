@@ -118,8 +118,17 @@ public class FeedProcessor{
             		p.x,
             		p.y);
             
-    
+            imageGraphics.drawLine(doThresh.getBlueGreenPlate4Points()[0].x,doThresh.getBlueGreenPlate4Points()[0].y, doThresh.getBlueGreenPlate4Points()[3].x, doThresh.getBlueGreenPlate4Points()[3].y);
+            imageGraphics.drawLine(doThresh.getBlueGreenPlate4Points()[0].x,doThresh.getBlueGreenPlate4Points()[0].y, doThresh.getBlueGreenPlate4Points()[2].x, doThresh.getBlueGreenPlate4Points()[2].y);
+            imageGraphics.drawLine(doThresh.getBlueGreenPlate4Points()[1].x,doThresh.getBlueGreenPlate4Points()[1].y, doThresh.getBlueGreenPlate4Points()[3].x, doThresh.getBlueGreenPlate4Points()[3].y);
+            imageGraphics.drawLine(doThresh.getBlueGreenPlate4Points()[1].x,doThresh.getBlueGreenPlate4Points()[1].y, doThresh.getBlueGreenPlate4Points()[2].x, doThresh.getBlueGreenPlate4Points()[2].y);
+            
+            imageGraphics.drawLine(doThresh.getYellowGreenPlate4Points()[0].x,doThresh.getYellowGreenPlate4Points()[0].y, doThresh.getYellowGreenPlate4Points()[3].x, doThresh.getYellowGreenPlate4Points()[3].y);
+            imageGraphics.drawLine(doThresh.getYellowGreenPlate4Points()[0].x,doThresh.getYellowGreenPlate4Points()[0].y, doThresh.getYellowGreenPlate4Points()[2].x, doThresh.getYellowGreenPlate4Points()[2].y);
+            imageGraphics.drawLine(doThresh.getYellowGreenPlate4Points()[1].x,doThresh.getYellowGreenPlate4Points()[1].y, doThresh.getYellowGreenPlate4Points()[3].x, doThresh.getYellowGreenPlate4Points()[3].y);
+            imageGraphics.drawLine(doThresh.getYellowGreenPlate4Points()[1].x,doThresh.getYellowGreenPlate4Points()[1].y, doThresh.getYellowGreenPlate4Points()[2].x, doThresh.getYellowGreenPlate4Points()[2].y);
     }
+    
 
     public static void calculateFPS(long before, Graphics imageGraphics, Graphics frameGraphics, BufferedImage image, int width, int height){
         /* Used to calculate the FPS. */
