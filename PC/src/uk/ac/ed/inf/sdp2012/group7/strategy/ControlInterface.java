@@ -92,11 +92,17 @@ public class ControlInterface {
 	 * Changes the angle provided by vision into one required by the calculations
 	 * @param	angle	the original angle to be converted in radians
 	 * 
-	 *  @return The converted angle so it is measured off the y axis rather than the x
+	 * @return The converted angle so it is measured off the y axis rather than the x
 	 */
 	public double convertAngle(double angle) {
-		//TODO add the conversion on here
-		double newAngle = 0;
+
+		if(angle < 0){
+			angle = -angle;
+		} else {
+			angle = (2.0*Math.PI) - angle;
+		}
+		double newAngle = (angle + (3*Math.PI/2.0)) % (2*Math.PI);
+		
 		logger.debug(String.format("Converted angle from %f to %f", angle, newAngle));
 		return newAngle;
 	}
