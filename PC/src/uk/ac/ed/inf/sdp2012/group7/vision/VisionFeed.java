@@ -47,6 +47,7 @@ public class VisionFeed extends WindowAdapter {
     private BufferedImage frameImage;
     //private ControlGUI thresholdGUI;
     private FeedProcessor processor;
+    private JavaCVProcessor cvProcessor;
     public boolean paused = false;
     int count = 0;
     /**
@@ -145,7 +146,10 @@ public class VisionFeed extends WindowAdapter {
                 }
                 frame.recycle();
                 //processor.processAndUpdateImage(frameImage, before, label, labelThresh);
-                processor.processAndUpdateImage(frameImage, before, label);
+               processor.processAndUpdateImage(frameImage, before, label);
+                
+               // cvProcessor.cvProcess(frameImage, label);
+                
                 count++;
                 if (count == 15){
                 	writeImage(frameImage, "backGround");
