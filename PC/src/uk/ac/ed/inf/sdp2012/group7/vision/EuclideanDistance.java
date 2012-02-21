@@ -3,6 +3,10 @@ package uk.ac.ed.inf.sdp2012.group7.vision;
 import java.awt.Point;
 import java.lang.Math;
 
+/*
+I was a bit silly making this class.  Just use the built in points api one
+*/
+
 public class EuclideanDistance {
     
     public double getDistance(Point a, Point b){

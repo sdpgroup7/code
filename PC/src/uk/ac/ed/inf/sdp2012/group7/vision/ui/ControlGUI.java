@@ -106,6 +106,7 @@ public class ControlGUI implements ChangeListener {
 	private RangeSlider green_b;
 
 	public final int THRESHOLD = 25;
+	public final int YELLOW_THRESHOLD = 20;
 	
     private boolean penaltyToGame = false;
 
@@ -157,12 +158,12 @@ public class ControlGUI implements ChangeListener {
 	}
 
 	public void setYellowValues(int r, int g, int b){
-		int rLower = r-THRESHOLD;
-		int rUpper = r+THRESHOLD;
-		int gLower = g-THRESHOLD;
-		int gUpper = g+THRESHOLD;
-		int bLower = b-THRESHOLD;
-		int bUpper = b+THRESHOLD;
+		int rLower = r-YELLOW_THRESHOLD;
+		int rUpper = r+YELLOW_THRESHOLD;
+		int gLower = g-YELLOW_THRESHOLD;
+		int gUpper = g+YELLOW_THRESHOLD;
+		int bLower = b-YELLOW_THRESHOLD;
+		int bUpper = b+YELLOW_THRESHOLD;
 
 		if(rLower < 0) rLower = 0;
 		if(gLower < 0) gLower = 0;

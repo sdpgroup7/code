@@ -83,6 +83,11 @@ public class FeedProcessor{
     	Vision.worldState.getBlueRobot().setAngle(blueAngle);
     	Vision.worldState.getYellowRobot().setAngle(yellowAngle);
     }
+    
+    /*
+    Neaten up the code in here, probably readable enough that no comments are needed
+    */
+    
     public void markObjects(Graphics imageGraphics){
             Point ball = Vision.worldState.getBall().getPosition().getCentre();
             Point blue = Vision.worldState.getBlueRobot().getPosition().getCentre();
