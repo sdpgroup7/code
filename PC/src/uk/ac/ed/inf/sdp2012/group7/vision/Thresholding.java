@@ -215,8 +215,13 @@ public class Thresholding {
 			blueGreyCentroid.setLocation(blueGreyCentroid.getX()/blueGreyCount, blueGreyCentroid.getY()/blueGreyCount);
 			yellowGreyCentroid.setLocation(yellowGreyCentroid.getX()/yellowGreyCount, yellowGreyCentroid.getY()/yellowGreyCount);
 			
-			blueGreenPlate4Points = findTheFourPoints(blueGreenPlate);
-			yellowGreenPlate4Points = findTheFourPoints(yellowGreenPlate);
+			Plate plate = new Plate();
+			
+			blueGreenPlate4Points = plate.getCorners(blueGreenPlate);
+			yellowGreenPlate4Points = plate.getCorners(yellowGreenPlate);
+			
+			/*blueGreenPlate4Points = findTheFourPoints(blueGreenPlate);
+			yellowGreenPlate4Points = findTheFourPoints(yellowGreenPlate);*/
 			
 			Vision.worldState.setBlueRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
 			Vision.worldState.setYellowRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
