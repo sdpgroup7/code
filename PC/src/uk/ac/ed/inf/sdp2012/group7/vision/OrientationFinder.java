@@ -63,7 +63,9 @@ public class OrientationFinder{
 
     public Point findOrientation(ArrayList<Point> pixels, Point centroid){
     	//TODO: Convert this into an orientation instead of a point
+    	
     	if(pixels.size() > 0){
+    		
 	    	Point furthest = new Point(0,0);
 	    	double dist = 0;
 	    	for(Point p : pixels){

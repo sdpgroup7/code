@@ -27,6 +27,11 @@ public class Thresholding {
 	private ArrayList<Integer> blueRobotY = new ArrayList<Integer>();
 	private ArrayList<Point> blueGreenPlate = new ArrayList<Point>();
 	private ArrayList<Point> yellowGreenPlate = new ArrayList<Point>();
+	
+
+	private ArrayList<Point> newYellowPixels = new ArrayList<Point>();
+	private ArrayList<Point> newBluePixels = new ArrayList<Point>();
+	
 	private Point[] blueGreenPlate4Points = new Point[]{new Point(0,0),new Point(0,0),new Point(0,0),new Point(0,0)};
 	private Point[] yellowGreenPlate4Points = new Point[]{new Point(0,0),new Point(0,0),new Point(0,0),new Point(0,0)};
 	
@@ -72,7 +77,7 @@ public class Thresholding {
  //    private int robot; // 0 for Yellow, 1 for Blue(our robot)  We will use the world state
     
     private ThresholdsState ts;
-
+    private Plate plate = new Plate();
     private EuclideanDistance ed = new EuclideanDistance();
     
 
@@ -156,7 +161,7 @@ public class Thresholding {
 					}
 					else if (isYellow(c)) {
 					    setCs(i,j,right,left,top,bottom, img);
-					    if (isYellow(cS) && isYellow(cE) && isYellow(cEE) && isYellow(cEN) && isYellow(cSS) && isYellow(cSW)){
+					    if (isYellow(cS) && isYellow(cE) && isYellow(cEE) && isYellow(cEN) && isYellow(cSS) && isYellow(cSW)  ){
 						    img.setRGB(i, j, Color.yellow.getRGB()); // Yellow robot
 						    yellowRobotX.add(i);
 						    yellowRobotY.add(j);
@@ -167,7 +172,7 @@ public class Thresholding {
 					}
 					else if (isBlue(c)){
 					    setCs(i,j,right,left,top,bottom, img);
-					    if (isBlue(cS) && isBlue(cE) && isBlue(cEE) && isBlue(cEN) && isBlue(cSS) && isBlue(cSW)){
+					    if (isBlue(cS) && isBlue(cE) && isBlue(cEE) && isBlue(cEN) && isBlue(cSS) && isBlue(cSW)  ){
 						    img.setRGB(i, j, Color.blue.getRGB()); // Blue robot 
 						    blueRobotX.add(i);
 						    blueRobotY.add(j);
@@ -215,7 +220,7 @@ public class Thresholding {
 			blueGreyCentroid.setLocation(blueGreyCentroid.getX()/blueGreyCount, blueGreyCentroid.getY()/blueGreyCount);
 			yellowGreyCentroid.setLocation(yellowGreyCentroid.getX()/yellowGreyCount, yellowGreyCentroid.getY()/yellowGreyCount);
 			
-			Plate plate = new Plate();
+			
 			
 			blueGreenPlate4Points = plate.getCorners(blueGreenPlate);
 			yellowGreenPlate4Points = plate.getCorners(yellowGreenPlate);
@@ -234,11 +239,36 @@ public class Thresholding {
 				Vision.worldState.setYellowGreyPosition((int)yellowGreyCentroid.getX(), (int)yellowGreyCentroid.getY());
 			}
 			
-			Vision.worldState.setBluePixels(bluePixels);
-			Vision.worldState.setYellowPixels(yellowPixels);
+			
+			
+			/*for(Point p : bluePixels){
+				
+				if( isInRectangle(p,blueGreenPlate4Points)  ){
+					newBluePixels.add(p);
+				}
+			}
+			for(Point p : yellowPixels){
+				
+				if( isInRectangle(p,yellowGreenPlate4Points) ){
+					newYellowPixels.add(p);
+				}
+			}
+			
+			Vision.worldState.setBluePixels(newBluePixels);
+			Vision.worldState.setYellowPixels(newYellowPixels);*/
+			
+			//The above is supposed to filter the pixels and pick up only the T pixels, but the orientation then is always with the (0,0) point 
+			
+			//System.err.println(newBluePixels.size());
 			
 			blueGreenPlate.clear();
 			yellowGreenPlate.clear();
+			
+			Vision.worldState.setBluePixels(bluePixels);//This must be removed to get the upper thing running
+			Vision.worldState.setYellowPixels(yellowPixels); //This must be removed to get the upper thing running
+			
+			newBluePixels.clear();
+			newYellowPixels.clear();
     	}
     		
     	return img;
@@ -428,5 +458,24 @@ public class Thresholding {
 	}
 	public Point[] getYellowGreenPlate4Points(){
 		return yellowGreenPlate4Points;
+	}
+	/**
+	 * 
+	 * @param a point p
+	 * @param array of four points, forming a rectangle
+	 * @return whether p is in the rectangle formed from the four points
+	 */
+	public boolean isInRectangle(Point p, Point[] points){
+		if( p == new Point(0,0) ){
+			return false;
+		}
+		
+		boolean a; 
+		boolean b; 
+		
+		a = plate.isPointInTriangle(points[0], points[2], points[3], p);
+		b = plate.isPointInTriangle(points[1], points[2], points[3], p);
+		
+		return a || b;
 	}
 }
