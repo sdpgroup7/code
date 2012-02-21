@@ -168,6 +168,9 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         return coords;
     }
     
+    /*
+    TODO Get rid of prompts for what we dont need i.e. blue robot
+    */
     //Set the sliders on the GUI, the messages are used to tell the user what to click
     public void getColors(){
         thresholdGUI.setBallValues(getClickColor("Click the ball"));

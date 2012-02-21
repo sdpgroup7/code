@@ -1,6 +1,10 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
 import java.util.ArrayList;
 
+/*
+TODO: Do we use this class
+*/
+
 /**
  * Represents the centre point of an object, for example the ball or a robot.
  * 

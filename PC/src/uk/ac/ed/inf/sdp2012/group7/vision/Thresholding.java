@@ -13,8 +13,10 @@ import uk.ac.ed.inf.sdp2012.group7.vision.EuclideanDistance;
  * @author s0951580
  * 
  * TODO: clustering algorithm to get the T right 
+ * TODO: do we give a shit about the grey circles anymore can we just remove them
  * 
  */
+ 
 
 
 public class Thresholding {
@@ -52,8 +54,6 @@ public class Thresholding {
     private int height;
     private int width;
     
-    private Point pastBlueCent = new Point();
-    private Point pastYellCent = new Point();
     private Point pastBlueGreyCent = new Point();
     private Point pastYellowGreyCent = new Point(); 
     
@@ -109,14 +109,13 @@ public class Thresholding {
     public BufferedImage getThresh(BufferedImage img, int left, int right, int top, int bottom) { // Method to get thresholded image 
     		//Vision.logger.debug("Starting thresholding");
     		
+    	//stops it fucking up the locations before we've given it the thresholds
     	if (Vision.worldState.isClickingDone()){
     		ArrayList<Point> bluePixels = new ArrayList<Point>();
     		ArrayList<Point> yellowPixels = new ArrayList<Point>();
     		pitch = Vision.worldState.getRoom();
     		width = right-left;
     		height = top-bottom;
-    		pastBlueCent = Vision.worldState.getBlueRobot().getPosition().getCentre();
-    	    pastYellCent = Vision.worldState.getYellowRobot().getPosition().getCentre();
     	  
     	  	pastBlueGreyCent = Vision.worldState.getBlueGrey().getPosition().getCentre();
     	  	pastYellowGreyCent = Vision.worldState.getYellowGrey().getPosition().getCentre();
@@ -219,15 +218,6 @@ public class Thresholding {
 			blueGreenPlate4Points = findTheFourPoints(blueGreenPlate);
 			yellowGreenPlate4Points = findTheFourPoints(yellowGreenPlate);
 			
-            /*
-            Idea is if centroid moves too much in one frame then set it at the previous location.  Doesn't seem to work
-            not sure why needs some investigating.  This should work because it can reacquire the robot centres automatically
-            this time.  I don't have the time to test this till tuesday though.  But in general the detection should be better
-            
-			if (ed.getDistance(yellowCentroid,pastYellCent) > 25) {
-			    yellowCentroid.setLocation(pastYellCent.getX(),pastYellCent.getY());
-			}
-			*/	
 			Vision.worldState.setBlueRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
 			Vision.worldState.setYellowRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
 			
@@ -249,6 +239,12 @@ public class Thresholding {
     	return img;
 	    	
     }
+    
+    /*
+    for the blob extraction.  E,N,S,W are compass directions
+    If it goes out of bounds then just set it to the original colour.
+    Could probably be made far more efficient through recursion
+    */
 
     public void setCs(int x, int y, int right, int left, int top, int bottom, BufferedImage img){
         if (x + 1 < right){
@@ -343,7 +339,9 @@ public class Thresholding {
     public ArrayList<Integer> getYellowY(){
         return yellowRobotY;
     }
-	    
+	
+	
+	//IS THIS FOR GREEN PLATE BOUNDING?
     public Point[] findTheFourPoints(ArrayList<Point> points){
     	Point[] ans = new Point[]{new Point(0,0),new Point(0,0),new Point(0,0),new Point(0,0)}; 
     	/*
@@ -381,6 +379,8 @@ public class Thresholding {
     	
     	return ans;
     }
+    
+    //IS THIS FOR THE FURTHEST AWAY POINT?
 	public Point findKeyPoint(Point[] points, Point cent){
 		/*
 		double one = ed.getDistance(points[0], cent);
