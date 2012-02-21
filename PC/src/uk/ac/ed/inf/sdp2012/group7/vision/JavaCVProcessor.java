@@ -1,4 +1,5 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
+/*
 import com.googlecode.javacpp.Loader;
 import com.googlecode.javacv.*;
 import com.googlecode.javacv.cpp.*;
@@ -13,10 +14,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import javax.swing.JLabel;
+*/
 
 public class JavaCVProcessor {
 	
-	 
+	 /*
 	
 	public void cvProcess(BufferedImage image, JLabel  label){
 		 System.out.println("Opit2");
@@ -31,4 +33,5 @@ public class JavaCVProcessor {
 	     Graphics frameGraphics = label.getGraphics();
          Graphics imageGraphics = ans.getGraphics();
 	}
+	*/
 }
