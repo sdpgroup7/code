@@ -5,6 +5,7 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.*;
 import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
@@ -66,17 +67,21 @@ public class Plan {
 	}
 	
 	//Compacts WorldState position point into "Node" center position
-	public Point[] convertToNodes(Point[] p){
+	//Problem -- ArrayList Bullshit... :D  
+	public ArrayList<Point> convertToNodes(ArrayList<Point> p){
 		
-		Point[] grid_points = new Point[p.length];
+		ArrayList<Point> node_points = new ArrayList<Point>();
+		Iterator itr = p.iterator();
 		
-		for(int i = 0; i < p.length ; i++){
-			int x = (int)Math.floor((p[i].x - this.pitch_left_buffer)/nodeInPixels);
-			int y = (int)Math.floor((p[i].y - this.pitch_top_buffer)/nodeInPixels);
-			grid_points[i] = new Point(x,y);
+		while(itr.hasNext()){
+			Point temp = (Point)itr.next();
+			int x = (int)Math.floor(temp.x - this.pitch_left_buffer)/nodeInPixels);
+			int y = (int)Math.floor(temp.y - this.pitch_top_buffer)/nodeInPixels);
+			Point grid_point = new Point(x,y);
+			
 		}
 		
-		return grid_points;
+		return node_points;
 	}
 
 }
