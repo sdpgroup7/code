@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 import uk.ac.ed.inf.sdp2012.group7.vision.EuclideanDistance;
+import java.lang.Math;
 
 /**
  * 
@@ -64,7 +65,8 @@ public class Thresholding {
     
     private Point ballCentroid = new Point();
     private Point blueCentroid = new Point();
-    private Point yellowCentroid = new Point();
+    private Point yellowCentroidA = new Point();
+    private Point yellowCentroidB = new Point();
     private Point blueGreenPlateCentroid = new Point();
     private Point blueGreyCentroid = new Point();
     private Point yellowGreyCentroid = new Point();
@@ -79,6 +81,11 @@ public class Thresholding {
     private ThresholdsState ts;
     private Plate plate = new Plate();
     private EuclideanDistance ed = new EuclideanDistance();
+    
+    private double randy = 0;
+    
+    private int yellowX = 0;
+    private int yellowY = 0;
     
 
     
@@ -136,7 +143,8 @@ public class Thresholding {
            blueCentroid.setLocation(0,0);
             
            yellowCount = 0;
-           yellowCentroid.setLocation(0,0);
+           yellowCentroidA.setLocation(0,0);
+           yellowCentroidB.setLocation(0,0);
            
            blueGreyCount = 0;
            blueGreyCentroid.setLocation(0,0);
@@ -166,7 +174,12 @@ public class Thresholding {
 						    yellowRobotX.add(i);
 						    yellowRobotY.add(j);
 						    yellowCount++;
-						    yellowCentroid.setLocation(yellowCentroid.getX() + i, yellowCentroid.getY() + j);
+						    randy = Math.random();
+						    if (randy > 0.5){						    
+						        yellowCentroidA.setLocation(yellowCentroidA.getX() + i, yellowCentroidA.getY() + j);
+						    }else{
+						        yellowCentroidB.setLocation(yellowCentroidB.getX() + i, yellowCentroidB.getY() + j);
+						    }
 						    yellowPixels.add(new Point(i,j));
 					    }
 					}
@@ -215,12 +228,14 @@ public class Thresholding {
 			
 	    	//Vision.logger.debug("End Iteration");
 			ballCentroid.setLocation(ballCentroid.getX()/ballCount, ballCentroid.getY()/ballCount);
-			yellowCentroid.setLocation(yellowCentroid.getX()/yellowCount, yellowCentroid.getY()/yellowCount);
+			yellowCentroidA.setLocation(yellowCentroidA.getX()/yellowCount, yellowCentroidA.getY()/yellowCount);
+			yellowCentroidB.setLocation(yellowCentroidB.getX()/yellowCount, yellowCentroidB.getY()/yellowCount);
 			blueCentroid.setLocation(blueCentroid.getX()/blueCount, blueCentroid.getY()/blueCount);
 			blueGreyCentroid.setLocation(blueGreyCentroid.getX()/blueGreyCount, blueGreyCentroid.getY()/blueGreyCount);
 			yellowGreyCentroid.setLocation(yellowGreyCentroid.getX()/yellowGreyCount, yellowGreyCentroid.getY()/yellowGreyCount);
 			
-			
+			yellowX = (int)((yellowCentroidA.getX()+yellowCentroidB.getX())/2);
+			yellowY = (int)((yellowCentroidA.getY()+yellowCentroidB.getY())/2);
 			
 			blueGreenPlate4Points = plate.getCorners(blueGreenPlate);
 			yellowGreenPlate4Points = plate.getCorners(yellowGreenPlate);
@@ -229,7 +244,7 @@ public class Thresholding {
 			yellowGreenPlate4Points = findTheFourPoints(yellowGreenPlate);*/
 			
 			Vision.worldState.setBlueRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
-			Vision.worldState.setYellowRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
+			Vision.worldState.setYellowRobotPosition(yellowX,yellowY);
 			
 			Vision.worldState.setBallPosition((int)ballCentroid.getX(),(int)ballCentroid.getY());
 			if(ed.getDistance(Vision.worldState.getBlueRobot().getPosition().getCentre(),blueGreyCentroid) < 20 ){
