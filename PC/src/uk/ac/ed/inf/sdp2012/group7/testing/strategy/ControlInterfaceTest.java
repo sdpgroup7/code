@@ -16,9 +16,11 @@ public class ControlInterfaceTest {
 	
 	private int look;
 	private ControlInterface inter;
-	private Point2D expected;
+	private double expectedAngle;
+	private Point2D expectedPoint;
 	private Point2D position;
 	private ArrayList<Point> path;
+	
 	
 	/*
 	 * Simple situation for finding the goal. Path has only one section and goal point is on that section 
@@ -26,7 +28,7 @@ public class ControlInterfaceTest {
 	@Test public void goalTest1() {
 		look = 3;
 		inter = new ControlInterface(look);
-		expected = new Point2D(0,3);
+		expectedPoint = new Point2D(0,3);
 		position = new Point2D (0,0);
 		path = new ArrayList<Point>();
 		path.add(new Point(0,1));
@@ -34,7 +36,7 @@ public class ControlInterfaceTest {
 		
 		try {
 			Point2D actual = inter.findGoalPoint(path, position);
-			assertTrue(expected.equals(actual));
+			assertTrue(expectedPoint.equals(actual));
 		} catch (Exception e) {
 		}
 		
@@ -61,7 +63,7 @@ public class ControlInterfaceTest {
 	@Test public void goalTest3() {
 		look = 5;
 		inter = new ControlInterface(look);
-		expected = new Point2D(25,30);
+		expectedPoint = new Point2D(25,30);
 		position = new Point2D(25,25);
 		path = new ArrayList<Point>();
 		path.add(new Point(22,25));
@@ -71,7 +73,7 @@ public class ControlInterfaceTest {
 		
 		try {
 			Point2D actual = inter.findGoalPoint(path, position);
-			assertTrue(expected.equals(actual));
+			assertTrue(expectedPoint.equals(actual));
 		} catch (Exception e) {
 		}
 	}
@@ -82,7 +84,7 @@ public class ControlInterfaceTest {
 	@Test public void goalTest4() {
 		look = 3;
 		inter = new ControlInterface(look);
-		expected = new Point2D(25,28);
+		expectedPoint = new Point2D(25,28);
 		position = new Point2D(25,25);
 		path = new ArrayList<Point>();
 		path.add(new Point(20,23));
@@ -90,10 +92,46 @@ public class ControlInterfaceTest {
 		
 		try {
 			Point2D actual = inter.findGoalPoint(path, position);
-			assertTrue(expected.equals(actual));
+			assertTrue(expectedPoint.equals(actual));
 		} catch (Exception e){
 		}
 		
 		
 		}
+	
+	/*
+	 * Checks the angle conventions
+	 */
+	@Test public void angleTest1() {
+		look = 3;
+		inter = new ControlInterface(look);
+		expectedAngle = 0;
+		double actualAngle = inter.convertAngle(0);
+		assertTrue(actualAngle == expectedAngle);
+		}
+	
+	@Test public void angleTest2() {
+		look = 3;
+		inter = new ControlInterface(look);
+		expectedAngle = Math.PI/2;
+		double actualAngle = inter.convertAngle(3*Math.PI/2);
+		assertTrue(actualAngle == expectedAngle);
+		}
+	
+	@Test public void angleTest3() {
+		look = 3;
+		inter = new ControlInterface(look);
+		expectedAngle = Math.PI/2;
+		double actualAngle = inter.convertAngle(3*Math.PI/2);
+		assertTrue(actualAngle == expectedAngle);
+		}
+	
+	@Test public void angleTest4() {
+		look = 3;
+		inter = new ControlInterface(look);
+		expectedAngle = Math.PI;
+		double actualAngle = inter.convertAngle(Math.PI);
+		assertTrue(actualAngle == expectedAngle);
+		}
+
 }

@@ -95,13 +95,13 @@ public class ControlInterface {
 	 * @return The converted angle so it is measured off the y axis rather than the x
 	 */
 	public double convertAngle(double angle) {
-
-		if(angle < 0){
-			angle = -angle;
+		
+		double newAngle;
+		if (angle == 0) {
+			newAngle = 0;
 		} else {
-			angle = (2.0*Math.PI) - angle;
+			newAngle = 2*Math.PI - angle;
 		}
-		double newAngle = (angle + (3*Math.PI/2.0)) % (2*Math.PI);
 		
 		logger.debug(String.format("Converted angle from %f to %f", angle, newAngle));
 		return newAngle;
