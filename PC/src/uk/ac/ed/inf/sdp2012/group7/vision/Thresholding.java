@@ -396,12 +396,12 @@ public class Thresholding {
     
     public Point fixParallax(Point p, MovingObject m){
     	VisionTools vt = new VisionTools();
-    	float x = 	(Vision.worldState.getPitch().getPitchLength()/2.0f)*(m.getHeight()) - 
+    	float x = 	(Vision.worldState.getPitch().getPitchWidth()/2.0f)*(m.getHeight()) - 
     				(vt.pixelsToCM(p.x) * m.getHeight()) + 
     				(Vision.worldState.getPitch().getCameraHeight() * vt.pixelsToCM(p.x));
     	x = (float) (x / Vision.worldState.getPitch().getCameraHeight());
     	
-    	float y = 	(Vision.worldState.getPitch().getPitchWidth()/2.0f)*(m.getHeight()) - 
+    	float y = 	(Vision.worldState.getPitch().getPitchHeight()/2.0f)*(m.getHeight()) - 
 					(vt.pixelsToCM(p.y) * m.getHeight()) + 
 					(Vision.worldState.getPitch().getCameraHeight() * vt.pixelsToCM(p.y));
     	y = (float) (y / Vision.worldState.getPitch().getCameraHeight());
