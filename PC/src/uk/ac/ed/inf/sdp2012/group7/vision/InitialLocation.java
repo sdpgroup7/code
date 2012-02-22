@@ -69,60 +69,19 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     	Vision.logger.info("Image saved.");
 
     	points.add(Vision.worldState.getBall().getPosition().getCentre());
-    	points.add(getCorner("blue",1));
-    	points.add(getCorner("blue",2));
-    	points.add(getCorner("blue",3));
-    	points.add(getCorner("blue",4));
-    	points.add(getCorner("yellow",1));
-    	points.add(getCorner("yellow",2));
-    	points.add(getCorner("yellow",3));
-    	points.add(getCorner("yellow",4));
+    	Point[] corners = Vision.worldState.getBlueRobot().getPosition().getCorners();
+    	points.add(corners[0]);
+    	points.add(corners[1]);
+    	points.add(corners[2]);
+    	points.add(corners[3]);
+    	corners = Vision.worldState.getYellowRobot().getPosition().getCorners();
+    	points.add(corners[0]);
+    	points.add(corners[1]);
+    	points.add(corners[2]);
+    	points.add(corners[3]);
         visionFeed.paused = false;
         Vision.logger.info("Vision System unpaused.");
     }
-    
-    private Point getCorner(String c, int i) {
-    	int deltax;
-    	int deltay;
-    	switch(i){
-    	case 1:
-    		deltax = 0;
-    		deltay = -15;
-    		break;
-    	case 2:
-    		deltax = 15;
-    		deltay = 0;
-    		break;
-    	case 3:
-    		deltax = 0;
-    		deltay = 15;
-    		break;
-    	case 4:
-    		deltax = -15;
-    		deltay = 0;
-    		break;
-    	default:
-    		deltax = 0;
-    		deltay = 0;
-    		break;
-    	}
-    	
-    	Point p;
-    	
-		if(c == "blue"){
-			p = new Point(
-					Vision.worldState.getBlueRobot().getPosition().getCentre().x + deltax,
-					Vision.worldState.getYellowRobot().getPosition().getCentre().y + deltay
-			);
-		} else {
-			p = new Point(
-					Vision.worldState.getYellowRobot().getPosition().getCentre().x + deltax,
-					Vision.worldState.getYellowRobot().getPosition().getCentre().y + deltay
-			);
-		}
-		Vision.logger.debug(p.toString());
-		return p;
-	}
 
 	public void writeImage(BufferedImage image, String fn){
         try {

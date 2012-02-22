@@ -77,7 +77,13 @@ public class VisionFeed extends WindowAdapter {
         //il.getPoints();
         il.getColors();
         Vision.logger.info("Vision System Calibrated");
+        Vision.worldState.setClickingDone(true);
         if(Vision.TESTING){
+        	try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				Vision.logger.error("Thread sleeping failed");
+			}
         	Vision.logger.info("Vision testing starting.");
         	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         	Date date = new Date();
@@ -87,7 +93,6 @@ public class VisionFeed extends WindowAdapter {
         	ts.writePoints(il.getTestPoints(), frameImage, filename);
         	Vision.logger.info("Vision testing complete.");
         }
-        Vision.worldState.setClickingDone(true);
     }
 
 
