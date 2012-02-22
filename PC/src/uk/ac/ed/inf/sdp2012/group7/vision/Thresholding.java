@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.awt.Point;
 import java.util.ArrayList;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.MovingObject;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 import uk.ac.ed.inf.sdp2012.group7.vision.EuclideanDistance;
 
@@ -275,6 +276,25 @@ public class Thresholding {
     		
     	return img;
 	    	
+    }
+    
+    
+    public Point fixParallax(Point p, MovingObject m){
+    	VisionTools vt = new VisionTools();
+    	float x = 	(Vision.worldState.getPitch().getPitchLength()/2.0f)*(m.getHeight()) - 
+    				(vt.pixelsToCM(p.x) * m.getHeight()) + 
+    				(Vision.worldState.getPitch().getCameraHeight() * vt.pixelsToCM(p.x));
+    	x = (float) (x / Vision.worldState.getPitch().getCameraHeight());
+    	
+    	float y = 	(Vision.worldState.getPitch().getPitchWidth()/2.0f)*(m.getHeight()) - 
+					(vt.pixelsToCM(p.y) * m.getHeight()) + 
+					(Vision.worldState.getPitch().getCameraHeight() * vt.pixelsToCM(p.y));
+    	y = (float) (y / Vision.worldState.getPitch().getCameraHeight());
+    	
+    	y = vt.cmToPixels(y);
+    	x = vt.cmToPixels(x);
+    	
+    	return new Point((int)x,(int)y);
     }
     
     /*

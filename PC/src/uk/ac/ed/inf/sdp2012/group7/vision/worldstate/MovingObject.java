@@ -9,12 +9,22 @@ public class MovingObject {
 	volatile ObjectPosition position = new ObjectPosition();
 	volatile double velocity;
 	volatile double angle; 
+	volatile float height = 0.2f;
 	volatile public ArrayList<TimePoint> positions = new ArrayList<TimePoint>();
 	volatile public ArrayList<Point> angles = new ArrayList<Point>();
 	volatile public ArrayList<Point> movedAngles = new ArrayList<Point>();
 	volatile public ArrayList<Point> centroids = new ArrayList<Point>();
 	volatile public ArrayList<Point> movedCentroids = new ArrayList<Point>();
+	volatile public Point tip = new Point();
 	
+	
+	public float getHeight(){
+		return this.height;
+	}
+	
+	public void setHeight(float height){
+		this.height = height;
+	}
 	
     public void addPosition(Point p){
     	positions.add(new TimePoint(p,System.currentTimeMillis()));
@@ -63,16 +73,17 @@ public class MovingObject {
 		if(angles.size() > 2) angles.remove(0);
 	}
 	
-	public Point getAngle(){
+	public double getAngle(){
 		if(angles.size() > 0){
 			Point a = new Point(0,0);
 			for(Point p : angles){
 				a = new Point(a.x + p.x, a.y + p.y);
 			}
 			a = new Point(a.x / angles.size(), a.y / angles.size());
-			return a;
+			tip = a;
+			return Math.atan2(a.y - getPosition().getCentre().y, a.x - getPosition().getCentre().x);
 		} else {
-			return new Point(0,0);
+			return 0;
 		}
 	}
 	

@@ -11,6 +11,33 @@ public class Pitch extends ObjectPosition{
 	private volatile int leftBuffer = 0;
 	private volatile int rightBuffer = 640;
 	private volatile boolean buffersSet = false;
+	private volatile float cameraHeight = 2.45f;
+	private volatile float length = 2.44f;
+	private volatile float width = 1.22f;
+
+	public float getPitchLength() {
+		return length;
+	}
+
+	public void setPitchLength(float length) {
+		this.length = length;
+	}
+
+	public float getPitchWidth() {
+		return width;
+	}
+
+	public void setPitchWidth(float width) {
+		this.width = width;
+	}
+
+	public float getCameraHeight() {
+		return cameraHeight;
+	}
+
+	public void setCameraHeight(float cameraHeight) {
+		this.cameraHeight = cameraHeight;
+	}
 
 	public Pitch(){
 		super();
