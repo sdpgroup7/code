@@ -18,6 +18,7 @@ import javax.swing.event.ChangeListener;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
+import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
@@ -66,11 +67,6 @@ public class ControlGUI implements ChangeListener {
 	/* Tabs. */
 	private JTabbedPane tabPane;
 	private JPanel defaultPanel;
-	private JPanel ballPanel;
-	private JPanel bluePanel;
-	private JPanel yellowPanel;
-	private JPanel greyPanel;
-	private JPanel greenPanel;
 	
 	/* Radio buttons */
 	JButton pitch_0;
@@ -79,11 +75,6 @@ public class ControlGUI implements ChangeListener {
 	JButton colour_blue;
 	JRadioButton direction_right;
 	JRadioButton direction_left;
-	
-	
-
-	public final int THRESHOLD = 25;
-	public final int YELLOW_THRESHOLD = 25;
 	
     private boolean penaltyToGame = false;
 
@@ -96,21 +87,17 @@ public class ControlGUI implements ChangeListener {
 	 * @param worldState		A WorldState object to update the pitch choice, shooting
 	 * 							direction, etc.
 	 */
-	public ControlGUI(ThresholdsState thresholdsState, WorldState worldState) {
+	public ControlGUI() {
 		
 		/* All three state objects must not be null. */
 		assert (thresholdsState != null);
 		assert (worldState != null);
 		
-		this.thresholdsState = thresholdsState;
-		this.worldState = worldState;
+		this.worldState = Vision.worldState;
 		strat = new Strategy();
 	}
 	
-	public void stateChanged(ChangeEvent e) {
-		
-		
-	}
+	public void stateChanged(ChangeEvent e) {}
 	
 	/**
 	 * Initialise the GUI, setting up all of the components and adding the required
@@ -415,12 +402,5 @@ public class ControlGUI implements ChangeListener {
 	}
 	
 
-    public ThresholdsState getThresholdsState(){
-        return this.thresholdsState;
-    }
-
-    public WorldState getWorldState(){
-        return this.worldState;
-    }
 
 }

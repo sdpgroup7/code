@@ -84,7 +84,7 @@ public class Vision {
         try {
 
             /* Create the Control GUI for threshold setting/etc. */
-            thresholdsGUI = new ControlGUI(thresholdsState, worldState);
+            thresholdsGUI = new ControlGUI();
             thresholdsGUI.initGUI();
 
             /* Create a new Vision object to serve the main vision window. */
