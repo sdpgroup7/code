@@ -33,7 +33,7 @@ public class WorldState{
 		}
 	}
 	
-	public MovingObject getOppononentsRobot(){
+	public MovingObject getOpponentsRobot(){
 		if(ourColor.equals(Color.blue)){
 			return yellowRobot;
 		} else {
