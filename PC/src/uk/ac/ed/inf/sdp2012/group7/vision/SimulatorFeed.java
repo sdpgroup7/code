@@ -3,6 +3,7 @@ package uk.ac.ed.inf.sdp2012.group7.vision;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -72,6 +73,13 @@ public class SimulatorFeed extends WindowAdapter {
 
 	private Thread receiver = new Thread() {
 		
+		private int simAngleToNormal(int simAngle) {
+			simAngle = simAngle - 90;
+			if (simAngle < 0)
+				return 360 + simAngle;
+			return simAngle;
+		}
+		
 		public void run() {
 			try {
 				socket = new Socket(simHost, simPort);
@@ -89,7 +97,8 @@ public class SimulatorFeed extends WindowAdapter {
 					int recv = 0;
 					for (int j = 0; j < 8; ++j) {
 						recv = recv << 8;
-						try {							recv = recv | is.read();
+						try {
+							recv = recv | is.read();
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							Simulator.logger.fatal("Receiving from simulator failed: "+e.toString());
@@ -97,11 +106,19 @@ public class SimulatorFeed extends WindowAdapter {
 					}
 					buf[i] = recv;
 				}
-
-			
+				
+				buf[2] = simAngleToNormal(buf[2]);
+				buf[5] = simAngleToNormal(buf[5]);
+				
 				Simulator.worldState.getBlueRobot().setPosition(buf[0], buf[1]);
 				Simulator.worldState.getBlueRobot().setAngle(Math.toRadians(buf[2]));
 				Simulator.worldState.getBall().addPosition(buf[6], buf[7]);
+				
+				frameImage.setData(background.getData());
+				AffineTransform xform = new AffineTransform();
+				xform.rotate(Math.toRadians(buf[2]), 23.5, 16.5);
+
+				
 			}
 		}
 		
