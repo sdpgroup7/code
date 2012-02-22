@@ -67,6 +67,7 @@ public class Plate{
 
 		// Check if point is in triangle
 		return (u >= -0.1) && (v >= -0.1) && (u + v < 1.1);
+
 	}
 	
 	public int dot(Point a, Point b){
