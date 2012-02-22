@@ -215,6 +215,8 @@ public class Thresholding {
 			if (yellowGreyCount == 0) yellowGreyCount++;
 			
 	    	//Vision.logger.debug("End Iteration");
+			
+			//TODO: Run these points through the parralax fix
 			ballCentroid.setLocation(ballCentroid.getX()/ballCount, ballCentroid.getY()/ballCount);
 			yellowCentroid.setLocation(yellowCentroid.getX()/yellowCount, yellowCentroid.getY()/yellowCount);
 			blueCentroid.setLocation(blueCentroid.getX()/blueCount, blueCentroid.getY()/blueCount);
