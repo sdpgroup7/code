@@ -24,7 +24,9 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     private int count = 0;
     private Point coords = new Point();
     private boolean mouseClick = false;
-    private ControlGUI thresholdGUI;
+    
+    private ThresholdsState thresholdsState;
+    
     private VisionFeed visionFeed;
     //private JFrame windowFrame;
     //The below variables are for the testing system
@@ -32,9 +34,9 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     public boolean testMouseClick = false;
     public Point testCoords = new Point(0,0);
 
-    public InitialLocation(ControlGUI thresholdsGUI, VisionFeed visionFeed, JFrame windowFrame) {
-    	this.thresholdGUI = thresholdsGUI;
+    public InitialLocation(VisionFeed visionFeed, JFrame windowFrame, ThresholdsState ts) {
         this.visionFeed = visionFeed;
+        this.thresholdsState = ts;
         //this.windowFrame = windowFrame;
         windowFrame.addMouseListener(this);
         windowFrame.addMouseMotionListener(this);
@@ -131,13 +133,38 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     */
     //Set the sliders on the GUI, the messages are used to tell the user what to click
     public void getColors(){
-        //thresholdGUI.setBallValues(getClickColor("Click the ball"));
-        thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
-        //thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
-        //thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
-        //thresholdGUI.setGreyValues(getClickColor("Click blue's grey circle"));
-        //thresholdGUI.setGreyValues(getClickColor("Click yellow's grey circle"));
+        setYellowValues(getClickColor("Click the yellow robot"));
     }
+    
+    public void setYellowValues(Color c){
+    	setYellowValues(c.getRed(),c.getGreen(),c.getBlue());
+    }
+    
+	public void setYellowValues(int r, int g, int b){
+		int YELLOW_THRESHOLD = 25;
+		int rLower = r-YELLOW_THRESHOLD;
+		int rUpper = r+YELLOW_THRESHOLD;
+		int gLower = g-YELLOW_THRESHOLD;
+		int gUpper = g+YELLOW_THRESHOLD;
+		int bLower = b-YELLOW_THRESHOLD;
+		int bUpper = b+YELLOW_THRESHOLD;
+
+		if(rLower < 0) rLower = 0;
+		if(gLower < 0) gLower = 0;
+		if(bLower < 0) bLower = 0;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+		if(rUpper > 255) rUpper = 255;
+		
+		
+		thresholdsState.setYellow_r_low(rLower);
+		thresholdsState.setYellow_r_high(rUpper);
+		thresholdsState.setYellow_g_low(gLower);
+		thresholdsState.setYellow_g_high(gUpper);
+		thresholdsState.setYellow_b_low(bLower);
+		thresholdsState.setYellow_b_high(bUpper);
+	}
+	
     /*
     Get the threshold values for the objects in the match i.e. ball.
     Registers the mouse clicks after being asked to by getColors
