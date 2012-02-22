@@ -260,12 +260,14 @@ public class Thresholding {
 			if (blueGreyCount == 0) blueGreyCount++;
 			if (yellowGreyCount == 0) yellowGreyCount++;
 			
+			
 	    	//Vision.logger.debug("End Iteration");
 			ballCentroid.setLocation(ballCentroid.getX()/ballCount, ballCentroid.getY()/ballCount);
 			
 			totalYellowX = 0;
 			totalYellowY = 0;
 			numYellowCentroids = 0;
+			
 			
 			yellowCentroidA.setLocation(yellowCentroidA.getX()/yellowCountA, yellowCentroidA.getY()/yellowCountA);
 			yellowCentroidB.setLocation(yellowCentroidB.getX()/yellowCountB, yellowCentroidB.getY()/yellowCountB);
@@ -275,6 +277,7 @@ public class Thresholding {
 			blueCentroid.setLocation(blueCentroid.getX()/blueCount, blueCentroid.getY()/blueCount);
 			blueGreyCentroid.setLocation(blueGreyCentroid.getX()/blueGreyCount, blueGreyCentroid.getY()/blueGreyCount);
 			yellowGreyCentroid.setLocation(yellowGreyCentroid.getX()/yellowGreyCount, yellowGreyCentroid.getY()/yellowGreyCount);
+			
 			
 			c = new Color(img.getRGB((int)yellowCentroidA.getX(), (int)yellowCentroidA.getY()));
 			if (isYellow(c)) {
@@ -307,8 +310,13 @@ public class Thresholding {
 			    numYellowCentroids++;
 			}
 			
+			if (numYellowCentroids == 0){
+			    numYellowCentroids++;
+			}
+			
 			yellowX = (int)(totalYellowX/numYellowCentroids);
 			yellowY = (int)(totalYellowY/numYellowCentroids);
+			
 			
 			blueGreenPlate4Points = plate.getCorners(blueGreenPlate);
 			yellowGreenPlate4Points = plate.getCorners(yellowGreenPlate);
