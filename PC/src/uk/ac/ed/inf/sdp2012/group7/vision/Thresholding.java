@@ -224,7 +224,9 @@ public class Thresholding {
 			
 			blueGreenPlate4Points = plate.getCorners(blueGreenPlate);
 			yellowGreenPlate4Points = plate.getCorners(yellowGreenPlate);
-			
+			Vision.worldState.getBlueRobot().getPosition().setCorners(blueGreenPlate4Points);
+			Vision.worldState.getYellowRobot().getPosition().setCorners(yellowGreenPlate4Points);
+
 			/*blueGreenPlate4Points = findTheFourPoints(blueGreenPlate);
 			yellowGreenPlate4Points = findTheFourPoints(yellowGreenPlate);*/
 			
