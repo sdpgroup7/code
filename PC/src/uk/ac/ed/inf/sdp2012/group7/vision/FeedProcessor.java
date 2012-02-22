@@ -105,18 +105,20 @@ public class FeedProcessor{
             //imageGraphics.drawLine(Vision.worldState.getOpponentsGrey().getPosition().getCentre().x,Vision.worldState.getOpponentsGrey().getPosition().getCentre().y,Vision.worldState.getOpponentsRobot().getPosition().getCentre().x,Vision.worldState.getOpponentsRobot().getPosition().getCentre().y);
             //imageGraphics.drawLine(Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y, Vision.worldState.getOurKeyPoint().x,Vision.worldState.getOurKeyPoint().y);
             //could the above line be shorter with the current worldState state?
-            Point p = findAngle.findOrientation(Vision.worldState.getBluePixels(),Vision.worldState.getBlueRobot().getPosition().getCentre());
-            Vision.worldState.getBlueRobot().addAngle(p);
-            Vision.logger.info("Blue robot: " + Vision.worldState.getBlueRobot().getAngle());
-            p = Vision.worldState.getBlueRobot().tip;
+            Vision.worldState.getBlueRobot().addAngle(
+            	findAngle.findOrientation(Vision.worldState.getBluePixels(),Vision.worldState.getBlueRobot().getPosition().getCentre())
+            );
+            //Vision.logger.info("Blue robot: " + Vision.worldState.getBlueRobot().getAngle());
+            Point p = Vision.worldState.getBlueRobot().tip;
             imageGraphics.drawLine(
             		Vision.worldState.getBlueRobot().getPosition().getCentre().x,
             		Vision.worldState.getBlueRobot().getPosition().getCentre().y,
             		p.x,
             		p.y);
             imageGraphics.setColor(Color.red);
-            p = findAngle.findOrientation(Vision.worldState.getYellowPixels(), Vision.worldState.getYellowRobot().getPosition().getCentre());
-            Vision.worldState.getYellowRobot().addAngle(p);
+            Vision.worldState.getYellowRobot().addAngle(
+            	findAngle.findOrientation(Vision.worldState.getYellowPixels(), Vision.worldState.getYellowRobot().getPosition().getCentre())
+            );
             //Vision.logger.info("Yellow Robot: " + Vision.worldState.getYellowRobot().getAngle());
             p = Vision.worldState.getYellowRobot().tip;
             imageGraphics.drawLine(
