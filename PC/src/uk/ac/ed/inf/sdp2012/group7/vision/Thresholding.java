@@ -94,6 +94,12 @@ public class Thresholding {
     private int yellowX = 0;
     private int yellowY = 0;
     
+    private int totalYellowX = 0;
+    private int totalYellowY = 0;
+    
+    private int numYellowCentroids = 0;
+    
+    private Color centroidColor;
 
     
     
@@ -256,6 +262,11 @@ public class Thresholding {
 			
 	    	//Vision.logger.debug("End Iteration");
 			ballCentroid.setLocation(ballCentroid.getX()/ballCount, ballCentroid.getY()/ballCount);
+			
+			totalYellowX = 0;
+			totalYellowY = 0;
+			numYellowCentroids = 0;
+			
 			yellowCentroidA.setLocation(yellowCentroidA.getX()/yellowCountA, yellowCentroidA.getY()/yellowCountA);
 			yellowCentroidB.setLocation(yellowCentroidB.getX()/yellowCountB, yellowCentroidB.getY()/yellowCountB);
 			yellowCentroidC.setLocation(yellowCentroidC.getX()/yellowCountC, yellowCentroidC.getY()/yellowCountC);
@@ -265,8 +276,39 @@ public class Thresholding {
 			blueGreyCentroid.setLocation(blueGreyCentroid.getX()/blueGreyCount, blueGreyCentroid.getY()/blueGreyCount);
 			yellowGreyCentroid.setLocation(yellowGreyCentroid.getX()/yellowGreyCount, yellowGreyCentroid.getY()/yellowGreyCount);
 			
-			yellowX = (int)((yellowCentroidA.getX()+yellowCentroidB.getX()+yellowCentroidC.getX()+yellowCentroidD.getX()+yellowCentroidE.getX())/5);
-			yellowY = (int)((yellowCentroidA.getY()+yellowCentroidB.getY()+yellowCentroidC.getY()+yellowCentroidD.getY()+yellowCentroidE.getY())/5);
+			c = new Color(img.getRGB((int)yellowCentroidA.getX(), (int)yellowCentroidA.getY()));
+			if (isYellow(c)) {
+			    totalYellowX += yellowCentroidA.getX();
+			    totalYellowY += yellowCentroidA.getY();
+			    numYellowCentroids++;
+			}
+			c = new Color(img.getRGB((int)yellowCentroidB.getX(), (int)yellowCentroidB.getY()));
+			if (isYellow(c)) {
+			    totalYellowX += yellowCentroidB.getX();
+			    totalYellowY += yellowCentroidB.getY();
+			    numYellowCentroids++;
+			}
+			c = new Color(img.getRGB((int)yellowCentroidC.getX(), (int)yellowCentroidC.getY()));
+			if (isYellow(c)) {
+			    totalYellowX += yellowCentroidC.getX();
+			    totalYellowY += yellowCentroidC.getY();
+			    numYellowCentroids++;
+			}
+			c = new Color(img.getRGB((int)yellowCentroidD.getX(), (int)yellowCentroidD.getY()));
+			if (isYellow(c)) {
+			    totalYellowX += yellowCentroidD.getX();
+			    totalYellowY += yellowCentroidD.getY();
+			    numYellowCentroids++;
+			}
+			c = new Color(img.getRGB((int)yellowCentroidE.getX(), (int)yellowCentroidE.getY()));
+			if (isYellow(c)) {
+			    totalYellowX += yellowCentroidE.getX();
+			    totalYellowY += yellowCentroidE.getY();
+			    numYellowCentroids++;
+			}
+			
+			yellowX = (int)(totalYellowX/numYellowCentroids);
+			yellowY = (int)(totalYellowY/numYellowCentroids);
 			
 			blueGreenPlate4Points = plate.getCorners(blueGreenPlate);
 			yellowGreenPlate4Points = plate.getCorners(yellowGreenPlate);
