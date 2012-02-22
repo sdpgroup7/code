@@ -27,6 +27,11 @@ public class SimulatorFeed extends WindowAdapter {
 	private FrameGrabber frameGrabber;
 	private int width, height;
 	private BufferedImage frameImage;
+	
+	private BufferedImage background;
+	private BufferedImage blue;
+	private BufferedImage yellow;
+	
 	public boolean paused = false;
 	int count = 0;
 	
@@ -44,6 +49,10 @@ public class SimulatorFeed extends WindowAdapter {
 	 *
 	 */
 	public SimulatorFeed(ControlGUI thresholdsGUI) {
+		background = ImageIO.read(new File("simData/background.png"));
+		blue = ImageIO.read(new File("simData/blue.png"));
+		yellow = ImageIO.read(new File("simData/yellow.png"));
+		
 
 		/* Initialise the GUI that displays the video feed. */
 		initGUI();
@@ -64,53 +73,38 @@ public class SimulatorFeed extends WindowAdapter {
 	private Thread receiver = new Thread() {
 		
 		public void run() {
-			/*try {
+			try {
 				socket = new Socket(simHost, simPort);
 				os = socket.getOutputStream();
 				os.flush();
 				is = socket.getInputStream();
 			} catch (Exception e) {
 				Simulator.logger.fatal("Connecting to simulator failed: "+e.toString());
-			}*/
+			}
 			
-			/*while(true) {
+			while(true) {
 				int[] buf = new int[8];
 				
 				for (int i = 0; i < 8; ++i) {
 					int recv = 0;
 					for (int j = 0; j < 8; ++j) {
 						recv = recv << 8;
-						try {
-							recv = recv | is.read();
+						try {							recv = recv | is.read();
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							Simulator.logger.fatal("Receiving from simulator failed: "+e.toString());
 						}
 					}
 					buf[i] = recv;
-				}*/
-
-				/*Simulator.worldState.setBlueRobotPosition(buf[0], buf[1]);
-				//Simulator.worldState.setBlueRobotAngle(buf[2]);
-				Simulator.worldState.setYellowRobotPosition(buf[3], buf[4]);
-				//Simulator.worldState.setYellowRobotAngle(buf[5]);
-				Simulator.worldState.setBallPosition(buf[6], buf[7]);*/
-				
-				try {
-					frameImage = ImageIO.read(new File("testData/.background.png"));
-				} catch (IOException e) {
-					Simulator.logger.fatal("Failed to load backgroundImage");
 				}
-				
-				//frameImage.getGraphics().setColor(Color.blue);
-				
-				
-			//}
+
 			
+				Simulator.worldState.getBlueRobot().setPosition(buf[0], buf[1]);
+				Simulator.worldState.getBlueRobot().setAngle(Math.toRadians(buf[2]));
+				Simulator.worldState.getBall().addPosition(buf[6], buf[7]);
+			}
 		}
 		
-		
-
 	};
 	
 	private void initFrameGenerator() {
