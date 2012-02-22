@@ -22,7 +22,6 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.Pitch;
 public class InitialLocation implements MouseListener, MouseMotionListener {
     
     private int count = 0;
-    private Point[] initCents = new Point[6];
     private Point coords = new Point();
     private boolean mouseClick = false;
     private ControlGUI thresholdGUI;
@@ -173,12 +172,12 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     */
     //Set the sliders on the GUI, the messages are used to tell the user what to click
     public void getColors(){
-        thresholdGUI.setBallValues(getClickColor("Click the ball"));
+        //thresholdGUI.setBallValues(getClickColor("Click the ball"));
         thresholdGUI.setYellowValues(getClickColor("Click the yellow robot"));
-        thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
-        thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
-        thresholdGUI.setGreyValues(getClickColor("Click blue's grey circle"));
-        thresholdGUI.setGreyValues(getClickColor("Click yellow's grey circle"));
+        //thresholdGUI.setBlueValues(getClickColor("Click the blue robot"));
+        //thresholdGUI.setGreenValues(getClickColor("Click a green plate"));
+        //thresholdGUI.setGreyValues(getClickColor("Click blue's grey circle"));
+        //thresholdGUI.setGreyValues(getClickColor("Click yellow's grey circle"));
     }
     /*
     Get the threshold values for the objects in the match i.e. ball.
@@ -193,7 +192,6 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
             } catch (Exception e) {}
         }
         mouseClick = false;
-        initCents[count] = coords;
         count++;
         
         return getColor(coords, this.visionFeed.getFrameImage());
@@ -255,7 +253,4 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         }
     }
     
-    public Point[] getInitCentroids(){
-        return initCents;
-    }
 }
