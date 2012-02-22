@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import uk.ac.ed.inf.sdp2012.group7.MainRunner;
+
 import lejos.pc.comm.NXTComm;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTInfo;
@@ -24,6 +26,9 @@ public class RobotControl {
 	private boolean keepConnected = true;
 	public boolean askingToReset = false;
 	private volatile int currentSpeed = 0;
+	private boolean simulator = false;
+
+	public RobotControl() {}
 
 	/**
 	 * This method initialises the connection and starts the thread which sends
@@ -75,7 +80,12 @@ public class RobotControl {
 	 * Connects to the NXT
 	 */
 	private void connectToRobot() throws IOException {
-		comms = new BluetoothCommunication(nxtComm, info);
+		simulator = MainRunner.simulator;
+		if (simulator)
+			comms = new SimulatorCommunication();
+		else 
+			comms = new BluetoothCommunication(nxtComm, info);
+
 		comms.openConnection();
 		setConnected(true);
 		beep();
@@ -87,7 +97,8 @@ public class RobotControl {
 	private void disconnectFromRobot() {
 		try {
 			comms.closeConnection();
-			nxtComm.close();
+			if (!simulator)			
+				nxtComm.close();
 			setConnected(false);
 		} catch (IOException ex) {
 			System.err.println("Error Disconnecting from NXT");

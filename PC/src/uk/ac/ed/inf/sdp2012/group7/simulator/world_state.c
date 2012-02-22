@@ -1,0 +1,38 @@
+#include "types.h"
+#include "net.h"
+
+
+/* This won't close (unless on error) but who cares */
+void ws_thread(void * args) {
+	struct ws_thread_args * a = args;
+	WS_SAY("started, waiting for connection...\n");
+	if ((socket_t = accept_client(a->socket)) != -1)
+		WS_SAY("connected.\n");
+	else {
+		WS_SAY("failed to connect client socket!\n");
+		exit(-1);
+	}
+	
+	/* Send packets! */
+	struct ws_packet p;
+
+	TIMED_LOOP
+
+		p.blue_x = a->ws->blue->x;
+		p.blue_y = a->ws->blue->y;
+		p.blue_a = a->ws->blue->angle;
+
+		p.yellow_x = a->ws->yellow->x;
+		p.yellow_y = a->ws->yellow->y;
+		p.yellow_a = a->ws->yellow->angle;
+
+		p.ball_x = a->ws->ball->x;
+		p.ball_y = a->ws->ball->y;
+
+		WS_SAY("sending packet bx=%i by=%i ba=%i yx=%i yy=%i ya=%i ballx=%i bally=%i\n", p.blue_x, p.blue_y, p.blue_a, p.yellow_x, p.yellow_y, p.yellow_a, p.ball_x, p.ball_y);
+		if (send(socket, &p, sizeof p, 0) == -1)
+			VT_SAY("send failed\n");
+		VT_SAY("send ok");
+
+	TIMED_LOOP_END
+}
