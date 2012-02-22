@@ -3,6 +3,8 @@ package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
+
 
 public class MovingObject {
     
@@ -71,9 +73,11 @@ public class MovingObject {
 			movedAngles.clear();
 		}
 		if(angles.size() > 2) angles.remove(0);
+		calculateAngle();
 	}
 	
-	public double getAngle(){
+	public void calculateAngle(){
+		VisionTools vt = new VisionTools();
 		if(angles.size() > 0){
 			Point a = new Point(0,0);
 			for(Point p : angles){
@@ -81,10 +85,14 @@ public class MovingObject {
 			}
 			a = new Point(a.x / angles.size(), a.y / angles.size());
 			tip = a;
-			return Math.atan2(a.y - getPosition().getCentre().y, a.x - getPosition().getCentre().x);
+			this.angle = vt.convertAngle(Math.atan2(a.y - getPosition().getCentre().y, a.x - getPosition().getCentre().x));
 		} else {
-			return 0;
+			this.angle = 0;
 		}
+	}
+	
+	public double getAngle(){
+		return this.angle;
 	}
 	
 	

@@ -107,8 +107,7 @@ public class FeedProcessor{
             //could the above line be shorter with the current worldState state?
             Point p = findAngle.findOrientation(Vision.worldState.getBluePixels(),Vision.worldState.getBlueRobot().getPosition().getCentre());
             Vision.worldState.getBlueRobot().addAngle(p);
-            Vision.logger.info(Vision.worldState.getBlueRobot().getAngle());
-            //TODO: Fix above!!!
+            Vision.logger.info("Blue robot: " + Vision.worldState.getBlueRobot().getAngle());
             p = Vision.worldState.getBlueRobot().tip;
             imageGraphics.drawLine(
             		Vision.worldState.getBlueRobot().getPosition().getCentre().x,
@@ -118,7 +117,7 @@ public class FeedProcessor{
             imageGraphics.setColor(Color.red);
             p = findAngle.findOrientation(Vision.worldState.getYellowPixels(), Vision.worldState.getYellowRobot().getPosition().getCentre());
             Vision.worldState.getYellowRobot().addAngle(p);
-            Vision.worldState.getYellowRobot().getAngle();
+            //Vision.logger.info("Yellow Robot: " + Vision.worldState.getYellowRobot().getAngle());
             p = Vision.worldState.getYellowRobot().tip;
             imageGraphics.drawLine(
             		Vision.worldState.getYellowRobot().getPosition().getCentre().x,

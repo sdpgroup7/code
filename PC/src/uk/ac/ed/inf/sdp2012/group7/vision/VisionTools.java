@@ -15,4 +15,15 @@ public class VisionTools {
 		float cm = width * pixelValue / pixelWidth;
 		return cm;	
 	}
+	
+    public double convertAngle(double a){
+    	
+    	if(a < 0){
+    		a = (2.0*Math.PI) + a;
+    	}    	
+    	a += (2*Math.PI);
+    	a = a - (3*Math.PI/2);
+    	a = a % (2*Math.PI);
+    	return a;
+    }
 }
