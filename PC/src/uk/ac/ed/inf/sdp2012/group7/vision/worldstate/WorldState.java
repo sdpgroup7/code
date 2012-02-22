@@ -25,6 +25,22 @@ public class WorldState{
 	volatile Point blueKeyPoint = new Point();
 	volatile Point yellowKeyPoint = new Point();
 	
+	public MovingObject getOurRobot(){
+		if(ourColor.equals(Color.blue)){
+			return blueRobot;
+		} else {
+			return yellowRobot;
+		}
+	}
+	
+	public MovingObject getOppononentsRobot(){
+		if(ourColor.equals(Color.blue)){
+			return yellowRobot;
+		} else {
+			return blueRobot;
+		}
+	}
+	
 	public Point getBlueKeyPoint(){
 		return this.blueKeyPoint;
 	}
