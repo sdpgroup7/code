@@ -72,7 +72,8 @@ public class Thresholding {
     private Point yellowGreyCentroid = new Point();
     
     private int ballCount;
-    private int yellowCount;
+    private int yellowCountA;
+    private int yellowCountB;
     private int blueCount;
     private int blueGreyCount;
     private int yellowGreyCount;
@@ -142,7 +143,8 @@ public class Thresholding {
            blueCount = 0;
            blueCentroid.setLocation(0,0);
             
-           yellowCount = 0;
+           yellowCountA = 0;
+           yellowCountB = 0;
            yellowCentroidA.setLocation(0,0);
            yellowCentroidB.setLocation(0,0);
            
@@ -173,11 +175,12 @@ public class Thresholding {
 						    img.setRGB(i, j, Color.yellow.getRGB()); // Yellow robot
 						    yellowRobotX.add(i);
 						    yellowRobotY.add(j);
-						    yellowCount++;
 						    randy = Math.random();
 						    if (randy > 0.5){						    
+						        yellowCountA++;
 						        yellowCentroidA.setLocation(yellowCentroidA.getX() + i, yellowCentroidA.getY() + j);
 						    }else{
+						        yellowCountB++;
 						        yellowCentroidB.setLocation(yellowCentroidB.getX() + i, yellowCentroidB.getY() + j);
 						    }
 						    yellowPixels.add(new Point(i,j));
@@ -222,14 +225,15 @@ public class Thresholding {
 			
 			if (ballCount == 0) ballCount++;
 			if (blueCount == 0) blueCount++;
-			if (yellowCount == 0) yellowCount++;
+			if (yellowCountA == 0) yellowCountA++;
+			if (yellowCountB == 0) yellowCountB++;
 			if (blueGreyCount == 0) blueGreyCount++;
 			if (yellowGreyCount == 0) yellowGreyCount++;
 			
 	    	//Vision.logger.debug("End Iteration");
 			ballCentroid.setLocation(ballCentroid.getX()/ballCount, ballCentroid.getY()/ballCount);
-			yellowCentroidA.setLocation(yellowCentroidA.getX()/yellowCount, yellowCentroidA.getY()/yellowCount);
-			yellowCentroidB.setLocation(yellowCentroidB.getX()/yellowCount, yellowCentroidB.getY()/yellowCount);
+			yellowCentroidA.setLocation(yellowCentroidA.getX()/yellowCountA, yellowCentroidA.getY()/yellowCountA);
+			yellowCentroidB.setLocation(yellowCentroidB.getX()/yellowCountB, yellowCentroidB.getY()/yellowCountB);
 			blueCentroid.setLocation(blueCentroid.getX()/blueCount, blueCentroid.getY()/blueCount);
 			blueGreyCentroid.setLocation(blueGreyCentroid.getX()/blueGreyCount, blueGreyCentroid.getY()/blueGreyCount);
 			yellowGreyCentroid.setLocation(yellowGreyCentroid.getX()/yellowGreyCount, yellowGreyCentroid.getY()/yellowGreyCount);

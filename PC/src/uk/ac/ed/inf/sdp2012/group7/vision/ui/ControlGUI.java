@@ -106,7 +106,7 @@ public class ControlGUI implements ChangeListener {
 	private RangeSlider green_b;
 
 	public final int THRESHOLD = 25;
-	public final int YELLOW_THRESHOLD = 20;
+	public final int YELLOW_THRESHOLD = 25;
 	
     private boolean penaltyToGame = false;
 
