@@ -38,6 +38,10 @@ public class MovingObject {
     	}
     }
     
+    public void addPosition(int x, int y){
+    	addPosition(new Point(x,y));
+    }
+    
     public void updateVelocity(){
     	TimePoint a = positions.get(0);
     	TimePoint b = positions.get(4);
