@@ -67,6 +67,9 @@ public class Thresholding {
     private Point blueCentroid = new Point();
     private Point yellowCentroidA = new Point();
     private Point yellowCentroidB = new Point();
+    private Point yellowCentroidC = new Point();
+    private Point yellowCentroidD = new Point();
+    private Point yellowCentroidE = new Point();
     private Point blueGreenPlateCentroid = new Point();
     private Point blueGreyCentroid = new Point();
     private Point yellowGreyCentroid = new Point();
@@ -74,6 +77,9 @@ public class Thresholding {
     private int ballCount;
     private int yellowCountA;
     private int yellowCountB;
+    private int yellowCountC;
+    private int yellowCountD;
+    private int yellowCountE;
     private int blueCount;
     private int blueGreyCount;
     private int yellowGreyCount;
@@ -145,8 +151,14 @@ public class Thresholding {
             
            yellowCountA = 0;
            yellowCountB = 0;
+           yellowCountC = 0;
+           yellowCountD = 0;
+           yellowCountE = 0;
            yellowCentroidA.setLocation(0,0);
            yellowCentroidB.setLocation(0,0);
+           yellowCentroidC.setLocation(0,0);
+           yellowCentroidD.setLocation(0,0);
+           yellowCentroidE.setLocation(0,0);
            
            blueGreyCount = 0;
            blueGreyCentroid.setLocation(0,0);
@@ -176,12 +188,21 @@ public class Thresholding {
 						    yellowRobotX.add(i);
 						    yellowRobotY.add(j);
 						    randy = Math.random();
-						    if (randy > 0.5){						    
+						    if (randy > 0 && randy =< 0.2){						    
 						        yellowCountA++;
 						        yellowCentroidA.setLocation(yellowCentroidA.getX() + i, yellowCentroidA.getY() + j);
-						    }else{
+						    }else if (randy > 0.2 && =< 0.4){
 						        yellowCountB++;
 						        yellowCentroidB.setLocation(yellowCentroidB.getX() + i, yellowCentroidB.getY() + j);
+						    }else if (randy > 0.4 && =< 0.6){
+						        yellowCountC++;
+						        yellowCentroidC.setLocation(yellowCentroidC.getX() + i, yellowCentroidC.getY() + j);
+						    }else if (randy > 0.6 && =< 0.8){
+						        yellowCountD++;
+						        yellowCentroidD.setLocation(yellowCentroidD.getX() + i, yellowCentroidD.getY() + j);
+						    }else if (randy > 0.8 && =< 1){
+						        yellowCountE++;
+						        yellowCentroidE.setLocation(yellowCentroidE.getX() + i, yellowCentroidE.getY() + j);
 						    }
 						    yellowPixels.add(new Point(i,j));
 					    }
@@ -227,6 +248,9 @@ public class Thresholding {
 			if (blueCount == 0) blueCount++;
 			if (yellowCountA == 0) yellowCountA++;
 			if (yellowCountB == 0) yellowCountB++;
+			if (yellowCountC == 0) yellowCountC++;
+			if (yellowCountD == 0) yellowCountD++;
+			if (yellowCountE == 0) yellowCountE++;
 			if (blueGreyCount == 0) blueGreyCount++;
 			if (yellowGreyCount == 0) yellowGreyCount++;
 			
@@ -234,12 +258,15 @@ public class Thresholding {
 			ballCentroid.setLocation(ballCentroid.getX()/ballCount, ballCentroid.getY()/ballCount);
 			yellowCentroidA.setLocation(yellowCentroidA.getX()/yellowCountA, yellowCentroidA.getY()/yellowCountA);
 			yellowCentroidB.setLocation(yellowCentroidB.getX()/yellowCountB, yellowCentroidB.getY()/yellowCountB);
+			yellowCentroidC.setLocation(yellowCentroidC.getX()/yellowCountC, yellowCentroidC.getY()/yellowCountC);
+			yellowCentroidD.setLocation(yellowCentroidD.getX()/yellowCountD, yellowCentroidD.getY()/yellowCountD);
+			yellowCentroidE.setLocation(yellowCentroidE.getX()/yellowCountE, yellowCentroidE.getY()/yellowCountE);
 			blueCentroid.setLocation(blueCentroid.getX()/blueCount, blueCentroid.getY()/blueCount);
 			blueGreyCentroid.setLocation(blueGreyCentroid.getX()/blueGreyCount, blueGreyCentroid.getY()/blueGreyCount);
 			yellowGreyCentroid.setLocation(yellowGreyCentroid.getX()/yellowGreyCount, yellowGreyCentroid.getY()/yellowGreyCount);
 			
-			yellowX = (int)((yellowCentroidA.getX()+yellowCentroidB.getX())/2);
-			yellowY = (int)((yellowCentroidA.getY()+yellowCentroidB.getY())/2);
+			yellowX = (int)((yellowCentroidA.getX()+yellowCentroidB.getX()+yellowCentroidC.getX()+yellowCentroidD.getX()+yellowCentroidE.getX())/5);
+			yellowY = (int)((yellowCentroidA.getY()+yellowCentroidB.getY()+yellowCentroidC.getY()+yellowCentroidD.getY()+yellowCentroidE.getY())/5);
 			
 			blueGreenPlate4Points = plate.getCorners(blueGreenPlate);
 			yellowGreenPlate4Points = plate.getCorners(yellowGreenPlate);
