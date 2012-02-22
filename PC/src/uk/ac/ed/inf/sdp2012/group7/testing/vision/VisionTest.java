@@ -12,7 +12,6 @@ import java.awt.Color;
 import java.awt.Point;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.InitialLocation;
-import uk.ac.ed.inf.sdp2012.group7.vision.EuclideanDistance;
 import org.junit.Test;
 
 public class VisionTest {
@@ -20,14 +19,6 @@ public class VisionTest {
 	@Test
 	public void testProcessAndUpdateImage() {
 		assertTrue(true);
-	}
-
-	@Test
-	public void testEuclideanDistance() {
-		EuclideanDistance e = new EuclideanDistance();
-		double d = e.getDistance(new Point(0,0),new Point(3,4));
-		assertTrue(Math.abs(d-5) < 0.0001);
-		System.out.println("Euclidean Distance Passed");
 	}
 	
 	@Test

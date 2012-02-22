@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.MovingObject;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
-import uk.ac.ed.inf.sdp2012.group7.vision.EuclideanDistance;
 
 /**
  * 
@@ -79,9 +78,6 @@ public class Thresholding {
     
     private ThresholdsState ts;
     private Plate plate = new Plate();
-    private EuclideanDistance ed = new EuclideanDistance();
-    
-
     
     
     public Thresholding(ThresholdsState ts) {  // Sets the constants for thresholding for each pitch 
@@ -185,20 +181,34 @@ public class Thresholding {
 					}
 					else if (isGreen(c,GB,RG))  {
 						img.setRGB(i,j, Color.green.getRGB()); // GreenPlates 
-						if (ed.getDistance(Vision.worldState.getBlueRobot().getPosition().getCentre(), new Point(i,j)) < 34) {
+						if (Point.distance(	Vision.worldState.getBlueRobot().getPosition().getCentre().x,
+											Vision.worldState.getBlueRobot().getPosition().getCentre().y,
+											i,j) < 34) {
 							blueGreenPlate.add(new Point(i,j));
 						} 
-						if (ed.getDistance(Vision.worldState.getYellowRobot().getPosition().getCentre(), new Point(i,j)) < 34){
+						if (Point.distance(	Vision.worldState.getYellowRobot().getPosition().getCentre().x,
+											Vision.worldState.getYellowRobot().getPosition().getCentre().y,
+											i,j) < 34){
 							yellowGreenPlate.add(new Point(i,j));
 						}
 
 					}
-					else if (isGrey(c) && (ed.getDistance(pastBlueGreyCent, new Point(i,j)) < 15) && (ed.getDistance(Vision.worldState.getBlueRobot().getPosition().getCentre(), new Point(i,j)) < 22.5) )  {
+					else if (isGrey(c) && (	Point.distance(	pastBlueGreyCent.x,
+															pastBlueGreyCent.y,
+															i,j) < 15) && (
+											Point.distance(	Vision.worldState.getBlueRobot().getPosition().getCentre().x,
+															Vision.worldState.getBlueRobot().getPosition().getCentre().y,
+															i,j) < 22.5))  {
 						
 					    img.setRGB(i,j, Color.orange.getRGB());
 					    blueGreyCount++;
 					    blueGreyCentroid.setLocation(blueGreyCentroid.getX() + i, blueGreyCentroid.getY() + j);
-					} else if (isGrey(c) && (ed.getDistance(pastYellowGreyCent, new Point(i,j)) < 15) && (ed.getDistance(Vision.worldState.getYellowRobot().getPosition().getCentre(), new Point(i,j)) < 22.5)) {
+					} else if (isGrey(c) && (	Point.distance(	pastYellowGreyCent.x,
+																pastYellowGreyCent.y,
+																i,j) < 15) && (
+												Point.distance(	Vision.worldState.getYellowRobot().getPosition().getCentre().x,
+																Vision.worldState.getYellowRobot().getPosition().getCentre().y,
+																i,j) < 22.5)) {
 						
 					    img.setRGB(i,j, Color.pink.getRGB());
 					    yellowGreyCount++;
@@ -237,10 +247,16 @@ public class Thresholding {
 			Vision.worldState.setYellowRobotPosition((int)yellowCentroid.getX(),(int)yellowCentroid.getY());
 			
 			Vision.worldState.setBallPosition((int)ballCentroid.getX(),(int)ballCentroid.getY());
-			if(ed.getDistance(Vision.worldState.getBlueRobot().getPosition().getCentre(),blueGreyCentroid) < 20 ){
+			if(	Point.distance(	Vision.worldState.getBlueRobot().getPosition().getCentre().x,
+								Vision.worldState.getBlueRobot().getPosition().getCentre().y,
+								blueGreyCentroid.x,
+								blueGreyCentroid.y) < 20){
 				Vision.worldState.setBlueGreyPosition((int)blueGreyCentroid.getX() ,(int)blueGreyCentroid.getY());
 			}
-			if(ed.getDistance(Vision.worldState.getYellowRobot().getPosition().getCentre(),yellowGreyCentroid) < 20 ){
+			if(	Point.distance(	Vision.worldState.getYellowRobot().getPosition().getCentre().x,
+								Vision.worldState.getYellowRobot().getPosition().getCentre().y,
+								yellowGreyCentroid.x,
+								yellowGreyCentroid.y) < 20 ){
 				Vision.worldState.setYellowGreyPosition((int)yellowGreyCentroid.getX(), (int)yellowGreyCentroid.getY());
 			}
 			
@@ -461,15 +477,16 @@ public class Thresholding {
 		Point secondMinP = new Point(0,0);
 
 		for (int i = 0; i < points.length; i++) {
-			if(ed.getDistance(points[i], cent) < firstMin){
+			if(Point.distance(points[i].x,points[i].y, cent.x, cent.y) < firstMin){
 				firstMinP = points[i];
-				firstMin = ed.getDistance(points[i], cent);
+				firstMin = Point.distance(points[i].x,points[i].y, cent.x, cent.y);
 			}
 		}
 		for (int i = 0; i < points.length; i++) {
-			if( ed.getDistance(points[i], cent) > ed.getDistance(firstMinP, cent) && (secondMin > firstMin)){
+			if( Point.distance(points[i].x,points[i].y, cent.x, cent.y) > 
+				Point.distance(firstMinP.x,firstMinP.y, cent.x, cent.y) && (secondMin > firstMin)){
 				secondMinP = points[i];
-				secondMin =  ed.getDistance(points[i], cent);
+				secondMin =  Point.distance(points[i].x,points[i].y, cent.x, cent.y);
 			}
 		}
 		//System.err.println("First point"+ firstMinP.x+","+firstMinP.y);
