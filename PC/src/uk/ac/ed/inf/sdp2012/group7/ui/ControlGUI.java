@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.sdp2012.group7.vision.ui;
+package uk.ac.ed.inf.sdp2012.group7.ui;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;

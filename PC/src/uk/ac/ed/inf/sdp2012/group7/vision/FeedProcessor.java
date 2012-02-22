@@ -8,7 +8,6 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
 import uk.ac.ed.inf.sdp2012.group7.vision.Thresholding;
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionFeed;
 

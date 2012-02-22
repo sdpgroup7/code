@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.sdp2012.group7.vision.ui;
+package uk.ac.ed.inf.sdp2012.group7.ui;
 /* FROM: https://github.com/ernieyu/Swing-range-slider */
 
 /* The MIT License

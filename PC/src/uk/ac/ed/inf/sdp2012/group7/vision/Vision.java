@@ -5,7 +5,6 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 import au.edu.jcu.v4l4j.V4L4JConstants;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
@@ -21,7 +20,6 @@ import org.apache.log4j.Logger;
 * @author s0840449
 */
 public class Vision {
-    private static ControlGUI thresholdsGUI;
     public static WorldState worldState;
     public static final Logger logger = Logger.getLogger(Vision.class);
     public static final boolean TESTING = false;
@@ -70,7 +68,6 @@ public class Vision {
         //Vision.logger.error("Sample error message");
         //Vision.logger.fatal("Sample fatal message");
         worldState = new WorldState();
-        ThresholdsState thresholdsState = new ThresholdsState();
 
         /* Default to main pitch. */
         /* Default values for the main vision window. */
@@ -82,13 +79,8 @@ public class Vision {
         int compressionQuality = 100;
 
         try {
-
-            /* Create the Control GUI for threshold setting/etc. */
-            thresholdsGUI = new ControlGUI();
-            thresholdsGUI.initGUI();
-
             /* Create a new Vision object to serve the main vision window. */
-            new VisionFeed(videoDevice, width, height, channel, videoStandard, compressionQuality, thresholdsGUI);
+            new VisionFeed(videoDevice, width, height, channel, videoStandard, compressionQuality);
             Vision.logger.info("Vision System Initialised");
         } catch (V4L4JException e) {
          Vision.logger.fatal("V4L4JException: " + e.getMessage());
@@ -97,8 +89,4 @@ public class Vision {
         }
     }
 
-    public WorldState getWorldState(){
-        //used for debugging purposes
-        return Vision.worldState;
-    }
 }

@@ -8,15 +8,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.*;
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.Pitch;
 
 public class InitialLocation implements MouseListener, MouseMotionListener {
