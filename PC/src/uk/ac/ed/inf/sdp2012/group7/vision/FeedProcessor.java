@@ -8,7 +8,6 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
 import uk.ac.ed.inf.sdp2012.group7.vision.Thresholding;
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionFeed;
 
@@ -30,14 +29,14 @@ public class FeedProcessor{
     
     double prevAngle = 0;
 
-    public FeedProcessor(InitialLocation il, int height, int width, ControlGUI controlGUI, VisionFeed visionFeed){
+    public FeedProcessor(InitialLocation il, int height, int width, VisionFeed visionFeed, ThresholdsState ts){
         
     	//this.thresholdsState = controlGUI.getThresholdsState();
         this.initialLocation = il;
         this.height = height;
         this.width = width;
         this.visionFeed = visionFeed;
-        this.doThresh = new Thresholding(controlGUI.getThresholdsState());
+        this.doThresh = new Thresholding(ts);
         this.findAngle = new OrientationFinder();
         //this.orientationFinder = new OrientationFinder(this.thresholdsState);
         Vision.logger.info("Feed Processor Initialised");

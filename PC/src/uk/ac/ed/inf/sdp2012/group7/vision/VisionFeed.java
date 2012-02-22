@@ -15,7 +15,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
 import uk.ac.ed.inf.sdp2012.group7.testing.vision.TestSaver;
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.DeviceInfo;
@@ -64,14 +63,15 @@ public class VisionFeed extends WindowAdapter {
      * @throws V4L4JException   If any parameter if invalid.
      */
     public VisionFeed(String videoDevice, int width, int height, int channel, int videoStandard,
-            int compressionQuality, ControlGUI thresholdsGUI) throws V4L4JException {
+            int compressionQuality) throws V4L4JException {
 
         /* Initialise the GUI that displays the video feed. */
         initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         initGUI();
         //this.thresholdGUI = thresholdsGUI;
-        InitialLocation il = new InitialLocation(thresholdsGUI, this, this.windowFrame);
-        processor = new FeedProcessor(il, height, width, thresholdsGUI, this);
+        ThresholdsState thresholdsState = new ThresholdsState();
+        InitialLocation il = new InitialLocation(this, this.windowFrame, thresholdsState);
+        processor = new FeedProcessor(il, height, width, this, thresholdsState);
         Vision.logger.info("VisionFeed Initialised");
         System.out.println("Please select what colour we are using the GUI.");
         //il.getPoints();
