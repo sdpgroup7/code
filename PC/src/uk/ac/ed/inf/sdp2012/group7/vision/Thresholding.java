@@ -188,19 +188,19 @@ public class Thresholding {
 						    yellowRobotX.add(i);
 						    yellowRobotY.add(j);
 						    randy = Math.random();
-						    if (randy > 0 && randy =< 0.2){						    
+						    if (randy > 0 && randy <= 0.2){						    
 						        yellowCountA++;
 						        yellowCentroidA.setLocation(yellowCentroidA.getX() + i, yellowCentroidA.getY() + j);
-						    }else if (randy > 0.2 && =< 0.4){
+						    }else if (randy > 0.2 && randy <= 0.4){
 						        yellowCountB++;
 						        yellowCentroidB.setLocation(yellowCentroidB.getX() + i, yellowCentroidB.getY() + j);
-						    }else if (randy > 0.4 && =< 0.6){
+						    }else if (randy > 0.4 && randy <= 0.6){
 						        yellowCountC++;
 						        yellowCentroidC.setLocation(yellowCentroidC.getX() + i, yellowCentroidC.getY() + j);
-						    }else if (randy > 0.6 && =< 0.8){
+						    }else if (randy > 0.6 && randy <= 0.8){
 						        yellowCountD++;
 						        yellowCentroidD.setLocation(yellowCentroidD.getX() + i, yellowCentroidD.getY() + j);
-						    }else if (randy > 0.8 && =< 1){
+						    }else if (randy > 0.8 && randy <= 1){
 						        yellowCountE++;
 						        yellowCentroidE.setLocation(yellowCentroidE.getX() + i, yellowCentroidE.getY() + j);
 						    }
