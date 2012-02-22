@@ -79,7 +79,7 @@ public class Vision {
         int height = 480;
         int channel = 0;
         int videoStandard = V4L4JConstants.STANDARD_PAL;
-        int compressionQuality = 80;
+        int compressionQuality = 100;
 
         try {
 
