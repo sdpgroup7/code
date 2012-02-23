@@ -2,6 +2,8 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 
 
 import java.awt.Point;
+import java.util.ArrayList;
+
 import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 
 
@@ -10,17 +12,112 @@ import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
  *
  */
 public class BallPrediction {
-	
+
 	/**
 	 * 
 	 */
 	private AllMovingObjects all_moving_objects ;
-	
-	public BallPrediction(AllMovingObjects aMO) {
+	private ArrayList<Point> obstacles;
+	private boolean clear_shot = false;
+	private boolean we_have_ball = false;
+	private boolean ball_is_too_close_to_wall = false;
+
+	public BallPrediction(AllMovingObjects aMO, ArrayList<Point> obstacles) {
 		this.all_moving_objects = aMO;
-		
+		this.obstacles = obstacles;
+		this.clearShot();
+		this.weHaveBall();
+
 	}
+	
+	
 	public Point getTarget () {
-		return this.all_moving_objects.getOurPosition();
+		
+		if (obstacles.contains(ConvertToNode.convertToNode(this.all_moving_objects.getBallPosition()))){
+			//boundary handling...
+			Point position = this.all_moving_objects.getBallPosition();
+			// 3 is the boundary variable	
+			if (position.x < 3) {
+				position.x = 3;
+			}
+			if (position.x > 47) {
+				position.x = 47;
+			}
+			if (position.y < 3) {
+				position.y = 3;
+			}
+			if (position.y > 22) {
+				position.y = 22;
+			}
+			
+			return position;
+		}
+		else {
+		return this.all_moving_objects.getBallPosition();
+		}
+	}
+
+
+	private void weHaveBall(){
+
+		Point our_position = all_moving_objects.getOurPosition();
+		Point ball_position = all_moving_objects.getBallPosition();
+		double our_angle = all_moving_objects.getOurAngle();
+
+		if(40 < (int)our_position.distance(ball_position)){
+
+
+			double angle_between_us_ball = Math.asin((ball_position.x - our_position.x)/our_position.distance(ball_position));
+
+			if (angle_between_us_ball < 0){ 
+				angle_between_us_ball = angle_between_us_ball + 360;
+			}
+
+			if(Math.abs(angle_between_us_ball - our_angle) < (30)){
+				we_have_ball = true;
+			}
+		}
+
+
+	}
+
+	private void clearShot(){
+
+		if(we_have_ball){
+
+			//Positions
+			Point our_position = all_moving_objects.getOurPosition();
+			Point their_top_goal_post = Vision.worldState.getOpponentsGoal().getTopLeft();
+			Point their_bottom_goal_post = Vision.worldState.getOpponentsGoal().getBottomLeft();
+
+			//Angles
+			double our_angle = all_moving_objects.getOurAngle();
+			double angle_with_top_post = Math.asin((their_top_goal_post.x - our_position.x)/(our_position.distance(their_top_goal_post)));
+			double angle_with_bottom_post = Math.asin((their_bottom_goal_post.x - our_position.x)/(our_position.distance(their_bottom_goal_post)));
+
+			//fix for normal angles into weirdo bearings....
+			if(angle_with_top_post < 0){
+				angle_with_bottom_post = angle_with_bottom_post + 360;
+				angle_with_top_post = angle_with_top_post + 360;
+			}
+
+			//Set clear shot boolean
+			if(Vision.worldState.getShootingDirection() == 1){
+				if(our_angle > angle_with_top_post && our_angle < angle_with_bottom_post){
+					this.clear_shot = true;
+				}
+			}
+			else{
+				if(our_angle < angle_with_top_post && our_angle > angle_with_bottom_post){
+					this.clear_shot = true;
+				}
+			}				
+
+
+		}
+	}
+	
+	public boolean getClearShot(){
+		return clear_shot;
 	}
 }

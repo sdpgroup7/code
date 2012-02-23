@@ -15,79 +15,55 @@ import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
  *
  */
 public class Plan {
-	
+
 	private BallPrediction ball_prediction;
 	private OppositionPrediction opposition;
+	private ArrayList<Point> obstacles;
 	private ArrayList<Node> path;
 	private AStarRun astar;
 	private int height = 25;
 	private int width = 50;
-	private int nodeInPixels = Vision.worldState.getPitch().getWidthInPixels()/50;//width in pixels!
-	
-	//Worldstate info
-	private int pitch_top_buffer;
-	private int pitch_right_buffer;
-	private int pitch_bottom_buffer;
-	private int pitch_left_buffer;
-	private AllMovingObjects all_moving_objects;
-	
-	
-	
 
-	//Vision.worldState.getBlueRobot().getPosition().getCentre().clone();
-	
+	//Worldstate info
+	private AllMovingObjects all_moving_objects;
+
 	/**
 	 * 
 	 */
 	public Plan() {
 		// TODO Auto-generated constructor stub
-		
+
 		this.all_moving_objects = new AllMovingObjects();
+		this.createBoundary();
+		ball_prediction = new BallPrediction(this.all_moving_objects, this.obstacles);
+		opposition = new OppositionPrediction(this.all_moving_objects, ConvertToNode.nodeInPixels);
+		this.obstacles = ConvertToNode.convertToNodes(opposition.getDefaultObstacles());
 		
-		ball_prediction = new BallPrediction(this.all_moving_objects);
-		opposition = new OppositionPrediction(this.all_moving_objects, nodeInPixels);
-		
-		//Set up world
-		this.pitch_top_buffer = Vision.worldState.getPitch().getTopBuffer();
-		this.pitch_right_buffer = Vision.worldState.getPitch().getLeftBuffer();
-		this.pitch_bottom_buffer = Vision.worldState.getPitch().getTopBuffer();
-		this.pitch_left_buffer = Vision.worldState.getPitch().getLeftBuffer();
-		
-		//get our robot.... We need to make sure we get the right method
-		//not sure if we got the latest file?
-		//this.us = Vision.worldState.getOurRobot().getPosition().getCentre();
-		
-		astar = new AStarRun(height, width, convertToNode(ball_prediction.getTarget()), convertToNode(all_moving_objects.getOurPosition()), convertToNodes(opposition.getDefaultObstacles()));
-		
+		astar = new AStarRun(height, width, ConvertToNode.convertToNode(ball_prediction.getTarget()), ConvertToNode.convertToNode(all_moving_objects.getOurPosition()), this.obstacles );
+
 		//Requires method to convert from path to ArrayList<Point>
 		//path = astar.getPathInPoints();
-		
+
 	}
+
+	//This method creates obstacles in front of both goals.
+	private void createBoundary(){
+		//boundary holds how thick is node obstacle at the edge of the pitch
+		int boundary = 3;
 		
-	//Compacts WorldState position point into "Node" center position
-	public Point convertToNode(Point p){
-		int x = (int)Math.floor((p.x - this.pitch_left_buffer)/nodeInPixels);
-		int y = (int)Math.floor((p.y - this.pitch_top_buffer)/nodeInPixels);
-		Point grid_point = new Point(x,y);
-		return grid_point;
-	}
-	
-	//Compacts WorldState position point into "Node" center position
-	
-	public ArrayList<Point> convertToNodes(ArrayList<Point> p){
-		
-		ArrayList<Point> node_points = new ArrayList<Point>();
-		Iterator itr = p.iterator();
-		
-		while(itr.hasNext()){
-			Point temp = (Point)itr.next();
-			int x = (int)Math.floor((temp.x - this.pitch_left_buffer)/nodeInPixels);
-			int y = (int)Math.floor((temp.y - this.pitch_top_buffer)/nodeInPixels);
-			Point grid_point = new Point(x,y);
-			node_points.add(grid_point);
+		for(int y = 0; y < height; y++){
+			for (int b=0; b < boundary; b++) {
+				this.obstacles.add(new Point(b,y));
+				this.obstacles.add(new Point(width - b,y));
+			}
 		}
-		
-		return node_points;
-	}
+		for(int x = boundary; x < width-boundary; x++){
+			for (int b=0; b < boundary; b++) {
+				this.obstacles.add(new Point(x,b));
+				this.obstacles.add(new Point(x,height-b));
+			}
+		}
+
+	}	
 
 }
