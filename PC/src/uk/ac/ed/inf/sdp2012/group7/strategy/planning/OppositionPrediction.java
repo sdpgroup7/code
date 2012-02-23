@@ -14,40 +14,32 @@ import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
  */
 public class OppositionPrediction {
 
-	private Point position;
-	private Point velocity;
-	private float nodeInPixels;
+	private AllMovingObjects all_moving_objects ;
+	private int nodeInPixels;
 	
 	/**
 	 * 
 	 */
-	public OppositionPrediction(float nodeInPixels) {
+	public OppositionPrediction(AllMovingObjects aMO, int nodeInPixels) {
+		
 		this.nodeInPixels = nodeInPixels;
-		this.position = Vision.worldState.getOpponentsRobot().getPosition().getCentre();
+		this.all_moving_objects = aMO;
 	}
 	
 	public ArrayList<Point> getDefaultObstacles(){
 		
 		ArrayList<Point> obstacles = new ArrayList<Point>();
 		
-		
+		Point position = this.all_moving_objects.getTheirPosition();
 		//Possible problem with conversion back to Int here..
-		for(float x = (this.position.x - (2*nodeInPixels)); x <= this.position.x + 2*nodeInPixels; x = x + nodeInPixels){
-			for(float y = (this.position.y - (2*nodeInPixels)); y <= this.position.y + 2*nodeInPixels; y = y + nodeInPixels){
-				Point p = new Point((int)x,(int)y);
+		for(int x = (position.x - (2*nodeInPixels)); x <= position.x + 2*nodeInPixels; x = x + nodeInPixels){
+			for(int y = (position.y - (2*nodeInPixels)); y <= position.y + 2*nodeInPixels; y = y + nodeInPixels){
+				Point p = new Point(x,y);
 				obstacles.add(p);
 			}
 		}
 		
 		return obstacles;
-	}
-	
-	public Point getPosition() {
-		return position;
-	}
-	
-	public Point getVelocity() {
-		return velocity;
 	}
 
 }

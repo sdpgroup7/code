@@ -16,20 +16,23 @@ import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
  */
 public class Plan {
 	
-	private BallPrediction ball;
+	private BallPrediction ball_prediction;
 	private OppositionPrediction opposition;
 	private ArrayList<Node> path;
 	private AStarRun astar;
 	private int height = 25;
 	private int width = 50;
-	private float nodeInPixels = Vision.worldState.getPitch().getWidthInPixels()/50;//width in pixels!
+	private int nodeInPixels = Vision.worldState.getPitch().getWidthInPixels()/50;//width in pixels!
 	
 	//Worldstate info
 	private int pitch_top_buffer;
 	private int pitch_right_buffer;
 	private int pitch_bottom_buffer;
 	private int pitch_left_buffer;
-	private Point us;
+	private AllMovingObjects all_moving_objects;
+	
+	
+	
 
 	//Vision.worldState.getBlueRobot().getPosition().getCentre().clone();
 	
@@ -38,8 +41,11 @@ public class Plan {
 	 */
 	public Plan() {
 		// TODO Auto-generated constructor stub
-		ball = new BallPrediction();
-		opposition = new OppositionPrediction(nodeInPixels);
+		
+		this.all_moving_objects = new AllMovingObjects();
+		
+		ball_prediction = new BallPrediction(this.all_moving_objects);
+		opposition = new OppositionPrediction(this.all_moving_objects, nodeInPixels);
 		
 		//Set up world
 		this.pitch_top_buffer = Vision.worldState.getPitch().getTopBuffer();
@@ -51,7 +57,7 @@ public class Plan {
 		//not sure if we got the latest file?
 		//this.us = Vision.worldState.getOurRobot().getPosition().getCentre();
 		
-		astar = new AStarRun(height, width, convertToNode(ball.getPosition()), convertToNode(us), convertToNodes(opposition.getDefaultObstacles()));
+		astar = new AStarRun(height, width, convertToNode(ball_prediction.getTarget()), convertToNode(all_moving_objects.getOurPosition()), convertToNodes(opposition.getDefaultObstacles()));
 		
 		//Requires method to convert from path to ArrayList<Point>
 		//path = astar.getPathInPoints();
@@ -67,7 +73,7 @@ public class Plan {
 	}
 	
 	//Compacts WorldState position point into "Node" center position
-	//Problem -- ArrayList Bullshit... :D  
+	
 	public ArrayList<Point> convertToNodes(ArrayList<Point> p){
 		
 		ArrayList<Point> node_points = new ArrayList<Point>();
@@ -75,10 +81,10 @@ public class Plan {
 		
 		while(itr.hasNext()){
 			Point temp = (Point)itr.next();
-			int x = (int)Math.floor(temp.x - this.pitch_left_buffer)/nodeInPixels);
-			int y = (int)Math.floor(temp.y - this.pitch_top_buffer)/nodeInPixels);
+			int x = (int)Math.floor((temp.x - this.pitch_left_buffer)/nodeInPixels);
+			int y = (int)Math.floor((temp.y - this.pitch_top_buffer)/nodeInPixels);
 			Point grid_point = new Point(x,y);
-			
+			node_points.add(grid_point);
 		}
 		
 		return node_points;

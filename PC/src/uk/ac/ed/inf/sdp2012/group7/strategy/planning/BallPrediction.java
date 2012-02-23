@@ -10,22 +10,17 @@ import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
  *
  */
 public class BallPrediction {
-
+	
 	/**
 	 * 
 	 */
-	private Point position;
-	private Point velocity;
-	public BallPrediction() {
-		this.position = Vision.worldState.getBall().getPosition().getCentre();
+	private AllMovingObjects all_moving_objects ;
+	
+	public BallPrediction(AllMovingObjects aMO) {
+		this.all_moving_objects = aMO;
+		
 	}
-	
-	
-	public Point getPosition() {
-		return position;
-	}
-	
-	public Point getVelocity() {
-		return velocity;
+	public Point getTarget () {
+		return this.all_moving_objects.getOurPosition();
 	}
 }
