@@ -12,14 +12,17 @@ public class Arc {
 	
 	private double radius;
 	private boolean direction;
+	//This is the number of mm in a golf ball
+	private double conversion = 43.67;
 	
 	public Arc(double r, boolean d) {
 		this.radius = r;
 		this.direction = d;
 	}
 	
-	public double getRadius() {
-		return radius;
+	public int getRadius() {
+		int convertedRadius = (int) Math.round(radius * conversion); 
+		return convertedRadius;
 	}
 	
 	public void setRadius(double radius) {
