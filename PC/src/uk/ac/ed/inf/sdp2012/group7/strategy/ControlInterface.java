@@ -85,6 +85,9 @@ public class ControlInterface {
 
 	public void implimentArc(Arc path) {
 		
+		//TODO
+		//c.circleWithRadius(
+		
 		
 	}
 	
