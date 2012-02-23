@@ -6,13 +6,14 @@ import java.util.ArrayList;
 
 public class WorldState{
 
+	volatile int shootingDirection = -1; //-1 = left, 1 = right
 	volatile Color ourColor = Color.blue;
 	volatile int room; //0 == main room, 1 == side room
 	volatile boolean clickingDone = false;
 
 	volatile Pitch pitch = new Pitch(); //All the data about the pitch dimensions
-	volatile ObjectPosition ourGoal = new ObjectPosition(); //The position of our goal
-	volatile ObjectPosition opponentsGoal = new ObjectPosition(); //The position of our opponents goal
+	volatile ObjectPosition leftGoal = new ObjectPosition(); //The position of our goal
+	volatile ObjectPosition rightGoal = new ObjectPosition(); //The position of our opponents goal
     
 	volatile MovingObject blueRobot = new MovingObject(); //blue robot including postion, orienation and eventually velocity
 	volatile MovingObject yellowRobot = new MovingObject(); //yellow robot including postion, orienation and eventually velocity
@@ -24,6 +25,8 @@ public class WorldState{
 	volatile ArrayList<Point> yellowPixels = new ArrayList<Point>(); //Holds all the yellow pixels (the T)
 	volatile Point blueKeyPoint = new Point();
 	volatile Point yellowKeyPoint = new Point();
+	
+	
 	
 	public MovingObject getOurRobot(){
 		if(ourColor.equals(Color.blue)){
@@ -134,12 +137,20 @@ public class WorldState{
 
     public ObjectPosition getOurGoal(){
     	//Returns an object representing our goal
-        return this.ourGoal;
+    	if(this.shootingDirection == -1){
+    		return this.leftGoal;
+    	} else {
+    		return this.rightGoal;
+    	}
     }
 
     public ObjectPosition getOpponentsGoal(){
     	//Returns an object representing our opponents goal
-        return this.opponentsGoal;
+    	if(this.shootingDirection == 1){
+    		return this.leftGoal;
+    	} else {
+    		return this.rightGoal;
+    	}
     }
     
     public void setBlueRobot(ObjectPosition position, double velocity){
@@ -248,16 +259,6 @@ public class WorldState{
     public void setPitchPosition(ObjectPosition position){
     	//Lets you set the position of the pitch given an ObjectPosition
     	this.pitch.setPosition(position);
-    }
-    
-    public void setOurGoal(ObjectPosition position){
-    	//Lets you set our goal given an ObjectPosition
-    	this.ourGoal = position;
-    }
-    
-    public void setOpponentsGoal(ObjectPosition position){
-    	//Lets you set our opponents goal given an ObjectPosition
-    	this.opponentsGoal = position;
     }
     
     public boolean isClickingDone(){
