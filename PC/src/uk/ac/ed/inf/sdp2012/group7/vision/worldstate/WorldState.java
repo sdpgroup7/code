@@ -76,6 +76,26 @@ public class WorldState{
  
     public WorldState(){
     	this(Color.blue,0);
+    	if(this.room == 0){
+	    	this.leftGoal.setTopLeft(new Point(36,196));
+	    	this.leftGoal.setTopRight(new Point(36,196));
+	    	this.leftGoal.setBottomLeft(new Point(39,337));
+	    	this.leftGoal.setBottomRight(new Point(39,337));
+	    	this.rightGoal.setTopLeft(new Point(611,191));
+	    	this.rightGoal.setTopRight(new Point(611,191));
+	    	this.rightGoal.setBottomLeft(new Point(614,330));
+	    	this.rightGoal.setBottomRight(new Point(614,330));
+    	} else {
+    		//TODO: Measure these
+    		this.leftGoal.setTopLeft(new Point(36,196));
+	    	this.leftGoal.setTopRight(new Point(36,196));
+	    	this.leftGoal.setBottomLeft(new Point(39,337));
+	    	this.leftGoal.setBottomRight(new Point(39,337));
+	    	this.rightGoal.setTopLeft(new Point(611,191));
+	    	this.rightGoal.setTopRight(new Point(611,191));
+	    	this.rightGoal.setBottomLeft(new Point(614,330));
+	    	this.rightGoal.setBottomRight(new Point(614,330));
+    	}
     }
     
     public WorldState(Color c, int room) {
