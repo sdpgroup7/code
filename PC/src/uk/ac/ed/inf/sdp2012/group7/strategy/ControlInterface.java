@@ -12,7 +12,7 @@ import math.geom2d.conic.Circle2D;
 import math.geom2d.line.LineSegment2D;
 
 /**
- * This takes a small section of the plan from Control Management and turns it
+ * This takes a plan from Control Management and turns it
  * into actual commands.
  * 
  * @author David Fraser -s0912336
@@ -37,10 +37,6 @@ public class ControlInterface {
 
 	}
 
-	public void getDistanceTravelled() {
-
-	}
-
 	/*
 	 * Calculates the Arc that the robot has to follow for the set of points
 	 * given using the pure pursuit algorithm
@@ -48,7 +44,8 @@ public class ControlInterface {
 	public Arc chooseArc(ArrayList<Point> pointPath, double v) {
 		// The paper where this maths comes from can be found here
 		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
-
+		
+		//TODO: Add this point in when the data standards are finalised
 		Point2D h = null;
 		Point2D p = new Point2D();
 		// TODO: Ask Grid for this position
@@ -86,7 +83,12 @@ public class ControlInterface {
 	public void implimentArc(Arc path) {
 		
 		//TODO
-		//c.circleWithRadius(
+		/*
+		c.clearAllCommands();
+		c.circleWithRadius(path.getRadius(), path.isDirection());
+		*/
+		logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", path.getRadius(), path.isDirection()));
+
 		
 		
 	}
