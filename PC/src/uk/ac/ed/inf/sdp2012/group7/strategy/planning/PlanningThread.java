@@ -16,7 +16,7 @@ public class PlanningThread extends Observable implements Runnable{
 	private boolean run;
 	private AllStaticObjects all_static_objects;
 	//How do we set what plan to make?
-	final int plan_type;
+	private int plan_type;
 	
 	/**
 	 * 
@@ -40,7 +40,7 @@ public class PlanningThread extends Observable implements Runnable{
 					Plan temp_plan = new Plan(this.all_static_objects, this.plan_type);
 					setChanged();
 					notifyObservers(temp_plan);
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 				} catch (InterruptedException e) {
 					
 				}
@@ -51,6 +51,10 @@ public class PlanningThread extends Observable implements Runnable{
 	
 	public void switchRun(){
 		this.run = run && false;
+	}
+	
+	public void setPlanType(int p){
+		this.plan_type = p;
 	}
 
 }

@@ -87,14 +87,14 @@ public class ControlGUI implements ChangeListener {
 	 * @param worldState		A WorldState object to update the pitch choice, shooting
 	 * 							direction, etc.
 	 */
-	public ControlGUI() {
+	public ControlGUI(Strategy s) {
 		
 		/* All three state objects must not be null. */
 		assert (thresholdsState != null);
 		assert (worldState != null);
 		
 		this.worldState = Vision.worldState;
-		strat = new Strategy();
+		strat = s;
 	}
 	
 	public void stateChanged(ChangeEvent e) {}

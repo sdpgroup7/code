@@ -17,24 +17,25 @@ import java.util.Observer;
 public class PlanningBuffer implements Observer {
 
 	private Plan held_plan;
-	private boolean run;
 	
 	public PlanningBuffer(){
 		   
 		
 	}
-	
-	
-	public Plan getHeld_plan() {
-		return this.held_plan;
-	}
+
 
 	@Override
 	public void update(Observable o, Object arg) {
 		synchronized(this){
 			
+			this.held_plan = (Plan)arg;
+			
 		}
 		
+	}
+	
+	public Plan getPlan(){
+		return held_plan;
 	}
 
 }
