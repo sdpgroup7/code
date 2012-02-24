@@ -73,8 +73,8 @@ public class ControlGUI implements ChangeListener {
 	JButton pitch_1;
 	JButton colour_yellow;
 	JButton colour_blue;
-	JRadioButton direction_right;
-	JRadioButton direction_left;
+	JButton direction_right;
+	JButton direction_left;
 	
     private boolean penaltyToGame = false;
 
@@ -223,21 +223,29 @@ public class ControlGUI implements ChangeListener {
 		direction_panel.add(direction_label);
 		
 		ButtonGroup direction_choice = new ButtonGroup();
-		direction_right = new JRadioButton("Right");
-		direction_left = new JRadioButton("Left");
+		direction_right = new JButton("Right");
+		direction_left = new JButton("Left");
 		direction_choice.add(direction_right);
 		direction_panel.add(direction_right);
 		direction_choice.add(direction_left);
 		direction_panel.add(direction_left);
 		
-		direction_right.setSelected(true);
-		
-		direction_right.addChangeListener(this);
-		direction_left.addChangeListener(this);
+		direction_right.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e){
+				Vision.worldState.setShootingDirection(1);
+				System.err.println(Integer.toString(Vision.worldState.getShootingDirection()));
+			}
+		});
+		direction_left.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e){
+				Vision.worldState.setShootingDirection(-1);
+				System.err.println(Integer.toString(Vision.worldState.getShootingDirection()));
+			}
+		});
 		
 		defaultPanel.add(direction_panel);
-		
-
 		
 		/*
 		The locate button is pressed to start the locating of the objects
