@@ -85,10 +85,10 @@ public class Path {
 		return points;
 	} 
 	
-//	public void printWaypoints() {
-//		for(Node node : waypoints) {
-//			System.out.println("("+node.getX()+","+node.getY()+") ");
-//		}
-//	}
+	public void printWaypoints() {
+		for(Node node : waypoints) {
+			System.out.println("("+node.getX()+","+node.getY()+") ");
+		}
+	}
 
 }
