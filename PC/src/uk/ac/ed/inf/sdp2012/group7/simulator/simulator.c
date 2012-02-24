@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <string.h>
 #include <getopt.h>
+#include <netdb.h>
 #include <pthread.h>
 
 #include "options.h"
