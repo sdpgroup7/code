@@ -287,7 +287,7 @@ public class ControlGUI implements ChangeListener {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        strat.mileStone2NavigateOn();
+		        strat.startPlanningThread();
 		    }
 		});
 		
@@ -295,7 +295,7 @@ public class ControlGUI implements ChangeListener {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        strat.mileStone2NavigateOff();
+		        strat.stopPlanningThread();
 		    }
 		});
 		
@@ -393,7 +393,7 @@ public class ControlGUI implements ChangeListener {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        //call to control saying kick
-		        strat.mileStone1(true);
+		        strat.kick();
 		    }
 		});
 		
@@ -402,7 +402,7 @@ public class ControlGUI implements ChangeListener {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        //call to control saying to drive
-		    	strat.mileStone1(false);
+		    	strat.drive();
 		    }
 		});
 		

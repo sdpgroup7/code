@@ -13,7 +13,7 @@ import java.util.Observer;
  */
 public class PlanningThread extends Observable implements Runnable{
 
-	private boolean run;
+	private boolean runFlag;
 	private AllStaticObjects all_static_objects;
 	//How do we set what plan to make?
 	private int plan_type;
@@ -27,14 +27,13 @@ public class PlanningThread extends Observable implements Runnable{
 		// PlanningBuffer watches this thread
 		this.addObserver(myWatcher);
 		// Set while flag as true
-		this.run = true;
 		// Set plan type
 		this.plan_type = plan_type;
 	}
 
 	@Override
 	public void run() {
-		while(run){
+		while(runFlag){
 			synchronized(this){
 				try {
 					Plan temp_plan = new Plan(this.all_static_objects, this.plan_type);
@@ -49,8 +48,8 @@ public class PlanningThread extends Observable implements Runnable{
 		
 	}
 	
-	public void switchRun(){
-		this.run = run && false;
+	public void switchRun(boolean b){
+		this.runFlag = b;
 	}
 	
 	public void setPlanType(int p){
