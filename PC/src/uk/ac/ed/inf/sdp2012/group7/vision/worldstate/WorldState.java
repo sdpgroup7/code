@@ -27,6 +27,13 @@ public class WorldState{
 	volatile Point yellowKeyPoint = new Point();
 	
 	
+	public void setShootingDirection(int shoot){
+		this.shootingDirection = shoot;
+	}
+	
+	public int getShootingDirection(){
+		return this.shootingDirection;
+	}
 	
 	public MovingObject getOurRobot(){
 		if(ourColor.equals(Color.blue)){
@@ -76,6 +83,10 @@ public class WorldState{
  
     public WorldState(){
     	this(Color.blue,0);
+    	updateShootingDirection();
+    }
+    
+    public void updateShootingDirection(){
     	if(this.room == 0){
 	    	this.leftGoal.setTopLeft(new Point(36,196));
 	    	this.leftGoal.setTopRight(new Point(36,196));
