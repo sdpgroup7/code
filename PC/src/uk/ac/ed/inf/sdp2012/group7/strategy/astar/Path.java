@@ -1,5 +1,6 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 public class Path {
@@ -74,7 +75,7 @@ public class Path {
 	}
 	
 	// only needed if path is to be given as an arraylist of points
-	/**
+	// that's useful then! 
 	public ArrayList<Point> pathToPoints() {
 		ArrayList<Point> points = new ArrayList<Point>();
 		for (Node node : waypoints) {
@@ -82,12 +83,12 @@ public class Path {
 			points.add(point);
 		}
 		return points;
-	} */
+	} 
 	
-	public void printWaypoints() {
-		for(Node node : waypoints) {
-			System.out.println("("+node.getX()+","+node.getY()+") ");
-		}
-	}
+//	public void printWaypoints() {
+//		for(Node node : waypoints) {
+//			System.out.println("("+node.getX()+","+node.getY()+") ");
+//		}
+//	}
 
 }

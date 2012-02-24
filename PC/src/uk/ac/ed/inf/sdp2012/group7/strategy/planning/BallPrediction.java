@@ -16,24 +16,29 @@ public class BallPrediction {
 	/**
 	 * 
 	 */
-	private AllMovingObjects all_moving_objects ;
+	private AllMovingObjects all_moving_objects;
+	private AllStaticObjects all_static_objects;
 	private ArrayList<Point> obstacles;
 	private boolean clear_shot = false;
 	private boolean we_have_ball = false;
 	private boolean ball_is_too_close_to_wall = false;
 
-	public BallPrediction(AllMovingObjects aMO, ArrayList<Point> obstacles) {
+	
+	//Constructor
+	public BallPrediction(AllMovingObjects aMO, AllStaticObjects aSO, ArrayList<Point> obstacles) {
 		this.all_moving_objects = aMO;
+		this.all_static_objects = aSO;
 		this.obstacles = obstacles;
 		this.clearShot();
 		this.weHaveBall();
+		this.ballTooCloseToWall();
 
 	}
 	
 	
 	public Point getTarget () {
 		
-		if (obstacles.contains(ConvertToNode.convertToNode(this.all_moving_objects.getBallPosition()))){
+		if (this.ball_is_too_close_to_wall){
 			//boundary handling...
 			Point position = this.all_moving_objects.getBallPosition();
 			// 3 is the boundary variable	
@@ -87,15 +92,14 @@ public class BallPrediction {
 
 			//Positions
 			Point our_position = all_moving_objects.getOurPosition();
-			Point their_top_goal_post = Vision.worldState.getOpponentsGoal().getTopLeft();
-			Point their_bottom_goal_post = Vision.worldState.getOpponentsGoal().getBottomLeft();
+
 
 			//Angles
 			double our_angle = all_moving_objects.getOurAngle();
-			double angle_with_top_post = Math.asin((their_top_goal_post.x - our_position.x)/(our_position.distance(their_top_goal_post)));
-			double angle_with_bottom_post = Math.asin((their_bottom_goal_post.x - our_position.x)/(our_position.distance(their_bottom_goal_post)));
+			double angle_with_top_post = Math.asin((all_static_objects.getTheir_top_goal_post().x - our_position.x)/(our_position.distance(all_static_objects.getTheir_top_goal_post())));
+			double angle_with_bottom_post = Math.asin((all_static_objects.getTheir_bottom_goal_post().x - our_position.x)/(our_position.distance(all_static_objects.getTheir_bottom_goal_post())));
 
-			//fix for normal angles into weirdo bearings....
+			//fix for normal angles into weird bearings.... :D
 			if(angle_with_top_post < 0){
 				angle_with_bottom_post = angle_with_bottom_post + 360;
 				angle_with_top_post = angle_with_top_post + 360;
@@ -112,9 +116,11 @@ public class BallPrediction {
 					this.clear_shot = true;
 				}
 			}				
-
-
 		}
+	}
+	
+	private void ballTooCloseToWall() {
+		this.ball_is_too_close_to_wall = obstacles.contains(all_static_objects.convertToNode(this.all_moving_objects.getBallPosition()));
 	}
 	
 	public boolean getClearShot(){

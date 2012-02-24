@@ -17,12 +17,12 @@ public class AStarRun {
 				map.setObstical(obstacle.x, obstacle.y, true);
 			}
 			
-			// set heuristic and run the pathfinder
+			// set heuristic and run the path finder
 			AStarHeuristic heuristic = new ClosestHeuristic();
 			AStar pathFinder = new AStar(map, heuristic);
 			shortestPath = pathFinder.calcShortestPath(some_robot.x, some_robot.y, ball.x, ball.y);
 			
-			// copied from astar for printing
+			// copied from A* for printing
 			Node node;
 			for(int x=0; x<map.getMapWidth(); x++) {
 				for(int y=0; y<map.getMapHeight(); y++) {
@@ -47,5 +47,9 @@ public class AStarRun {
 		
 		public Path getPath() {
 			return shortestPath;
+		}
+		
+		public ArrayList<Point> getPathInPoints() {
+			return this.shortestPath.pathToPoints();
 		}
 }
