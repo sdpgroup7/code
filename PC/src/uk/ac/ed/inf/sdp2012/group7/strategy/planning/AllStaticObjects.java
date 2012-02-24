@@ -20,25 +20,37 @@ public class AllStaticObjects {
 	private int nodeInPixels; 
 	private int pitch_top_buffer;
 	private int pitch_left_buffer; 
+	//private int pitch_bottom_buffer;
+	//private int pitch_right_buffer; 
 	private int height;
 	private int width;
 	private int boundary;
 	private Point their_top_goal_post;
 	private Point their_bottom_goal_post;
+	private Point our_top_goal_post;
+	private Point our_bottom_goal_post;
+	private Point infront_of_our_goal;
 	
 	public AllStaticObjects (){
 		
 		this.their_top_goal_post = Vision.worldState.getOpponentsGoal().getTopLeft();
 		this.their_bottom_goal_post = Vision.worldState.getOpponentsGoal().getBottomLeft();
+		this.our_top_goal_post = Vision.worldState.getOurGoal().getTopLeft();
+		this.our_bottom_goal_post = Vision.worldState.getOurGoal().getBottomLeft();
 		this.nodeInPixels = Vision.worldState.getPitch().getWidthInPixels()/50;//width in pixels!
 		this.pitch_top_buffer  = Vision.worldState.getPitch().getTopBuffer();
 		this.pitch_left_buffer = Vision.worldState.getPitch().getLeftBuffer();
+		//this.pitch_bottom_buffer  = Vision.worldState.getPitch().getBottomBuffer();
+		//this.pitch_right_buffer = Vision.worldState.getPitch().getRightBuffer();
+		
 		//hard code setting of grid resolution (Grid is used in A*)
 		this.height = 25;
 		this.width = 50;
 		//Boundary around the edges of the pitch, to prevent the robot from hitting the walls
 		//So this is dependent on the resolution..
 		this.boundary = 3;
+		//set defence position
+		this.pointInfrontOfGoal();
 	}
 	
 	//Compacts WorldState position point into "Node" centre position
@@ -62,6 +74,16 @@ public class AllStaticObjects {
 		}
 
 		return node_points;
+	}
+	
+	//Method for finding the centre point just in front of our goal...
+	private void pointInfrontOfGoal(){
+		if(Vision.worldState.getShootingDirection() == 1){
+			this.infront_of_our_goal = new Point((this.width - (this.boundary + 1)),(this.our_bottom_goal_post.y - this.our_top_goal_post.y));
+		}
+		else {
+			this.infront_of_our_goal = new Point((this.boundary + 1),(this.our_bottom_goal_post.y - this.our_top_goal_post.y));
+		}
 	}
 	
 	
@@ -110,12 +132,18 @@ public class AllStaticObjects {
 	public int getBoundary() {
 		return this.boundary;
 	}
+	
 	public Point getTheir_top_goal_post() {
 		return their_top_goal_post;
 	}
-
+	
 	public Point getTheir_bottom_goal_post() {
 		return their_bottom_goal_post;
 	}
+	
+	public Point getInfront_of_our_goal() {
+		return infront_of_our_goal;
+	}
+
 
 }
