@@ -292,4 +292,8 @@ public class WorldState{
         this.clickingDone = yn;
     }
     
+    public int getShootingDirection(){
+    	return this.shootingDirection;
+    }
+    
 }
