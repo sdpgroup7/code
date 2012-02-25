@@ -135,7 +135,7 @@ public class TargetDecision {
 			double angle_with_top_post = Math.asin((all_static_objects.getTheir_top_goal_post().x - our_position.x)/(our_position.distance(all_static_objects.getTheir_top_goal_post())));
 			double angle_with_bottom_post = Math.asin((all_static_objects.getTheir_bottom_goal_post().x - our_position.x)/(our_position.distance(all_static_objects.getTheir_bottom_goal_post())));
 
-			//fix for normal angles into weird bearings.... :D
+			//fix for normal angles into bearings.... :D
 			if(angle_with_top_post < 0){
 				angle_with_bottom_post = angle_with_bottom_post + 360;
 				angle_with_top_post = angle_with_top_post + 360;

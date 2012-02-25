@@ -14,11 +14,11 @@ import java.util.Observer;
  * @author twig
  *
  */
-public class PlanningBuffer implements Observer {
+public class PlanningBuffer extends Observable implements Observer {
 
 	private Plan held_plan;
 	
-	public PlanningBuffer(){
+	public PlanningBuffer(Observer myWatcher){
 		   
 		
 	}
@@ -27,9 +27,9 @@ public class PlanningBuffer implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		synchronized(this){
-			
-			this.held_plan = (Plan)arg;
-			
+			this.held_plan = (Plan)arg;;
+			setChanged();
+			notifyObservers(held_plan);
 		}
 		
 	}

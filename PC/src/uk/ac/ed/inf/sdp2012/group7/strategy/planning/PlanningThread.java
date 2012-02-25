@@ -39,7 +39,7 @@ public class PlanningThread extends Observable implements Runnable{
 					Plan temp_plan = new Plan(this.all_static_objects, this.plan_type);
 					setChanged();
 					notifyObservers(temp_plan);
-					Thread.sleep(2000);
+					Thread.sleep(1);
 				} catch (InterruptedException e) {
 					
 				}

@@ -1,13 +1,8 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy;
 
-import java.awt.Point;
 
 import org.apache.log4j.Logger;
-
-import uk.ac.ed.inf.sdp2012.group7.control.RobotControl;
-import uk.ac.ed.inf.sdp2012.group7.control.Tools;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.*;
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 
 /**
  * 
@@ -18,26 +13,22 @@ public class Strategy {
 
 	public static final Logger logger = Logger.getLogger(Strategy.class);
 	
-	private RobotControl controller;
 	private PlanningBuffer planning_buffer;
 	private PlanningThread planningthread;
+	private ControlInterface control_interface;
 	private Thread thread_for_planningthread;
-	private boolean runFlag;
 
 
 	public Strategy() {
-		controller = new RobotControl();
-		controller.startCommunications();
-		this.runFlag = true;
 		
+		//Start Control interface
+		this.control_interface = new ControlInterface(5);
 		
-		//Thread testing and plan testing code::
 		//create the observer / buffer for the plans
-		this.planning_buffer = new PlanningBuffer();
+		this.planning_buffer = new PlanningBuffer(control_interface);
 		
 		//Make runnable...
 		this.planningthread = new PlanningThread(planning_buffer,1);
-		
 		
 	}
 	
@@ -57,21 +48,9 @@ public class Strategy {
 		this.thread_for_planningthread = null;
 	}
 	
-	
-	//The below is just here as a quick fix for the GUI -- I don't have time to sort this out now
-	//delete/modify later
-	//Also kept so we can see how it was done
-	
-	public void drive(){
-		controller.changeSpeed(30);
-		controller.moveForward(60);
+	public ControlInterface getControlInterface(){
+		return this.control_interface;
 	}
-	
-	public void kick(){
-		controller.kick();
-	}
-
-
 
 
 }

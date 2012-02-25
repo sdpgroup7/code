@@ -393,7 +393,7 @@ public class ControlGUI implements ChangeListener {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        //call to control saying kick
-		        strat.kick();
+		        strat.getControlInterface().kick();
 		    }
 		});
 		
@@ -402,7 +402,7 @@ public class ControlGUI implements ChangeListener {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        //call to control saying to drive
-		    	strat.drive();
+		    	strat.getControlInterface().drive();
 		    }
 		});
 		
