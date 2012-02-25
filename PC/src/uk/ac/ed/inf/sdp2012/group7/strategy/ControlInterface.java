@@ -3,9 +3,14 @@ package uk.ac.ed.inf.sdp2012.group7.strategy;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Observable;
+import java.util.Observer;
+
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
+import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
 import org.apache.log4j.Logger;
+import uk.ac.ed.inf.sdp2012.group7.control.RobotControl;
 
 import math.geom2d.Point2D;
 import math.geom2d.conic.Circle2D;
@@ -18,15 +23,21 @@ import math.geom2d.line.LineSegment2D;
  * @author David Fraser -s0912336
  * 
  */
-public class ControlInterface {
+public class ControlInterface implements Observer {
 
 	
 	public static final Logger logger = Logger.getLogger(ControlInterface.class);
 	
 	private int lookahead;
+	private RobotControl c;
+	
 
 	public ControlInterface(int lookahead) {
 		this.lookahead = lookahead;
+		this.c = new RobotControl();
+		this.c.startCommunications();
+		
+		
 	}
 
 	/**
@@ -41,17 +52,16 @@ public class ControlInterface {
 	 * Calculates the Arc that the robot has to follow for the set of points
 	 * given using the pure pursuit algorithm
 	 */
-	public Arc chooseArc(ArrayList<Point> pointPath, double v) {
+	public Arc chooseArc(Plan plan) {
 		// The paper where this maths comes from can be found here
 		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
 		
-		//TODO: Add this point in when the data standards are finalised
 		Point2D h = null;
-		Point2D p = new Point2D();
-		// TODO: Ask Grid for this position
+		Point2D p = new Point2D(plan.getOurRobotPosition());
+		double v = plan.getOurRobotAngle();
 		
 		try {
-			h = this.findGoalPoint(pointPath, p);
+			h = this.findGoalPoint(plan.getPath(), p);
 		} catch(Exception e) {
 		}
 		
@@ -74,7 +84,7 @@ public class ControlInterface {
 			dir = true;
 		}
 
-		Arc arc = new Arc(R, dir);
+		Arc arc = new Arc(R, dir, plan.getAction());
 
 		return arc;
 
@@ -82,13 +92,18 @@ public class ControlInterface {
 
 	public void implimentArc(Arc path) {
 		
-		//TODO
-		/*
-		c.clearAllCommands();
-		c.circleWithRadius(path.getRadius(), path.isDirection());
-		*/
+		
+		this.c.clearAllCommands();
+		this.c.circleWithRadius(path.getRadius(), path.isDirection());
+		
+		if (path.getCommand() == 1) {
+			this.c.clearAllCommands();
+			this.c.kick();
+			logger.info("Command sent to robot: kick");
+		}
+		
 		logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", path.getRadius(), path.isDirection()));
-
+		
 		
 		
 	}
@@ -159,6 +174,17 @@ public class ControlInterface {
 				
 		return intersect;
 	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		Plan plan = (Plan) arg1;
+		Arc arcToDrive = this.chooseArc(plan);
+		this.implimentArc(arcToDrive);
+		
+	}
+
+	
+
 	
 
 
