@@ -1,16 +1,22 @@
+#include <stdio.h>
+
 #include "types.h"
 #include "net.h"
+#include "macros.h"
+#include "options.h"
 
+#include <errno.h>
 
 /* This won't close (unless on error) but who cares */
 void ws_thread(void * args) {
 	struct ws_thread_args * a = args;
 	WS_SAY("started, waiting for connection...\n");
-	if ((socket_t = accept_client(a->socket)) != -1)
+	socket_t socket;
+	if ((socket = accept_client(a->socket)) != -1) {
 		WS_SAY("connected.\n");
-	else {
-		WS_SAY("failed to connect client socket!\n");
-		exit(-1);
+	} else {
+		WS_SAY_ "failed to connect client socket %i %i!\n", errno, a->socket);
+		return -1;
 	}
 	
 	/* Send packets! */
@@ -29,10 +35,10 @@ void ws_thread(void * args) {
 		p.ball_x = a->ws->ball->x;
 		p.ball_y = a->ws->ball->y;
 
-		WS_SAY("sending packet bx=%i by=%i ba=%i yx=%i yy=%i ya=%i ballx=%i bally=%i\n", p.blue_x, p.blue_y, p.blue_a, p.yellow_x, p.yellow_y, p.yellow_a, p.ball_x, p.ball_y);
+		WS_SAY_ "sending packet bx=%i by=%i ba=%i yx=%i yy=%i ya=%i ballx=%i bally=%i\n", p.blue_x, p.blue_y, p.blue_a, p.yellow_x, p.yellow_y, p.yellow_a, p.ball_x, p.ball_y);
 		if (send(socket, &p, sizeof p, 0) == -1)
-			VT_SAY("send failed\n");
-		VT_SAY("send ok");
+			WS_SAY("send failed\n");
+		WS_SAY("send ok\n");
 
 	TIMED_LOOP_END
 }

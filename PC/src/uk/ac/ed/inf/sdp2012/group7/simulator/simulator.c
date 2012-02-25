@@ -13,6 +13,7 @@
 #include "types.h"
 #include "net.h"
 #include "robot_simm.h"
+#include "world_state.h"
 
 void help() {
 	printf(
@@ -71,7 +72,7 @@ int main(int argc, char **argv) {
 
 	char blue_addr[INET6_ADDRSTRLEN];
 	char yellow_addr[INET6_ADDRSTRLEN];
-	char vision_addr[INET6_ADDRSTRLEN];
+	char world_state_addr[INET6_ADDRSTRLEN];
 	
 	socket_t blue_socket = -1;
 	socket_t yellow_socket = -1;
@@ -79,6 +80,9 @@ int main(int argc, char **argv) {
 
 	struct robot_status blue_status;
 	struct robot_status yellow_status;
+	struct world_state world_state;
+	world_state.blue = &blue_status;
+	world_state.yellow = &yellow_status;
 	memset(&blue_status, 0, sizeof blue_status);
 	memset(&yellow_status, 0, sizeof yellow_status);
 	blue_status.x = BLUE_START_X;
@@ -112,9 +116,19 @@ int main(int argc, char **argv) {
 	yellow_thread_args.status = &yellow_status;
 	pthread_create(&yellow_thread, NULL, robot_thread, &yellow_thread_args);
 
+	struct ws_thread_args ws_thread_args;
+	if (set_up_ws_conn(world_state_port, world_state_addr, &ws_thread_args) < 0) {
+		printf("Failed to open world state socket!\n");
+		return 1;
+	}
+	pthread_t world_state_thread;
+	ws_thread_args.ws = &world_state;
+	pthread_create(&world_state_thread, NULL, ws_thread, &ws_thread_args);
+	
 
 	pthread_join(blue_thread, NULL);
 	pthread_join(yellow_thread, NULL);
+	pthread_join(world_state_thread, NULL);	
 
 
 	return 0;

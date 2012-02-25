@@ -73,10 +73,11 @@ socket_t make_socket(char *host, char *port, int *error, int *gai_error) {
 }
 
 int set_up_robot_conn(char * port, char * addr, struct robot_thread_args * thread_args) {
+	socket_t socket;
 	if (not_dummy(port)) {
 		int error;
 		int gai_error;
-		socket_t socket = make_socket(addr, port, &error, &gai_error);
+		socket = make_socket(addr, port, &error, &gai_error);
 		if (socket == -1) {
 			printf("error: ");
 			if (error)
@@ -93,3 +94,24 @@ int set_up_robot_conn(char * port, char * addr, struct robot_thread_args * threa
 	return 0;
 }
 
+int set_up_ws_conn(char * port, char * addr, struct ws_thread_args * thread_args) {
+	socket_t socket;
+	if (not_dummy(port)) {
+		int error;
+		int gai_error;
+		socket = make_socket(addr, port, &error, &gai_error);
+		if (socket == -1) {
+			printf("error: ");
+			if (error)
+				printf("failed to open socket on [%s]:%s, errno %i", addr, port, error);
+			if (gai_error)
+				printf("getaddrinfo on port %s failed: %i %s", port, gai_error, gai_strerror(gai_error));
+			return -1;
+		}
+		printf("Opened socket %i on [%s]:%s\n", socket, addr, port);
+	}
+
+	thread_args->socket = socket;
+	thread_args->is_dummy = is_dummy(port);
+	return 0;
+}

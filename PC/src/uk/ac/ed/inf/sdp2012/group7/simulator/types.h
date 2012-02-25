@@ -51,12 +51,13 @@ struct world_state {
 struct ws_thread_args {
 	struct world_state * ws;
 	socket_t socket;
+	int is_dummy;
 };
 
 struct ws_packet {
 	java_uint blue_x;
 	java_uint blue_y;
-	java_uint blue_c;
+	java_uint blue_a;
 
 	java_uint yellow_x;
 	java_uint yellow_y;

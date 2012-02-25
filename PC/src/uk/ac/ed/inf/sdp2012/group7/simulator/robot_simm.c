@@ -1,21 +1,26 @@
 #include "robot_simm.h"
 
-
+#include <errno.h>
 #include <math.h>
 #include <sys/time.h>
+#include <netdb.h>
+#include <unistd.h>
+#include <stdio.h>
 
 #include "types.h"
 #include "opcodes.h"
+#include "macros.h"
+#include "options.h"
 
 
-void decode_command(opcode op, struct command * cmd) {
+void decode_command(opcode_t op, struct command * cmd) {
 	cmd->instr = op & INSTR_MASK;
 	cmd->arg = op ARG_SHIFT;
 }
 
 void robot_thread(void *args) {
 	struct robot_thread_args *a = args;
-	RT_SAY("started, is_dummy=%i\n", a->is_dummy);
+	RT_SAY("started\n");
 
 	if (a->is_dummy) {
 		RT_SAY("I'm a dummy LOL\n");
@@ -31,30 +36,29 @@ void robot_thread(void *args) {
 		int recv_size;
 		struct command cmd;
 		cmd.instr = DO_NOTHING;
-		cmd.robot = a->robot;
 		pthread_t action_thread;
 		struct robot_action_thread_args action_args;
-		action_args->command = &cmd;
-		action_args->rs = a->robot_status;
+		action_args.cmd = &cmd;
+		action_args.rs = a->status;
+		action_args.robot = a->robot;		
 		pthread_create(&action_thread, NULL, action, &action_args);
 		
 		while ((recv_size = recv(socket, &buf, sizeof buf, 0)) > 0) {
-			if (recv_size == sizeof opcode) {
-				RT_SAY("received opcode %i\n", buf);
+			if (recv_size == sizeof(opcode_t)) {
+				RT_SAY2("received opcode %i\n", buf);
 				decode_command(buf, &cmd);
-				RT_SAY("decoded as instr=%i arg=%i\n", cmd->instr, cmd->arg);
+				RT_SAY3("decoded as instr=%i arg=%i\n", cmd.instr, cmd.arg);
 				
 			} else {
-				RT_SAY("received opcode of wrong size (%i)\n", recv_size);
+				RT_SAY2("received opcode of wrong size (%i)\n", recv_size);
 			}
 		}
 
-		pthread_kill(action_thread, SIGKILL);
+		cmd.instr = QUIT;
 		close(socket);
 	}
 
 	RT_SAY("thread exit\n");
-	return 0;
 }
 
 
@@ -98,9 +102,9 @@ void action(void* args) {
 			case ARC: AT_STUB("ARC\n"); break;
 			case STEER_WITH_RATIO: AT_STUB("STEER_WITH_RATIO\n"); break;
 			case BEEP: AT_SAY("bleep blop.\n"); break;
-			case CELEBRATE: AT_SAY("bleep bLOLp robot %i suxx!\n", a->robot==1?2:1); break;
+			case CELEBRATE: AT_SAY("bleep blop win!\n"); break;
 			case FORWARDS_WITH_DISTANCE:
-					distance = a->rs->arg; break;
+					distance = a->cmd->arg; break;
 			case QUIT: AT_SAY("quitting action thread.\n"); return 0;
 		}
 
