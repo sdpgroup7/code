@@ -60,7 +60,7 @@ public class Thresholding {
     private int width;
     
     private Point pastBlueGreyCent = new Point();
-    private Point pastYellowGreyCent = new Point(); 
+    private Point pastYellowGreyCent = new Point();
     
     private Point ballCentroid = new Point();
     private Point blueCentroid = new Point();
@@ -139,7 +139,7 @@ public class Thresholding {
     		pitch = Vision.worldState.getRoom();
     		width = right-left;
     		height = top-bottom;
-    	  
+    	 
     	  	pastBlueGreyCent = Vision.worldState.getBlueGrey().getPosition().getCentre();
     	  	pastYellowGreyCent = Vision.worldState.getYellowGrey().getPosition().getCentre();
 		 //  BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
@@ -332,6 +332,7 @@ public class Thresholding {
 			yellowY = (int)(totalYellowY/numYellowCentroids);
 			
 			
+			
 			blueGreenPlate4Points = plate.getCorners(blueGreenPlate);
 			yellowGreenPlate4Points = plate.getCorners(yellowGreenPlate);
 			Vision.worldState.getBlueRobot().getPosition().setCorners(blueGreenPlate4Points);
@@ -341,7 +342,9 @@ public class Thresholding {
 			yellowGreenPlate4Points = findTheFourPoints(yellowGreenPlate);*/
 			
 			Vision.worldState.setBlueRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
-			Vision.worldState.setYellowRobotPosition(yellowX,yellowY);
+			if ((yellowX != 0) && (yellowY != 0)) {
+			    Vision.worldState.setYellowRobotPosition(yellowX,yellowY);
+			}
 			
 			Vision.worldState.setBallPosition((int)ballCentroid.getX(),(int)ballCentroid.getY());
 			if(	Point.distance(	Vision.worldState.getBlueRobot().getPosition().getCentre().x,
