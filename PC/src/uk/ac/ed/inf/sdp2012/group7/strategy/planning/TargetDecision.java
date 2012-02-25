@@ -48,33 +48,30 @@ public class TargetDecision {
 		 * This whole section is experimental
 		 */
 		//If the plan type is not 0, go into free play mode
-		if(plan_type > 1){
-			if(!they_have_ball){
+		if(plan_type > 0){
+			if(clear_shot){
+				this.action = 1;
+				return this.all_moving_objects.getBallPosition();
+			}
+			else {
 				if (this.ball_is_too_close_to_wall){
+					this.action = 0;
 					return this.handlingBallTooCloseWall();
 				}
 			
 				else {
+					this.action = 0;
 					return this.all_moving_objects.getBallPosition();
 				}
 			}
-			else{
-				
-				return this.all_static_objects.getInfront_of_our_goal();
-				
-			}
 		}
 		//If the plan is 0, we are defending our goal at penalty
-		else if (this.plan_type == 0){
+		else {
 			//best position in front of our own goal for defending...
+			this.action = 0;
 			return this.all_static_objects.getInfront_of_our_goal();
 					
 		}
-		else {
-			return this.all_moving_objects.getBallPosition();
-		}
-		
-	
 	}
 
 
