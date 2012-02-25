@@ -181,7 +181,7 @@ public class ControlInterface implements Observer {
 	}
 	
 	public void drive() {
-		c.clearAllCommands()
+		c.clearAllCommands();
 		c.changeSpeed(30);
 		c.moveForward(60);
 	}

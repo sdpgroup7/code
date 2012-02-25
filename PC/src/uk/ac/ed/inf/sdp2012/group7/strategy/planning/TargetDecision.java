@@ -44,7 +44,9 @@ public class TargetDecision {
 	
 	public Point getTarget() {
 		
-		
+		/*
+		 * This whole section is experimental
+		 */
 		//If the plan type is not 0, go into free play mode
 		if(plan_type > 1){
 			if(!they_have_ball){
