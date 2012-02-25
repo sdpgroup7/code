@@ -174,6 +174,17 @@ public class ControlInterface implements Observer {
 				
 		return intersect;
 	}
+	
+	public void kick() {
+		c.clearAllCommands();
+		c.kick();
+	}
+	
+	public void drive() {
+		c.clearAllCommands()
+		c.changeSpeed(30);
+		c.moveForward(60);
+	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
