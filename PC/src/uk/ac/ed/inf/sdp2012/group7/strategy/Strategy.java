@@ -47,13 +47,13 @@ public class Strategy {
 	public void startPlanningThread() {
 		// TODO Auto-generated method stub
 		this.thread_for_planningthread = new Thread(planningthread);
-		this.planningthread.switchRun(true);
+		this.planningthread.switchRun();
 		this.thread_for_planningthread.start();
 	}
 
 	public void stopPlanningThread() {
 		// TODO Auto-generated method stub
-		this.planningthread.switchRun(false);
+		this.planningthread.switchRun();
 		this.thread_for_planningthread = null;
 	}
 	

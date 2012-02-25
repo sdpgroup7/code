@@ -48,12 +48,9 @@ public class PlanningThread extends Observable implements Runnable{
 		
 	}
 	
-	public void switchRun(boolean b){
-		this.runFlag = b;
+	public void switchRun() {
+		this.runFlag = !runFlag;
 	}
-	
-	public void setPlanType(int p){
-		this.plan_type = p;
-	}
+
 
 }
