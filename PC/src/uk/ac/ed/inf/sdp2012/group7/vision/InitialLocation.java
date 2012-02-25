@@ -80,16 +80,6 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         visionFeed.paused = false;
         Vision.logger.info("Vision System unpaused.");
     }
-
-	public void writeImage(BufferedImage image, String fn){
-        try {
-            File outputFile = new File(fn);
-            ImageIO.write(image, "png", outputFile);
-        } catch (Exception e) {
-        	Vision.logger.error("Failed to write image: " + e.getMessage());
-        }
-    }
-
     
 	public void getPoints(){
 	
