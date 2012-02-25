@@ -76,5 +76,9 @@ public class Plan {
 	public double getOurRobotAngle(){
 		return all_moving_objects.getOurAngle();
 	}
+	
+	public Point getOurRobotPosition() {
+		return all_moving_objects.getOurPosition();
+	}
 
 }
