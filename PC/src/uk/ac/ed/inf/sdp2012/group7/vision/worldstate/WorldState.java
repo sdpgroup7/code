@@ -8,7 +8,7 @@ public class WorldState{
 
 	volatile int shootingDirection = -1; //-1 = left, 1 = right
 	volatile Color ourColor = Color.blue;
-	volatile int room; //0 == main room, 1 == side room
+	volatile int room = 0; //0 == main room, 1 == side room
 	volatile boolean clickingDone = false;
 
 	volatile Pitch pitch = new Pitch(); //All the data about the pitch dimensions
@@ -119,6 +119,11 @@ public class WorldState{
     		pitch.setBuffers(86,612,402,24);
     	} else {
     		//TODO: Add the constants for pitch 2.
+    		pitch = new Pitch(	new Point(40,104),
+					new Point(600,98),
+					new Point(40,394),
+					new Point(607,384));
+    		pitch.setBuffers(86,612,402,24);
     	}
     }
     

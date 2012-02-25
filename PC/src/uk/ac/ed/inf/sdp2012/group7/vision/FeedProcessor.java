@@ -59,8 +59,8 @@ public class FeedProcessor{
 							                Vision.worldState.getPitch().getBottomBuffer()
             							).getGraphics();
             markObjects(imageGraphics);
-            calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
-            calculateAngle();
+    		calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
+            //calculateAngle();
             //System.err.println(Vision.worldState.getOurRobot().getAngle());
         }
 
