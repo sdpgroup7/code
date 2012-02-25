@@ -72,5 +72,9 @@ public class Plan {
 	public int getAction(){
 		return target_decision.getAction();
 	}
+	
+	public double getOurRobotAngle(){
+		return all_moving_objects.getOurAngle();
+	}
 
 }
