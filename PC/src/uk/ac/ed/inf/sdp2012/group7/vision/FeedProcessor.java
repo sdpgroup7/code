@@ -191,14 +191,7 @@ public class FeedProcessor{
     	return image;
     }
     
-    public void writeImage(BufferedImage image, String fn){
-        try {
-            File outputFile = new File(fn);
-            ImageIO.write(image, "png", outputFile);
-        } catch (Exception e) {
-        	Vision.logger.error("Failed to write image: " + e.getMessage());
-        }
-    }
+    
 
     public static boolean similarColor(Color a, Color b){
     	int rDiff = 33;
