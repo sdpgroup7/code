@@ -67,8 +67,9 @@ public class AStar {
 			
 			// check if our current Node location is the goal Node. If it is, we are done.
 			if(current.getX() == map.getGoalLocationX() && current.getY() == map.getGoalLocationY()) {
+				Path tempPath = reconstructPath(current);
 				printPath();
-				return reconstructPath(current);
+				return tempPath;
 			}
 			
 			//move current Node to the closed (already searched) list
