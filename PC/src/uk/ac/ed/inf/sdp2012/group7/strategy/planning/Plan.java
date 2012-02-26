@@ -6,6 +6,8 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.*;
 
 /**
@@ -21,7 +23,7 @@ public class Plan {
 	private AStarRun astar;
 	private AllStaticObjects all_static_objects;
 	private int plan_type;
-
+	public static final Logger logger = Logger.getLogger(Plan.class);
 
 	//World state info
 	private AllMovingObjects all_moving_objects;
@@ -53,6 +55,9 @@ public class Plan {
 		
 		//Now add in the obstacles created by AllStaticObjects
 		this.obstacles = all_static_objects.addBoundary(this.obstacles);
+		
+		logger.debug("pitch hieght" + this.all_static_objects.getHeight());
+		logger.debug("pitch hieght" + this.all_static_objects.getWidth());
 		
 		//Now create an A* object from which we create a path
 		astar = new AStarRun(this.all_static_objects.getHeight(), this.all_static_objects.getWidth(), this.all_static_objects.convertToNode(target_decision.getTarget()), this.all_static_objects.convertToNode(all_moving_objects.getOurPosition()), this.obstacles );
