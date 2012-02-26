@@ -27,6 +27,9 @@ public class Plan {
 
 	//World state info
 	private AllMovingObjects all_moving_objects;
+	
+	//For testing
+	private Path node_path;
 
 	/**
 	 * 
@@ -64,7 +67,10 @@ public class Plan {
 
 		//Requires method to convert from path to ArrayList<Point>
 		//Now grab path through A* method
-		path = astar.getPathInPoints();
+		this.path = astar.getPathInPoints();
+		
+		//Grab path in Node
+		this.node_path = astar.getPath();
 		
 		
 
@@ -85,6 +91,10 @@ public class Plan {
 	
 	public Point getOurRobotPosition() {
 		return all_static_objects.convertToNode(all_moving_objects.getOurPosition());
+	}
+	
+	public Path getNodePath(){
+		return this.node_path;
 	}
 
 }
