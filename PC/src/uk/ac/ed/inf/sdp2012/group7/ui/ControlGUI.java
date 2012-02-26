@@ -115,7 +115,7 @@ public class ControlGUI implements ChangeListener {
         
         defaultPanel = new JPanel();
         defaultPanel.setLayout(new BoxLayout(defaultPanel, BoxLayout.Y_AXIS));
-                
+          
         /* The main (default) tab */
         setUpMainPanel();
         
@@ -129,9 +129,6 @@ public class ControlGUI implements ChangeListener {
         frame.pack();
         frame.setVisible(true);
         
-        /* Fires off an initial pass through the ChangeListener method,
-         * to initialise all of the default values. */
-        this.stateChanged(null);
 		
 	}
 	
@@ -247,33 +244,6 @@ public class ControlGUI implements ChangeListener {
 		
 		defaultPanel.add(direction_panel);
 		
-		/*
-		The locate button is pressed to start the locating of the objects
-		and pitch boundaries
-		*/
-		/*
-		JPanel locatePanel = new JPanel();
-		
-		locateButton = new JButton("Locate Objects");
-		
-		locatePanel.add(locateButton);
-		locateButton.addActionListener(new ActionListener() {
-		    
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        //Call the methods to find and set the thresholds of the objects and locate the corners
-		        //Call to vision
-		        System.err.println("Run Location");
-		    }
-		});
-		    
-		
-		defaultPanel.add(locatePanel);
-		*/
-		/*
-		Buttons for starting and stopping the match, before starting you have
-		to have done locate.  Stop will be used for breaks in play etc.
-		*/
 		
 		JPanel startStopPanel = new JPanel();
 		
