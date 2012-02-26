@@ -6,13 +6,13 @@ import uk.ac.ed.inf.sdp2012.group7.strategy.astar.utils.StopWatch;
 
 public class TestAStar {
 	
-	private static int mapWidth = 29;
-	private static int mapHeight = 58;
+	private static int mapWidth = 50;
+	private static int mapHeight = 25;
 	
-	private static int startX = 27;
-	private static int startY = 10;
-	private static int goalX = 5;
-	private static int goalY = 56;
+	private static int startX = 39;
+	private static int startY = 13;
+	private static int goalX = 27;
+	private static int goalY = 14;
 	
 	
 	public static void main(String[] args) {

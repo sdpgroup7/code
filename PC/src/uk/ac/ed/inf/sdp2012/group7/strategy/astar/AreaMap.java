@@ -7,7 +7,6 @@ public class AreaMap {
 
 	private int mapWidth;
 	private int mapHeight;
-	//private ArrayList<ArrayList<Node>> map;
 	private Node[][] map;
 	private int startLocationX = 0;
 	private int startLocationY = 0;
@@ -30,11 +29,8 @@ public class AreaMap {
 	private void createMap() {
 		
 		map = new Node[mapWidth][mapHeight];
-		//map = new ArrayList<ArrayList<Node>>();
 		for (int x=0; x<mapWidth; x++) {
-			//map.add(new ArrayList<Node>());
 			for (int y=0; y<mapHeight; y++) {
-				//map.get(x).add(new Node(x,y));
 				map[x][y] = new Node(x,y);
 			}
 		}
@@ -50,7 +46,6 @@ public class AreaMap {
 		} else {
 			map[x][y].setObstical(isObstical);
 		}
-		//map.get(x).get(y).setObstical(isObstical);
 	}
 
 	public Node getNode(int x, int y) {
@@ -63,8 +58,6 @@ public class AreaMap {
 	public void setStartLocation(int x, int y) {
 		map[startLocationX][startLocationY].setStart(false);
 		map[x][y].setStart(true);
-		//map.get(startLocationX).get(startLocationY).setStart(false);
-		//map.get(x).get(y).setStart(true);
 		startLocationX = x;
 		startLocationY = y;
 	}
@@ -73,8 +66,6 @@ public class AreaMap {
 
 		map[goalLocationX][goalLocationY].setGoal(false);
 		map[x][y].setGoal(true);
-		//map.get(goalLocationX).get(goalLocationY).setGoal(false);
-		//map.get(x).get(y).setGoal(true);
 		goalLocationX = x;
 		goalLocationY = y;
 	}
@@ -106,9 +97,11 @@ public class AreaMap {
 	public float getDistanceBetween(Node node1, Node node2) {
 		//if the nodes are on top or next to each other, return 1
 		if (node1.getX() == node2.getX() || node1.getY() == node2.getY()){
-			return 1;
+			// changed from 1 to 10 to stop rounding errors when casting to int in comparison
+			return 10;
 		} else { //if they are diagonal to each other return diagonal distance: sqrt(1^2+1^2)
-			return (float) Math.sqrt(2);
+			// also multiplied by 10
+			return (float) (10*Math.sqrt(2));
 		}
 	}
 	
