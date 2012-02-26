@@ -39,7 +39,7 @@ public class AllStaticObjects {
 	public AllStaticObjects (){
 		
 		worldState = WorldState.getInstance();
-		
+		while(!worldState.isClickingDone()){};
 		this.their_top_goal_post = worldState.getOpponentsGoal().getTopLeft();
 		this.their_bottom_goal_post = worldState.getOpponentsGoal().getBottomLeft();
 		this.our_top_goal_post = worldState.getOurGoal().getTopLeft();
