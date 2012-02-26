@@ -1,7 +1,7 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 
-import uk.ac.ed.inf.sdp2012.group7.strategy.astar.utils.Logger;
-
+//import uk.ac.ed.inf.sdp2012.group7.strategy.astar.utils.Logger;
+import org.apache.log4j.Logger;
 
 public class AreaMap {
 
@@ -14,17 +14,24 @@ public class AreaMap {
 	private int goalLocationX = 0;
 	private int goalLocationY = 0;
 
-	private Logger log = new Logger();
+	public static final Logger logger = Logger.getLogger(AreaMap.class);
+	
+	//private Logger log = new Logger();
 	
 	AreaMap(int mapWidth, int mapHeight) {
+		
+		logger.debug(mapWidth);
+		logger.debug(mapHeight);
+		
 		this.mapWidth = mapWidth;
 		this.mapHeight = mapHeight;
 		
 		createMap();
-		log.addToLog("\tMap Created");
-		log.addToLog("\tMap Node edges registered");
+		logger.debug("\tMap Created");
+		logger.debug("\tMap Node edges registered");
 	}
 	private void createMap() {
+		
 		map = new Node[mapWidth][mapHeight];
 		//map = new ArrayList<ArrayList<Node>>();
 		for (int x=0; x<mapWidth; x++) {
@@ -41,6 +48,9 @@ public class AreaMap {
 		return map;
 	}
 	public void setObstical(int x, int y, boolean isObstical) {
+		
+		logger.debug("given x :" + x + "given y : " + y);
+		
 		map[x][y].setObstical(isObstical);
 		//map.get(x).get(y).setObstical(isObstical);
 	}
