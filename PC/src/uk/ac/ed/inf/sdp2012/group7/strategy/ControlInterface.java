@@ -11,6 +11,7 @@ import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
 import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.control.RobotControl;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 import math.geom2d.Point2D;
 import math.geom2d.conic.Circle2D;
@@ -27,6 +28,8 @@ public class ControlInterface implements Observer {
 
 	
 	public static final Logger logger = Logger.getLogger(ControlInterface.class);
+	
+	private WorldState world = WorldState.getInstance();
 	
 	private int lookahead;
 	private RobotControl c;
@@ -96,21 +99,37 @@ public class ControlInterface implements Observer {
 
 	}
 
-	public void implimentArc(Arc path) {
+	public void implimentArc(Arc path, Plan plan) {
 		
 		
 
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {}
-		this.c.circleWithRadius(path.getRadius(), path.isDirection());
+		double conversion = (double) world.getPitch().getHeight()/(double) plan.getHeightInNodes(); //Cm's per node
+		logger.debug(String.format("Conversion value: %f", conversion));
+
+		if (plan.getAction() == PlanTypes.ActionType.DRIVE.ordinal()) {
+			
+			this.c.circleWithRadius((int)( conversion*path.getRadius()), path.isDirection());
+			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", (int)( conversion*path.getRadius()), path.isDirection()));
 		
-		if (path.getCommand() == 1) {
-			this.c.kick();
+		} else if (plan.getAction() == PlanTypes.ActionType.KICK.ordinal()) {
+			
+			this.c.circleWithRadius((int) (conversion*path.getRadius()), path.isDirection());
+			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", (int)( conversion*path.getRadius()), path.isDirection()));
+			c.kick();
+			
 			logger.info("Command sent to robot: kick");
+		} else if (plan.getAction() == PlanTypes.ActionType.STOP.ordinal()) {
+		
+			c.stop();
+			
+			logger.info("Command sent to robot: stop");
 		}
 		
-		logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", path.getRadius(), path.isDirection()));
+		
+		
 		
 		
 		
@@ -200,7 +219,7 @@ public class ControlInterface implements Observer {
 		logger.debug("Got a new plan");
 		Plan plan = (Plan) arg1;
 		Arc arcToDrive = this.chooseArc(plan);
-		this.implimentArc(arcToDrive);
+		this.implimentArc(arcToDrive, plan);
 		
 	}
 
