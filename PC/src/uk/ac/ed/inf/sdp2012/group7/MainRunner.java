@@ -3,8 +3,9 @@ package uk.ac.ed.inf.sdp2012.group7;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.ui.ControlGUI;
+import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 
 
 public class MainRunner {
@@ -15,10 +16,10 @@ public class MainRunner {
 
     public static void main(String[] args){
     	Logger.getLogger("com.intel.bluetooth").setLevel(Level.WARN);
-        //ControlGUI gui = new ControlGUI();
-        //gui.initGUI();
+        ControlGUI gui = new ControlGUI();
+        gui.initGUI();
     	Vision v = new Vision();
-        //Strategy s = new Strategy(v,gui);
+        Strategy s = new Strategy();
     }
 
 }
