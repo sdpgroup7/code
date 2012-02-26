@@ -76,7 +76,9 @@ public class PlanningBuffer extends Observable implements Observer {
 				Node n = map.getNode(x,y);
 				if(n.isGoal()) ascii[y][x] = "T";
 				if(n.isObstical()) ascii[y][x] = "X";
+				if(n.isObstical()) ascii[y][x] = "X";
 				if(n.isStart()) ascii[y][x] = "S";
+				if(n.getCost() == 1) ascii[y][x] = "O";
 				if(n.isVisited()) ascii[y][x] = " ";
 			}
 		}
