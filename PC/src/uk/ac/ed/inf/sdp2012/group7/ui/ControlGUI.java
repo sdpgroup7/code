@@ -51,18 +51,14 @@ public class ControlGUI implements ChangeListener {
 	/*Locate Button*/
 	private JButton locateButton;
 	
-	/* Start and Stop Buttons */
+	/* Start/Stop Button */
 	private JButton startButton;
-	private JButton stopButton;
 	
 	/*Penalty mode buttons */
 	private JButton penaltyAttackButton;
 	private JButton penaltyDefendButton;
 	private JCheckBox returnToGame;
 	
-	/*Pause and Resume Buttons*/
-	private JButton pauseButton;
-	private JButton resumeButton;
 	
 	/* Tabs. */
 	private JTabbedPane tabPane;
@@ -248,56 +244,27 @@ public class ControlGUI implements ChangeListener {
 		JPanel startStopPanel = new JPanel();
 		
 		startButton = new JButton("Start Match");
-		stopButton = new JButton("Stop Match");
 		
 		startStopPanel.add(startButton);
-		startStopPanel.add(stopButton);
 		
 		startButton.addActionListener(new ActionListener() {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        strat.startPlanningThread();
+		        if(startButton.getText() == "Start Match"){
+		        	startButton.setText("Stop Match");
+		        } else {
+		        	startButton.setText("Start Match");
+		        }
 		    }
 		});
 		
-		stopButton.addActionListener(new ActionListener() {
-		    
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        strat.stopPlanningThread();
-		    }
-		});
 		
 		defaultPanel.add(startStopPanel);
 		
 		/* Pausing and Resuming play */
 		
-		JPanel pauseResumePanel = new JPanel();
-		
-		pauseButton = new JButton ("Pause Match");
-		resumeButton = new JButton ("Resume Match");
-		
-		pauseResumePanel.add(pauseButton);
-		pauseResumePanel.add(resumeButton);
-		
-		pauseButton.addActionListener(new ActionListener() {
-		    
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        System.out.println("Play paused");
-		    }
-		});
-		
-		resumeButton.addActionListener(new ActionListener() {
-		    
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        System.out.println("Play paused");
-		    }
-		});
-		
-		defaultPanel.add(pauseResumePanel);
 		
 		/*
 		Penalty Mode buttons.  Stop button must be pressed first

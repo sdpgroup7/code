@@ -47,7 +47,7 @@ public class PlanningBuffer extends Observable implements Observer {
 			this.held_plan = (Plan)arg;
 			setChanged();
 			notifyObservers(held_plan);
-			if(counter > 50){
+			if(counter > 1){
 				savePlan();
 				counter = 0;
 			}
@@ -74,7 +74,7 @@ public class PlanningBuffer extends Observable implements Observer {
 		for(int y = 0; y < ascii.length; y++){
 			for(int x = 0; x < ascii[y].length; x++){
 				Node n = map.getNode(x,y);
-				if(n.isGoal()) ascii[y][x] = "G";
+				if(n.isGoal()) ascii[y][x] = "T";
 				if(n.isObstical()) ascii[y][x] = "X";
 				if(n.isStart()) ascii[y][x] = "S";
 				if(n.isVisited()) ascii[y][x] = " ";
@@ -83,7 +83,7 @@ public class PlanningBuffer extends Observable implements Observer {
 		for(int y = 0; y < ascii.length; y++){
 			String line = "";
 			for(int x = 0; x < ascii[y].length; x++){
-				line += ascii[y][x];
+				line += ascii[y][x] + " ";
 			}
 			System.out.println(line);
 		}
