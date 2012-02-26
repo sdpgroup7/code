@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
@@ -57,46 +58,46 @@ public class TargetDecision {
 		
 		Point target = new Point();
 		//put it into node for assessment
+		//hack :o)
 		target = all_static_objects.convertToNode(this.all_moving_objects.getBallPosition());
 		//boolean for knowing if the ball is on the pitch
 		boolean ballOnPitch = ((target.x >= 0) && (target.x <= all_static_objects.getWidth()) && 
 							   (target.y >= 0) && (target.y <= all_static_objects.getHeight()));
 		
-		//Lets get this shit in, and then go read about proper decision making structures later.
-		if(!ballOnPitch){
-			//fuck off and sit next to our goal
-			this.action = 0;
-			return this.all_static_objects.getInfront_of_our_goal();
-		} else {
-			
-		}
+		if(this.plan_type == PlanTypes.PlanType.FREE_PLAY.ordinal()){
 		
-		
-		//If the plan type is not 0, go into free play mode
-		if(plan_type > 0){
-			if(clear_shot){
-				this.action = 1;
-				return this.all_moving_objects.getBallPosition();
-			}
-			else {
-				if (this.ball_is_too_close_to_wall){
-					this.action = 0;
-					return this.handlingBallTooCloseWall();
+			//Lets get this shit in, and then go read about proper decision making structures later.
+			if(!ballOnPitch){
+				//fuck off and sit next to our goal
+				this.action = PlanTypes.ActionType.DRIVE.ordinal();
+				return this.all_static_objects.getInfront_of_our_goal();
+			} else {
+				if(this.ball_is_too_close_to_wall){
+					//sit just near to the ball
+					this.action = PlanTypes.ActionType.DRIVE.ordinal();
+					return this.handlingBallTooCloseWall(target);
 				}
-			
 				else {
-					this.action = 0;
-					return this.all_moving_objects.getBallPosition();
+					if(this.clear_shot){
+						this.action = PlanTypes.ActionType.KICK.ordinal();
+						return target;
+					} else {
+						this.action = PlanTypes.ActionType.DRIVE.ordinal();
+						return target;
+					}
 				}
+			
 			}
+		} 
+		else if(this.plan_type == PlanTypes.PlanType.HALT.ordinal()){
+			this.action = PlanTypes.ActionType.STOP.ordinal();
+			return target;
 		}
-		//If the plan is 0, we are defending our goal at penalty
+		//Penalty modes continue from here...
 		else {
-			//best position in front of our own goal for defending...
-			this.action = 0;
-			return this.all_static_objects.getInfront_of_our_goal();
-					
-		}
+			this.action = PlanTypes.ActionType.STOP.ordinal();
+			return target;		
+		}				
 	}
 
 
@@ -189,9 +190,9 @@ public class TargetDecision {
 	public boolean getClearShot(){
 		return clear_shot;
 	}
-	public Point handlingBallTooCloseWall() {
+	public Point handlingBallTooCloseWall(Point p) {
 		//boundary handling...
-		Point position = this.all_moving_objects.getBallPosition();
+		Point position = p;
 		// 3 is the boundary variable	
 		if (position.x < 3) {
 			position.x = 3;
