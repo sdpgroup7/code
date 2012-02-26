@@ -36,6 +36,7 @@ public class ControlInterface implements Observer {
 		this.lookahead = lookahead;
 		this.c = new RobotControl();
 		this.c.startCommunications();
+		this.c.changeSpeed(30);
 		
 		
 	}
@@ -57,22 +58,27 @@ public class ControlInterface implements Observer {
 		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
 		
 		Point2D h = null;
-		Point2D p = new Point2D(plan.getOurRobotPosition());
+		Point2D p = new Point2D(plan.getOurRobotPositionVisual());
 		double v = plan.getOurRobotAngle();
 		
 		try {
-			h = this.findGoalPoint(plan.getPath(), p);
+			h = this.findGoalPoint(plan);
 		} catch(Exception e) {
-			Strategy.logger.error("Point h is now null");
+			logger.debug(e);
+			h = new Point2D(plan.getPath().get(plan.getPath().size() -1));
 		}
 		
 		double alpha = Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))	- v;
+		logger.debug(String.format("Alpha: %f", alpha));
 
 		double d = h.getDistance(p);
+		logger.debug(String.format("d: %f",d));
 	
 		double xhc = d * Math.cos(alpha);
+		logger.debug(String.format("xhc: %f",xhc));
 
 		double R = (Math.pow(d, 2) / 2 * xhc);
+		logger.debug(String.format("R: %f",R));
 
 		boolean dir;
 
@@ -93,11 +99,13 @@ public class ControlInterface implements Observer {
 	public void implimentArc(Arc path) {
 		
 		
-		this.c.clearAllCommands();
+
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {}
 		this.c.circleWithRadius(path.getRadius(), path.isDirection());
 		
 		if (path.getCommand() == 1) {
-			this.c.clearAllCommands();
 			this.c.kick();
 			logger.info("Command sent to robot: kick");
 		}
@@ -134,28 +142,29 @@ public class ControlInterface implements Observer {
 	 * 
 	 * @return The goal point
 	 */
-	public Point2D findGoalPoint(ArrayList<Point> points, Point2D p) throws Exception {
+	public Point2D findGoalPoint(Plan p) throws Exception {
 		
-		Circle2D zone = new Circle2D(p.getX(), p.getY(), this.lookahead);
+		Circle2D zone = new Circle2D(p.getOurRobotPositionVisual().getX(), p.getOurRobotPositionVisual().getY(), this.lookahead);
+		logger.debug(String.format("Zone centre: (%f,%f)",p.getOurRobotPositionVisual().getX(),p.getOurRobotPositionVisual().getY()));
 		boolean run = true;
-		int size = points.size();
-		int i = size -1;
+		int size = p.getPath().size();
+		int i = 0;
 		
 		Point2D intersect = null;
 		
 		while(run) {
 			
-			if (i == size) {
+			if (i == size-1) {
 				logger.error("Lookahead point unable to be found");
 				throw new Exception("Lookahead point unable to be found");
-			}
+			} 
 			
-			LineSegment2D line = new LineSegment2D(points.get(i).getX(), points.get(i).getY(), points.get(i+1).getX(), points.get(i+1).getY());
+			LineSegment2D line = new LineSegment2D(p.getPath().get(i).getX(), p.getPath().get(i).getY(), p.getPath().get(i+1).getX(), p.getPath().get(i+1).getY());
+			logger.debug(String.format("Line Points: P1: (%f,%f) P2: (%f,%f)",p.getPath().get(i).getX(), p.getPath().get(i).getY(), p.getPath().get(i+1).getX(), p.getPath().get(i+1).getY() ));
 			Collection<Point2D> intersections = zone.getIntersections(line);
 			
-			
 			if (intersections.size() == 1 || intersections.size() == 2) {
-				
+
 				if (intersections.size() == 2) {
 					logger.debug("I found 2 points, taking the last point.");
 				}
@@ -164,7 +173,7 @@ public class ControlInterface implements Observer {
 				}
 				logger.debug(String.format("Goal point found at (%f,%f)", intersect.getX(), intersect.getY()));
 				run = false;
-				
+
 			} else {
 				logger.debug("No points found, going to next line segment");
 			}
@@ -188,6 +197,7 @@ public class ControlInterface implements Observer {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
+		logger.debug("Got a new plan");
 		Plan plan = (Plan) arg1;
 		Arc arcToDrive = this.chooseArc(plan);
 		this.implimentArc(arcToDrive);
