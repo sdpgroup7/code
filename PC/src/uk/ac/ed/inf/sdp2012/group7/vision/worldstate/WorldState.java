@@ -26,6 +26,8 @@ public class WorldState{
 	volatile Point blueKeyPoint = new Point();
 	volatile Point yellowKeyPoint = new Point();
 	
+	volatile private long lastUpdated = 0;
+	
 	
 	public void setShootingDirection(int shoot){
 		this.shootingDirection = shoot;
@@ -306,6 +308,17 @@ public class WorldState{
     public void setClickingDone(boolean yn){
     	//Sets the above mentioned variable
         this.clickingDone = yn;
+    }
+    
+    
+    //Vision updates timestamp when we've processed a frame
+    public void setUpdatedTime(){
+        this.lastUpdated = System.currentTimeMillis();
+    }
+    
+    //Strategy can pull when it was last updated
+    public long getLastUpdateTime(){
+        return this.lastUpdated;
     }
     
 }
