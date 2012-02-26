@@ -45,8 +45,11 @@ public class AreaMap {
 		return map;
 	}
 	public void setObstical(int x, int y, boolean isObstical) {
-		
-		map[x][y].setObstical(isObstical);
+		if (x<0 || x>=mapWidth || y<0 || y>=mapHeight) {
+			logger.debug("Something is fucked (setObstical): x: " + Integer.toString(x) + " , y: " + Integer.toString(y));
+		} else {
+			map[x][y].setObstical(isObstical);
+		}
 		//map.get(x).get(y).setObstical(isObstical);
 	}
 
