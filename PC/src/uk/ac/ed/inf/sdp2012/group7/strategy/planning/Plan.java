@@ -110,5 +110,9 @@ public class Plan {
 	public AStarRun getAStar(){
 		return this.astar;
 	}
+	
+	public int getNodeInPixels(){
+		return this.all_static_objects.getNodeInPixels();
+	}
 
 }
