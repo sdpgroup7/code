@@ -3,7 +3,7 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import uk.ac.ed.inf.sdp2012.group7.strategy.astar.utils.Logger;
+import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 
 public class AStar {
 	private AreaMap map;
@@ -15,7 +15,6 @@ public class AStar {
 	// nodes not searched yet, ordered by our heuristic (manhattan distance)
 	private SortedNodeList openList;
 	private Path shortestPath;
-	Logger log = new Logger();
 	
 	AStar(AreaMap map, AStarHeuristic heuristic) {
 		this.map = map;
@@ -61,7 +60,7 @@ public class AStar {
 		//while we haven't reached the goal yet
 		while(openList.size() != 0) {
 			if (openList.size()%100 == 0)
-				log.addToLog("\topenList.size() = "+openList.size());
+				Strategy.logger.info("\topenList.size() = "+openList.size());
 			
 			//get the first Node from non-searched Node list, sorted by lowest distance from our goal as guessed by our heuristic
 			Node current = openList.getFirst();
