@@ -4,6 +4,9 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
+import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 
 
@@ -13,6 +16,8 @@ import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
  */
 public class TargetDecision {
 
+	public static final Logger logger = Logger.getLogger(PlanningThread.class);
+	
 	/**
 	 * 
 	 */
@@ -155,6 +160,10 @@ public class TargetDecision {
 	}
 	
 	private void ballTooCloseToWall() {
+		
+		logger.debug("Ball Position : " + this.all_moving_objects.getBallPosition());
+		logger.debug("obstacles is of length : " + obstacles.size());
+		
 		this.ball_is_too_close_to_wall = obstacles.contains(all_static_objects.convertToNode(this.all_moving_objects.getBallPosition()));
 	}
 	
