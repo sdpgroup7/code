@@ -23,26 +23,26 @@ public class AStarRun {
 			shortestPath = pathFinder.calcShortestPath(some_robot.x, some_robot.y, ball.x, ball.y);
 			
 			// copied from A* for printing
-			Node node;
-			for(int x=0; x<map.getMapWidth(); x++) {
-				for(int y=0; y<map.getMapHeight(); y++) {
-					node = map.getNode(x, y);
-					//System.out.println(node.getX());
-					//System.out.println(node.getY());
-					if (node.isObstacle) {
-						System.out.print("O");
-					} else if (node.isStart) {
-						System.out.print("R");
-					} else if (node.isGoal()) {
-						System.out.print("B");
-					} else if (shortestPath.contains(node.getX(), node.getY())) {
-						System.out.print("X");
-					} else {
-						System.out.print("*");
-					}
-				}
-				System.out.println();
-			}
+//			Node node;
+//			for(int x=0; x<map.getMapWidth(); x++) {
+//				for(int y=0; y<map.getMapHeight(); y++) {
+//					node = map.getNode(x, y);
+//					//System.out.println(node.getX());
+//					//System.out.println(node.getY());
+//					if (node.isObstacle) {
+//						System.out.print("O");
+//					} else if (node.isStart) {
+//						System.out.print("R");
+//					} else if (node.isGoal()) {
+//						System.out.print("B");
+//					} else if (shortestPath.contains(node.getX(), node.getY())) {
+//						System.out.print("X");
+//					} else {
+//						System.out.print("*");
+//					}
+//				}
+//				System.out.println();
+//			}
 		}
 		
 		public Path getPath() {
