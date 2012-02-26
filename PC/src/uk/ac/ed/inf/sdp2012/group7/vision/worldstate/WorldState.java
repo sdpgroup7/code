@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 public class WorldState{
 
+	private static WorldState worldState = null;
+	
 	volatile int shootingDirection = -1; //-1 = left, 1 = right
 	volatile Color ourColor = Color.blue;
 	volatile int room = 0; //0 == main room, 1 == side room
@@ -25,6 +27,37 @@ public class WorldState{
 	volatile ArrayList<Point> yellowPixels = new ArrayList<Point>(); //Holds all the yellow pixels (the T)
 	volatile Point blueKeyPoint = new Point();
 	volatile Point yellowKeyPoint = new Point();
+	
+	volatile private long lastUpdated = 0;
+	
+	
+	public static WorldState getInstance(){
+		if(worldState == null){
+			worldState = new WorldState();
+		}
+		return worldState;
+	}
+	
+	
+    private WorldState() {
+    	if(room == 0){
+    		pitch = new Pitch(	new Point(40,104),
+    							new Point(600,98),
+    							new Point(40,394),
+    							new Point(607,384));
+    		pitch.setBuffers(86,612,402,24);
+    	} else {
+    		//TODO: Add the constants for pitch 2.
+    		pitch = new Pitch(	new Point(40,104),
+					new Point(600,98),
+					new Point(40,394),
+					new Point(607,384));
+    		pitch.setBuffers(86,612,402,24);
+    	}
+    	updateShootingDirection();
+    }
+	
+	
 	
 	
 	public void setShootingDirection(int shoot){
@@ -80,12 +113,6 @@ public class WorldState{
 		this.yellowPixels = yellowPixels;
 	}    
     
- 
-    public WorldState(){
-    	this(Color.blue,0);
-    	updateShootingDirection();
-    }
-    
     public void updateShootingDirection(){
     	if(this.room == 0){
 	    	this.leftGoal.setTopLeft(new Point(36,196));
@@ -106,24 +133,6 @@ public class WorldState{
 	    	this.rightGoal.setTopRight(new Point(611,191));
 	    	this.rightGoal.setBottomLeft(new Point(614,330));
 	    	this.rightGoal.setBottomRight(new Point(614,330));
-    	}
-    }
-    
-    public WorldState(Color c, int room) {
-    	this.room = room;
-    	if(room == 0){
-    		pitch = new Pitch(	new Point(40,104),
-    							new Point(600,98),
-    							new Point(40,394),
-    							new Point(607,384));
-    		pitch.setBuffers(86,612,402,24);
-    	} else {
-    		//TODO: Add the constants for pitch 2.
-    		pitch = new Pitch(	new Point(40,104),
-					new Point(600,98),
-					new Point(40,394),
-					new Point(607,384));
-    		pitch.setBuffers(86,612,402,24);
     	}
     }
     
@@ -306,6 +315,17 @@ public class WorldState{
     public void setClickingDone(boolean yn){
     	//Sets the above mentioned variable
         this.clickingDone = yn;
+    }
+    
+    
+    //Vision updates timestamp when we've processed a frame
+    public void setUpdatedTime(){
+        this.lastUpdated = System.currentTimeMillis();
+    }
+    
+    //Strategy can pull when it was last updated
+    public long getLastUpdateTime(){
+        return this.lastUpdated;
     }
     
 }
