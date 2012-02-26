@@ -20,9 +20,6 @@ public class AreaMap {
 	
 	AreaMap(int mapWidth, int mapHeight) {
 		
-		logger.debug(mapWidth);
-		logger.debug(mapHeight);
-		
 		this.mapWidth = mapWidth;
 		this.mapHeight = mapHeight;
 		
@@ -48,8 +45,6 @@ public class AreaMap {
 		return map;
 	}
 	public void setObstical(int x, int y, boolean isObstical) {
-		
-		logger.debug("given x :" + x + "given y : " + y);
 		
 		map[x][y].setObstical(isObstical);
 		//map.get(x).get(y).setObstical(isObstical);
