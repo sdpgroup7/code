@@ -3,10 +3,14 @@
  */
 package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 import org.apache.log4j.Logger;
+
+import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
+import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Path;
 
 /**
  * 
@@ -44,6 +48,7 @@ public class PlanningBuffer extends Observable implements Observer {
 			if(counter < 50){
 				counter++;
 			} else {
+				savePlan();
 				counter = 0;
 			}
 			
@@ -53,6 +58,11 @@ public class PlanningBuffer extends Observable implements Observer {
 	
 	public Plan getPlan(){
 		return held_plan;
+	}
+	
+	public void savePlan(){
+		Path path = held_plan.getNodePath();
+		ArrayList<Node> waypoints = path.getWayPoints();
 	}
 
 }
