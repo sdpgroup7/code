@@ -63,6 +63,7 @@ public class ControlInterface implements Observer {
 		try {
 			h = this.findGoalPoint(plan.getPath(), p);
 		} catch(Exception e) {
+			Strategy.logger.error("Point h is now null");
 		}
 		
 		double alpha = Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))	- v;
