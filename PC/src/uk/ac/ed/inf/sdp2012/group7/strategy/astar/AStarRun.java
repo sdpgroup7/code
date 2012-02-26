@@ -10,7 +10,7 @@ public class AStarRun {
 		private Path shortestPath;
 		
 		public AStarRun(int golf_balls_height, int golf_balls_width, Point ball, Point some_robot, ArrayList<Point> obstacles) {
-			AreaMap map = new AreaMap(golf_balls_width, golf_balls_height);
+			AreaMap map = new AreaMap(golf_balls_height, golf_balls_width);
 			
 			// set obstacles
 			for (Point obstacle : obstacles) {
