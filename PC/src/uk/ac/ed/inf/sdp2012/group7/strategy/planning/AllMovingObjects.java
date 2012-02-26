@@ -20,6 +20,10 @@ public class AllMovingObjects {
 	public WorldState worldState = WorldState.getInstance();
 	
 	public AllMovingObjects() {
+		update();
+	}
+	
+	public void update(){
 		
 		this.ourPosition = worldState.getOurRobot().getPosition().getCentre();
 		
@@ -38,7 +42,7 @@ public class AllMovingObjects {
 	    this.theirAngle = worldState.getOpponentsRobot().getAngle();
 	    
 	    this.ballAngle = worldState.getBall().getAngle();
-		
+	    
 	}
 	
 	public Point getOurPosition() {

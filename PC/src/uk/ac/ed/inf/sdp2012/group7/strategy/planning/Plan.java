@@ -37,19 +37,17 @@ public class Plan {
 	 * 
 	 */
 	//Constructor
-	public Plan(AllStaticObjects all_static_objects, int plan_type) {
+	public Plan(AllStaticObjects all_static_objects, AllMovingObjects all_moving_objects, int plan_type) {
 		
 		this.all_static_objects = all_static_objects;
+		this.all_moving_objects = all_moving_objects;
+		all_moving_objects.update();
 		
 		//grab plan type
 		this.plan_type = plan_type;
-		
-		//This is here to make an attempt on ensuring all the moving
-		//data is read at the same time. Is this the best way though?
-		this.all_moving_objects = new AllMovingObjects();
-		
+				
 		//Set up obstacles created by opposition
-		opposition = new OppositionPrediction(this.all_moving_objects, this.all_static_objects);
+		opposition = new OppositionPrediction(all_moving_objects, this.all_static_objects);
 		
 		//Add the opposition obstacles to the overall obstacles
 		//IE add in the boundary...

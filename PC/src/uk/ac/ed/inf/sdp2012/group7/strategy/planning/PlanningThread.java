@@ -16,6 +16,7 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 public class PlanningThread extends Observable implements Runnable{
 
 	private boolean runFlag;
+	private AllMovingObjects all_moving_objects;
 	private AllStaticObjects all_static_objects;
 	//How do we set what plan to make?
 	private int plan_type;
@@ -41,11 +42,12 @@ public class PlanningThread extends Observable implements Runnable{
 		
 		if(!isWorldStateNull){
 			this.all_static_objects = new AllStaticObjects();
+			this.all_moving_objects = new AllMovingObjects();
 		
 			while(runFlag){
 				synchronized(this){
 					try {
-						Plan temp_plan = new Plan(this.all_static_objects, this.plan_type);
+						Plan temp_plan = new Plan(this.all_static_objects, this.all_moving_objects, this.plan_type);
 						setChanged();
 						notifyObservers(temp_plan);
 						//This is here just because I can never remember how to do this

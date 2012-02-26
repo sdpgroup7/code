@@ -9,6 +9,7 @@ import java.util.Observer;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ed.inf.sdp2012.group7.strategy.astar.AreaMap;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Path;
 
@@ -61,13 +62,13 @@ public class PlanningBuffer extends Observable implements Observer {
 	}
 	
 	public void savePlan(){
-		//AreaMap map = new AreaMap();
+		AreaMap map = new AreaMap();
 		
 		Path path = held_plan.getNodePath();
 		ArrayList<Node> waypoints = path.getWayPoints();
-		//for(Node n : waypoints){
+		for(Node n : waypoints){
 			//Draw node onto map
-		//}
+		}
 	}
 
 }
