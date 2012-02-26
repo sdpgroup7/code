@@ -50,7 +50,7 @@ public class PlanningThread extends Observable implements Runnable{
 						//This is here just because I can never remember how to do this
 						//and I think it might be useful for testing...
 						//I can imagine Tom finding this, and think "wtf!" - sorry Tom!
-						Thread.sleep(1);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 					
 					}
