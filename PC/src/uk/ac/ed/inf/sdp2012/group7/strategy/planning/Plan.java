@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.*;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
  * @author s0955088
@@ -27,6 +28,7 @@ public class Plan {
 
 	//World state info
 	private AllMovingObjects all_moving_objects;
+	public WorldState worldState;
 	
 	//For testing
 	private Path node_path;
@@ -38,6 +40,8 @@ public class Plan {
 	public Plan(AllStaticObjects all_static_objects, int plan_type) {
 		
 		this.all_static_objects = all_static_objects;
+		
+		worldState = WorldState.getInstance();
 
 		//grab plan type
 		this.plan_type = plan_type;
@@ -91,6 +95,11 @@ public class Plan {
 	
 	public Point getOurRobotPosition() {
 		return all_static_objects.convertToNode(all_moving_objects.getOurPosition());
+	}
+	
+	//err.. 
+	public Point getOurRobotPositionVisual() {
+		return all_static_objects.convertToNode(worldState.getOurRobot().getPosition().getCentre());
 	}
 	
 	public Path getNodePath(){

@@ -67,7 +67,7 @@ public class Vision {
         //Vision.logger.warn("Sample warn message");
         //Vision.logger.error("Sample error message");
         //Vision.logger.fatal("Sample fatal message");
-        worldState = new WorldState();
+        worldState = WorldState.getInstance();
 
         /* Default to main pitch. */
         /* Default values for the main vision window. */

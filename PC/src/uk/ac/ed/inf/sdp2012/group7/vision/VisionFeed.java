@@ -66,7 +66,7 @@ public class VisionFeed extends WindowAdapter {
             int compressionQuality) throws V4L4JException {
 
         /* Initialise the GUI that displays the video feed. */
-    	initGUI();
+    	initGUI(); //This line and the next line MUST be this way round. 
     	initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         
         //this.thresholdGUI = thresholdsGUI;
@@ -169,17 +169,8 @@ public class VisionFeed extends WindowAdapter {
         windowFrame.addWindowListener(this);
         windowFrame.setVisible(true);
         windowFrame.setSize(645, 505);
-       
-      /*  windowFrameThresh = new JFrame("Vision Window Threshed");
-        labelThresh = new JLabel();
-        windowFrameThresh.getContentPane().add(labelThresh);
-	windowFrameThresh.addWindowListener(this);
-        windowFrameThresh.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        windowFrameThresh.setVisible(true);
-        windowFrameThresh.setSize(width+5, height+25);  */
+
     }
-    
-    //useless, had to be included because of the MouseEvent interface
     
     
     //can output the buffered image to disk, can normalise if necessary

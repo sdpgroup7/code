@@ -7,7 +7,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
  * @author s0955088
@@ -31,17 +32,23 @@ public class AllStaticObjects {
 	private Point our_bottom_goal_post;
 	private Point infront_of_our_goal;
 	
+	//worldstate getInstance
+	public WorldState worldState;
+	
+	
 	public AllStaticObjects (){
 		
-		this.their_top_goal_post = Vision.worldState.getOpponentsGoal().getTopLeft();
-		this.their_bottom_goal_post = Vision.worldState.getOpponentsGoal().getBottomLeft();
-		this.our_top_goal_post = Vision.worldState.getOurGoal().getTopLeft();
-		this.our_bottom_goal_post = Vision.worldState.getOurGoal().getBottomLeft();
-		this.nodeInPixels = Vision.worldState.getPitch().getWidthInPixels()/50;//width in pixels!
-		this.pitch_top_buffer  = Vision.worldState.getPitch().getTopBuffer();
-		this.pitch_left_buffer = Vision.worldState.getPitch().getLeftBuffer();
-		//this.pitch_bottom_buffer  = Vision.worldState.getPitch().getBottomBuffer();
-		//this.pitch_right_buffer = Vision.worldState.getPitch().getRightBuffer();
+		worldState = WorldState.getInstance();
+		
+		this.their_top_goal_post = worldState.getOpponentsGoal().getTopLeft();
+		this.their_bottom_goal_post = worldState.getOpponentsGoal().getBottomLeft();
+		this.our_top_goal_post = worldState.getOurGoal().getTopLeft();
+		this.our_bottom_goal_post = worldState.getOurGoal().getBottomLeft();
+		this.nodeInPixels = worldState.getPitch().getWidthInPixels()/50;//width in pixels!
+		this.pitch_top_buffer  = worldState.getPitch().getTopBuffer();
+		this.pitch_left_buffer = worldState.getPitch().getLeftBuffer();
+		//this.pitch_bottom_buffer  = worldState.getPitch().getBottomBuffer();
+		//this.pitch_right_buffer = worldState.getPitch().getRightBuffer();
 		
 		//hard code setting of grid resolution (Grid is used in A*)
 		this.height = 25;
@@ -78,7 +85,7 @@ public class AllStaticObjects {
 	
 	//Method for finding the centre point just in front of our goal...
 	private void pointInfrontOfGoal(){
-		if(Vision.worldState.getShootingDirection() == 1){
+		if(worldState.getShootingDirection() == 1){
 			this.infront_of_our_goal = new Point((this.width - (this.boundary + 1)),(this.our_bottom_goal_post.y - this.our_top_goal_post.y));
 		}
 		else {
