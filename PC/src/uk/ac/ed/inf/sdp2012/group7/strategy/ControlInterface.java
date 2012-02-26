@@ -65,8 +65,7 @@ public class ControlInterface implements Observer {
 		} catch(Exception e) {
 		}
 		
-		double alpha = Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))
-				- v;
+		double alpha = Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))	- v;
 
 		double d = h.getDistance(p);
 	

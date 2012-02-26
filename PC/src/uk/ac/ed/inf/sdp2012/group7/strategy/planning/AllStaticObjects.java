@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 
 
+import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
@@ -37,8 +38,7 @@ public class AllStaticObjects {
 	
 	
 	public AllStaticObjects (){
-		
-		while(!(worldState.getLastUpdateTime() == 0)){}
+		while(worldState.getLastUpdateTime() == 0){}
 		this.their_top_goal_post = worldState.getOpponentsGoal().getTopLeft();
 		this.their_bottom_goal_post = worldState.getOpponentsGoal().getBottomLeft();
 		this.our_top_goal_post = worldState.getOurGoal().getTopLeft();
@@ -63,6 +63,8 @@ public class AllStaticObjects {
 	public Point convertToNode(Point p){
 		int x = (int)Math.floor((p.x - this.pitch_left_buffer)/this.nodeInPixels);
 		int y = (int)Math.floor((p.y - this.pitch_top_buffer)/this.nodeInPixels);
+		if(x < 0) x = 0; //Fixes bugs where we start accessing negative array indices.
+		if(y < 0) y = 0; 
 		return new Point(x,y);
 	}
 	

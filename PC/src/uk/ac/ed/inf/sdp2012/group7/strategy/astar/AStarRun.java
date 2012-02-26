@@ -14,8 +14,8 @@ public class AStarRun {
 			return map;
 		}
 
-		public AStarRun(int golf_balls_height, int golf_balls_width, Point ball, Point some_robot, ArrayList<Point> obstacles) {
-			map = new AreaMap(golf_balls_width, golf_balls_height);
+		public AStarRun(int pitch_height_in_nodes, int pitch_width_in_nodes, Point ball, Point some_robot, ArrayList<Point> obstacles) {
+			map = new AreaMap(pitch_width_in_nodes, pitch_height_in_nodes);
 			
 			// set obstacles
 			for (Point obstacle : obstacles) {

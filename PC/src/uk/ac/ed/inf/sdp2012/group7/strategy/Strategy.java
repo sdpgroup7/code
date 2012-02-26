@@ -20,9 +20,7 @@ public class Strategy {
 
 
 	public Strategy() {
-		
-;
-		
+				
 		//Start Control interface
 		this.control_interface = new ControlInterface(5);
 		

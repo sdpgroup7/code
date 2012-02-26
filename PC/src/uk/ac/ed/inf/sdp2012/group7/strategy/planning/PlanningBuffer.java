@@ -9,6 +9,7 @@ import java.util.Observer;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.AStar;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.AreaMap;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
@@ -35,7 +36,6 @@ public class PlanningBuffer extends Observable implements Observer {
 	private int counter = 0;
 	
 	public PlanningBuffer(Observer myWatcher){
-		   
 		this.addObserver(myWatcher);
 	}
 
@@ -47,15 +47,13 @@ public class PlanningBuffer extends Observable implements Observer {
 			this.held_plan = (Plan)arg;
 			setChanged();
 			notifyObservers(held_plan);
-			if(counter < 50){
-				counter++;
-			} else {
+			if(counter > 50){
 				savePlan();
 				counter = 0;
 			}
-			
+			Strategy.logger.info("Current plan count: " + Integer.toString(counter));
+			counter++;
 		}
-		
 	}
 	
 	public Plan getPlan(){
@@ -64,12 +62,36 @@ public class PlanningBuffer extends Observable implements Observer {
 	
 	public void savePlan(){
 		AreaMap map = held_plan.getAStar().getAreaMap();
+		if(map.getNodes().length <= 0) return;
 		
-		Path path = held_plan.getNodePath();
-		ArrayList<Node> waypoints = path.getWayPoints();
-		for(Node n : waypoints){
-			//Draw node onto map
+		String[][] ascii = new String[map.getMapHeight()][map.getMapWidth()];
+		for(int y = 0; y < ascii.length; y++){
+			for(int x = 0; x < ascii[0].length; x++){
+				ascii[y][x] = ".";
+			}
 		}
+				
+		for(int y = 0; y < ascii.length; y++){
+			for(int x = 0; x < ascii[y].length; x++){
+				Node n = map.getNode(x,y);
+				if(n.isGoal()) ascii[y][x] = "G";
+				if(n.isObstical()) ascii[y][x] = "X";
+				if(n.isStart()) ascii[y][x] = "S";
+				if(n.isVisited()) ascii[y][x] = " ";
+			}
+		}
+		for(int y = 0; y < ascii.length; y++){
+			String line = "";
+			for(int x = 0; x < ascii[y].length; x++){
+				line += ascii[y][x];
+			}
+			System.out.println(line);
+		}
+		//Path path = held_plan.getNodePath();
+		//ArrayList<Node> waypoints = path.getWayPoints();
+		//for(Node n : waypoints){
+			//Draw node onto map
+		//}
 	}
 
 }
