@@ -24,7 +24,7 @@ public class PlanningBuffer extends Observable implements Observer {
 	
 	public PlanningBuffer(Observer myWatcher){
 		   
-		
+		this.addObserver(myWatcher);
 	}
 
 
