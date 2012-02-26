@@ -28,7 +28,7 @@ public class Strategy {
 		this.planning_buffer = new PlanningBuffer(control_interface);
 		
 		//Make runnable...
-		this.planningthread = new PlanningThread(planning_buffer,2);
+		this.planningthread = new PlanningThread(planning_buffer,PlanTypes.PlanType.FREE_PLAY.ordinal());
 		
 	}
 	
