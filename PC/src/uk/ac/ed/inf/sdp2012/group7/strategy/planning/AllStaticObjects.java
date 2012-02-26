@@ -63,8 +63,7 @@ public class AllStaticObjects {
 	public Point convertToNode(Point p){
 		int x = (int)Math.floor((p.x - this.pitch_left_buffer)/this.nodeInPixels);
 		int y = (int)Math.floor((p.y - this.pitch_top_buffer)/this.nodeInPixels);
-		Point grid_point = new Point(x,y);
-		return grid_point;
+		return new Point(x,y);
 	}
 	
 	//Compacts WorldState position points into "Node" centre positions

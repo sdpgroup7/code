@@ -62,7 +62,7 @@ public class PlanningBuffer extends Observable implements Observer {
 	}
 	
 	public void savePlan(){
-		AreaMap map = new AreaMap();
+		//AreaMap map = new AreaMap();
 		
 		Path path = held_plan.getNodePath();
 		ArrayList<Node> waypoints = path.getWayPoints();
