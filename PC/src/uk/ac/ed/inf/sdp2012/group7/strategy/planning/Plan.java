@@ -63,7 +63,12 @@ public class Plan {
 		logger.debug("pitch height" + this.all_static_objects.getWidth());
 		
 		//Now create an A* object from which we create a path
-		astar = new AStarRun(this.all_static_objects.getHeight(), this.all_static_objects.getWidth(), this.all_static_objects.convertToNode(target_decision.getTarget()), this.all_static_objects.convertToNode(all_moving_objects.getOurPosition()), this.obstacles );
+		astar = new AStarRun(	this.all_static_objects.getHeight(),
+								this.all_static_objects.getWidth(),
+								this.all_static_objects.convertToNode(target_decision.getTarget()),
+								this.all_static_objects.convertToNode(all_moving_objects.getOurPosition()),
+								this.obstacles
+							);
 
 		//Requires method to convert from path to ArrayList<Point>
 		//Now grab path through A* method
@@ -100,6 +105,10 @@ public class Plan {
 	
 	public Path getNodePath(){
 		return this.node_path;
+	}
+	
+	public AStarRun getAStar(){
+		return this.astar;
 	}
 
 }

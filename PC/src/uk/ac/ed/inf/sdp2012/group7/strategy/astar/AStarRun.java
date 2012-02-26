@@ -8,9 +8,14 @@ import uk.ac.ed.inf.sdp2012.group7.strategy.astar.heuristics.ClosestHeuristic;
 public class AStarRun {
 		
 		private Path shortestPath;
+		private AreaMap map;
 		
+		public AreaMap getAreaMap() {
+			return map;
+		}
+
 		public AStarRun(int golf_balls_height, int golf_balls_width, Point ball, Point some_robot, ArrayList<Point> obstacles) {
-			AreaMap map = new AreaMap(golf_balls_width, golf_balls_height);
+			map = new AreaMap(golf_balls_width, golf_balls_height);
 			
 			// set obstacles
 			for (Point obstacle : obstacles) {
