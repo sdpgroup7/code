@@ -6,6 +6,8 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.apache.log4j.Logger;
+
 import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
@@ -24,6 +26,7 @@ public class PlanningThread extends Observable implements Runnable{
 	private int plan_type;
 	private boolean worldStateIsPopulated = false;
 	private WorldState worldState = WorldState.getInstance();
+	public static final Logger logger = Logger.getLogger(PlanningThread.class);
 	
 	/**
 	 * 
@@ -48,7 +51,7 @@ public class PlanningThread extends Observable implements Runnable{
 					Plan temp_plan = new Plan(this.all_static_objects, this.all_moving_objects, this.plan_type);
 					setChanged();
 					notifyObservers(temp_plan);
-					Strategy.logger.debug("Plan type: " + this.plan_type);
+					logger.debug("Plan type: " + this.plan_type);
 					//This is here just because I can never remember how to do this
 					//and I think it might be useful for testing...
 					//I can imagine Tom finding this, and think "wtf!" - sorry Tom!
@@ -74,9 +77,8 @@ public class PlanningThread extends Observable implements Runnable{
 	}
 	
 	public void sendStop(){
-		synchronized(this){
 			this.plan_type = PlanTypes.PlanType.HALT.ordinal();
-		}
+
 	}
 	
 	public void setWorldStateIsPopulated (){
