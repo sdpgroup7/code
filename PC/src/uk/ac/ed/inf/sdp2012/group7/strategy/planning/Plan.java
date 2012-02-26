@@ -65,7 +65,7 @@ public class Plan {
 		//Now create an A* object from which we create a path
 		astar = new AStarRun(	this.all_static_objects.getHeight(),
 								this.all_static_objects.getWidth(),
-								this.all_static_objects.convertToNode(target_decision.getTarget()),
+								this.target_decision.getTargetAsNode(),
 								this.all_static_objects.convertToNode(all_moving_objects.getOurPosition()),
 								this.obstacles
 							);
@@ -109,6 +109,10 @@ public class Plan {
 	
 	public AStarRun getAStar(){
 		return this.astar;
+	}
+	
+	public int getNodeInPixels(){
+		return this.all_static_objects.getNodeInPixels();
 	}
 
 }
