@@ -15,18 +15,13 @@ public class Node implements Comparable<Node> {
 	boolean isObstacle;
 	boolean isStart;
 	private boolean isGoal;
+	int cost;
 	
-	Node(int x, int y) {
-		this.x = x;
-		this.y = y;
-		this.visited = false;
-		this.distanceFromStart = Float.MAX_VALUE;
-		this.isObstacle = false;
-		this.isStart = false;
-		this.isGoal = false;
+	Node(int x, int y, int cost) {
+		this(x,y,false,Float.MAX_VALUE,false,false,false,cost);
 	}
 	
-	Node (int x, int y, boolean visited, float distanceFromStart, boolean isObstical, boolean isStart, boolean isGoal) {
+	Node (int x, int y, boolean visited, float distanceFromStart, boolean isObstical, boolean isStart, boolean isGoal, int cost) {
 		this.x = x;
 		this.y = y;
 		this.visited = visited;
@@ -34,6 +29,11 @@ public class Node implements Comparable<Node> {
 		this.isObstacle = isObstical;
 		this.isStart = isStart;
 		this.isGoal = isGoal;
+		this.cost = cost;
+	}
+
+	public int getCost(){
+		return this.cost;
 	}
 
 	public boolean isVisited() {
