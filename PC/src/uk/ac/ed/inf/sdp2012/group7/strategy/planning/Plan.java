@@ -90,29 +90,39 @@ public class Plan {
 		return target_decision.getAction();
 	}
 	
+	//Unused
 	public double getOurRobotAngle(){
 		return all_moving_objects.getOurAngle();
 	}
 	
+	//Unused
 	public Point getOurRobotPosition() {
 		return all_static_objects.convertToNode(all_moving_objects.getOurPosition());
 	}
 	
-	//err.. 
+	//For Control Interface
 	public Point getOurRobotPositionVisual() {
 		return all_static_objects.convertToNode(worldState.getOurRobot().getPosition().getCentre());
 	}
 	
+	//For testing
 	public Path getNodePath(){
 		return this.node_path;
 	}
 	
+	//For testing
 	public AStarRun getAStar(){
 		return this.astar;
 	}
 	
+	//For Control Interface
 	public int getNodeInPixels(){
 		return this.all_static_objects.getNodeInPixels();
+	}
+	
+	//For Control Interface
+	public int getHeightInNodes(){
+		return this.all_static_objects.getHeight();
 	}
 
 }
