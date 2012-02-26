@@ -6,6 +6,7 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 import java.util.Observable;
 import java.util.Observer;
 
+import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
@@ -69,6 +70,12 @@ public class PlanningThread extends Observable implements Runnable{
 	
 	public void switchRun() {
 		this.runFlag = !runFlag;
+	}
+	
+	public void sendStop(){
+		synchronized(this){
+			this.plan_type = PlanTypes.PlanType.HALT.ordinal();
+		}
 	}
 	
 	public void setWorldStateIsPopulated (){
