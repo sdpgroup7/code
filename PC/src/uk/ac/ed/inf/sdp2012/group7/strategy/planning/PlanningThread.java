@@ -44,9 +44,15 @@ public class PlanningThread extends Observable implements Runnable{
 
 	@Override
 	public void run() {
-		while(runFlag){
+		boolean keepPlanning = true;
+		while(keepPlanning || runFlag){
 			if(worldStateIsPopulated){
 				synchronized(this){
+					if( this.plan_type == PlanTypes.PlanType.HALT.ordinal()){
+						keepPlanning = false;
+					} else {
+						keepPlanning = true;
+					}
 					Strategy.logger.info("Planning Thread is running");
 					Plan temp_plan = new Plan(this.all_static_objects, this.all_moving_objects, this.plan_type);
 					setChanged();
@@ -55,7 +61,7 @@ public class PlanningThread extends Observable implements Runnable{
 					//This is here just because I can never remember how to do this
 					//and I think it might be useful for testing...
 					//I can imagine Tom finding this, and think "wtf!" - sorry Tom!
-						
+					
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
@@ -68,6 +74,7 @@ public class PlanningThread extends Observable implements Runnable{
 					setWorldStateIsPopulated();
 				}
 			}
+			
 		}
 		
 	}
@@ -77,8 +84,7 @@ public class PlanningThread extends Observable implements Runnable{
 	}
 	
 	public void sendStop(){
-			this.plan_type = PlanTypes.PlanType.HALT.ordinal();
-
+		this.plan_type = PlanTypes.PlanType.HALT.ordinal();
 	}
 	
 	public void setWorldStateIsPopulated (){

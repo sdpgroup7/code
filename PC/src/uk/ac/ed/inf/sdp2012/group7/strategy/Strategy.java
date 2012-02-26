@@ -36,14 +36,12 @@ public class Strategy {
 	// need to read Tom's email on thread handling.. this is just a placeholder!
 	
 	public void startPlanningThread() {
-		// TODO Auto-generated method stub
 		this.thread_for_planningthread = new Thread(planningthread);
 		this.planningthread.switchRun();
 		this.thread_for_planningthread.start();
 	}
 
 	public void stopPlanningThread() {
-		// TODO Auto-generated method stub
 		this.planningthread.sendStop();
 		this.planningthread.switchRun();
 		this.thread_for_planningthread = null;
