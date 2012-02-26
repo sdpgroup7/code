@@ -6,7 +6,7 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 import java.util.Observable;
 import java.util.Observer;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
  * @author s0955088
@@ -20,6 +20,7 @@ public class PlanningThread extends Observable implements Runnable{
 	//How do we set what plan to make?
 	private int plan_type;
 	private boolean isWorldStateNull = true;
+	private WorldState worldState = WorldState.getInstance();
 	
 	/**
 	 * 
@@ -66,7 +67,7 @@ public class PlanningThread extends Observable implements Runnable{
 	}
 	
 	public void setIsWorldStateNull (){
-		this.isWorldStateNull = (Vision.worldState.getBall().getPosition().getCentre() == null);
+		this.isWorldStateNull = (worldState.getLastUpdateTime() == 0);
 	}
 
 

@@ -33,13 +33,12 @@ public class AllStaticObjects {
 	private Point infront_of_our_goal;
 	
 	//worldstate getInstance
-	public WorldState worldState;
+	public WorldState worldState = WorldState.getInstance();
 	
 	
 	public AllStaticObjects (){
 		
-		worldState = WorldState.getInstance();
-		while(!worldState.isClickingDone()){};
+		while(!(worldState.getLastUpdateTime() == 0)){}
 		this.their_top_goal_post = worldState.getOpponentsGoal().getTopLeft();
 		this.their_bottom_goal_post = worldState.getOpponentsGoal().getBottomLeft();
 		this.our_top_goal_post = worldState.getOurGoal().getTopLeft();

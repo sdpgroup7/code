@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ed.inf.sdp2012.group7.control.RobotControl;
 import uk.ac.ed.inf.sdp2012.group7.control.Tools;
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
  * 
@@ -16,6 +16,7 @@ import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 public class StrategyOld {
 
 	public static final Logger logger = Logger.getLogger(StrategyOld.class);
+	private WorldState worldState = WorldState.getInstance();
 
 	public void mileStone1(boolean kick) {
 		if (kick) {
@@ -71,7 +72,7 @@ public class StrategyOld {
 				} catch (InterruptedException e) {
 					logger.error(e);
 				}
-				Point oldPoint = (Point) Vision.worldState.getBlueRobot().getPosition().getCentre().clone();
+				Point oldPoint = (Point) worldState.getBlueRobot().getPosition().getCentre().clone();
 				logger.debug("Old point: " + oldPoint);	
 
 				controller.moveForward(10);
@@ -80,7 +81,7 @@ public class StrategyOld {
 				} catch (InterruptedException e) {
 					logger.error(e);
 				}
-				Point newPoint = (Point) Vision.worldState.getBlueRobot().getPosition().getCentre().clone();
+				Point newPoint = (Point) worldState.getBlueRobot().getPosition().getCentre().clone();
 				logger.debug("New point: " + newPoint);
 				angle = Math.atan2(newPoint.y-oldPoint.y, newPoint.x-oldPoint.x);
 				ratio = 10/Point.distance(newPoint.x, newPoint.y, oldPoint.x, oldPoint.y);
@@ -93,12 +94,12 @@ public class StrategyOld {
 			while (true) {
 				while (runFlag) {
 					controller.changeSpeed(30);
-					Point ball = Vision.worldState.getBall().getPosition().getCentre();
+					Point ball = worldState.getBall().getPosition().getCentre();
 					if (ball.x == 0 && ball.y == 0) { //"bullshit checks"
 						runFlag = false;
 					}
 					setAngleHack();
-					Point robot = Vision.worldState.getBlueRobot().getPosition().getCentre();
+					Point robot = worldState.getBlueRobot().getPosition().getCentre();
 					
 					double targetangle = Tools.getAngleToFacePoint(robot, angle, ball);
 					/* should we drive to the robot? */

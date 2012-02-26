@@ -4,7 +4,7 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 
 /**
@@ -22,6 +22,7 @@ public class BallPrediction {
 	private boolean clear_shot = false;
 	private boolean we_have_ball = false;
 	private boolean ball_is_too_close_to_wall = false;
+	private WorldState worldState = WorldState.getInstance();
 
 	
 	//Constructor
@@ -106,7 +107,7 @@ public class BallPrediction {
 			}
 
 			//Set clear shot boolean
-			if(Vision.worldState.getShootingDirection() == 1){
+			if(worldState.getShootingDirection() == 1){
 				if(our_angle > angle_with_top_post && our_angle < angle_with_bottom_post){
 					this.clear_shot = true;
 				}
