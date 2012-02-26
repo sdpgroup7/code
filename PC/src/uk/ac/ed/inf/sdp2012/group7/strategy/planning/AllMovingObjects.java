@@ -17,11 +17,9 @@ public class AllMovingObjects {
 	private double ballAngle;
 	
 	//worldstate getInstance
-	public WorldState worldState;
+	public WorldState worldState = WorldState.getInstance();
 	
 	public AllMovingObjects() {
-		
-		worldState = WorldState.getInstance();
 		
 		this.ourPosition = worldState.getOurRobot().getPosition().getCentre();
 		

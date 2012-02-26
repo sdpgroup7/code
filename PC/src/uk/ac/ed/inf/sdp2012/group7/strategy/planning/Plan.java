@@ -28,7 +28,7 @@ public class Plan {
 
 	//World state info
 	private AllMovingObjects all_moving_objects;
-	public WorldState worldState;
+	private WorldState worldState = WorldState.getInstance();
 	
 	//For testing
 	private Path node_path;
@@ -41,8 +41,6 @@ public class Plan {
 		
 		this.all_static_objects = all_static_objects;
 		
-		worldState = WorldState.getInstance();
-
 		//grab plan type
 		this.plan_type = plan_type;
 		

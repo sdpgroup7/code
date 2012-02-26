@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
+
 
 
 /**
@@ -30,6 +31,7 @@ public class TargetDecision {
 	private boolean we_have_ball = false;
 	private boolean they_have_ball = false;
 	private boolean ball_is_too_close_to_wall = false;
+	private WorldState worldState = WorldState.getInstance();
 
 	
 	//Constructor
@@ -146,7 +148,7 @@ public class TargetDecision {
 			}
 
 			//Set clear shot boolean
-			if(Vision.worldState.getShootingDirection() == 1){
+			if(worldState.getShootingDirection() == 1){
 				if(our_angle > angle_with_top_post && our_angle < angle_with_bottom_post){
 					this.clear_shot = true;
 				}
