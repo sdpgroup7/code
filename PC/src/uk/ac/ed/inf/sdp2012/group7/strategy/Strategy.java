@@ -28,7 +28,7 @@ public class Strategy {
 		this.planning_buffer = new PlanningBuffer(control_interface);
 		
 		//Make runnable...
-		this.planningthread = new PlanningThread(planning_buffer,1);
+		this.planningthread = new PlanningThread(planning_buffer,2);
 		
 	}
 	
@@ -44,6 +44,7 @@ public class Strategy {
 
 	public void stopPlanningThread() {
 		// TODO Auto-generated method stub
+		this.planningthread.sendStop();
 		this.planningthread.switchRun();
 		this.thread_for_planningthread = null;
 	}
