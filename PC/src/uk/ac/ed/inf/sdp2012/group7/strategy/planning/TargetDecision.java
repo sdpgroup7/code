@@ -162,9 +162,9 @@ public class TargetDecision {
 	private void ballTooCloseToWall() {
 		
 		logger.debug("Ball Position : " + this.all_moving_objects.getBallPosition());
-		logger.debug("obstacles is of length : " + obstacles.size());
+		logger.debug("obstacles is of length : " + this.obstacles.size());
 		
-		this.ball_is_too_close_to_wall = obstacles.contains(all_static_objects.convertToNode(this.all_moving_objects.getBallPosition()));
+		this.ball_is_too_close_to_wall = this.obstacles.contains(all_static_objects.convertToNode(this.all_moving_objects.getBallPosition()));
 	}
 	
 	public boolean getClearShot(){
