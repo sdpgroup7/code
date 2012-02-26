@@ -84,6 +84,7 @@ public class AllStaticObjects {
 		else {
 			this.infront_of_our_goal = new Point((this.boundary + 1),(this.our_bottom_goal_post.y - this.our_top_goal_post.y));
 		}
+		this.infront_of_our_goal = this.convertToNode(this.infront_of_our_goal);
 	}
 	
 	
@@ -92,9 +93,14 @@ public class AllStaticObjects {
 	//However this method does create obstacles in front of both goals...
 	public ArrayList<Point> addBoundary(ArrayList<Point> obstacles){
 		
+		//convert into node data!!
+		int pBy = this.convertToNode(this.our_bottom_goal_post).y;
+		int pTy = this.convertToNode(this.our_top_goal_post).y;
+		
 		for(int y = 0; y < this.height; y++){
 			for (int b=0; b < boundary; b++) {
-				if(!((y > this.our_bottom_goal_post.y) && ( y < this.our_top_goal_post.y))){
+				//remove area infront of goal
+				if(!((y > pBy) && ( y < pTy))){
 					obstacles.add(new Point(b,y));
 					obstacles.add(new Point((this.width - 1) - b,y));
 				}
