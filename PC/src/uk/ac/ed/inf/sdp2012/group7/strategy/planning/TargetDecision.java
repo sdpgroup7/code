@@ -49,11 +49,29 @@ public class TargetDecision {
 	}
 	
 	
-	public Point getTarget() {
+	public Point getTargetAsNode() {
 		
 		/*
 		 * This whole section is experimental
 		 */
+		
+		Point target = new Point();
+		//put it into node for assessment
+		target = all_static_objects.convertToNode(this.all_moving_objects.getBallPosition());
+		//boolean for knowing if the ball is on the pitch
+		boolean ballOnPitch = ((target.x >= 0) && (target.x <= all_static_objects.getWidth()) && 
+							   (target.y >= 0) && (target.y <= all_static_objects.getHeight()));
+		
+		//Lets get this shit in, and then go read about proper decision making structures later.
+		if(!ballOnPitch){
+			//fuck off and sit next to our goal
+			this.action = 0;
+			return this.all_static_objects.getInfront_of_our_goal();
+		} else {
+			
+		}
+		
+		
 		//If the plan type is not 0, go into free play mode
 		if(plan_type > 0){
 			if(clear_shot){
@@ -138,8 +156,10 @@ public class TargetDecision {
 
 			//Angles
 			double our_angle = all_moving_objects.getOurAngle();
-			double angle_with_top_post = Math.asin((all_static_objects.getTheir_top_goal_post().x - our_position.x)/(our_position.distance(all_static_objects.getTheir_top_goal_post())));
-			double angle_with_bottom_post = Math.asin((all_static_objects.getTheir_bottom_goal_post().x - our_position.x)/(our_position.distance(all_static_objects.getTheir_bottom_goal_post())));
+			double angle_with_top_post = Math.asin((all_static_objects.getTheir_top_goal_post().x 
+					- our_position.x)/(our_position.distance(all_static_objects.getTheir_top_goal_post())));
+			double angle_with_bottom_post = Math.asin((all_static_objects.getTheir_bottom_goal_post().x 
+					- our_position.x)/(our_position.distance(all_static_objects.getTheir_bottom_goal_post())));
 
 			//fix for normal angles into bearings.... :D
 			if(angle_with_top_post < 0){

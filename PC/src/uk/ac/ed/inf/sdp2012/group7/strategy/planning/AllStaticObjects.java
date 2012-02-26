@@ -69,13 +69,13 @@ public class AllStaticObjects {
 	}
 	
 	//Compacts WorldState position points into "Node" centre positions
-	public ArrayList<Point> convertToNodes(ArrayList<Point> p){
+	public ArrayList<Point> convertToNodes(ArrayList<Point> l){
 
 		ArrayList<Point> node_points = new ArrayList<Point>();
 
-		for (Point obstacle : p) {
-			int x = (int)Math.floor((obstacle.x - this.pitch_left_buffer)/this.nodeInPixels);
-			int y = (int)Math.floor((obstacle.y - this.pitch_top_buffer)/this.nodeInPixels);
+		for (Point p : l) {
+			int x = (int)Math.floor((p.x - this.pitch_left_buffer)/this.nodeInPixels);
+			int y = (int)Math.floor((p.y - this.pitch_top_buffer)/this.nodeInPixels);
 			node_points.add(new Point(x,y));
 		}
 
@@ -83,14 +83,19 @@ public class AllStaticObjects {
 	}
 	
 	//Method for finding the centre point just in front of our goal...
+	//Return this as a node!
 	private void pointInfrontOfGoal(){
 		if(worldState.getShootingDirection() == 1){
-			this.infront_of_our_goal = new Point((this.width - (this.boundary + 1)),(this.our_bottom_goal_post.y - this.our_top_goal_post.y));
+			this.infront_of_our_goal = new Point((this.width - (this.boundary - 1)),
+												((this.our_bottom_goal_post.y - this.our_top_goal_post.y) 
+														- this.pitch_top_buffer)/this.nodeInPixels);
+			
 		}
 		else {
-			this.infront_of_our_goal = new Point((this.boundary + 1),(this.our_bottom_goal_post.y - this.our_top_goal_post.y));
+			this.infront_of_our_goal = new Point((this.boundary),
+												((this.our_bottom_goal_post.y - this.our_top_goal_post.y) 
+														- this.pitch_top_buffer)/this.nodeInPixels);
 		}
-		this.infront_of_our_goal = this.convertToNode(this.infront_of_our_goal);
 	}
 	
 	
