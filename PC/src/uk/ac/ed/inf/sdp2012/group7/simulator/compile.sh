@@ -2,6 +2,9 @@
 FILES=( net robot_simm world_state simulator )
 
 rm *.o
+rm -rf .deps
+
+mkdir .deps
 
 for f in ${FILES[*]}
 do

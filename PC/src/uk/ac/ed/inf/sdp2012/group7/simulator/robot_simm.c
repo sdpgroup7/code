@@ -78,7 +78,7 @@ void action(void* args) {
 			a->rs->kicker = 0;
 		}
 		switch (a->cmd->instr) {
-			case DO_NOTHING: AT_SAY("idling.\n"); break;
+			case DO_NOTHING: /*AT_SAY("idling.\n");*/ break;
 			case FORWARDS:
 					 a->rs->x = a->rs->x - speed * cos(a->rs->angle);
 					 a->rs->y = a->rs->y - speed * sin(a->rs->angle);

@@ -34,11 +34,11 @@ void ws_thread(void * args) {
 
 		p.ball_x = a->ws->ball->x;
 		p.ball_y = a->ws->ball->y;
+		
+		WS_SAY_ "bx=%u by=%u ba=%u yx=%u yy=%u ya=%u bx=%u by=%u\r", p.blue_x, p.blue_y, p.blue_a, p.yellow_x, p.yellow_y, p.yellow_a, p.ball_x, p.ball_y);
 
-		WS_SAY_ "sending packet bx=%i by=%i ba=%i yx=%i yy=%i ya=%i ballx=%i bally=%i\n", p.blue_x, p.blue_y, p.blue_a, p.yellow_x, p.yellow_y, p.yellow_a, p.ball_x, p.ball_y);
 		if (send(socket, &p, sizeof p, 0) == -1)
 			WS_SAY("send failed\n");
-		WS_SAY("send ok\n");
 
 	TIMED_LOOP_END
 }

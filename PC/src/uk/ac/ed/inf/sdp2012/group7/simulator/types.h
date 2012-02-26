@@ -5,10 +5,9 @@
 
 #include "opcodes.h"
 
-#define opcode_t uint32_t
+#define opcode_t int32_t
 #define socket_t int
 #define java_int int32_t
-#define java_uint uint32_t
 
 struct command {
 	enum opcodes instr;
@@ -16,9 +15,9 @@ struct command {
 };
 
 struct robot_status {
-	java_uint x;
-	java_uint y;
-	java_uint angle;
+	java_int x;
+	java_int y;
+	java_int angle;
 	int kicker;
 };
 
@@ -36,8 +35,8 @@ struct robot_action_thread_args {
 };
 
 struct ball {
-	java_uint x;
-	java_uint y;
+	java_int x;
+	java_int y;
 	int angle;
 	int speed;
 };
@@ -55,16 +54,16 @@ struct ws_thread_args {
 };
 
 struct ws_packet {
-	java_uint blue_x;
-	java_uint blue_y;
-	java_uint blue_a;
+	java_int blue_x;
+	java_int blue_y;
+	java_int blue_a;
 
-	java_uint yellow_x;
-	java_uint yellow_y;
-	java_uint yellow_a;
+	java_int yellow_x;
+	java_int yellow_y;
+	java_int yellow_a;
 
-	java_uint ball_x;
-	java_uint ball_y;
+	java_int ball_x;
+	java_int ball_y;
 };
 
 #endif

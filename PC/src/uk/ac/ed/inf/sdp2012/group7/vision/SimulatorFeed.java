@@ -1,6 +1,8 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
@@ -10,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.awt.Point;
+
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -27,7 +31,7 @@ public class SimulatorFeed extends WindowAdapter {
 	private JFrame windowFrameThresh;
 	private FrameGrabber frameGrabber;
 	private int width, height;
-	private BufferedImage frameImage;
+	private BufferedImage frameImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
 	
 	private BufferedImage background;
 	private BufferedImage blue;
@@ -50,9 +54,11 @@ public class SimulatorFeed extends WindowAdapter {
 	 *
 	 */
 	public SimulatorFeed(ControlGUI thresholdsGUI) {
-		background = ImageIO.read(new File("simData/background.png"));
-		blue = ImageIO.read(new File("simData/blue.png"));
-		yellow = ImageIO.read(new File("simData/yellow.png"));
+		try {
+			background = ImageIO.read(new File("simData/background.png"));
+		} catch (IOException e) {
+			Simulator.logger.fatal("Can't load background: "+e.toString());
+		}
 		
 
 		/* Initialise the GUI that displays the video feed. */
@@ -83,8 +89,6 @@ public class SimulatorFeed extends WindowAdapter {
 		public void run() {
 			try {
 				socket = new Socket(simHost, simPort);
-				os = socket.getOutputStream();
-				os.flush();
 				is = socket.getInputStream();
 			} catch (Exception e) {
 				Simulator.logger.fatal("Connecting to simulator failed: "+e.toString());
@@ -92,33 +96,49 @@ public class SimulatorFeed extends WindowAdapter {
 			
 			while(true) {
 				int[] buf = new int[8];
-				
+				byte[] int_buf = new byte[4];
+							
 				for (int i = 0; i < 8; ++i) {
-					int recv = 0;
-					for (int j = 0; j < 8; ++j) {
-						recv = recv << 8;
-						try {
-							recv = recv | is.read();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							Simulator.logger.fatal("Receiving from simulator failed: "+e.toString());
-						}
+					try {
+						is.read(int_buf);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-					buf[i] = recv;
+					buf[i] = (0x000000FF & (int)int_buf[0])
+					      | ((0x000000FF & (int)int_buf[1]) << 8)
+					      | ((0x000000FF & (int)int_buf[2]) << 16)
+					      | ((0x000000FF & (int)int_buf[3]) << 24);
 				}
+				
+				//System.out.println(buf[0]+" "+buf[1]+" "+buf[2]+" "+buf[3]+" "+buf[4]+" "+buf[5]+" "+buf[6]+" "+buf[7]);
 				
 				buf[2] = simAngleToNormal(buf[2]);
 				buf[5] = simAngleToNormal(buf[5]);
 				
+				
 				Simulator.worldState.getBlueRobot().setPosition(buf[0], buf[1]);
 				Simulator.worldState.getBlueRobot().setAngle(Math.toRadians(buf[2]));
-				Simulator.worldState.getBall().addPosition(buf[6], buf[7]);
+				Simulator.worldState.getYellowRobot().setPosition(buf[3], buf[4]);
+				Simulator.worldState.getYellowRobot().setAngle(Math.toRadians(buf[5]));
+				Simulator.worldState.getBall().addPosition(new Point(buf[6], buf[7]));
 				
 				frameImage.setData(background.getData());
-				AffineTransform xform = new AffineTransform();
-				xform.rotate(Math.toRadians(buf[2]), 23.5, 16.5);
-
 				
+				Graphics g = frameImage.getGraphics();
+				g.setColor(Color.blue);
+				g.fillRect(buf[0]-24, buf[1]-17, 47, 33);
+				g.setColor(Color.yellow);
+				g.fillRect(buf[3]-24, buf[4]-17, 47, 33);
+				g.setColor(Color.red);
+				g.fillOval(buf[6]-5, buf[7]-5, 11, 11);
+				
+				System.out.println("now really");
+				
+				label.getGraphics().drawImage(frameImage, 0, 0, frameImage.getWidth(), frameImage.getHeight(), null);
+				
+				
+				System.out.println("fo sho");
 			}
 		}
 		
@@ -172,8 +192,7 @@ public class SimulatorFeed extends WindowAdapter {
 	 */
 	public void windowClosing(WindowEvent e) {
 		/* Dispose of the various swing and v4l4j components. */
-		frameGrabber.stopCapture();
-		videoDev.releaseFrameGrabber();
+		receiver.stop();
 
 		windowFrame.dispose();
 		Vision.logger.info("Vision System Ending...");

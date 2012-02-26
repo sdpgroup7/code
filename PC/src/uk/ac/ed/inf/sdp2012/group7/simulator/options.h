@@ -16,6 +16,8 @@
 #define BLUE_START_Y 110
 #define YELLOW_START_X 590
 #define YELLOW_START_Y 370
+#define BALL_START_X 320
+#define BALL_START_Y 240
 
 #define USEC_PER_ACTION 40000 // 25 fps = action every 0.04 s
 
