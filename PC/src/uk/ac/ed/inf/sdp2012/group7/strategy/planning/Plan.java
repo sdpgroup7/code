@@ -44,11 +44,12 @@ public class Plan {
 		//Set up obstacles created by opposition
 		opposition = new OppositionPrediction(this.all_moving_objects, this.all_static_objects);
 		
+		//Add the opposition obstacles to the overall obstacles
+		//IE add in the boundary...
+		this.obstacles = all_static_objects.convertToNodes(opposition.getDefaultObstacles());
+		
 		//Setup target for A*
 		target_decision = new TargetDecision(this.all_moving_objects, this.all_static_objects, this.obstacles, this.plan_type);
-		
-		//Add the opposition obstacles to the overall obstacles
-		this.obstacles = all_static_objects.convertToNodes(opposition.getDefaultObstacles());
 		
 		//Now add in the obstacles created by AllStaticObjects
 		this.obstacles = all_static_objects.addBoundary(this.obstacles);
