@@ -35,7 +35,7 @@ public class AreaMap {
 			//map.add(new ArrayList<Node>());
 			for (int y=0; y<mapHeight; y++) {
 				//map.get(x).add(new Node(x,y));
-				map[x][y] = new Node(x,y);
+				map[x][y] = new Node(x,y,0);
 			}
 		}
 	}
