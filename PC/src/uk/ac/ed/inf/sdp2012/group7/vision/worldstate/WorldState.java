@@ -11,7 +11,6 @@ public class WorldState{
 	volatile int shootingDirection = -1; //-1 = left, 1 = right
 	volatile Color ourColor = Color.blue;
 	volatile int room = 0; //0 == main room, 1 == side room
-	volatile boolean clickingDone = false;
 
 	volatile Pitch pitch = new Pitch(); //All the data about the pitch dimensions
 	volatile ObjectPosition leftGoal = new ObjectPosition(); //The position of our goal
@@ -28,9 +27,10 @@ public class WorldState{
 	volatile Point blueKeyPoint = new Point();
 	volatile Point yellowKeyPoint = new Point();
 	
-	volatile private long lastUpdated = 0;
+	volatile private long lastUpdated = 0; //The timestamp of when worldstate was last updated
+	volatile private boolean clickingDone = false; //Says whether all clicking has been done (generally used by vision)
 	
-	
+
 	public static WorldState getInstance(){
 		if(worldState == null){
 			worldState = new WorldState();
