@@ -101,7 +101,7 @@ public class AllStaticObjects {
 		for(int x = boundary; x < this.width - boundary; x++){
 			for (int b=0; b < boundary; b++) {
 				obstacles.add(new Point(x,b));
-				obstacles.add(new Point(x,this.height-b));
+				obstacles.add(new Point(x,(this.height - 1) -b));
 			}
 		}
 		
