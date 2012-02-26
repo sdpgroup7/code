@@ -48,6 +48,7 @@ public class PlanningThread extends Observable implements Runnable{
 					Plan temp_plan = new Plan(this.all_static_objects, this.all_moving_objects, this.plan_type);
 					setChanged();
 					notifyObservers(temp_plan);
+					Strategy.logger.debug("Plan type: " + this.plan_type);
 					//This is here just because I can never remember how to do this
 					//and I think it might be useful for testing...
 					//I can imagine Tom finding this, and think "wtf!" - sorry Tom!
