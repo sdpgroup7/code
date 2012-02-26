@@ -188,6 +188,7 @@ public class ControlInterface implements Observer {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
+		logger.debug("Got a new plan");
 		Plan plan = (Plan) arg1;
 		Arc arcToDrive = this.chooseArc(plan);
 		this.implimentArc(arcToDrive);
