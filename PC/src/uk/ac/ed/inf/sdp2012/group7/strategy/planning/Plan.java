@@ -84,7 +84,7 @@ public class Plan {
 	}
 	
 	public Point getOurRobotPosition() {
-		return all_moving_objects.getOurPosition();
+		return all_static_objects.convertToNode(all_moving_objects.getOurPosition());
 	}
 
 }
