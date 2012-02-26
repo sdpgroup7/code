@@ -74,8 +74,7 @@ public class AllStaticObjects {
 		for (Point obstacle : p) {
 			int x = (int)Math.floor((obstacle.x - this.pitch_left_buffer)/this.nodeInPixels);
 			int y = (int)Math.floor((obstacle.y - this.pitch_top_buffer)/this.nodeInPixels);
-			Point grid_point = new Point(x,y);
-			node_points.add(grid_point);
+			node_points.add(new Point(x,y));
 		}
 
 		return node_points;
