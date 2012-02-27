@@ -150,6 +150,9 @@ public class Thresholding {
     		
     	//stops it fucking up the locations before we've given it the thresholds
     	if (Vision.worldState.isClickingDone()){
+    		
+    		newBluePixels = new ArrayList<Point>();
+			newYellowPixels = new ArrayList<Point>();
     		ArrayList<Point> bluePixels = new ArrayList<Point>();
     		ArrayList<Point> yellowPixels = new ArrayList<Point>();
     		pitch = Vision.worldState.getRoom();
@@ -457,13 +460,13 @@ public class Thresholding {
 			
 			for(Point p : bluePixels){
 				
-				if( isInRectangle(p,blueGreenPlate4Points)  ){
+				if( plate.isInRectangle(p,blueGreenPlate4Points)  ){
 					newBluePixels.add(p);
 				}
 			}
 			for(Point p : yellowPixels){
 				
-				if( isInRectangle(p,yellowGreenPlate4Points) ){
+				if( plate.isInRectangle(p,yellowGreenPlate4Points) ){
 					newYellowPixels.add(p);
 				}
 			}
@@ -473,7 +476,7 @@ public class Thresholding {
 			
 			//The above is supposed to filter the pixels and pick up only the T pixels, but the orientation then is always with the (0,0) point 
 			
-			System.err.println(newYellowPixels.size());
+			//System.err.println(newYellowPixels.size());
 			
 			blueGreenPlate.clear();
 			yellowGreenPlate.clear();
@@ -481,8 +484,7 @@ public class Thresholding {
 			//Vision.worldState.setBluePixels(bluePixels);//This must be removed to get the upper thing running
 			//Vision.worldState.setYellowPixels(yellowPixels); //This must be removed to get the upper thing running
 			
-			newBluePixels.clear();
-			newYellowPixels.clear();
+			
     	}
     		
     	return img;
@@ -681,23 +683,5 @@ public class Thresholding {
 	public Point[] getYellowGreenPlate4Points(){
 		return yellowGreenPlate4Points;
 	}
-	/**
-	 * 
-	 * @param a point p
-	 * @param array of four points, forming a rectangle
-	 * @return whether p is in the rectangle formed from the four points
-	 */
-	public boolean isInRectangle(Point p, Point[] points){
-		if( p == new Point(0,0) ){
-			return false;
-		}
-		
-		boolean a; 
-		boolean b; 
-		
-		a = plate.isPointInTriangle(points[0], points[2], points[3], p);
-		b = plate.isPointInTriangle(points[1], points[2], points[3], p);
-		
-		return a || b;
-	}
+
 }
