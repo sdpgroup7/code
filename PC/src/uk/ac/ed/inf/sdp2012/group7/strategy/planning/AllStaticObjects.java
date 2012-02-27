@@ -7,7 +7,9 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+
+import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
  * @author s0955088
@@ -17,7 +19,7 @@ import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
  */
 public class AllStaticObjects {
 	
-	private int nodeInPixels; 
+	private double nodeInPixels;
 	private int pitch_top_buffer;
 	private int pitch_left_buffer; 
 	//private int pitch_bottom_buffer;
@@ -31,21 +33,29 @@ public class AllStaticObjects {
 	private Point our_bottom_goal_post;
 	private Point infront_of_our_goal;
 	
+	//worldstate getInstance
+	public WorldState worldState = WorldState.getInstance();
+	
+	//changes the type of plan to be created
+	private int plan_type;
+	
+	
 	public AllStaticObjects (){
-		
-		this.their_top_goal_post = Vision.worldState.getOpponentsGoal().getTopLeft();
-		this.their_bottom_goal_post = Vision.worldState.getOpponentsGoal().getBottomLeft();
-		this.our_top_goal_post = Vision.worldState.getOurGoal().getTopLeft();
-		this.our_bottom_goal_post = Vision.worldState.getOurGoal().getBottomLeft();
-		this.nodeInPixels = Vision.worldState.getPitch().getWidthInPixels()/50;//width in pixels!
-		this.pitch_top_buffer  = Vision.worldState.getPitch().getTopBuffer();
-		this.pitch_left_buffer = Vision.worldState.getPitch().getLeftBuffer();
-		//this.pitch_bottom_buffer  = Vision.worldState.getPitch().getBottomBuffer();
-		//this.pitch_right_buffer = Vision.worldState.getPitch().getRightBuffer();
+		while(worldState.getLastUpdateTime() == 0){}
+		this.their_top_goal_post = worldState.getOpponentsGoal().getTopLeft();
+		this.their_bottom_goal_post = worldState.getOpponentsGoal().getBottomLeft();
+		this.our_top_goal_post = worldState.getOurGoal().getTopLeft();
+		this.our_bottom_goal_post = worldState.getOurGoal().getBottomLeft();
+		this.pitch_top_buffer  = worldState.getPitch().getTopBuffer();
+		this.pitch_left_buffer = worldState.getPitch().getLeftBuffer();
+		//this.pitch_bottom_buffer  = worldState.getPitch().getBottomBuffer();
+		//this.pitch_right_buffer = worldState.getPitch().getRightBuffer();
 		
 		//hard code setting of grid resolution (Grid is used in A*)
-		this.height = 25;
-		this.width = 50;
+		this.height = 29;
+		this.width = 58;
+		this.nodeInPixels = (double)worldState.getPitch().getWidthInPixels()/(double)this.width;//width in pixels!
+		Strategy.logger.info("Node size in pixels: " + nodeInPixels);
 		//Boundary around the edges of the pitch, to prevent the robot from hitting the walls
 		//So this is dependent on the resolution..
 		this.boundary = 3;
@@ -55,61 +65,44 @@ public class AllStaticObjects {
 	
 	//Compacts WorldState position point into "Node" centre position
 	public Point convertToNode(Point p){
-		int x = (int)Math.floor((p.x - this.pitch_left_buffer)/this.nodeInPixels);
-		int y = (int)Math.floor((p.y - this.pitch_top_buffer)/this.nodeInPixels);
-		Point grid_point = new Point(x,y);
-		return grid_point;
+		int x = (int)((double)(p.x - this.pitch_left_buffer)/this.nodeInPixels);
+		int y = (int)((double)(p.y - this.pitch_top_buffer)/this.nodeInPixels);
+
+		
+		return new Point(x,y);
 	}
 	
 	//Compacts WorldState position points into "Node" centre positions
-	public ArrayList<Point> convertToNodes(ArrayList<Point> p){
-
+	public ArrayList<Point> convertToNodes(ArrayList<Point> l){
 		ArrayList<Point> node_points = new ArrayList<Point>();
 
-		for (Point obstacle : p) {
-			int x = (int)Math.floor((obstacle.x - this.pitch_left_buffer)/this.nodeInPixels);
-			int y = (int)Math.floor((obstacle.y - this.pitch_top_buffer)/this.nodeInPixels);
-			Point grid_point = new Point(x,y);
-			node_points.add(grid_point);
+		for (Point p : l) {
+			node_points.add(convertToNode(p));
 		}
 
 		return node_points;
 	}
 	
 	//Method for finding the centre point just in front of our goal...
+	//Return this as a node!
 	private void pointInfrontOfGoal(){
-		if(Vision.worldState.getShootingDirection() == 1){
-			this.infront_of_our_goal = new Point((this.width - (this.boundary + 1)),(this.our_bottom_goal_post.y - this.our_top_goal_post.y));
+		if(worldState.getShootingDirection() == 1){
+			this.infront_of_our_goal = new Point(	
+					(this.width - (this.boundary - 1)),
+					(int)(((this.our_bottom_goal_post.y - this.our_top_goal_post.y) - this.pitch_top_buffer)/this.nodeInPixels));
+			
 		}
 		else {
-			this.infront_of_our_goal = new Point((this.boundary + 1),(this.our_bottom_goal_post.y - this.our_top_goal_post.y));
+			this.infront_of_our_goal = new Point(
+					(this.boundary),
+					(int)(((this.our_bottom_goal_post.y - this.our_top_goal_post.y) 
+														- this.pitch_top_buffer)/this.nodeInPixels));
 		}
 	}
 	
-	
-	//This method is for creating a buffer around all of the walls
-	//and has a different signature so that we can add in 
-	//However this method does create obstacles in front of both goals...
-	public ArrayList<Point> addBoundary(ArrayList<Point> obstacles){
-		
-		for(int y = 0; y < this.height; y++){
-			for (int b=0; b < boundary; b++) {
-				obstacles.add(new Point(b,y));
-				obstacles.add(new Point(this.width - b,y));
-			}
-		}
-		for(int x = boundary; x < this.width -boundary; x++){
-			for (int b=0; b < boundary; b++) {
-				obstacles.add(new Point(x,b));
-				obstacles.add(new Point(x,this.height-b));
-			}
-		}
-		
-		return obstacles;
 
-	}
 
-	public int getNodeInPixels() {
+	public double getNodeInPixels() {
 		return this.nodeInPixels;
 	}
 
@@ -145,5 +138,12 @@ public class AllStaticObjects {
 		return infront_of_our_goal;
 	}
 
+	public int getPlanType(){
+		return this.plan_type;
+	}
+	
+	public void setPlanType(int pT){
+		this.plan_type = pT;
+	}
 
 }

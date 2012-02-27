@@ -1,5 +1,5 @@
  package uk.ac.ed.inf.sdp2012.group7.strategy;
-
+ 
 
 /**
  * Defines an arc to be used for a robot to drive on
@@ -12,17 +12,17 @@ public class Arc {
 	
 	private double radius;
 	private boolean direction;
-	//This is the number of mm in a golf ball
-	private double conversion = 43.67;
+	private int command;
+	//This is the number of cm in a golf ball
 	
-	public Arc(double r, boolean d) {
+	public Arc(double r, boolean d, int c) {
 		this.radius = r;
 		this.direction = d;
+		this.command = c;
 	}
 	
-	public int getRadius() {
-		int convertedRadius = (int) Math.round(radius * conversion); 
-		return convertedRadius;
+	public double getRadius() {
+		return this.radius;
 	}
 	
 	public void setRadius(double radius) {
@@ -35,6 +35,14 @@ public class Arc {
 	
 	public void setDirection(boolean direction) {
 		this.direction = direction;
+	}
+
+	public void setCommand(int command) {
+		this.command = command;
+	}
+
+	public int getCommand() {
+		return command;
 	}
 	
 

@@ -6,6 +6,12 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.apache.log4j.Logger;
+
+import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
+import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
+
 /**
  * @author s0955088
  * THE planning thread, so this will start off all the plan making
@@ -13,44 +19,76 @@ import java.util.Observer;
  */
 public class PlanningThread extends Observable implements Runnable{
 
-	private boolean run;
+	private boolean runFlag = false;
+	private AllMovingObjects all_moving_objects;
 	private AllStaticObjects all_static_objects;
 	//How do we set what plan to make?
-	final int plan_type;
+	private int plan_type;
+	private boolean worldStateIsPopulated = false;
+	private WorldState worldState = WorldState.getInstance();
+	public static final Logger logger = Logger.getLogger(PlanningThread.class);
 	
 	/**
 	 * 
 	 */
-	public PlanningThread(Observer myWatcher, int plan_type) {
-		// We only need to create the static objects once, and this class provides one place to store them all
-		this.all_static_objects = new AllStaticObjects();
+	public PlanningThread(Observer myWatcher, AllStaticObjects aSO) {
+		
 		// PlanningBuffer watches this thread
 		this.addObserver(myWatcher);
-		// Set while flag as true
-		this.run = true;
-		// Set plan type
-		this.plan_type = plan_type;
+		//this is here so we can use the plan_type variable in Strategy.java, which
+		//commands which plan type we are creating
+		this.all_static_objects = aSO;
+		this.all_moving_objects = new AllMovingObjects();
 	}
 
 	@Override
 	public void run() {
-		while(run){
-			synchronized(this){
-				try {
-					Plan temp_plan = new Plan(this.all_static_objects, this.plan_type);
+		boolean keepPlanning = true;
+		while(keepPlanning || runFlag){
+			if(worldStateIsPopulated){
+				synchronized(this){
+					if( this.plan_type == PlanTypes.PlanType.HALT.ordinal()){
+						keepPlanning = false;
+					} else {
+						keepPlanning = true;
+					}
+					Strategy.logger.info("Planning Thread is running");
+					Plan temp_plan = new Plan(this.all_static_objects, this.all_moving_objects);
 					setChanged();
 					notifyObservers(temp_plan);
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
+					logger.debug("Plan type: " + this.plan_type);
+					//This is here just because I can never remember how to do this
+					//and I think it might be useful for testing...
+					//I can imagine Tom finding this, and think "wtf!" - sorry Tom!
 					
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						Strategy.logger.error("Thread sleeping in PlanningThread was interrupted.");
+					}
+				}
+			} else {
+				while(!worldStateIsPopulated){
+					Strategy.logger.info(worldState.getLastUpdateTime());
+					setWorldStateIsPopulated();
 				}
 			}
+			
 		}
 		
 	}
 	
-	public void switchRun(){
-		this.run = run && false;
+	public void switchRun() {
+		this.runFlag = !runFlag;
 	}
+	
+	public void sendStop(){
+		this.plan_type = PlanTypes.PlanType.HALT.ordinal();
+	}
+	
+	public void setWorldStateIsPopulated (){
+		this.worldStateIsPopulated = (worldState.getLastUpdateTime() > 0);
+	}
+
 
 }
