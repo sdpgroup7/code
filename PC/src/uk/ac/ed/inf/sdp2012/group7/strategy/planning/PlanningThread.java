@@ -6,6 +6,9 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.apache.log4j.Logger;
+
+import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
@@ -23,6 +26,7 @@ public class PlanningThread extends Observable implements Runnable{
 	private int plan_type;
 	private boolean worldStateIsPopulated = false;
 	private WorldState worldState = WorldState.getInstance();
+	public static final Logger logger = Logger.getLogger(PlanningThread.class);
 	
 	/**
 	 * 
@@ -40,17 +44,24 @@ public class PlanningThread extends Observable implements Runnable{
 
 	@Override
 	public void run() {
-		while(runFlag){
+		boolean keepPlanning = true;
+		while(keepPlanning || runFlag){
 			if(worldStateIsPopulated){
 				synchronized(this){
+					if( this.plan_type == PlanTypes.PlanType.HALT.ordinal()){
+						keepPlanning = false;
+					} else {
+						keepPlanning = true;
+					}
 					Strategy.logger.info("Planning Thread is running");
 					Plan temp_plan = new Plan(this.all_static_objects, this.all_moving_objects, this.plan_type);
 					setChanged();
 					notifyObservers(temp_plan);
+					logger.debug("Plan type: " + this.plan_type);
 					//This is here just because I can never remember how to do this
 					//and I think it might be useful for testing...
 					//I can imagine Tom finding this, and think "wtf!" - sorry Tom!
-						
+					
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
@@ -63,12 +74,17 @@ public class PlanningThread extends Observable implements Runnable{
 					setWorldStateIsPopulated();
 				}
 			}
+			
 		}
 		
 	}
 	
 	public void switchRun() {
 		this.runFlag = !runFlag;
+	}
+	
+	public void sendStop(){
+		this.plan_type = PlanTypes.PlanType.HALT.ordinal();
 	}
 	
 	public void setWorldStateIsPopulated (){

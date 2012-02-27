@@ -11,6 +11,8 @@ import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
 import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.control.RobotControl;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
+import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 
 import math.geom2d.Point2D;
 import math.geom2d.conic.Circle2D;
@@ -28,8 +30,16 @@ public class ControlInterface implements Observer {
 	
 	public static final Logger logger = Logger.getLogger(ControlInterface.class);
 	
+	private WorldState world = WorldState.getInstance();
+	private VisionTools vtools = new VisionTools();
+	
 	private int lookahead;
 	private RobotControl c;
+	
+	//So planning and us are working off the same page
+	private int drive = PlanTypes.ActionType.DRIVE.ordinal();
+	private int kick = PlanTypes.ActionType.KICK.ordinal();
+	private int stop = PlanTypes.ActionType.STOP.ordinal();
 	
 
 	public ControlInterface(int lookahead) {
@@ -65,7 +75,11 @@ public class ControlInterface implements Observer {
 			h = this.findGoalPoint(plan);
 		} catch(Exception e) {
 			logger.debug(e);
-			h = new Point2D(plan.getPath().get(plan.getPath().size() -1));
+			if(plan.getPath().size() > 1){
+				h = new Point2D(plan.getPath().get(plan.getPath().size() -1));
+			} else {
+				h = new Point2D(plan.getPath().get(0));
+			}
 		}
 		
 		double alpha = Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))	- v;
@@ -77,7 +91,7 @@ public class ControlInterface implements Observer {
 		double xhc = d * Math.cos(alpha);
 		logger.debug(String.format("xhc: %f",xhc));
 
-		double R = (Math.pow(d, 2) / 2 * xhc);
+		double R = Math.abs((Math.pow(d, 2) / (2 * xhc)));
 		logger.debug(String.format("R: %f",R));
 
 		boolean dir;
@@ -96,21 +110,43 @@ public class ControlInterface implements Observer {
 
 	}
 
-	public void implimentArc(Arc path) {
+	public void implimentArc(Arc path, Plan plan) {
 		
 		
+		
+		
+		int pixelsPerNode = world.getPitch().getHeight()/plan.getHeightInNodes();
+		logger.debug(String.format("pixelsPerNode: %d", pixelsPerNode));
+		double conversion = (double) vtools.pixelsToCM(pixelsPerNode);
+		
+		logger.debug(String.format("Conversion value: %f", conversion));
 
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {}
-		this.c.circleWithRadius(path.getRadius(), path.isDirection());
+		if (plan.getAction() == drive) {
+			
+			int converted = (int)(conversion*path.getRadius());
+			this.c.circleWithRadius(converted , path.isDirection());
+			logger.info("Action is to drive");
+			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isDirection()));
 		
-		if (path.getCommand() == 1) {
-			this.c.kick();
+		} else if (plan.getAction() == kick) {
+			logger.info("Action is to kick");
+			int converted = (int)(conversion*path.getRadius());
+			this.c.circleWithRadius(converted , path.isDirection());
+			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isDirection()));
+			c.kick();
+			
 			logger.info("Command sent to robot: kick");
+		} else if (plan.getAction() == stop) {
+			logger.info("Action is to stop");
+			c.stop();
+			logger.info("Command sent to robot: stop");
+		
 		}
 		
-		logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", path.getRadius(), path.isDirection()));
+		
+		
+		
+		
 		
 		
 		
@@ -200,7 +236,7 @@ public class ControlInterface implements Observer {
 		logger.debug("Got a new plan");
 		Plan plan = (Plan) arg1;
 		Arc arcToDrive = this.chooseArc(plan);
-		this.implimentArc(arcToDrive);
+		this.implimentArc(arcToDrive, plan);
 		
 	}
 

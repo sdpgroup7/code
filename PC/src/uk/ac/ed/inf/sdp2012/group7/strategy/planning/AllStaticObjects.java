@@ -43,15 +43,16 @@ public class AllStaticObjects {
 		this.their_bottom_goal_post = worldState.getOpponentsGoal().getBottomLeft();
 		this.our_top_goal_post = worldState.getOurGoal().getTopLeft();
 		this.our_bottom_goal_post = worldState.getOurGoal().getBottomLeft();
-		this.nodeInPixels = worldState.getPitch().getWidthInPixels()/50;//width in pixels!
 		this.pitch_top_buffer  = worldState.getPitch().getTopBuffer();
 		this.pitch_left_buffer = worldState.getPitch().getLeftBuffer();
 		//this.pitch_bottom_buffer  = worldState.getPitch().getBottomBuffer();
 		//this.pitch_right_buffer = worldState.getPitch().getRightBuffer();
 		
 		//hard code setting of grid resolution (Grid is used in A*)
-		this.height = 25;
-		this.width = 50;
+		this.height = 30;
+		this.width = 60;
+		this.nodeInPixels = worldState.getPitch().getWidthInPixels()/this.width;//width in pixels!
+		
 		//Boundary around the edges of the pitch, to prevent the robot from hitting the walls
 		//So this is dependent on the resolution..
 		this.boundary = 3;
