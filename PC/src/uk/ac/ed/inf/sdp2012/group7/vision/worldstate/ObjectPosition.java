@@ -101,7 +101,7 @@ public class ObjectPosition{
     }
 
     public int getHeight(){
-        return Math.max(topLeft.y,topRight.y) - Math.min(bottomLeft.y,bottomRight.y);
+        return Math.max(bottomLeft.y,bottomRight.y) - Math.min(topLeft.y,topRight.y);
     }
 
     public int getWidth(){

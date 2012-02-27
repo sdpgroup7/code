@@ -12,13 +12,11 @@ public class ClosestHeuristic implements AStarHeuristic {
 		float dx = goalX - startX;
 		float dy = goalY - startY;
 		
-		//float result = (float) (Math.sqrt((dx*dx)+(dy*dy)));
-		//Optimization! Changed to Manhattan distance:
-		
-		float result = (float) (dx*dx)+(dy*dy);
-		
+		float result = (float) (Math.sqrt((dx*dx)+(dy*dy)));
 		
 		return result;
 	}
+	
+
 
 }

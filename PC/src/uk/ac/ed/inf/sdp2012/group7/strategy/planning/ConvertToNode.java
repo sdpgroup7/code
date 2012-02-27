@@ -7,7 +7,10 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
+
+
+
 
 /**
  * @author s0955088
@@ -15,9 +18,10 @@ import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
  */
 public class ConvertToNode {
 	
-	public static int nodeInPixels = Vision.worldState.getPitch().getWidthInPixels()/50;//width in pixels!
-	public static int pitch_top_buffer = Vision.worldState.getPitch().getTopBuffer();
-	public static int pitch_left_buffer = Vision.worldState.getPitch().getLeftBuffer();
+	private static WorldState worldState = WorldState.getInstance();
+	public static int nodeInPixels = worldState.getPitch().getWidthInPixels()/50;//width in pixels!
+	public static int pitch_top_buffer = worldState.getPitch().getTopBuffer();
+	public static int pitch_left_buffer = worldState.getPitch().getLeftBuffer();
 	
 	//Compacts WorldState position point into "Node" center position
 	public static Point convertToNode(Point p){

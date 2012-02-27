@@ -1,36 +1,36 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 
-import uk.ac.ed.inf.sdp2012.group7.strategy.astar.utils.Logger;
-
+//import uk.ac.ed.inf.sdp2012.group7.strategy.astar.utils.Logger;
+import org.apache.log4j.Logger;
 
 public class AreaMap {
 
 	private int mapWidth;
 	private int mapHeight;
-	//private ArrayList<ArrayList<Node>> map;
 	private Node[][] map;
 	private int startLocationX = 0;
 	private int startLocationY = 0;
 	private int goalLocationX = 0;
 	private int goalLocationY = 0;
 
-	private Logger log = new Logger();
+	public static final Logger logger = Logger.getLogger(AreaMap.class);
+	
+	//private Logger log = new Logger();
 	
 	AreaMap(int mapWidth, int mapHeight) {
+		
 		this.mapWidth = mapWidth;
 		this.mapHeight = mapHeight;
 		
 		createMap();
-		log.addToLog("\tMap Created");
-		log.addToLog("\tMap Node edges registered");
+		logger.debug("\tMap Created");
+		logger.debug("\tMap Node edges registered");
 	}
 	private void createMap() {
+		
 		map = new Node[mapWidth][mapHeight];
-		//map = new ArrayList<ArrayList<Node>>();
 		for (int x=0; x<mapWidth; x++) {
-			//map.add(new ArrayList<Node>());
 			for (int y=0; y<mapHeight; y++) {
-				//map.get(x).add(new Node(x,y));
 				map[x][y] = new Node(x,y);
 			}
 		}
@@ -42,7 +42,6 @@ public class AreaMap {
 	}
 	public void setObstical(int x, int y, boolean isObstical) {
 		map[x][y].setObstical(isObstical);
-		//map.get(x).get(y).setObstical(isObstical);
 	}
 
 	public Node getNode(int x, int y) {
@@ -55,8 +54,6 @@ public class AreaMap {
 	public void setStartLocation(int x, int y) {
 		map[startLocationX][startLocationY].setStart(false);
 		map[x][y].setStart(true);
-		//map.get(startLocationX).get(startLocationY).setStart(false);
-		//map.get(x).get(y).setStart(true);
 		startLocationX = x;
 		startLocationY = y;
 	}
@@ -65,8 +62,6 @@ public class AreaMap {
 
 		map[goalLocationX][goalLocationY].setGoal(false);
 		map[x][y].setGoal(true);
-		//map.get(goalLocationX).get(goalLocationY).setGoal(false);
-		//map.get(x).get(y).setGoal(true);
 		goalLocationX = x;
 		goalLocationY = y;
 	}
@@ -98,9 +93,11 @@ public class AreaMap {
 	public float getDistanceBetween(Node node1, Node node2) {
 		//if the nodes are on top or next to each other, return 1
 		if (node1.getX() == node2.getX() || node1.getY() == node2.getY()){
-			return 1;
+			// changed from 1 to 10 to stop rounding errors when casting to int in comparison
+			return 10;
 		} else { //if they are diagonal to each other return diagonal distance: sqrt(1^2+1^2)
-			return (float) Math.sqrt(2);
+			// also multiplied by 10
+			return (float) (10*Math.sqrt(2));
 		}
 	}
 	

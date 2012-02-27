@@ -3,7 +3,7 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import uk.ac.ed.inf.sdp2012.group7.strategy.astar.utils.Logger;
+import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 
 public class AStar {
 	private AreaMap map;
@@ -15,7 +15,6 @@ public class AStar {
 	// nodes not searched yet, ordered by our heuristic (manhattan distance)
 	private SortedNodeList openList;
 	private Path shortestPath;
-	Logger log = new Logger();
 	
 	AStar(AreaMap map, AStarHeuristic heuristic) {
 		this.map = map;
@@ -61,14 +60,16 @@ public class AStar {
 		//while we haven't reached the goal yet
 		while(openList.size() != 0) {
 			if (openList.size()%100 == 0)
-				log.addToLog("\topenList.size() = "+openList.size());
+				Strategy.logger.info("\topenList.size() = "+openList.size());
 			
 			//get the first Node from non-searched Node list, sorted by lowest distance from our goal as guessed by our heuristic
 			Node current = openList.getFirst();
 			
 			// check if our current Node location is the goal Node. If it is, we are done.
 			if(current.getX() == map.getGoalLocationX() && current.getY() == map.getGoalLocationY()) {
-				return reconstructPath(current);
+				Path tempPath = reconstructPath(current);
+				//printPath();
+				return tempPath;
 			}
 			
 			//move current Node to the closed (already searched) list
@@ -120,13 +121,19 @@ public class AStar {
 		for(int x=0; x<map.getMapWidth(); x++) {
 			for(int y=0; y<map.getMapHeight(); y++) {
 				node = map.getNode(x, y);
+				boolean pathtest = false;
+				try{
+					pathtest = shortestPath.contains(node.getX(), node.getY());
+				} catch (Exception ex){
+					Strategy.logger.error("Shortest path error: (X,Y) = (" + Integer.toString(node.getX()) + "," + Integer.toString(node.getY()) + ")");
+				}
 				if (node.isObstacle) {
 					System.out.print("O");
 				} else if (node.isStart) {
 					System.out.print("R");
 				} else if (node.isGoal()) {
 					System.out.print("B");
-				} else if (shortestPath.contains(node.getX(), node.getY())) {
+				} else if (pathtest) {
 					System.out.print("X");
 				} else {
 					System.out.print("*");

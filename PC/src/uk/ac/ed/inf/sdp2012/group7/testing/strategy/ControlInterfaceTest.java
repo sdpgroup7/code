@@ -1,3 +1,4 @@
+/*
 package uk.ac.ed.inf.sdp2012.group7.testing.strategy;
 
 import org.junit.Test;
@@ -22,9 +23,9 @@ public class ControlInterfaceTest {
 	private ArrayList<Point> path;
 	
 	
-	/*
+	
 	 * Simple situation for finding the goal. Path has only one section and goal point is on that section 
-	 */
+	 
 	@Test public void goalTest1() {
 		look = 3;
 		inter = new ControlInterface(look);
@@ -42,9 +43,9 @@ public class ControlInterfaceTest {
 		
 	}
 	
-	/*
+	
 	 * Ensures that if the path cannot be found then it complains
-	 */
+	 
 	@Test(expected = Exception.class) public void goalTest2() throws Exception {
 		look = 3;
 		inter = new ControlInterface(look);
@@ -57,9 +58,9 @@ public class ControlInterfaceTest {
 	
 	}
 	
-	/*
+	
 	 * Ensures that it can deal with the point at the end of the path
-	 */
+	 
 	@Test public void goalTest3() {
 		look = 5;
 		inter = new ControlInterface(look);
@@ -78,9 +79,9 @@ public class ControlInterfaceTest {
 		}
 	}
 	
-	/*
+	
 	 * Ensure that it can deal with 2 points on the same path
-	 */
+	 
 	@Test public void goalTest4() {
 		look = 3;
 		inter = new ControlInterface(look);
@@ -99,9 +100,9 @@ public class ControlInterfaceTest {
 		
 		}
 	
-	/*
+	
 	 * Checks the angle conventions
-	 */
+	 
 	@Test public void angleTest1() {
 		look = 3;
 		inter = new ControlInterface(look);
@@ -133,5 +134,8 @@ public class ControlInterfaceTest {
 		double actualAngle = inter.convertAngle(Math.PI);
 		assertTrue(actualAngle == expectedAngle);
 		}
+	
 
 }
+
+*/
