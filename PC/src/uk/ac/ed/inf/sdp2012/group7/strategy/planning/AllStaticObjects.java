@@ -36,6 +36,9 @@ public class AllStaticObjects {
 	//worldstate getInstance
 	public WorldState worldState = WorldState.getInstance();
 	
+	//changes the type of plan to be created
+	private int plan_type;
+	
 	
 	public AllStaticObjects (){
 		while(worldState.getLastUpdateTime() == 0){}
@@ -165,5 +168,12 @@ public class AllStaticObjects {
 		return infront_of_our_goal;
 	}
 
+	public int getPlanType(){
+		return this.plan_type;
+	}
+	
+	public void setPlanType(int pT){
+		this.plan_type = pT;
+	}
 
 }
