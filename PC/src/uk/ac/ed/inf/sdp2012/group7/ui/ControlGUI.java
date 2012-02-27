@@ -37,7 +37,7 @@ public class ControlGUI implements ChangeListener {
 	
 	/* Stores information about the current world state, such as 
 	 * shooting direction, ball location, etc. */
-	private WorldState worldState;
+	private WorldState worldState = WorldState.getInstance();
 	
 	private final Strategy strat;
 	
@@ -59,6 +59,8 @@ public class ControlGUI implements ChangeListener {
 	private JButton penaltyAttackButton;
 	private JButton penaltyDefendButton;
 	private JCheckBox returnToGame;
+	
+	private JButton overlayButton;
 	
 	
 	/* Tabs. */
@@ -90,7 +92,6 @@ public class ControlGUI implements ChangeListener {
 		assert (thresholdsState != null);
 		assert (worldState != null);
 		
-		this.worldState = Vision.worldState;
 		strat = s;
 	}
 	
@@ -271,8 +272,21 @@ public class ControlGUI implements ChangeListener {
 		
 		defaultPanel.add(startStopPanel);
 		
-		/* Pausing and Resuming play */
+		JPanel overlayPanel = new JPanel();
 		
+		overlayButton = new JButton("Toggle Overlay");
+		
+		overlayPanel.add(overlayButton);
+		
+		overlayButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        worldState.setGenerateOverlay(!worldState.getGenerateOverlay());
+		    }
+		});
+		
+		defaultPanel.add(overlayPanel);
 		
 		/*
 		Penalty Mode buttons.  Stop button must be pressed first
