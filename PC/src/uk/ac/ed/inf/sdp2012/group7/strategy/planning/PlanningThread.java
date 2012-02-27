@@ -62,7 +62,7 @@ public class PlanningThread extends Observable implements Runnable{
 					//I can imagine Tom finding this, and think "wtf!" - sorry Tom!
 					
 					try {
-						Thread.sleep(1);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						Strategy.logger.error("Thread sleeping in PlanningThread was interrupted.");
 					}

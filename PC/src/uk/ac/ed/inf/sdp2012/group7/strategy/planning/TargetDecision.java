@@ -71,19 +71,19 @@ public class TargetDecision {
 			if(!ballOnPitch){
 				//fuck off and sit next to our goal
 				this.action = PlanTypes.ActionType.DRIVE.ordinal();
-				logger.debug("Ball is not found on pitch");
+				logger.debug("Ball is not found on pitch, driving to our goal");
 				return this.all_static_objects.getInfront_of_our_goal();
 				
 			} else {
 				if(this.ball_is_too_close_to_wall){
 					//go sit infront of our goal
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
-					logger.debug("Ball is too close to the wall");
+					logger.debug("Ball is too close to the wall, driving to our goal");
 					return this.all_static_objects.getInfront_of_our_goal();
 				} else if (this.they_have_ball){
 					//go sit infront of our goal
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
-					logger.debug("Ball is too close to the wall");
+					logger.debug("They have the ball, driving to our goal");
 					return this.all_static_objects.getInfront_of_our_goal();
 				} else {
 					if(this.clear_shot){

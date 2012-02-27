@@ -87,16 +87,11 @@ public class AllStaticObjects {
 	//Return this as a node!
 	private void pointInfrontOfGoal(){
 		if(worldState.getShootingDirection() == 1){
-			this.infront_of_our_goal = new Point(	
-					(this.width - (this.boundary - 1)),
-					(int)(((this.our_bottom_goal_post.y - this.our_top_goal_post.y) - this.pitch_top_buffer)/this.nodeInPixels));
+			this.infront_of_our_goal = new Point((this.width - this.boundary),this.height/2);
 			
 		}
 		else {
-			this.infront_of_our_goal = new Point(
-					(this.boundary),
-					(int)(((this.our_bottom_goal_post.y - this.our_top_goal_post.y) 
-														- this.pitch_top_buffer)/this.nodeInPixels));
+			this.infront_of_our_goal = new Point(this.boundary,this.height/2);
 		}
 	}
 	
