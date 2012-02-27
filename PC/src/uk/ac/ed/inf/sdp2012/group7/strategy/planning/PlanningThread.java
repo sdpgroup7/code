@@ -19,7 +19,7 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
  */
 public class PlanningThread extends Observable implements Runnable{
 
-	private boolean runFlag = false;
+
 	private AllMovingObjects allMovingObjects;
 	private AllStaticObjects allStaticObjects;
 	//How do we set what plan to make?
@@ -44,11 +44,12 @@ public class PlanningThread extends Observable implements Runnable{
 	@Override
 	public void run() {
 		boolean keepPlanning = true;
-		while(keepPlanning || runFlag){
+		while(keepPlanning || this.allStaticObjects.getRunFlag()){
 			if(worldStateIsPopulated){
 				synchronized(this){
 					if( this.planType == PlanTypes.PlanType.HALT.ordinal()){
 						keepPlanning = false;
+						logger.debug("Robot been asked to stop");
 					} else {
 						keepPlanning = true;
 					}
@@ -62,7 +63,7 @@ public class PlanningThread extends Observable implements Runnable{
 					//I can imagine Tom finding this, and think "wtf!" - sorry Tom!
 					
 					try {
-						Thread.sleep(1);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						Strategy.logger.error("Thread sleeping in PlanningThread was interrupted.");
 					}
@@ -76,14 +77,6 @@ public class PlanningThread extends Observable implements Runnable{
 			
 		}
 		
-	}
-	
-	public void switchRun() {
-		this.runFlag = !runFlag;
-	}
-	
-	public void sendStop(){
-		this.planType = PlanTypes.PlanType.HALT.ordinal();
 	}
 	
 	public void setWorldStateIsPopulated (){

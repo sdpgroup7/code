@@ -15,6 +15,7 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
  * @author s0955088
  * This class holds all static elements required for planning
  * including the grid setup, the grid is used in A* planning
+ * It also contains the commands for running the Planning thread
  *
  */
 public class AllStaticObjects {
@@ -38,6 +39,9 @@ public class AllStaticObjects {
 	
 	//changes the type of plan to be created
 	private int planType;
+
+	//controls planning thread
+	private volatile boolean runFlag;
 	
 	
 	public AllStaticObjects (){
@@ -87,16 +91,11 @@ public class AllStaticObjects {
 	//Return this as a node!
 	private void pointInfrontOfGoal(){
 		if(worldState.getShootingDirection() == 1){
-			this.inFrontOfOurGoal = new Point(	
-					(this.width - (this.boundary - 1)),
-					(int)(((this.ourBottomGoalPost.y - this.ourTopGoalPost.y) - this.pitchTopBuffer)/this.nodeInPixels));
+			this.inFrontOfOurGoal = new Point((this.width - this.boundary),this.height/2);
 			
 		}
 		else {
-			this.inFrontOfOurGoal = new Point(
-					(this.boundary),
-					(int)(((this.ourBottomGoalPost.y - this.ourTopGoalPost.y) 
-														- this.pitchTopBuffer)/this.nodeInPixels));
+			this.inFrontOfOurGoal = new Point(this.boundary,this.height/2);
 		}
 	}
 	
@@ -143,7 +142,29 @@ public class AllStaticObjects {
 	}
 	
 	public void setPlanType(int pT){
-		this.planType = pT;
+		synchronized (this) {
+			Strategy.logger.info("PLAN CHANGED : " + this.planType);
+			this.planType = pT;
+		}
 	}
 
+	public void stopRun() {
+		synchronized (this) {
+			Strategy.logger.info("STOPPED : " + this.runFlag);
+			this.runFlag = false;
+		}
+	}
+	
+	public void startRun() {
+		synchronized (this) {
+			Strategy.logger.info("STARTED" + this.runFlag);
+			this.runFlag = true;
+		}
+	}
+	
+	public boolean getRunFlag(){
+		synchronized (this) {
+			return this.runFlag;
+		}
+	}
 }

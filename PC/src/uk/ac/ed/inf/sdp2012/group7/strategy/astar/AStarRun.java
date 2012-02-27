@@ -19,8 +19,12 @@ public class AStarRun {
 			map = new AreaMap(pitch_width_in_nodes, pitch_height_in_nodes);
 			
 			// set obstacles
-			for (Point obstacle : obstacles) {
-				map.setObstical(obstacle.x, obstacle.y, true);
+			if (obstacles.size() > 0){
+				for (Point obstacle : obstacles) {
+					if(!(obstacle.x < 0 || obstacle.y < 0)){
+						map.setObstical(obstacle.x, obstacle.y, true);
+					}
+				}
 			}
 			
 			// set heuristic and run the path finder

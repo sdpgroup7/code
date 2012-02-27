@@ -71,19 +71,20 @@ public class TargetDecision {
 			if(!ballOnPitch){
 				//fuck off and sit next to our goal
 				this.action = PlanTypes.ActionType.DRIVE.ordinal();
-				logger.debug("Ball is not found on pitch");
+				logger.debug("Ball is not found on pitch, driving to our goal");
 				return this.allStaticObjects.getInFrontOfOurGoal();
+
 				
 			} else {
 				if(this.ballIsTooCloseToWall){
 					//go sit infront of our goal
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
-					logger.debug("Ball is too close to the wall");
+					logger.debug("Ball is too close to the wall, driving to our goal");
 					return this.allStaticObjects.getInFrontOfOurGoal();
 				} else if (this.theyHaveBall){
 					//go sit infront of our goal
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
-					logger.debug("Ball is too close to the wall");
+					logger.debug("They have the ball, driving to our goal");
 					return this.allStaticObjects.getInFrontOfOurGoal();
 				} else {
 					if(this.clearShot){
@@ -195,6 +196,15 @@ public class TargetDecision {
 		}
 	}
 	
+	private void findShot(){
+		
+		//Positions
+		Point ballPosition = allMovingObjects.getBallPosition();
+		
+		//Angles
+		
+	}
+	
 	private void ballTooCloseToWall() {
 		
 		Point ballPosition = this.allMovingObjects.getBallPosition();
@@ -210,25 +220,6 @@ public class TargetDecision {
 	
 	public boolean getClearShot(){
 		return clearShot;
-	}
-	public Point handlingBallTooCloseWall(Point p) {
-		//boundary handling...
-		Point position = p;
-		// 3 is the boundary variable	
-		if (position.x < 3) {
-			position.x = 3;
-		}
-		if (position.x > 47) {
-			position.x = 47;
-		}
-		if (position.y < 3) {
-			position.y = 3;
-		}
-		if (position.y > 22) {
-			position.y = 22;
-		}
-	
-		return position;
 	}
 	
 	public int getAction(){
