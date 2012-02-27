@@ -66,8 +66,9 @@ public class VisionFeed extends WindowAdapter {
             int compressionQuality) throws V4L4JException {
 
         /* Initialise the GUI that displays the video feed. */
-        initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
-        initGUI();
+    	initGUI(); //This line and the next line MUST be this way round. 
+    	initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
+        
         //this.thresholdGUI = thresholdsGUI;
         ThresholdsState thresholdsState = new ThresholdsState();
         InitialLocation il = new InitialLocation(this, this.windowFrame, thresholdsState);
@@ -128,6 +129,7 @@ public class VisionFeed extends WindowAdapter {
         frameGrabber.setCaptureCallback(new CaptureCallback() {
             public void exceptionReceived(V4L4JException e) {
                 Vision.logger.error("Unable to capture frame: " + e.getMessage());
+                e.printStackTrace();
             }
 
             public void nextFrame(VideoFrame frame) {
@@ -166,18 +168,9 @@ public class VisionFeed extends WindowAdapter {
         windowFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         windowFrame.addWindowListener(this);
         windowFrame.setVisible(true);
-        windowFrame.setSize(width+5, height+25);
-       
-      /*  windowFrameThresh = new JFrame("Vision Window Threshed");
-        labelThresh = new JLabel();
-        windowFrameThresh.getContentPane().add(labelThresh);
-	windowFrameThresh.addWindowListener(this);
-        windowFrameThresh.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        windowFrameThresh.setVisible(true);
-        windowFrameThresh.setSize(width+5, height+25);  */
+        windowFrame.setSize(645, 505);
+
     }
-    
-    //useless, had to be included because of the MouseEvent interface
     
     
     //can output the buffered image to disk, can normalise if necessary

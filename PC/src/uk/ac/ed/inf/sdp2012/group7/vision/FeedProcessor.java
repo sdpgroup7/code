@@ -58,9 +58,11 @@ public class FeedProcessor{
 							                Vision.worldState.getPitch().getTopBuffer(),
 							                Vision.worldState.getPitch().getBottomBuffer()
             							).getGraphics();
+            //give strategy a timestamp of when we've finished updating worldstate
+            Vision.worldState.setUpdatedTime();
             markObjects(imageGraphics);
-            calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
-            calculateAngle();
+    		calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
+            //calculateAngle();
             //System.err.println(Vision.worldState.getOurRobot().getAngle());
         }
 
