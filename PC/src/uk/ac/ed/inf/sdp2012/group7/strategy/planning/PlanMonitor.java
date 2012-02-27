@@ -1,10 +1,16 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.AreaMap;
@@ -45,7 +51,9 @@ public class PlanMonitor {
 	}
 	
 	public void outputPlan(){
-		System.out.println(generateASCIIPlan());
+		String plan = generateASCIIPlan();
+		System.out.println(plan);
+		saveImage(plan);
 	}
 	
 	public String generateASCIIPlan(){
@@ -86,5 +94,35 @@ public class PlanMonitor {
 		}
 		return output;
 	}
+	
+	public void saveImage(String text){
+		try {
+		    BufferedImage bi = generateImage(text);
+		    File outputfile = new File("planoutput.png");
+		    ImageIO.write(bi, "png", outputfile);
+		} catch (IOException ex) {
+			Strategy.logger.error("Error saving image: " + ex.getMessage());
+		}
+	}
+	
+	public BufferedImage generateImage(String text){
+		BufferedImage im = new BufferedImage(640,480,BufferedImage.TYPE_INT_ARGB);
+		textOverlay(text,im);
+		return im;
+	}
+	
+	
+    public void textOverlay(String text, BufferedImage image){
+    	Graphics frameGraphics = image.getGraphics();
+        frameGraphics.setColor(Color.white);
+        int vShift = 20;
+        int lineCount = 0;
+        for(String s : text.split("\n")){
+        	lineCount++;
+        	frameGraphics.drawString(s, 15, vShift*lineCount);
+        }
+        frameGraphics.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
+    }
+	
 	
 }
