@@ -63,7 +63,11 @@ public class Thresholding {
     private Point pastYellowGreyCent = new Point();
     
     private Point ballCentroid = new Point();
-    private Point blueCentroid = new Point();
+    private Point blueCentroidA = new Point();
+    private Point blueCentroidB = new Point();
+    private Point blueCentroidC = new Point();
+    private Point blueCentroidD = new Point();
+    private Point blueCentroidE = new Point();
     private Point yellowCentroidA = new Point();
     private Point yellowCentroidB = new Point();
     private Point yellowCentroidC = new Point();
@@ -79,7 +83,11 @@ public class Thresholding {
     private int yellowCountC;
     private int yellowCountD;
     private int yellowCountE;
-    private int blueCount;
+    private int blueCountA;
+    private int blueCountB;
+    private int blueCountC;
+    private int blueCountD;
+    private int blueCountE;
     private int blueGreyCount;
     private int yellowGreyCount;
  //    private int robot; // 0 for Yellow, 1 for Blue(our robot)  We will use the world state
@@ -92,10 +100,18 @@ public class Thresholding {
     private int yellowX = 0;
     private int yellowY = 0;
     
+    private int blueX = 0;
+    private int blueY = 0;
+    
     private int totalYellowX = 0;
     private int totalYellowY = 0;
     
     private int numYellowCentroids = 0;
+    
+    private int totalBlueX = 0;
+    private int totalBlueY = 0;
+    
+    private int numBlueCentroids = 0;
     
     private Color centroidColor;
 
@@ -150,8 +166,16 @@ public class Thresholding {
            ballCount = 0;
            ballCentroid.setLocation(0,0);
             
-           blueCount = 0;
-           blueCentroid.setLocation(0,0);
+           blueCountA = 0;
+           blueCountB = 0;
+           blueCountC = 0;
+           blueCountD = 0;
+           blueCountE = 0;
+           blueCentroidA.setLocation(0,0);
+           blueCentroidB.setLocation(0,0);
+           blueCentroidC.setLocation(0,0);
+           blueCentroidD.setLocation(0,0);
+           blueCentroidE.setLocation(0,0);
             
            yellowCountA = 0;
            yellowCountB = 0;
@@ -217,8 +241,23 @@ public class Thresholding {
 						    img.setRGB(i, j, Color.blue.getRGB()); // Blue robot 
 						    blueRobotX.add(i);
 						    blueRobotY.add(j);
-						    blueCount++;
-						    blueCentroid.setLocation(blueCentroid.getX() + i, blueCentroid.getY() + j);
+						    randy = Math.random();
+						    if (randy > 0 && randy <= 0.2){						    
+						        blueCountA++;
+						        blueCentroidA.setLocation(blueCentroidA.getX() + i, blueCentroidA.getY() + j);
+						    }else if (randy > 0.2 && randy <= 0.4){
+						        blueCountB++;
+						        blueCentroidB.setLocation(blueCentroidB.getX() + i, blueCentroidB.getY() + j);
+						    }else if (randy > 0.4 && randy <= 0.6){
+						        blueCountC++;
+						        blueCentroidC.setLocation(blueCentroidC.getX() + i, blueCentroidC.getY() + j);
+						    }else if (randy > 0.6 && randy <= 0.8){
+						        blueCountD++;
+						        blueCentroidD.setLocation(blueCentroidD.getX() + i, blueCentroidD.getY() + j);
+						    }else if (randy > 0.8 && randy <= 1){
+						        blueCountE++;
+						        blueCentroidE.setLocation(blueCentroidE.getX() + i, blueCentroidE.getY() + j);
+						    }
 						    bluePixels.add(new Point(i,j));
 					    }
 						//make blue thresholds for the different pitches in that [pitch][x] style
@@ -263,7 +302,11 @@ public class Thresholding {
 			}
 			
 			if (ballCount == 0) ballCount++;
-			if (blueCount == 0) blueCount++;
+			if (blueCountA == 0) blueCountA++;
+			if (blueCountB == 0) blueCountB++;
+			if (blueCountC == 0) blueCountC++;
+			if (blueCountD == 0) blueCountD++;
+			if (blueCountE == 0) blueCountE++;
 			if (yellowCountA == 0) yellowCountA++;
 			if (yellowCountB == 0) yellowCountB++;
 			if (yellowCountC == 0) yellowCountC++;
@@ -288,7 +331,18 @@ public class Thresholding {
 			yellowCentroidC.setLocation(yellowCentroidC.getX()/yellowCountC, yellowCentroidC.getY()/yellowCountC);
 			yellowCentroidD.setLocation(yellowCentroidD.getX()/yellowCountD, yellowCentroidD.getY()/yellowCountD);
 			yellowCentroidE.setLocation(yellowCentroidE.getX()/yellowCountE, yellowCentroidE.getY()/yellowCountE);
-			blueCentroid.setLocation(blueCentroid.getX()/blueCount, blueCentroid.getY()/blueCount);
+			
+			totalBlueX = 0;
+			totalBlueY = 0;
+			numBlueCentroids = 0;
+			
+			
+			blueCentroidA.setLocation(blueCentroidA.getX()/blueCountA, blueCentroidA.getY()/blueCountA);
+			blueCentroidB.setLocation(blueCentroidB.getX()/blueCountB, blueCentroidB.getY()/blueCountB);
+			blueCentroidC.setLocation(blueCentroidC.getX()/blueCountC, blueCentroidC.getY()/blueCountC);
+			blueCentroidD.setLocation(blueCentroidD.getX()/blueCountD, blueCentroidD.getY()/blueCountD);
+			blueCentroidE.setLocation(blueCentroidE.getX()/blueCountE, blueCentroidE.getY()/blueCountE);
+			
 			blueGreyCentroid.setLocation(blueGreyCentroid.getX()/blueGreyCount, blueGreyCentroid.getY()/blueGreyCount);
 			yellowGreyCentroid.setLocation(yellowGreyCentroid.getX()/yellowGreyCount, yellowGreyCentroid.getY()/yellowGreyCount);
 			
@@ -331,7 +385,43 @@ public class Thresholding {
 			yellowX = (int)(totalYellowX/numYellowCentroids);
 			yellowY = (int)(totalYellowY/numYellowCentroids);
 			
+			c = new Color(img.getRGB((int)blueCentroidA.getX(), (int)blueCentroidA.getY()));
+			if (isBlue(c)) {
+			    totalBlueX += blueCentroidA.getX();
+			    totalBlueY += blueCentroidA.getY();
+			    numBlueCentroids++;
+			}
+			c = new Color(img.getRGB((int)blueCentroidB.getX(), (int)blueCentroidB.getY()));
+			if (isBlue(c)) {
+			    totalBlueX += blueCentroidB.getX();
+			    totalBlueY += blueCentroidB.getY();
+			    numBlueCentroids++;
+			}
+			c = new Color(img.getRGB((int)blueCentroidC.getX(), (int)blueCentroidC.getY()));
+			if (isBlue(c)) {
+			    totalBlueX += blueCentroidC.getX();
+			    totalBlueY += blueCentroidC.getY();
+			    numBlueCentroids++;
+			}
+			c = new Color(img.getRGB((int)blueCentroidD.getX(), (int)blueCentroidD.getY()));
+			if (isBlue(c)) {
+			    totalBlueX += blueCentroidD.getX();
+			    totalBlueY += blueCentroidD.getY();
+			    numBlueCentroids++;
+			}
+			c = new Color(img.getRGB((int)blueCentroidE.getX(), (int)blueCentroidE.getY()));
+			if (isBlue(c)) {
+			    totalBlueX += blueCentroidE.getX();
+			    totalBlueY += blueCentroidE.getY();
+			    numBlueCentroids++;
+			}
 			
+			if (numBlueCentroids == 0){
+			    numBlueCentroids++;
+			}
+			
+			blueX = (int)(totalBlueX/numBlueCentroids);
+			blueY = (int)(totalBlueY/numBlueCentroids);
 			
 			blueGreenPlate4Points = plate.getCorners(blueGreenPlate);
 			yellowGreenPlate4Points = plate.getCorners(yellowGreenPlate);
@@ -341,7 +431,10 @@ public class Thresholding {
 			/*blueGreenPlate4Points = findTheFourPoints(blueGreenPlate);
 			yellowGreenPlate4Points = findTheFourPoints(yellowGreenPlate);*/
 			
-			Vision.worldState.setBlueRobotPosition((int)blueCentroid.getX(),(int)blueCentroid.getY());
+			if ((blueX != 0) && (blueY != 0)) {
+			    Vision.worldState.setBlueRobotPosition(blueX,blueY);
+			}
+			
 			if ((yellowX != 0) && (yellowY != 0)) {
 			    Vision.worldState.setYellowRobotPosition(yellowX,yellowY);
 			}
