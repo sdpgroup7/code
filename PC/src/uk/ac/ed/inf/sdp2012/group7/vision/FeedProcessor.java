@@ -22,6 +22,7 @@ public class FeedProcessor{
     private Thresholding doThresh; // Do Thresholding 
     private VisionFeed visionFeed;
     private OrientationFinder findAngle; // finds the angle
+    private BufferedImage previousOverlay = null;
     
     private int height;
     private int width;
@@ -61,12 +62,35 @@ public class FeedProcessor{
             //give strategy a timestamp of when we've finished updating worldstate
             Vision.worldState.setUpdatedTime();
             markObjects(imageGraphics);
+            drawOverlay(image);
     		calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
             //calculateAngle();
             //System.err.println(Vision.worldState.getOurRobot().getAngle());
         }
 
     }
+    
+    public void drawOverlay(BufferedImage im){
+    	if(Vision.worldState.getOverlay() == null) return;
+    	BufferedImage overlay = Vision.worldState.getOverlay();
+    	int lb = Vision.worldState.getPitch().getLeftBuffer();
+    	int rb = Vision.worldState.getPitch().getRightBuffer();
+    	int bb = Vision.worldState.getPitch().getBottomBuffer();
+    	int tb = Vision.worldState.getPitch().getTopBuffer();
+    	
+    	
+    	for(int x = lb; x < rb; x++){
+    		for(int y = tb; y < bb; y++){
+    			int rgb = im.getRGB(x, y);
+    			rgb = rgb | overlay.getRGB(x-lb, y-tb);
+    			im.setRGB(x, y, rgb);
+    		}
+    	}
+    	
+    	previousOverlay = overlay;
+    	
+    }
+    
     public void calculateAngle(){
     	double blueAngle = findAngle.findOrientation(
     		Vision.worldState.getBlueKeyPoint().x, 

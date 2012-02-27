@@ -3,7 +3,10 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -111,6 +114,7 @@ public class PlanMonitor {
 		BufferedImage im = new BufferedImage(900,620,BufferedImage.TYPE_INT_ARGB);
 		textOverlay(text,im);
 		BufferedImage returnImage = resize(im);
+		worldState.setOverlay(returnImage);
 		return returnImage;
 	}
 	
@@ -134,18 +138,28 @@ public class PlanMonitor {
 		width = right - left;
 		height = bottom - top;
 		
-		BufferedImage returnImage = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+		BufferedImage croppedImage = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
 		for(int i = left; i < right; i++){
 			for(int j = top; j < bottom; j++){
 				if(im.getRGB(i,j) == Color.white.getRGB()){
-					returnImage.setRGB(i-left, j-top, Color.white.getRGB());
+					croppedImage.setRGB(i-left, j-top, Color.white.getRGB());
 				}
 			}
 		}
 		
+		int bufferWidth = worldState.getPitch().getWidthInPixels();
+		int bufferHeight = worldState.getPitch().getHeightInPixels();
 		
-		
-		return returnImage;
+		BufferedImage scaledImage = new BufferedImage(bufferWidth, bufferHeight, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D graphics2D = scaledImage.createGraphics();
+		AffineTransform xform = AffineTransform.getScaleInstance(
+									(double)bufferWidth/(double)croppedImage.getWidth(),
+									(double)bufferHeight/(double)croppedImage.getHeight());
+		graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+		graphics2D.drawImage(croppedImage, xform, null);
+		graphics2D.dispose();
+
+		return scaledImage;
 	}
 	
 	
