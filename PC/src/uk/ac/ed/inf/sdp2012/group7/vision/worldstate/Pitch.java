@@ -12,8 +12,8 @@ public class Pitch extends ObjectPosition{
 	private volatile int rightBuffer = 640;
 	private volatile boolean buffersSet = false;
 	private volatile float cameraHeight = 2.45f;
-	private volatile float width = 2.44f;
-	private volatile float height = 1.22f;
+	private volatile float width = 244f;
+	private volatile float height = 122f;
 
 	public float getPitchWidth() {
 		return width;
