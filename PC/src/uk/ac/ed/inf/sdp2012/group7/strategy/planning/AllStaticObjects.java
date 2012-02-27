@@ -143,29 +143,22 @@ public class AllStaticObjects {
 	}
 	
 	public void setPlanType(int pT){
-		synchronized (this) {
 			Strategy.logger.info("PLAN CHANGED : " + this.plan_type);
 			this.plan_type = pT;
-		}
 	}
 
 	public void stopRun() {
-		synchronized (this) {
 			Strategy.logger.info("STOPPED : " + this.runFlag);
 			this.runFlag = false;
-		}
 	}
 	
 	public void startRun() {
-		synchronized (this) {
 			Strategy.logger.info("STARTED" + this.runFlag);
 			this.runFlag = true;
-		}
 	}
 	
 	public boolean getRunFlag(){
-		synchronized (this) {
 			return this.runFlag;
-		}
+
 	}
 }
