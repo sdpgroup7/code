@@ -80,12 +80,21 @@ public class TargetDecision {
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
 					logger.debug("Ball is too close to the wall");
 					return this.all_static_objects.getInfront_of_our_goal();
-				}
-				else {
+				} else if (this.they_have_ball){
+					//go sit infront of our goal
+					this.action = PlanTypes.ActionType.DRIVE.ordinal();
+					logger.debug("Ball is too close to the wall");
+					return this.all_static_objects.getInfront_of_our_goal();
+				} else {
 					if(this.clear_shot){
+						//here we kick
 						this.action = PlanTypes.ActionType.KICK.ordinal();
 						return target;
 					} else {
+						//here we should be providing either 
+						//a) best position for open shot -- so we need find position for open shot, and that angle
+						//b) best position for angular shot -- so we need find position for angular shot, and that angle
+						//c) dribble the ball out -- drive to ball, drive after ball <--
 						this.action = PlanTypes.ActionType.DRIVE.ordinal();
 						return target;
 					}

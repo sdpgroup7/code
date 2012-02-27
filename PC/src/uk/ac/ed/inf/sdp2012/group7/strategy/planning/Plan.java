@@ -39,6 +39,8 @@ public class Plan {
 	//Constructor
 	public Plan(AllStaticObjects all_static_objects, AllMovingObjects all_moving_objects) {
 		
+		logger.debug("Plan being generated");
+		
 		this.all_static_objects = all_static_objects;
 		this.all_moving_objects = all_moving_objects;
 		all_moving_objects.update();
@@ -56,10 +58,6 @@ public class Plan {
 		logger.debug("Target Decision Position: " + target_decision.getTargetAsNode().toString());
 		logger.debug("Ball Position: " + this.all_static_objects.convertToNode(Vision.worldState.getBall().getPosition().getCentre()));
 		logger.debug("Robot Position: " + this.all_static_objects.convertToNode(all_moving_objects.getOurPosition()).toString());
-		logger.debug("lb,tb: " + this.all_static_objects.convertToNode(new Point(Vision.worldState.getPitch().getLeftBuffer(),Vision.worldState.getPitch().getTopBuffer())));
-		logger.debug("rb,bb: " + this.all_static_objects.convertToNode(new Point(Vision.worldState.getPitch().getRightBuffer() - 9,Vision.worldState.getPitch().getBottomBuffer() - 9)));
-		logger.debug("pitch height: " + this.all_static_objects.getHeight());
-		logger.debug("pitch width: " + this.all_static_objects.getWidth());
 		
 		//Now create an A* object from which we create a path
 		astar = new AStarRun(	this.all_static_objects.getHeight(),
@@ -72,6 +70,8 @@ public class Plan {
 		//Requires method to convert from path to ArrayList<Point>
 		//Now grab path through A* method
 		this.path = astar.getPathInPoints();
+		
+		logger.debug("Path length: " + this.path.size());
 		
 		//Grab path in Node
 		this.node_path = astar.getPath();
