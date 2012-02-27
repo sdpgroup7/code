@@ -48,7 +48,7 @@ public class Strategy {
 		this.thread_for_planningthread.start();
 	}
 
-	public void stopPlanningThread(int plan_type) {
+	public void stopPlanningThread() {
 		this.allStaticObjects.setPlanType(PlanTypes.PlanType.HALT.ordinal());
 		this.planningthread.switchRun();
 		this.thread_for_planningthread = null;
