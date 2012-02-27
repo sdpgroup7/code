@@ -455,7 +455,7 @@ public class Thresholding {
 			
 			
 			
-			/*for(Point p : bluePixels){
+			for(Point p : bluePixels){
 				
 				if( isInRectangle(p,blueGreenPlate4Points)  ){
 					newBluePixels.add(p);
@@ -469,17 +469,17 @@ public class Thresholding {
 			}
 			
 			Vision.worldState.setBluePixels(newBluePixels);
-			Vision.worldState.setYellowPixels(newYellowPixels);*/
+			Vision.worldState.setYellowPixels(newYellowPixels);
 			
 			//The above is supposed to filter the pixels and pick up only the T pixels, but the orientation then is always with the (0,0) point 
 			
-			//System.err.println(newBluePixels.size());
+			System.err.println(newYellowPixels.size());
 			
 			blueGreenPlate.clear();
 			yellowGreenPlate.clear();
 			
-			Vision.worldState.setBluePixels(bluePixels);//This must be removed to get the upper thing running
-			Vision.worldState.setYellowPixels(yellowPixels); //This must be removed to get the upper thing running
+			//Vision.worldState.setBluePixels(bluePixels);//This must be removed to get the upper thing running
+			//Vision.worldState.setYellowPixels(yellowPixels); //This must be removed to get the upper thing running
 			
 			newBluePixels.clear();
 			newYellowPixels.clear();
@@ -577,7 +577,7 @@ public class Thresholding {
     }
     
     public boolean isGreen(Color c, int GB, int RG){
-        return ( GB > 55 && RG > 55 && c.getGreen() > greenPlatesThresh[pitch][0]);
+        return ( GB > 70 && RG > 70 && c.getGreen() > greenPlatesThresh[pitch][0]);
     }
     
     public boolean isGrey(Color c){
