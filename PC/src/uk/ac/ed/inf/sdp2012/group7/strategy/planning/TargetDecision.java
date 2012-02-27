@@ -36,11 +36,11 @@ public class TargetDecision {
 
 	
 	//Constructor
-	public TargetDecision(AllMovingObjects aMO, AllStaticObjects aSO, ArrayList<Point> obstacles, int plan_type) {
+	public TargetDecision(AllMovingObjects aMO, AllStaticObjects aSO, ArrayList<Point> obstacles) {
 		this.all_moving_objects = aMO;
 		this.all_static_objects = aSO;
 		this.obstacles = obstacles;
-		this.plan_type = plan_type;
+		this.plan_type = this.all_static_objects.getPlanType();
 		this.clearShot();
 		this.weHaveBall();
 		this.theyHaveBall();
@@ -55,6 +55,7 @@ public class TargetDecision {
 		/*
 		 * This whole section is experimental
 		 */
+		
 		
 		Point target = new Point();
 		//put it into node for assessment
