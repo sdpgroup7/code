@@ -2,6 +2,7 @@ package uk.ac.ed.inf.sdp2012.group7.robot;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import lejos.geom.Point;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
@@ -9,7 +10,9 @@ import lejos.nxt.Sound;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
+import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.DifferentialPilot;
+import lejos.robotics.navigation.Pose;
 
 /**
  * Code that runs on the NXT brick
@@ -42,17 +45,23 @@ public class Nxt_code implements Runnable {
         BEEP,
         CELEBRATE,
         FORWARDS_WITH_DISTANCE,
+        START_MATCH,
+        STOP_MATCH,
         QUIT
     }
+	
+	private static Pose initial;
+	private static boolean fallback = false;
 
 	public static void main(String[] args) throws Exception {
 
 		
 		DifferentialPilot pilot = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, Motor.B,Motor.C, false);
-		
+		OdometryPoseProvider odometry = new OdometryPoseProvider(pilot);
+		initial = new Pose(0, 0, 0);
 		// start the sensor thread
 		new Thread(new Nxt_code(pilot)).start();
-
+		
 		// set initial pilot variables to produce maximum speed
 		//pilot.regulateSpeed(true);
 		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()*0.7);
@@ -66,7 +75,13 @@ public class Nxt_code implements Runnable {
 				LCD.clear();
 				LCD.drawString("Waiting...", 0, 2);
 				LCD.drawString("Please connect", 0, 3);
+				if (fallback) {
+					pilot.stop();
+					pilot.rotate(odometry.getPose().angleTo(initial.getLocation())-odometry.getPose().getHeading());
+					pilot.travel(odometry.getPose().distanceTo(initial.getLocation()));
+				}
 				NXTConnection connection = Bluetooth.waitForConnection();
+				
 				is = connection.openInputStream();
 				os = connection.openOutputStream();
 				LCD.clear();
@@ -188,10 +203,21 @@ public class Nxt_code implements Runnable {
 							break;
 	
 						case CELEBRATE: // play a sound file
-							Sound.beepSequenceUp();
-							
+							Sound.beepSequenceUp();						
 							break;
-	
+
+						case START_MATCH:
+							pilot.reset();
+							odometry.setPose(initial);
+							fallback = true;
+							pilot.travel(80);
+							break;
+							
+						case STOP_MATCH:
+							pilot.quickStop();
+							fallback = false;
+							break;
+						
 						case QUIT: // close connection
 							Sound.twoBeeps();
 							break;
@@ -257,7 +283,7 @@ public class Nxt_code implements Runnable {
 					// we were going before the collision occurred
 					reacting = true;
 					tempCurSpeed = (float) pilot.getTravelSpeed();
-
+					pilot.quickStop();
 					// move back a little bit away from the wall
 					pilot.setTravelSpeed(200);
 					pilot.travel(-20);
