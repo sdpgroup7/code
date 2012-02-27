@@ -21,38 +21,37 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 public class AllStaticObjects {
 	
 	private double nodeInPixels;
-	private int pitch_top_buffer;
-	private int pitch_left_buffer; 
+	private int pitchTopBuffer;
+	private int pitchLeftBuffer; 
 	//private int pitch_bottom_buffer;
 	//private int pitch_right_buffer; 
 	private int height;
 	private int width;
 	private int boundary;
-	private Point their_top_goal_post;
-	private Point their_bottom_goal_post;
-	private Point our_top_goal_post;
-	private Point our_bottom_goal_post;
-	private Point infront_of_our_goal;
+	private Point theirTopGoalPost;
+	private Point theirBottomGoalPost;
+	private Point ourTopGoalPost;
+	private Point ourBottomGoalPost;
+	private Point inFrontOfOurGoal;
 	
 	//worldstate getInstance
 	public WorldState worldState = WorldState.getInstance();
 	
 	//changes the type of plan to be created
-	private volatile int plan_type;
-	
+	private int planType;
+
 	//controls planning thread
 	private volatile boolean runFlag;
 	
 	
 	public AllStaticObjects (){
 		while(worldState.getLastUpdateTime() == 0){}
-		this.runFlag = false;
-		this.their_top_goal_post = worldState.getOpponentsGoal().getTopLeft();
-		this.their_bottom_goal_post = worldState.getOpponentsGoal().getBottomLeft();
-		this.our_top_goal_post = worldState.getOurGoal().getTopLeft();
-		this.our_bottom_goal_post = worldState.getOurGoal().getBottomLeft();
-		this.pitch_top_buffer  = worldState.getPitch().getTopBuffer();
-		this.pitch_left_buffer = worldState.getPitch().getLeftBuffer();
+		this.theirTopGoalPost = worldState.getOpponentsGoal().getTopLeft();
+		this.theirBottomGoalPost = worldState.getOpponentsGoal().getBottomLeft();
+		this.ourTopGoalPost = worldState.getOurGoal().getTopLeft();
+		this.ourBottomGoalPost = worldState.getOurGoal().getBottomLeft();
+		this.pitchTopBuffer  = worldState.getPitch().getTopBuffer();
+		this.pitchLeftBuffer = worldState.getPitch().getLeftBuffer();
 		//this.pitch_bottom_buffer  = worldState.getPitch().getBottomBuffer();
 		//this.pitch_right_buffer = worldState.getPitch().getRightBuffer();
 		
@@ -70,8 +69,8 @@ public class AllStaticObjects {
 	
 	//Compacts WorldState position point into "Node" centre position
 	public Point convertToNode(Point p){
-		int x = (int)((double)(p.x - this.pitch_left_buffer)/this.nodeInPixels);
-		int y = (int)((double)(p.y - this.pitch_top_buffer)/this.nodeInPixels);
+		int x = (int)((double)(p.x - this.pitchLeftBuffer)/this.nodeInPixels);
+		int y = (int)((double)(p.y - this.pitchTopBuffer)/this.nodeInPixels);
 
 		
 		return new Point(x,y);
@@ -79,24 +78,24 @@ public class AllStaticObjects {
 	
 	//Compacts WorldState position points into "Node" centre positions
 	public ArrayList<Point> convertToNodes(ArrayList<Point> l){
-		ArrayList<Point> node_points = new ArrayList<Point>();
+		ArrayList<Point> nodePoints = new ArrayList<Point>();
 
 		for (Point p : l) {
-			node_points.add(convertToNode(p));
+			nodePoints.add(convertToNode(p));
 		}
 
-		return node_points;
+		return nodePoints;
 	}
 	
 	//Method for finding the centre point just in front of our goal...
 	//Return this as a node!
 	private void pointInfrontOfGoal(){
 		if(worldState.getShootingDirection() == 1){
-			this.infront_of_our_goal = new Point((this.width - this.boundary),this.height/2);
+			this.inFrontOfOurGoal = new Point((this.width - this.boundary),this.height/2);
 			
 		}
 		else {
-			this.infront_of_our_goal = new Point(this.boundary,this.height/2);
+			this.inFrontOfOurGoal = new Point(this.boundary,this.height/2);
 		}
 	}
 	
@@ -106,12 +105,12 @@ public class AllStaticObjects {
 		return this.nodeInPixels;
 	}
 
-	public int getPitch_top_buffer() {
-		return this.pitch_top_buffer;
+	public int getPitchTopBuffer() {
+		return this.pitchTopBuffer;
 	}
 
-	public int getPitch_left_buffer() {
-		return this.pitch_left_buffer;
+	public int getPitchLeftBuffer() {
+		return this.pitchLeftBuffer;
 	}
 
 	public int getHeight() {
@@ -126,25 +125,25 @@ public class AllStaticObjects {
 		return this.boundary;
 	}
 	
-	public Point getTheir_top_goal_post() {
-		return their_top_goal_post;
+	public Point getTheirTopGoalPost() {
+		return theirTopGoalPost;
 	}
 	
-	public Point getTheir_bottom_goal_post() {
-		return their_bottom_goal_post;
+	public Point getTheirBottomGoalPost() {
+		return theirBottomGoalPost;
 	}
 	
-	public Point getInfront_of_our_goal() {
-		return infront_of_our_goal;
+	public Point getInFrontOfOurGoal() {
+		return inFrontOfOurGoal;
 	}
 
 	public int getPlanType(){
-		return this.plan_type;
+		return this.planType;
 	}
 	
 	public void setPlanType(int pT){
-			Strategy.logger.info("PLAN CHANGED : " + this.plan_type);
-			this.plan_type = pT;
+		Strategy.logger.info("PLAN CHANGED : " + this.planType);
+		this.planType = pT;
 	}
 
 	public void stopRun() {

@@ -30,10 +30,10 @@ import uk.ac.ed.inf.sdp2012.group7.strategy.planning.PlanMonitor;
  */
 public class PlanningBuffer extends Observable implements Observer {
 
-	private Plan held_plan;
+	private Plan heldPlan;
 	
 	public static final Logger logger = Logger.getLogger(Plan.class);
-	private long time_stamp = System.currentTimeMillis();
+	private long timeStamp = System.currentTimeMillis();
 	private PlanMonitor planMonitor= new PlanMonitor();
 
 	//I would like to be able to read the plans created
@@ -50,11 +50,11 @@ public class PlanningBuffer extends Observable implements Observer {
 	public void update(Observable o, Object arg) {
 		synchronized(this){
 			logger.debug("Planning Buffer Updated");
-			this.held_plan = (Plan)arg;
+			this.heldPlan = (Plan)arg;
 			setChanged();
-			notifyObservers(held_plan);
+			notifyObservers(heldPlan);
 			if(counter > 1){
-				planMonitor.setPlan(held_plan);
+				planMonitor.setPlan(heldPlan);
 				planMonitor.outputPlan();
 				counter = 0;
 			}
@@ -64,7 +64,7 @@ public class PlanningBuffer extends Observable implements Observer {
 	}
 	
 	public Plan getPlan(){
-		return held_plan;
+		return heldPlan;
 	}
 	
 
