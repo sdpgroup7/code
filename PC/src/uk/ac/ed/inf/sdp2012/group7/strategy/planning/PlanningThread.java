@@ -47,7 +47,7 @@ public class PlanningThread extends Observable implements Runnable{
 		while(keepPlanning || this.allStaticObjects.getRunFlag()){
 			if(worldStateIsPopulated){
 				synchronized(this){
-					if( this.planType == PlanTypes.PlanType.HALT.ordinal()){
+					if( this.allStaticObjects.getPlanType() == PlanTypes.PlanType.HALT.ordinal()){
 						keepPlanning = false;
 						logger.debug("Robot been asked to stop");
 					} else {
