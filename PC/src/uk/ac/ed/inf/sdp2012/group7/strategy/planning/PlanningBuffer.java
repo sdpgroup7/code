@@ -34,7 +34,7 @@ public class PlanningBuffer extends Observable implements Observer {
 	
 	public static final Logger logger = Logger.getLogger(Plan.class);
 	private long time_stamp = System.currentTimeMillis();
-	private PlanMonitor planMonitor;
+	private PlanMonitor planMonitor= new PlanMonitor();
 
 	//I would like to be able to read the plans created
 	//offline; but I don't need EVERY plan, so I will
