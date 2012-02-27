@@ -76,9 +76,10 @@ public class TargetDecision {
 				
 			} else {
 				if(this.ball_is_too_close_to_wall){
-					//sit just near to the ball
+					//go sit infront of our goal
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
-					return this.handlingBallTooCloseWall(target);
+					logger.debug("Ball is too close to the wall");
+					return this.all_static_objects.getInfront_of_our_goal();
 				}
 				else {
 					if(this.clear_shot){
@@ -187,7 +188,15 @@ public class TargetDecision {
 	
 	private void ballTooCloseToWall() {
 		
-		this.ball_is_too_close_to_wall = this.obstacles.contains(all_static_objects.convertToNode(this.all_moving_objects.getBallPosition()));
+		Point ballPosition = this.all_moving_objects.getBallPosition();
+		int rightWall = this.all_static_objects.getWidth();
+		int bottomWall = this.all_static_objects.getHeight();
+		int b = this.all_static_objects.getBoundary();
+		
+		this.ball_is_too_close_to_wall = (ballPosition.x < b) || 
+				(ballPosition.x > ((rightWall -1) - b ) || 
+				(ballPosition.y < b ) || 
+				(ballPosition.x > ((bottomWall -1) - b )));
 	}
 	
 	public boolean getClearShot(){
