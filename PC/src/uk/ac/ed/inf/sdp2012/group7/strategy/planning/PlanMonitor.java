@@ -16,10 +16,12 @@ import javax.imageio.ImageIO;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.AreaMap;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 public class PlanMonitor {
 	
 	private Plan currentPlan;
+	private WorldState worldState = WorldState.getInstance();
 	
 	public PlanMonitor(Plan plan){
 		currentPlan = plan;
@@ -83,7 +85,6 @@ public class PlanMonitor {
 				if(n.isObstical()) ascii[y][x] = "X";
 				if(n.isObstical()) ascii[y][x] = "X";
 				if(n.isStart()) ascii[y][x] = "S";
-				if(n.getCost() == 1) ascii[y][x] = "O";
 				if(n.isVisited()) ascii[y][x] = " ";
 			}
 		}
@@ -109,7 +110,42 @@ public class PlanMonitor {
 	public BufferedImage generateImage(String text){
 		BufferedImage im = new BufferedImage(900,620,BufferedImage.TYPE_INT_ARGB);
 		textOverlay(text,im);
-		return im;
+		BufferedImage returnImage = resize(im);
+		return returnImage;
+	}
+	
+	public BufferedImage resize(BufferedImage im){
+		int width = 0;
+		int height = 0;
+		int left = Integer.MAX_VALUE;
+		int right = 0;
+		int top = Integer.MAX_VALUE;
+		int bottom = 0;
+		for(int i = 0; i < im.getWidth(); i++){
+			for(int j = 0; j < im.getHeight(); j++){
+				if(im.getRGB(i, j) == Color.white.getRGB()){
+					if(i < left) left = i;
+					if(i > right) right = i;
+					if(j < top) top = j;
+					if(j > bottom) bottom = j;
+				}
+			}
+		}
+		width = right - left;
+		height = bottom - top;
+		
+		BufferedImage returnImage = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+		for(int i = left; i < right; i++){
+			for(int j = top; j < bottom; j++){
+				if(im.getRGB(i,j) == Color.white.getRGB()){
+					returnImage.setRGB(i-left, j-top, Color.white.getRGB());
+				}
+			}
+		}
+		
+		
+		
+		return returnImage;
 	}
 	
 	

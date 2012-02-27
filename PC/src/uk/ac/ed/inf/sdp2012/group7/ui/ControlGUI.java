@@ -53,6 +53,7 @@ public class ControlGUI implements ChangeListener {
 	
 	/* Start/Stop Button */
 	private JButton startButton;
+	private JButton stopButton;
 	
 	/*Penalty mode buttons */
 	private JButton penaltyAttackButton;
@@ -252,11 +253,18 @@ public class ControlGUI implements ChangeListener {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        strat.startPlanningThread();
-		        if(startButton.getText() == "Start Match"){
-		        	startButton.setText("Stop Match");
-		        } else {
-		        	startButton.setText("Start Match");
-		        }
+		    }
+		});
+		
+		stopButton = new JButton("Stop Match");
+		
+		startStopPanel.add(stopButton);
+		
+		stopButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        strat.stopPlanningThread();
 		    }
 		});
 		
