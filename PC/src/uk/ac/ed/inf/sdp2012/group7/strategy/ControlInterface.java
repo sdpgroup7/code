@@ -124,22 +124,37 @@ public class ControlInterface implements Observer {
 		if (plan.getAction() == drive) {
 			
 			int converted = (int)(conversion*path.getRadius());
-			this.c.circleWithRadius(converted , path.isDirection());
 			logger.info("Action is to drive");
+			c.clearAllCommands();
+			
+			this.c.circleWithRadius(converted , path.isDirection());
 			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isDirection()));
+			try {
+				Thread.sleep(75);
+			} catch (InterruptedException e) {}
 		
 		} else if (plan.getAction() == kick) {
 			logger.info("Action is to kick");
 			int converted = (int)(conversion*path.getRadius());
 			this.c.circleWithRadius(converted , path.isDirection());
 			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isDirection()));
+			try {
+				Thread.sleep(75);
+			} catch (InterruptedException e) {}
 			c.kick();
-			
 			logger.info("Command sent to robot: kick");
+			try {
+				Thread.sleep(75);
+			} catch (InterruptedException e) {}
+			
 		} else if (plan.getAction() == stop) {
 			logger.info("Action is to stop");
 			c.stop();
 			logger.info("Command sent to robot: stop");
+			try {
+				Thread.sleep(75);
+			} catch (InterruptedException e) {}
+			
 		
 		}
 		
