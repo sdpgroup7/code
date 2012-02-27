@@ -71,7 +71,9 @@ public class TargetDecision {
 			if(!ballOnPitch){
 				//fuck off and sit next to our goal
 				this.action = PlanTypes.ActionType.DRIVE.ordinal();
+				logger.debug("Ball is not found on pitch");
 				return this.all_static_objects.getInfront_of_our_goal();
+				
 			} else {
 				if(this.ball_is_too_close_to_wall){
 					//sit just near to the ball
