@@ -15,11 +15,12 @@ public class MainRunner {
     */
 
     public static void main(String[] args){
-    	Logger.getLogger("com.intel.bluetooth").setLevel(Level.WARN);
-        ControlGUI gui = new ControlGUI();
-        gui.initGUI();
-    	Vision v = new Vision();
+        Logger.getLogger("com.intel.bluetooth").setLevel(Level.WARN);
+        
+        Vision v = new Vision();
         Strategy s = new Strategy();
+        ControlGUI gui = new ControlGUI(s);
+        gui.initGUI();
     }
 
 }

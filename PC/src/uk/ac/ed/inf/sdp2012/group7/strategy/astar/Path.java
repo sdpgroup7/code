@@ -11,6 +11,10 @@ public class Path {
 	public Path() {
 	}
 	
+	public ArrayList<Node> getWayPoints(){
+		return this.waypoints;
+	}
+	
 	public int getLength() {
 		return waypoints.size();
 	}

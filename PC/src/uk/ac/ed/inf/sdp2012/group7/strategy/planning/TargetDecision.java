@@ -4,7 +4,12 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+import org.apache.log4j.Logger;
+
+import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
+import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
+
 
 
 /**
@@ -13,6 +18,8 @@ import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
  */
 public class TargetDecision {
 
+	public static final Logger logger = Logger.getLogger(PlanningThread.class);
+	
 	/**
 	 * 
 	 */
@@ -25,14 +32,15 @@ public class TargetDecision {
 	private boolean we_have_ball = false;
 	private boolean they_have_ball = false;
 	private boolean ball_is_too_close_to_wall = false;
+	private WorldState worldState = WorldState.getInstance();
 
 	
 	//Constructor
-	public TargetDecision(AllMovingObjects aMO, AllStaticObjects aSO, ArrayList<Point> obstacles, int plan_type) {
+	public TargetDecision(AllMovingObjects aMO, AllStaticObjects aSO, ArrayList<Point> obstacles) {
 		this.all_moving_objects = aMO;
 		this.all_static_objects = aSO;
 		this.obstacles = obstacles;
-		this.plan_type = plan_type;
+		this.plan_type = this.all_static_objects.getPlanType();
 		this.clearShot();
 		this.weHaveBall();
 		this.theyHaveBall();
@@ -42,37 +50,57 @@ public class TargetDecision {
 	}
 	
 	
-	public Point getTarget() {
+	public Point getTargetAsNode() {
+		
+		/*
+		 * This whole section is experimental
+		 */
 		
 		
-		//If the plan type is not 0, go into free play mode
-		if(plan_type > 1){
-			if(!they_have_ball){
-				if (this.ball_is_too_close_to_wall){
-					return this.handlingBallTooCloseWall();
-				}
-			
-				else {
-					return this.all_moving_objects.getBallPosition();
-				}
-			}
-			else{
-				
+		Point target = new Point();
+		//put it into node for assessment
+		//hack :o)
+		target = all_static_objects.convertToNode(this.all_moving_objects.getBallPosition());
+		//boolean for knowing if the ball is on the pitch
+		boolean ballOnPitch = ((target.x >= 0) && (target.x <= all_static_objects.getWidth()) && 
+							   (target.y >= 0) && (target.y <= all_static_objects.getHeight()));
+		
+		if(this.plan_type == PlanTypes.PlanType.FREE_PLAY.ordinal()){
+		
+			//Lets get this shit in, and then go read about proper decision making structures later.
+			if(!ballOnPitch){
+				//fuck off and sit next to our goal
+				this.action = PlanTypes.ActionType.DRIVE.ordinal();
+				logger.debug("Ball is not found on pitch");
 				return this.all_static_objects.getInfront_of_our_goal();
 				
+			} else {
+				if(this.ball_is_too_close_to_wall){
+					//sit just near to the ball
+					this.action = PlanTypes.ActionType.DRIVE.ordinal();
+					return this.handlingBallTooCloseWall(target);
+				}
+				else {
+					if(this.clear_shot){
+						this.action = PlanTypes.ActionType.KICK.ordinal();
+						return target;
+					} else {
+						this.action = PlanTypes.ActionType.DRIVE.ordinal();
+						return target;
+					}
+				}
+			
 			}
+		} 
+		else if(this.plan_type == PlanTypes.PlanType.HALT.ordinal()){
+			this.action = PlanTypes.ActionType.STOP.ordinal();
+			return target;
 		}
-		//If the plan is 0, we are defending our goal at penalty
-		else if (this.plan_type == 0){
-			//best position in front of our own goal for defending...
-			return this.all_static_objects.getInfront_of_our_goal();
-					
-		}
+		//Penalty modes continue from here...
 		else {
-			return this.all_moving_objects.getBallPosition();
-		}
-		
-	
+			this.action = PlanTypes.ActionType.STOP.ordinal();
+			return target;		
+		}				
 	}
 
 
@@ -132,17 +160,19 @@ public class TargetDecision {
 
 			//Angles
 			double our_angle = all_moving_objects.getOurAngle();
-			double angle_with_top_post = Math.asin((all_static_objects.getTheir_top_goal_post().x - our_position.x)/(our_position.distance(all_static_objects.getTheir_top_goal_post())));
-			double angle_with_bottom_post = Math.asin((all_static_objects.getTheir_bottom_goal_post().x - our_position.x)/(our_position.distance(all_static_objects.getTheir_bottom_goal_post())));
+			double angle_with_top_post = Math.asin((all_static_objects.getTheir_top_goal_post().x 
+					- our_position.x)/(our_position.distance(all_static_objects.getTheir_top_goal_post())));
+			double angle_with_bottom_post = Math.asin((all_static_objects.getTheir_bottom_goal_post().x 
+					- our_position.x)/(our_position.distance(all_static_objects.getTheir_bottom_goal_post())));
 
-			//fix for normal angles into weird bearings.... :D
+			//fix for normal angles into bearings.... :D
 			if(angle_with_top_post < 0){
 				angle_with_bottom_post = angle_with_bottom_post + 360;
 				angle_with_top_post = angle_with_top_post + 360;
 			}
 
 			//Set clear shot boolean
-			if(Vision.worldState.getShootingDirection() == 1){
+			if(worldState.getShootingDirection() == 1){
 				if(our_angle > angle_with_top_post && our_angle < angle_with_bottom_post){
 					this.clear_shot = true;
 				}
@@ -156,15 +186,16 @@ public class TargetDecision {
 	}
 	
 	private void ballTooCloseToWall() {
-		this.ball_is_too_close_to_wall = obstacles.contains(all_static_objects.convertToNode(this.all_moving_objects.getBallPosition()));
+		
+		this.ball_is_too_close_to_wall = this.obstacles.contains(all_static_objects.convertToNode(this.all_moving_objects.getBallPosition()));
 	}
 	
 	public boolean getClearShot(){
 		return clear_shot;
 	}
-	public Point handlingBallTooCloseWall() {
+	public Point handlingBallTooCloseWall(Point p) {
 		//boundary handling...
-		Point position = this.all_moving_objects.getBallPosition();
+		Point position = p;
 		// 3 is the boundary variable	
 		if (position.x < 3) {
 			position.x = 3;

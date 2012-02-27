@@ -17,6 +17,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
+import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
 import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
@@ -37,7 +38,7 @@ public class ControlGUI implements ChangeListener {
 	
 	/* Stores information about the current world state, such as 
 	 * shooting direction, ball location, etc. */
-	private WorldState worldState;
+	private WorldState worldState = WorldState.getInstance();
 	
 	private final Strategy strat;
 	
@@ -51,7 +52,7 @@ public class ControlGUI implements ChangeListener {
 	/*Locate Button*/
 	private JButton locateButton;
 	
-	/* Start and Stop Buttons */
+	/* Start/Stop Button */
 	private JButton startButton;
 	private JButton stopButton;
 	
@@ -60,9 +61,8 @@ public class ControlGUI implements ChangeListener {
 	private JButton penaltyDefendButton;
 	private JCheckBox returnToGame;
 	
-	/*Pause and Resume Buttons*/
-	private JButton pauseButton;
-	private JButton resumeButton;
+	private JButton overlayButton;
+	
 	
 	/* Tabs. */
 	private JTabbedPane tabPane;
@@ -87,14 +87,13 @@ public class ControlGUI implements ChangeListener {
 	 * @param worldState		A WorldState object to update the pitch choice, shooting
 	 * 							direction, etc.
 	 */
-	public ControlGUI() {
+	public ControlGUI(Strategy s) {
 		
 		/* All three state objects must not be null. */
 		assert (thresholdsState != null);
 		assert (worldState != null);
 		
-		this.worldState = Vision.worldState;
-		strat = new Strategy();
+		strat = s;
 	}
 	
 	public void stateChanged(ChangeEvent e) {}
@@ -248,56 +247,47 @@ public class ControlGUI implements ChangeListener {
 		JPanel startStopPanel = new JPanel();
 		
 		startButton = new JButton("Start Match");
-		stopButton = new JButton("Stop Match");
 		
 		startStopPanel.add(startButton);
-		startStopPanel.add(stopButton);
 		
 		startButton.addActionListener(new ActionListener() {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        strat.mileStone2NavigateOn();
+		        strat.startPlanningThread(PlanTypes.PlanType.FREE_PLAY.ordinal());
 		    }
 		});
+		
+		stopButton = new JButton("Stop Match");
+		
+		startStopPanel.add(stopButton);
 		
 		stopButton.addActionListener(new ActionListener() {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        strat.mileStone2NavigateOff();
+		        strat.stopPlanningThread();
 		    }
 		});
+		
 		
 		defaultPanel.add(startStopPanel);
 		
-		/* Pausing and Resuming play */
+		JPanel overlayPanel = new JPanel();
 		
-		JPanel pauseResumePanel = new JPanel();
+		overlayButton = new JButton("Toggle Overlay");
 		
-		pauseButton = new JButton ("Pause Match");
-		resumeButton = new JButton ("Resume Match");
+		overlayPanel.add(overlayButton);
 		
-		pauseResumePanel.add(pauseButton);
-		pauseResumePanel.add(resumeButton);
-		
-		pauseButton.addActionListener(new ActionListener() {
+		overlayButton.addActionListener(new ActionListener() {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        System.out.println("Play paused");
+		        worldState.setGenerateOverlay(!worldState.getGenerateOverlay());
 		    }
 		});
 		
-		resumeButton.addActionListener(new ActionListener() {
-		    
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        System.out.println("Play paused");
-		    }
-		});
-		
-		defaultPanel.add(pauseResumePanel);
+		defaultPanel.add(overlayPanel);
 		
 		/*
 		Penalty Mode buttons.  Stop button must be pressed first
@@ -363,7 +353,7 @@ public class ControlGUI implements ChangeListener {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        //call to control saying kick
-		        strat.mileStone1(true);
+		        strat.getControlInterface().kick();
 		    }
 		});
 		
@@ -372,7 +362,7 @@ public class ControlGUI implements ChangeListener {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        //call to control saying to drive
-		    	strat.mileStone1(false);
+		    	strat.getControlInterface().drive();
 		    }
 		});
 		

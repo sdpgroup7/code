@@ -17,13 +17,7 @@ public class Node implements Comparable<Node> {
 	private boolean isGoal;
 	
 	Node(int x, int y) {
-		this.x = x;
-		this.y = y;
-		this.visited = false;
-		this.distanceFromStart = Float.MAX_VALUE;
-		this.isObstacle = false;
-		this.isStart = false;
-		this.isGoal = false;
+		this(x,y,false,Float.MAX_VALUE,false,false,false);
 	}
 	
 	Node (int x, int y, boolean visited, float distanceFromStart, boolean isObstical, boolean isStart, boolean isGoal) {
@@ -35,6 +29,7 @@ public class Node implements Comparable<Node> {
 		this.isStart = isStart;
 		this.isGoal = isGoal;
 	}
+
 
 	public boolean isVisited() {
 		return visited;
@@ -113,6 +108,10 @@ public class Node implements Comparable<Node> {
 	public Point nodeToPoint(Node node) {
 		Point point = new Point(node.getX(),node.getY());
 		return point;
+	}
+	
+	public Point nodeToPoint(){
+		return nodeToPoint(this);
 	}
 
 
