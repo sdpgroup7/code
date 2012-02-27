@@ -16,10 +16,12 @@ import javax.imageio.ImageIO;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.AreaMap;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 public class PlanMonitor {
 	
 	private Plan currentPlan;
+	private WorldState worldState = WorldState.getInstance();
 	
 	public PlanMonitor(Plan plan){
 		currentPlan = plan;
@@ -140,6 +142,8 @@ public class PlanMonitor {
 				}
 			}
 		}
+		
+		
 		
 		return returnImage;
 	}
