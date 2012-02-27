@@ -19,7 +19,7 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
  */
 public class AllStaticObjects {
 	
-	private int nodeInPixels; 
+	private double nodeInPixels;
 	private int pitch_top_buffer;
 	private int pitch_left_buffer; 
 	//private int pitch_bottom_buffer;
@@ -52,10 +52,10 @@ public class AllStaticObjects {
 		//this.pitch_right_buffer = worldState.getPitch().getRightBuffer();
 		
 		//hard code setting of grid resolution (Grid is used in A*)
-		this.height = 30;
-		this.width = 60;
-		this.nodeInPixels = worldState.getPitch().getWidthInPixels()/this.width;//width in pixels!
-		
+		this.height = 29;
+		this.width = 58;
+		this.nodeInPixels = (double)worldState.getPitch().getWidthInPixels()/(double)this.width;//width in pixels!
+		Strategy.logger.info("Node size in pixels: " + nodeInPixels);
 		//Boundary around the edges of the pitch, to prevent the robot from hitting the walls
 		//So this is dependent on the resolution..
 		this.boundary = 3;
@@ -65,22 +65,19 @@ public class AllStaticObjects {
 	
 	//Compacts WorldState position point into "Node" centre position
 	public Point convertToNode(Point p){
-		int x = (int)Math.floor((p.x - this.pitch_left_buffer)/this.nodeInPixels);
-		int y = (int)Math.floor((p.y - this.pitch_top_buffer)/this.nodeInPixels);
-		if(x < 0) x = 0; //Fixes bugs where we start accessing negative array indices.
-		if(y < 0) y = 0; 
+		int x = (int)((double)(p.x - this.pitch_left_buffer)/this.nodeInPixels);
+		int y = (int)((double)(p.y - this.pitch_top_buffer)/this.nodeInPixels);
+
+		
 		return new Point(x,y);
 	}
 	
 	//Compacts WorldState position points into "Node" centre positions
 	public ArrayList<Point> convertToNodes(ArrayList<Point> l){
-
 		ArrayList<Point> node_points = new ArrayList<Point>();
 
 		for (Point p : l) {
-			int x = (int)Math.floor((p.x - this.pitch_left_buffer)/this.nodeInPixels);
-			int y = (int)Math.floor((p.y - this.pitch_top_buffer)/this.nodeInPixels);
-			node_points.add(new Point(x,y));
+			node_points.add(convertToNode(p));
 		}
 
 		return node_points;
@@ -90,51 +87,22 @@ public class AllStaticObjects {
 	//Return this as a node!
 	private void pointInfrontOfGoal(){
 		if(worldState.getShootingDirection() == 1){
-			this.infront_of_our_goal = new Point((this.width - (this.boundary - 1)),
-												((this.our_bottom_goal_post.y - this.our_top_goal_post.y) 
-														- this.pitch_top_buffer)/this.nodeInPixels);
+			this.infront_of_our_goal = new Point(	
+					(this.width - (this.boundary - 1)),
+					(int)(((this.our_bottom_goal_post.y - this.our_top_goal_post.y) - this.pitch_top_buffer)/this.nodeInPixels));
 			
 		}
 		else {
-			this.infront_of_our_goal = new Point((this.boundary),
-												((this.our_bottom_goal_post.y - this.our_top_goal_post.y) 
-														- this.pitch_top_buffer)/this.nodeInPixels);
+			this.infront_of_our_goal = new Point(
+					(this.boundary),
+					(int)(((this.our_bottom_goal_post.y - this.our_top_goal_post.y) 
+														- this.pitch_top_buffer)/this.nodeInPixels));
 		}
 	}
 	
-	
-	//This method is for creating a buffer around all of the walls
-	//and has a different signature so that we can add in 
-	//However this method does create obstacles in front of both goals...
-	public ArrayList<Point> addBoundary(ArrayList<Point> obstacles){
-		
-		//left incase we need to consider boundaries
-		
-		//convert into node data!!
-//		int pBy = this.convertToNode(this.our_bottom_goal_post).y;
-//		int pTy = this.convertToNode(this.our_top_goal_post).y;
-//		
-//		for(int y = 0; y < this.height; y++){
-//			for (int b=0; b < boundary; b++) {
-//				//remove area infront of goal
-//				if(!((y > pBy) && ( y < pTy))){
-//					obstacles.add(new Point(b,y));
-//					obstacles.add(new Point((this.width - 1) - b,y));
-//				}
-//			}
-//		}
-//		for(int x = boundary; x < this.width - boundary; x++){
-//			for (int b=0; b < boundary; b++) {
-//				obstacles.add(new Point(x,b));
-//				obstacles.add(new Point(x,(this.height - 1) -b));
-//			}
-//		}
-		
-		return obstacles;
 
-	}
 
-	public int getNodeInPixels() {
+	public double getNodeInPixels() {
 		return this.nodeInPixels;
 	}
 

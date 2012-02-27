@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.*;
+import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
@@ -52,11 +53,13 @@ public class Plan {
 		//Setup target for A*
 		target_decision = new TargetDecision(this.all_moving_objects, this.all_static_objects, this.obstacles);
 		
-		//Now add in the obstacles created by AllStaticObjects
-		this.obstacles = all_static_objects.addBoundary(this.obstacles);
-		
-		logger.debug("pitch height" + this.all_static_objects.getHeight());
-		logger.debug("pitch height" + this.all_static_objects.getWidth());
+		logger.debug("Target Decision Position: " + target_decision.getTargetAsNode().toString());
+		logger.debug("Ball Position: " + this.all_static_objects.convertToNode(Vision.worldState.getBall().getPosition().getCentre()));
+		logger.debug("Robot Position: " + this.all_static_objects.convertToNode(all_moving_objects.getOurPosition()).toString());
+		logger.debug("lb,tb: " + this.all_static_objects.convertToNode(new Point(Vision.worldState.getPitch().getLeftBuffer(),Vision.worldState.getPitch().getTopBuffer())));
+		logger.debug("rb,bb: " + this.all_static_objects.convertToNode(new Point(Vision.worldState.getPitch().getRightBuffer() - 9,Vision.worldState.getPitch().getBottomBuffer() - 9)));
+		logger.debug("pitch height: " + this.all_static_objects.getHeight());
+		logger.debug("pitch width: " + this.all_static_objects.getWidth());
 		
 		//Now create an A* object from which we create a path
 		astar = new AStarRun(	this.all_static_objects.getHeight(),
@@ -112,7 +115,7 @@ public class Plan {
 	}
 	
 	//For Control Interface
-	public int getNodeInPixels(){
+	public double getNodeInPixels(){
 		return this.all_static_objects.getNodeInPixels();
 	}
 	
