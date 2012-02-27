@@ -78,14 +78,6 @@ public class PlanningThread extends Observable implements Runnable{
 		
 	}
 	
-//	public void switchRun() {
-//		this.runFlag = !runFlag;
-//	}
-	
-	public void sendStop(){
-		this.plan_type = PlanTypes.PlanType.HALT.ordinal();
-	}
-	
 	public void setWorldStateIsPopulated (){
 		this.worldStateIsPopulated = (worldState.getLastUpdateTime() > 0);
 	}

@@ -15,6 +15,7 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
  * @author s0955088
  * This class holds all static elements required for planning
  * including the grid setup, the grid is used in A* planning
+ * It also contains the commands for running the Planning thread
  *
  */
 public class AllStaticObjects {
@@ -37,15 +38,15 @@ public class AllStaticObjects {
 	public WorldState worldState = WorldState.getInstance();
 	
 	//changes the type of plan to be created
-	private int plan_type;
+	private volatile int plan_type;
 	
 	//controls planning thread
-	private boolean runFlag;
+	private volatile boolean runFlag;
 	
 	
 	public AllStaticObjects (){
 		while(worldState.getLastUpdateTime() == 0){}
-		this.runFlag = true;
+		this.runFlag = false;
 		this.their_top_goal_post = worldState.getOpponentsGoal().getTopLeft();
 		this.their_bottom_goal_post = worldState.getOpponentsGoal().getBottomLeft();
 		this.our_top_goal_post = worldState.getOurGoal().getTopLeft();
@@ -142,14 +143,29 @@ public class AllStaticObjects {
 	}
 	
 	public void setPlanType(int pT){
-		this.plan_type = pT;
+		synchronized (this) {
+			Strategy.logger.info("PLAN CHANGED : " + this.plan_type);
+			this.plan_type = pT;
+		}
 	}
 
-	public void switchRun() {
-	this.runFlag = !runFlag;
+	public void stopRun() {
+		synchronized (this) {
+			Strategy.logger.info("STOPPED : " + this.runFlag);
+			this.runFlag = false;
+		}
+	}
+	
+	public void startRun() {
+		synchronized (this) {
+			Strategy.logger.info("STARTED" + this.runFlag);
+			this.runFlag = true;
+		}
 	}
 	
 	public boolean getRunFlag(){
-		return this.runFlag;
+		synchronized (this) {
+			return this.runFlag;
+		}
 	}
 }
