@@ -39,9 +39,13 @@ public class AllStaticObjects {
 	//changes the type of plan to be created
 	private int plan_type;
 	
+	//controls planning thread
+	private boolean runFlag;
+	
 	
 	public AllStaticObjects (){
 		while(worldState.getLastUpdateTime() == 0){}
+		this.runFlag = true;
 		this.their_top_goal_post = worldState.getOpponentsGoal().getTopLeft();
 		this.their_bottom_goal_post = worldState.getOpponentsGoal().getBottomLeft();
 		this.our_top_goal_post = worldState.getOurGoal().getTopLeft();
@@ -141,4 +145,11 @@ public class AllStaticObjects {
 		this.plan_type = pT;
 	}
 
+	public void switchRun() {
+	this.runFlag = !runFlag;
+	}
+	
+	public boolean getRunFlag(){
+		return this.runFlag;
+	}
 }

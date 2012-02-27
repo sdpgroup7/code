@@ -195,6 +195,15 @@ public class TargetDecision {
 		}
 	}
 	
+	private void findShot(){
+		
+		//Positions
+		Point ballPosition = all_moving_objects.getBallPosition();
+		
+		//Angles
+		
+	}
+	
 	private void ballTooCloseToWall() {
 		
 		Point ballPosition = this.all_moving_objects.getBallPosition();
@@ -210,25 +219,6 @@ public class TargetDecision {
 	
 	public boolean getClearShot(){
 		return clear_shot;
-	}
-	public Point handlingBallTooCloseWall(Point p) {
-		//boundary handling...
-		Point position = p;
-		// 3 is the boundary variable	
-		if (position.x < 3) {
-			position.x = 3;
-		}
-		if (position.x > 47) {
-			position.x = 47;
-		}
-		if (position.y < 3) {
-			position.y = 3;
-		}
-		if (position.y > 22) {
-			position.y = 22;
-		}
-	
-		return position;
 	}
 	
 	public int getAction(){
