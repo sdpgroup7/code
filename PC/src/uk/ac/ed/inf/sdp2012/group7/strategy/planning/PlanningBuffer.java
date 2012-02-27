@@ -3,6 +3,10 @@
  */
 package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 
+import java.awt.Point;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -29,6 +33,7 @@ public class PlanningBuffer extends Observable implements Observer {
 	
 	public static final Logger logger = Logger.getLogger(Plan.class);
 	private long time_stamp = System.currentTimeMillis();
+	private PlanMonitor planMonitor;
 
 	//I would like to be able to read the plans created
 	//offline; but I don't need EVERY plan, so I will
@@ -48,7 +53,8 @@ public class PlanningBuffer extends Observable implements Observer {
 			setChanged();
 			notifyObservers(held_plan);
 			if(counter > 1){
-				savePlan();
+				planMonitor.setPlan(held_plan);
+				planMonitor.outputPlan();
 				counter = 0;
 			}
 			Strategy.logger.info("Current plan count: " + Integer.toString(counter));
@@ -60,40 +66,5 @@ public class PlanningBuffer extends Observable implements Observer {
 		return held_plan;
 	}
 	
-	public void savePlan(){
-		AreaMap map = held_plan.getAStar().getAreaMap();
-		if(map.getNodes().length <= 0) return;
-		
-		String[][] ascii = new String[map.getMapHeight()][map.getMapWidth()];
-		for(int y = 0; y < ascii.length; y++){
-			for(int x = 0; x < ascii[0].length; x++){
-				ascii[y][x] = ".";
-			}
-		}
-				
-		for(int y = 0; y < ascii.length; y++){
-			for(int x = 0; x < ascii[y].length; x++){
-				Node n = map.getNode(x,y);
-				if(n.isGoal()) ascii[y][x] = "T";
-				if(n.isObstical()) ascii[y][x] = "X";
-				if(n.isObstical()) ascii[y][x] = "X";
-				if(n.isStart()) ascii[y][x] = "S";
-				if(n.getCost() == 1) ascii[y][x] = "O";
-				if(n.isVisited()) ascii[y][x] = " ";
-			}
-		}
-		for(int y = 0; y < ascii.length; y++){
-			String line = "";
-			for(int x = 0; x < ascii[y].length; x++){
-				line += ascii[y][x] + " ";
-			}
-			System.out.println(line);
-		}
-		//Path path = held_plan.getNodePath();
-		//ArrayList<Node> waypoints = path.getWayPoints();
-		//for(Node n : waypoints){
-			//Draw node onto map
-		//}
-	}
 
 }
