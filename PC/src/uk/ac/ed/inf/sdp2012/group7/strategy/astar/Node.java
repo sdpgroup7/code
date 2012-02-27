@@ -114,6 +114,10 @@ public class Node implements Comparable<Node> {
 		Point point = new Point(node.getX(),node.getY());
 		return point;
 	}
+	
+	public Point nodeToPoint(){
+		return nodeToPoint(this);
+	}
 
 
 	public boolean equals(Node node) {
