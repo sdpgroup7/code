@@ -34,6 +34,10 @@ public class ControlInterface implements Observer {
 	private int lookahead;
 	private RobotControl c;
 	
+	private int drive = PlanTypes.ActionType.DRIVE.ordinal();
+	private int kick = PlanTypes.ActionType.KICK.ordinal();
+	private int stop = PlanTypes.ActionType.STOP.ordinal();
+	
 
 	public ControlInterface(int lookahead) {
 		this.lookahead = lookahead;
@@ -106,26 +110,30 @@ public class ControlInterface implements Observer {
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {}
+		
 		double conversion = (double) world.getPitch().getHeight()/(double) plan.getHeightInNodes(); //Cm's per node
+		
 		logger.debug(String.format("Conversion value: %f", conversion));
 
-		if (plan.getAction() == PlanTypes.ActionType.DRIVE.ordinal()) {
+		if (plan.getAction() == drive) {
 			
-			this.c.circleWithRadius((int)( conversion*path.getRadius()), path.isDirection());
-			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", (int)( conversion*path.getRadius()), path.isDirection()));
+			int converted = (int)(conversion*path.getRadius());
+			this.c.circleWithRadius(converted , path.isDirection());
+			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isDirection()));
 		
-		} else if (plan.getAction() == PlanTypes.ActionType.KICK.ordinal()) {
+		} else if (plan.getAction() == kick) {
 			
-			this.c.circleWithRadius((int) (conversion*path.getRadius()), path.isDirection());
-			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", (int)( conversion*path.getRadius()), path.isDirection()));
+			int converted = (int)(conversion*path.getRadius());
+			this.c.circleWithRadius(converted , path.isDirection());
+			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isDirection()));
 			c.kick();
 			
 			logger.info("Command sent to robot: kick");
-		} else if (plan.getAction() == PlanTypes.ActionType.STOP.ordinal()) {
+		} else if (plan.getAction() == stop) {
 		
 			c.stop();
-			
 			logger.info("Command sent to robot: stop");
+		
 		}
 		
 		
