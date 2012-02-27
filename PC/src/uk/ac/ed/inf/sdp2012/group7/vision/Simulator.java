@@ -10,11 +10,9 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.ui.ControlGUI;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 public class Simulator {
-	private static ControlGUI thresholdsGUI;
 	public static WorldState worldState;
 	public static final Logger logger = Logger.getLogger(Simulator.class);
 	public static final boolean TESTING = false;
@@ -57,32 +55,15 @@ public class Simulator {
 			}
 		}
 
-		worldState = new WorldState();
-		ThresholdsState thresholdsState = new ThresholdsState();
+		worldState = WorldState.getInstance();
 
-		/* Default to main pitch. */
-		/* Default values for the main vision window. */
-		int width = 640;
-		int height = 480;
 
 		try {
-
-			/* Create the Control GUI for threshold setting/etc. */
-			thresholdsGUI = new ControlGUI(thresholdsState, worldState);
-			thresholdsGUI.initGUI();
-
-			/* Create a new Vision object to serve the main vision window. */
-//			new VisionFeed(videoDevice, width, height, channel, videoStandard, compressionQuality, thresholdsGUI);
-			new SimulatorFeed(thresholdsGUI);
+			new SimulatorFeed();
 			logger.info("Simulator System Initialised");
 
 		} catch (Exception e) {
-			logger.fatal("Exception: " + e.getMessage());
+			logger.fatal("Simulator Exception: " + e.getMessage());
 		}
-	}
-
-	public WorldState getWorldState(){
-		//used for debugging purposes
-		return worldState;
 	}
 }
