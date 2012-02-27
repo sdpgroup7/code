@@ -23,7 +23,6 @@ public class Plan {
 	private ArrayList<Point> path;
 	private AStarRun astar;
 	private AllStaticObjects all_static_objects;
-	private int plan_type;
 	public static final Logger logger = Logger.getLogger(Plan.class);
 
 	//World state info
@@ -37,15 +36,12 @@ public class Plan {
 	 * 
 	 */
 	//Constructor
-	public Plan(AllStaticObjects all_static_objects, AllMovingObjects all_moving_objects, int plan_type) {
+	public Plan(AllStaticObjects all_static_objects, AllMovingObjects all_moving_objects) {
 		
 		this.all_static_objects = all_static_objects;
 		this.all_moving_objects = all_moving_objects;
 		all_moving_objects.update();
 		
-		//grab plan type
-		this.plan_type = plan_type;
-				
 		//Set up obstacles created by opposition
 		opposition = new OppositionPrediction(all_moving_objects, this.all_static_objects);
 		
@@ -54,7 +50,7 @@ public class Plan {
 		this.obstacles = all_static_objects.convertToNodes(opposition.getDefaultObstacles());
 		
 		//Setup target for A*
-		target_decision = new TargetDecision(this.all_moving_objects, this.all_static_objects, this.obstacles, this.plan_type);
+		target_decision = new TargetDecision(this.all_moving_objects, this.all_static_objects, this.obstacles);
 		
 		//Now add in the obstacles created by AllStaticObjects
 		this.obstacles = all_static_objects.addBoundary(this.obstacles);

@@ -31,14 +31,13 @@ public class PlanningThread extends Observable implements Runnable{
 	/**
 	 * 
 	 */
-	public PlanningThread(Observer myWatcher, int plan_type) {
+	public PlanningThread(Observer myWatcher, AllStaticObjects aSO) {
 		
 		// PlanningBuffer watches this thread
 		this.addObserver(myWatcher);
-		// Set while flag as true
-		// Set plan type
-		this.plan_type = plan_type;
-		this.all_static_objects = new AllStaticObjects();
+		//this is here so we can use the plan_type variable in Strategy.java, which
+		//commands which plan type we are creating
+		this.all_static_objects = aSO;
 		this.all_moving_objects = new AllMovingObjects();
 	}
 
@@ -54,7 +53,7 @@ public class PlanningThread extends Observable implements Runnable{
 						keepPlanning = true;
 					}
 					Strategy.logger.info("Planning Thread is running");
-					Plan temp_plan = new Plan(this.all_static_objects, this.all_moving_objects, this.plan_type);
+					Plan temp_plan = new Plan(this.all_static_objects, this.all_moving_objects);
 					setChanged();
 					notifyObservers(temp_plan);
 					logger.debug("Plan type: " + this.plan_type);
@@ -63,7 +62,7 @@ public class PlanningThread extends Observable implements Runnable{
 					//I can imagine Tom finding this, and think "wtf!" - sorry Tom!
 					
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(1);
 					} catch (InterruptedException e) {
 						Strategy.logger.error("Thread sleeping in PlanningThread was interrupted.");
 					}

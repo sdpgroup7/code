@@ -15,6 +15,7 @@ public class Strategy {
 	
 	private PlanningBuffer planning_buffer;
 	private PlanningThread planningthread;
+	private AllStaticObjects allStaticObjects;
 	private ControlInterface control_interface;
 	private Thread thread_for_planningthread;
 
@@ -27,22 +28,28 @@ public class Strategy {
 		//create the observer / buffer for the plans
 		this.planning_buffer = new PlanningBuffer(control_interface);
 		
+		//create static objects and plan_type
+		this.allStaticObjects = new AllStaticObjects();
+		
 		//Make runnable...
-		this.planningthread = new PlanningThread(planning_buffer,PlanTypes.PlanType.FREE_PLAY.ordinal());
+		this.planningthread = new PlanningThread(planning_buffer, this.allStaticObjects);
 		
 	}
 	
 	
 	// need to read Tom's email on thread handling.. this is just a placeholder!
 	
-	public void startPlanningThread() {
+	//this function is used to send the plan_type
+	//and then start the plan type
+	public void startPlanningThread(int plan_type) {
+		this.allStaticObjects.setPlanType(plan_type);
 		this.thread_for_planningthread = new Thread(planningthread);
 		this.planningthread.switchRun();
 		this.thread_for_planningthread.start();
 	}
 
 	public void stopPlanningThread() {
-		this.planningthread.sendStop();
+		this.allStaticObjects.setPlanType(PlanTypes.PlanType.HALT.ordinal());
 		this.planningthread.switchRun();
 		this.thread_for_planningthread = null;
 	}

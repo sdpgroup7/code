@@ -36,11 +36,11 @@ public class TargetDecision {
 
 	
 	//Constructor
-	public TargetDecision(AllMovingObjects aMO, AllStaticObjects aSO, ArrayList<Point> obstacles, int plan_type) {
+	public TargetDecision(AllMovingObjects aMO, AllStaticObjects aSO, ArrayList<Point> obstacles) {
 		this.all_moving_objects = aMO;
 		this.all_static_objects = aSO;
 		this.obstacles = obstacles;
-		this.plan_type = plan_type;
+		this.plan_type = this.all_static_objects.getPlanType();
 		this.clearShot();
 		this.weHaveBall();
 		this.theyHaveBall();
@@ -56,6 +56,7 @@ public class TargetDecision {
 		 * This whole section is experimental
 		 */
 		
+		
 		Point target = new Point();
 		//put it into node for assessment
 		//hack :o)
@@ -70,7 +71,9 @@ public class TargetDecision {
 			if(!ballOnPitch){
 				//fuck off and sit next to our goal
 				this.action = PlanTypes.ActionType.DRIVE.ordinal();
+				logger.debug("Ball is not found on pitch");
 				return this.all_static_objects.getInfront_of_our_goal();
+				
 			} else {
 				if(this.ball_is_too_close_to_wall){
 					//sit just near to the ball
