@@ -42,20 +42,16 @@ public class Strategy {
 	//this function is used to send the plan_type
 	//and then start the plan type
 	public void startPlanningThread(int plan_type) {
-		synchronized (this) {
 			this.allStaticObjects.setPlanType(plan_type);
 			this.thread_for_planningthread = new Thread(planningthread);
 			this.allStaticObjects.startRun();
 			this.thread_for_planningthread.start();
-		}
 	}
 
 	public void stopPlanningThread() {
-		synchronized (this) {
 			this.allStaticObjects.setPlanType(PlanTypes.PlanType.HALT.ordinal());
 			this.allStaticObjects.stopRun();
 			this.thread_for_planningthread = null;
-		}
 	}
 	
 	public ControlInterface getControlInterface(){
