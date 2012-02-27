@@ -56,10 +56,20 @@ public class AStarRun {
 		}
 		
 		public Path getPath() {
-			return shortestPath;
+			try{
+				return shortestPath;
+			} catch (Exception ex) {
+				Strategy.logger.error("getPath return failed: " + ex.getMessage());
+				return shortestPath;
+			}
 		}
 		
 		public ArrayList<Point> getPathInPoints() {
-			return this.shortestPath.pathToPoints();
+			try {
+				return this.shortestPath.pathToPoints();
+			} catch (Exception ex) {
+				Strategy.logger.error("getPathInPoints return failed: " + ex.getMessage());
+				return this.shortestPath.pathToPoints();
+			}
 		}
 }
