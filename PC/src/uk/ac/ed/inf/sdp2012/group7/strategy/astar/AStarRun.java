@@ -3,6 +3,7 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.heuristics.ClosestHeuristic;
 
 public class AStarRun {
@@ -25,8 +26,12 @@ public class AStarRun {
 			// set heuristic and run the path finder
 			AStarHeuristic heuristic = new ClosestHeuristic();
 			AStar pathFinder = new AStar(map, heuristic);
-			shortestPath = pathFinder.calcShortestPath(some_robot.x, some_robot.y, ball.x, ball.y);
-			
+			try{
+				shortestPath = pathFinder.calcShortestPath(some_robot.x, some_robot.y, ball.x, ball.y);
+			} catch (Exception ex) {
+				Strategy.logger.error("Shortest path calculation failed: " + ex.getMessage());
+				shortestPath = new Path();
+			}
 			// copied from A* for printing
 //			Node node;
 //			for(int x=0; x<map.getMapWidth(); x++) {

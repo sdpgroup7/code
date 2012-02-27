@@ -72,7 +72,11 @@ public class ControlInterface implements Observer {
 			h = this.findGoalPoint(plan);
 		} catch(Exception e) {
 			logger.debug(e);
-			h = new Point2D(plan.getPath().get(plan.getPath().size() -1));
+			if(plan.getPath().size() > 1){
+				h = new Point2D(plan.getPath().get(plan.getPath().size() -1));
+			} else {
+				h = new Point2D(plan.getPath().get(0));
+			}
 		}
 		
 		double alpha = Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))	- v;

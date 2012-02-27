@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -106,7 +107,7 @@ public class PlanMonitor {
 	}
 	
 	public BufferedImage generateImage(String text){
-		BufferedImage im = new BufferedImage(640,480,BufferedImage.TYPE_INT_ARGB);
+		BufferedImage im = new BufferedImage(900,620,BufferedImage.TYPE_INT_ARGB);
 		textOverlay(text,im);
 		return im;
 	}
@@ -115,6 +116,7 @@ public class PlanMonitor {
     public void textOverlay(String text, BufferedImage image){
     	Graphics frameGraphics = image.getGraphics();
         frameGraphics.setColor(Color.white);
+        frameGraphics.setFont(new Font(Font.MONOSPACED,Font.PLAIN,12));
         int vShift = 20;
         int lineCount = 0;
         for(String s : text.split("\n")){
