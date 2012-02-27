@@ -108,25 +108,27 @@ public class AllStaticObjects {
 	//However this method does create obstacles in front of both goals...
 	public ArrayList<Point> addBoundary(ArrayList<Point> obstacles){
 		
-		//convert into node data!!
-		int pBy = this.convertToNode(this.our_bottom_goal_post).y;
-		int pTy = this.convertToNode(this.our_top_goal_post).y;
+		//left incase we need to consider boundaries
 		
-		for(int y = 0; y < this.height; y++){
-			for (int b=0; b < boundary; b++) {
-				//remove area infront of goal
-				if(!((y > pBy) && ( y < pTy))){
-					obstacles.add(new Point(b,y));
-					obstacles.add(new Point((this.width - 1) - b,y));
-				}
-			}
-		}
-		for(int x = boundary; x < this.width - boundary; x++){
-			for (int b=0; b < boundary; b++) {
-				obstacles.add(new Point(x,b));
-				obstacles.add(new Point(x,(this.height - 1) -b));
-			}
-		}
+		//convert into node data!!
+//		int pBy = this.convertToNode(this.our_bottom_goal_post).y;
+//		int pTy = this.convertToNode(this.our_top_goal_post).y;
+//		
+//		for(int y = 0; y < this.height; y++){
+//			for (int b=0; b < boundary; b++) {
+//				//remove area infront of goal
+//				if(!((y > pBy) && ( y < pTy))){
+//					obstacles.add(new Point(b,y));
+//					obstacles.add(new Point((this.width - 1) - b,y));
+//				}
+//			}
+//		}
+//		for(int x = boundary; x < this.width - boundary; x++){
+//			for (int b=0; b < boundary; b++) {
+//				obstacles.add(new Point(x,b));
+//				obstacles.add(new Point(x,(this.height - 1) -b));
+//			}
+//		}
 		
 		return obstacles;
 
