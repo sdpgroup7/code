@@ -84,6 +84,11 @@ public class Plan {
 	public ArrayList<Point> getPath(){
 		return this.path;
 	}
+	
+	public void setPath(ArrayList<Point> path){
+		this.path = path;
+	}
+	
 	//action = 0; nothing 
 	//action = 1; kick
 	public int getAction(){
@@ -132,6 +137,11 @@ public class Plan {
 	//Return angle required...
 	public double getAngleWanted(){
 		return this.targetDecision.getAngleWanted();
+	}
+
+	public void setOurPosition(Point point) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

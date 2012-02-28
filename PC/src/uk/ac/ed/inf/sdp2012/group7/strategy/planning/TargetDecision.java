@@ -141,15 +141,22 @@ public class TargetDecision {
 		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
 				
 			if(this.allStaticObjects.getCounter() % 2 == 0) {
+				logger.debug("In penalty offence, try to turn 20 degrees");
 				double angle = allMovingObjects.getOurAngle() + Math.PI/18;
+				logger.debug("Trying to turn to angle "+angle);
 				this.bestAngle = angle;
 				target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
+				logger.debug("The target is "+target+" it should be our position");
 				this.action = PlanTypes.ActionType.ANGLE.ordinal();
 				this.allStaticObjects.setCounter();
+				logger.debug("Counter incremented, next plan should try to kick");
 				return target;
 			} else {
+				logger.debug("In penalty offence, trying to kick");
 				this.action = PlanTypes.ActionType.KICK.ordinal();
 				this.allStaticObjects.setCounter();
+				target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
+				logger.debug("The target is "+target+" it should be our position");
 				return target;
 			}
 		}
