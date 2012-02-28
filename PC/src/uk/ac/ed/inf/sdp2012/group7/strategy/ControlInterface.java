@@ -80,7 +80,7 @@ public class ControlInterface implements Observer {
 			if(plan.getPath().size() > 1){
 				h = new Point2D(plan.getPath().get(plan.getPath().size() -1));
 			} else {
-				h = new Point2D(plan.getPath().get(0));
+				h = new Point2D(0,0);
 			}
 		}
 		
