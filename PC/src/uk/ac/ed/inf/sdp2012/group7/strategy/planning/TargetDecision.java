@@ -33,6 +33,8 @@ public class TargetDecision {
 	private boolean theyHaveBall = false;
 	private boolean ballIsTooCloseToWall = false;
 	private WorldState worldState = WorldState.getInstance();
+	private Point bestPosition;
+	private double bestAngle;
 
 	
 	//Constructor
@@ -212,7 +214,18 @@ public class TargetDecision {
 		}
 	}
 	
-	private void findShot(){
+	private void findBestShot(){
+		
+		//1 Choose best position for openShot
+		//2 return this angle
+		//3 test if the line to the goal from above position is blocked
+		//4 if not, set bestPosition & bestAngle to above
+		//5 if above blocked choose best position for angularShot
+		//6 return this angle
+		//7 test is the line to goal from above is blocked
+		//if not, set bestPosition & bestAngle to above
+		//if above blocked, we need to decide what dribbling is at this point
+		//or sit on the line which is their best attack
 		
 		//Positions
 		Point ballPosition = allMovingObjects.getBallPosition();
