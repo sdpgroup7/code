@@ -33,7 +33,7 @@ public class ControlInterface implements Observer {
 	private WorldState world = WorldState.getInstance();
 	private VisionTools vtools = new VisionTools();
 	
-	private int lookahead;
+	private static int lookahead;
 	private RobotControl c;
 	
 	//So planning and us are working off the same page
@@ -63,7 +63,7 @@ public class ControlInterface implements Observer {
 	 * Calculates the Arc that the robot has to follow for the set of points
 	 * given using the pure pursuit algorithm
 	 */
-	public Arc chooseArc(Plan plan) {
+	public static Arc chooseArc(Plan plan) {
 		// The paper where this maths comes from can be found here
 		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
 		
@@ -71,10 +71,10 @@ public class ControlInterface implements Observer {
 		Point2D p = new Point2D(plan.getOurRobotPositionVisual());
 		double v = plan.getOurRobotAngle();
 		
-		v = this.convertAngle(v);
+		v = convertAngle(v);
 		
 		try {
-			h = this.findGoalPoint(plan);
+			h = findGoalPoint(plan);
 		} catch(Exception e) {
 			logger.debug(e);
 			if(plan.getPath().size() > 1){
@@ -131,8 +131,8 @@ public class ControlInterface implements Observer {
 			logger.info("Action is to drive");
 			c.clearAllCommands();
 			
-			this.c.circleWithRadius(converted , path.isDirection());
-			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isDirection()));
+			this.c.circleWithRadius(converted , path.isLeft());
+			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isLeft()));
 			try {
 				Thread.sleep(75);
 			} catch (InterruptedException e) {}
@@ -140,8 +140,8 @@ public class ControlInterface implements Observer {
 		} else if (plan.getAction() == kick) {
 			logger.info("Action is to kick");
 			int converted = (int)(conversion*path.getRadius());
-			this.c.circleWithRadius(converted , path.isDirection());
-			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isDirection()));
+			this.c.circleWithRadius(converted , path.isLeft());
+			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isLeft()));
 			try {
 				Thread.sleep(75);
 			} catch (InterruptedException e) {}
@@ -177,7 +177,7 @@ public class ControlInterface implements Observer {
 	 * 
 	 * @return The converted angle so it is measured off the y axis rather than the x
 	 */
-	public double convertAngle(double angle) {
+	public static double convertAngle(double angle) {
 		
 		double newAngle;
 		if (angle == 0) {
@@ -197,9 +197,9 @@ public class ControlInterface implements Observer {
 	 * 
 	 * @return The goal point
 	 */
-	public Point2D findGoalPoint(Plan p) throws Exception {
+	public static Point2D findGoalPoint(Plan p) throws Exception {
 		
-		Circle2D zone = new Circle2D(p.getOurRobotPositionVisual().getX(), p.getOurRobotPositionVisual().getY(), this.lookahead);
+		Circle2D zone = new Circle2D(p.getOurRobotPositionVisual().getX(), p.getOurRobotPositionVisual().getY(), lookahead);
 		logger.debug(String.format("Zone centre: (%f,%f)",p.getOurRobotPositionVisual().getX(),p.getOurRobotPositionVisual().getY()));
 		boolean run = true;
 		int size = p.getPath().size();

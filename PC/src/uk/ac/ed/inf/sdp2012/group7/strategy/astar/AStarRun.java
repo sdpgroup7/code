@@ -64,7 +64,7 @@ public class AStarRun {
 				return shortestPath;
 			} catch (Exception ex) {
 				Strategy.logger.error("getPath return failed: " + ex.getMessage());
-				return shortestPath;
+				return null;
 			}
 		}
 		

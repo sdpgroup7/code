@@ -35,11 +35,6 @@ public class PlanningBuffer extends Observable implements Observer {
 	public static final Logger logger = Logger.getLogger(Plan.class);
 	private long timeStamp = System.currentTimeMillis();
 	private PlanMonitor planMonitor= new PlanMonitor();
-
-	//I would like to be able to read the plans created
-	//offline; but I don't need EVERY plan, so I will
-	//use a counter...
-	private int counter = 0;
 	
 	public PlanningBuffer(Observer myWatcher){
 		this.addObserver(myWatcher);
@@ -53,13 +48,8 @@ public class PlanningBuffer extends Observable implements Observer {
 			this.heldPlan = (Plan)arg;
 			setChanged();
 			notifyObservers(heldPlan);
-			if(counter > 1){
-				planMonitor.setPlan(heldPlan);
-				planMonitor.outputPlan();
-				counter = 0;
-			}
-			Strategy.logger.info("Current plan count: " + Integer.toString(counter));
-			counter++;
+			planMonitor.setPlan(heldPlan);
+			planMonitor.outputPlan();
 		}
 	}
 	
