@@ -69,8 +69,8 @@ public class SimulatorFeed extends WindowAdapter {
 			try {
 				socket = new Socket(simHost, simPort);
 				is = socket.getInputStream();
-			} catch (Exception e) {
-				Simulator.logger.fatal("Connecting to simulator failed: "+e.toString());
+			} catch (Exception ex) {
+				Simulator.logger.fatal("Connecting to simulator failed: " + ex.toString());
 			}
 			
 			while(true) {
@@ -80,8 +80,8 @@ public class SimulatorFeed extends WindowAdapter {
 				for (int i = 0; i < 8; ++i) {
 					try {
 						is.read(int_buf);
-					} catch (IOException e) {
-						Simulator.logger.fatal("Failed to receive packet: "+e.toString());
+					} catch (IOException ex) {
+						Simulator.logger.fatal("Failed to receive packet: " + ex.toString());
 					}
 					buf[i] = (0x000000FF & (int)int_buf[0])
 					      | ((0x000000FF & (int)int_buf[1]) << 8)
@@ -156,10 +156,10 @@ public class SimulatorFeed extends WindowAdapter {
 	@SuppressWarnings("deprecation")
 	public void windowClosing(WindowEvent e) {
 		/* Dispose of the various swing and v4l4j components. */
-		receiver.stop();
+		receiver.stop(); //TODO: Replace this. It is a depreciated method. 
 
 		windowFrame.dispose();
-		Simulator.logger.info("Vision System Ending...");
+		Simulator.logger.info("Simulator System Ending...");
 		System.exit(0);
 	}
 }
