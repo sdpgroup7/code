@@ -241,10 +241,24 @@ public class TargetDecision {
 		int bottomWall = this.allStaticObjects.getHeight();
 		int b = this.allStaticObjects.getBoundary();
 		
-		this.ballIsTooCloseToWall = (ballPosition.x < b) || 
-				(ballPosition.x > ((rightWall -1) - b ) || 
-				(ballPosition.y < b ) || 
-				(ballPosition.x > ((bottomWall -1) - b )));
+		boolean insideLeftBoundary = ballPosition.x < b;
+		if(insideLeftBoundary){
+			logger.debug("inside left boundary..." + ballPosition.x);
+		}
+		boolean insideRightBoundary = ballPosition.x > ((rightWall - 1) -b);
+		if(insideRightBoundary){
+			logger.debug("inside right boundary..." + "boundary condition : " + ((rightWall - 1) -b));
+		}
+		boolean insideTopBoundary = ballPosition.y < b;
+		if(insideTopBoundary){
+			logger.debug("inside top boundary..." + ballPosition.y + "bounary is : " + b);
+		}
+		boolean insideBottomBoundary = ballPosition.y > ((bottomWall -1) -b);
+		if(insideBottomBoundary){
+			logger.debug("inside bottom boundary..." + ballPosition.y + "boundary condition : " + ((bottomWall -1) -b ));
+		}
+		
+		this.ballIsTooCloseToWall = (insideLeftBoundary) || (insideRightBoundary) || (insideTopBoundary ) || (insideBottomBoundary);
 	}
 	
 	public boolean getClearShot(){
