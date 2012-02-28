@@ -31,7 +31,6 @@ public class ControlInterface implements Observer {
 	public static final Logger logger = Logger.getLogger(ControlInterface.class);
 	
 	private WorldState world = WorldState.getInstance();
-	private VisionTools vtools = new VisionTools();
 	
 	private static int lookahead;
 	private RobotControl c;
@@ -77,7 +76,7 @@ public class ControlInterface implements Observer {
 			h = findGoalPoint(plan);
 		} catch(Exception e) {
 			logger.debug(e);
-			if(plan.getPath().size() > 0){
+			if(plan.getPath().size() > 1){
 				h = new Point2D(plan.getPath().get(plan.getPath().size() -1));
 			} else {
 				h = new Point2D(0,0);
@@ -115,13 +114,10 @@ public class ControlInterface implements Observer {
 	}
 
 	public void implimentArc(Arc path, Plan plan) {
-		
-		
-		
-		
-		int pixelsPerNode = world.getPitch().getHeight()/plan.getHeightInNodes();
+
+		double pixelsPerNode = plan.getNodeInPixels();
 		logger.debug(String.format("pixelsPerNode: %d", pixelsPerNode));
-		double conversion = (double) vtools.pixelsToCM(pixelsPerNode);
+		double conversion = (double) VisionTools.pixelsToCM(pixelsPerNode);
 		
 		logger.debug(String.format("Conversion value: %f", conversion));
 
@@ -158,17 +154,7 @@ public class ControlInterface implements Observer {
 			try {
 				Thread.sleep(75);
 			} catch (InterruptedException e) {}
-			
-		
 		}
-		
-		
-		
-		
-		
-		
-		
-		
 	}
 	
 	/*
@@ -201,13 +187,12 @@ public class ControlInterface implements Observer {
 		
 		Circle2D zone = new Circle2D(p.getOurRobotPositionVisual().getX(), p.getOurRobotPositionVisual().getY(), lookahead);
 		logger.debug(String.format("Zone centre: (%f,%f)",p.getOurRobotPositionVisual().getX(),p.getOurRobotPositionVisual().getY()));
-		boolean run = true;
 		int size = p.getPath().size();
 		int i = 0;
 		
 		Point2D intersect = null;
 		
-		while(run) {
+		while(true) {
 			
 			if (i == size-1) {
 				logger.error("Lookahead point unable to be found");
@@ -221,13 +206,13 @@ public class ControlInterface implements Observer {
 			if (intersections.size() == 1 || intersections.size() == 2) {
 
 				if (intersections.size() == 2) {
-					logger.debug("I found 2 points, taking the last point.");
+					logger.debug("I found 2 points, taking the first point.");
 				}
 				for (Point2D point : intersections) {
 					intersect = new Point2D(point);
 				}
 				logger.debug(String.format("Goal point found at (%f,%f)", intersect.getX(), intersect.getY()));
-				run = false;
+				break;
 
 			} else {
 				logger.debug("No points found, going to next line segment");
@@ -254,7 +239,7 @@ public class ControlInterface implements Observer {
 	public void update(Observable arg0, Object arg1) {
 		logger.debug("Got a new plan");
 		Plan plan = (Plan) arg1;
-		Arc arcToDrive = this.chooseArc(plan);
+		Arc arcToDrive = chooseArc(plan);
 		this.implimentArc(arcToDrive, plan);
 		
 	}
