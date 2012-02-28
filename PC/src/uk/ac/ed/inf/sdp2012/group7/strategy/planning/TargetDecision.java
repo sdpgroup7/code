@@ -168,23 +168,19 @@ public class TargetDecision {
 		}
 	}
 
-
+	
 	private void weHaveBall(){
 
 		Point ourPosition = allMovingObjects.getOurPosition();
-		Point ball_position = allMovingObjects.getBallPosition();
+		Point ballPosition = allMovingObjects.getBallPosition();
 		double ourAngle = allMovingObjects.getOurAngle();
 
-		if(40 > (int)ourPosition.distance(ball_position)){
+		if(40 > (int)ourPosition.distance(ballPosition)){
 
 
-			double angle_between_us_ball = Math.asin((ball_position.x - ourPosition.x)/ourPosition.distance(ball_position));
+			double angleBetweenUsBall = allMovingObjects.angleBetween(ourPosition, ballPosition);
 
-			if (angle_between_us_ball < 0){ 
-				angle_between_us_ball = angle_between_us_ball + 360;
-			}
-
-			if(Math.abs(angle_between_us_ball - ourAngle) < (30)){
+			if(Math.abs(angleBetweenUsBall - ourAngle) < (Math.PI/6)){
 				weHaveBall = true;
 			}
 		}
@@ -196,20 +192,17 @@ public class TargetDecision {
 	
 	private void theyHaveBall(){
 
-		Point their_position = allMovingObjects.getTheirPosition();
-		Point ball_position = allMovingObjects.getBallPosition();
-		double their_angle = allMovingObjects.getTheirAngle();
+		Point theirPosition = allMovingObjects.getTheirPosition();
+		Point ballPosition = allMovingObjects.getBallPosition();
+		double theirAngle = allMovingObjects.getTheirAngle();
 
-		if(40 > (int)their_position.distance(ball_position)){
+		if(40 > (int)theirPosition.distance(ballPosition)){
 
 
-			double angle_between_them_ball = Math.asin((ball_position.x - their_position.x)/their_position.distance(ball_position));
+			double angleBetweenThemBall = allMovingObjects.angleBetween(theirPosition, ballPosition);
 
-			if (angle_between_them_ball < 0){ 
-				angle_between_them_ball = angle_between_them_ball + 360;
-			}
-
-			if(Math.abs(angle_between_them_ball - their_angle) < (30)){
+			
+			if(Math.abs(angleBetweenThemBall - theirAngle) < (Math.PI/6)){
 				theyHaveBall = true;
 			}
 		}
@@ -240,16 +233,8 @@ public class TargetDecision {
 
 			//Angles
 			double ourAngle = allMovingObjects.getOurAngle();
-			double angleWithTopPost = Math.asin((allStaticObjects.getTheirTopGoalPost().x 
-					- ourPosition.x)/(ourPosition.distance(allStaticObjects.getTheirTopGoalPost())));
-			double angleWithBottomPost = Math.asin((allStaticObjects.getTheirBottomGoalPost().x 
-					- ourPosition.x)/(ourPosition.distance(allStaticObjects.getTheirBottomGoalPost())));
-
-			//fix for normal angles into bearings.... :D
-			if(angleWithTopPost < 0){
-				angleWithBottomPost = angleWithBottomPost + 360;
-				angleWithTopPost = angleWithTopPost + 360;
-			}
+			double angleWithTopPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirTopGoalPost()); 
+			double angleWithBottomPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirBottomGoalPost());
 
 			//Set clear shot boolean
 			if(worldState.getShootingDirection() == 1){
@@ -271,29 +256,22 @@ public class TargetDecision {
 		if(this.weHaveBall){
 
 			//Position
-			Point our_position = position;
+			Point ourPosition = position;
 
 			//Angles
 			double our_angle = angle;
-			double angle_with_top_post = Math.asin((this.allStaticObjects.getTheirTopGoalPost().x - our_position.x)/
-					(our_position.distance(this.allStaticObjects.getTheirTopGoalPost())));
-			double angle_with_bottom_post = Math.asin((this.allStaticObjects.getTheirBottomGoalPost().x - our_position.x)/
-					(our_position.distance(this.allStaticObjects.getTheirBottomGoalPost())));
+			double angleWithTopPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirTopGoalPost()); 
+			double angleWithBottomPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirBottomGoalPost());
 
-
-
-			angle_with_bottom_post = angle_with_bottom_post % (2*Math.PI);
-			angle_with_top_post = angle_with_top_post % (2*Math.PI);
 			
-
 			//Set clear shot boolean
 			if(worldState.getShootingDirection() == 1){
-				if(our_angle > angle_with_top_post && our_angle < angle_with_bottom_post){
+				if(our_angle > angleWithTopPost && our_angle < angleWithBottomPost){
 					return true;
 				}
 			}
 			else{
-				if(our_angle < angle_with_top_post && our_angle > angle_with_bottom_post){
+				if(our_angle < angleWithTopPost && our_angle > angleWithBottomPost){
 					return true;
 				}
 			}				
@@ -303,7 +281,7 @@ public class TargetDecision {
 	
 	
 	private void angularShot(){
-		int pitch_height = this.allStaticObjects.getPitchHeight();
+		int pitchHeight = this.allStaticObjects.getPitchHeight();
 		
 		//if angle of our robot is 90 or 270 , there cannot be angular shot 
 		double angle = allMovingObjects.getOurAngle();
@@ -322,29 +300,30 @@ public class TargetDecision {
 		// Find intercepts by plugging in y = 0 and y = pitch_height, and find the x ;
 		
 		double xTop = constant / slope;
-		double xBot = (pitch_height - constant) / slope;
-		Point intercept_top = new Point ((int)xTop,0);
-		Point intercept_bot = new Point ((int)xBot,pitch_height);
+		double xBot = (pitchHeight - constant) / slope;
+		Point interceptTop = new Point ((int)xTop,0);
+		Point interceptBot = new Point ((int)xBot,pitchHeight);
 		//compute the bounce angle
-		double bounce_angle = Math.PI - angle;
-		bounce_angle = bounce_angle % (2*Math.PI);
-		
-		if  (clearShot(intercept_top,bounce_angle) || clearShot(intercept_bot,bounce_angle)) {
+		double bounceAngle = Math.PI - angle;
+		while (bounceAngle < 0) {
+			bounceAngle = bounceAngle + (2*Math.PI);
+		}
+		if  (clearShot(interceptTop,bounceAngle) || clearShot(interceptBot,bounceAngle)) {
 			this.angularShot = true;
 		}
 	}
 	
 	
 	// returns best angle at a point for an open shot
-	//does not work yet 
+	
 	private double bestAngleOpen(Point p) {
 		// Find the coordinates of the middle of their goal
 		int x = (allStaticObjects.getTheirTopGoalPost().x - allStaticObjects.getTheirBottomGoalPost().x)/2;
 		int y = (allStaticObjects.getTheirTopGoalPost().y - allStaticObjects.getTheirBottomGoalPost().y)/2;
 		Point midGoal = new Point(x,y);
 		//The sin of the best shot angle is
-		double sinAngle = (midGoal.x - p.x)/midGoal.distance(p); 
-		double angle = Math.asin(sinAngle) % (Math.PI *2);
+	
+		double angle = allMovingObjects.angleBetween(p, midGoal);
 		return allMovingObjects.convertAngle(angle);
 	}
 	
@@ -415,8 +394,8 @@ public class TargetDecision {
 		double velocity = allMovingObjects.getBallVelocity();
 		double acceleration = allStaticObjects.getDeceleration();
 		//width and height of pitch in pixels
-		double pitch_width = allStaticObjects.getPitchWidth();
-		double pitch_height = allStaticObjects.getPitchHeight();
+		double pitchWidth = allStaticObjects.getPitchWidth();
+		double pitchHeight = allStaticObjects.getPitchHeight();
 		
 		int direction;
 		//-1 if ball goes to right, 1 if ball goes to left
@@ -433,30 +412,30 @@ public class TargetDecision {
 		int number_bounces_x = 0;
 		int number_bounces_y = 0;
 		//dealing with bounces of the walls
-		while (x > pitch_width) {
+		while (x > pitchWidth) {
 			number_bounces_x++;
-			x = x - pitch_width;			
+			x = x - pitchWidth;			
 		}
 		x = x * direction * Math.pow(-1, number_bounces_x);
 		
 		if (x < 0) {
-			x = x + pitch_width;
+			x = x + pitchWidth;
 		}
 		
-		while (y > pitch_height) {
+		while (y > pitchHeight) {
 			number_bounces_y++;
-			y = y - pitch_height;						
+			y = y - pitchHeight;						
 		}
 		y = y * direction * Math.pow(-1, number_bounces_y);
 		
 		if (y < 0) {
-			y = y + pitch_height;
+			y = y + pitchHeight;
 		}
 		
 		
-		Point predicted_point = new Point ((int)x,(int) y);
+		Point predictedPoint = new Point ((int)x,(int) y);
 		
-		return predicted_point;
+		return predictedPoint;
 	}
 	
 	public boolean getClearShot(){

@@ -2,6 +2,7 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 
 import java.awt.Point;
 
+import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 public class AllMovingObjects {
@@ -22,6 +23,7 @@ public class AllMovingObjects {
 	public AllMovingObjects() {
 		update();
 	}
+	
 	
 	public void update(){
 		
@@ -49,6 +51,11 @@ public class AllMovingObjects {
 	// method to trasform an angle between the coordinate system used in worldstate and the standard coordinate system used in strategy 
 	public double convertAngle(double angle) {
 		return Math.PI/2 - angle;
+	}
+	//   This uses the method from Vision to find angle between 2 points, then converts it into strategy coordinate system.
+	public double angleBetween(Point p1, Point p2) {
+		double angle = this.convertAngle(VisionTools.convertAngle(Math.atan2(p2.y - p1.y, p2.x - p1.x)));		
+		return angle;
 	}
 	
 	public Point getOurPosition() {
