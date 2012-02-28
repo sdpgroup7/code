@@ -41,8 +41,6 @@ public class ControlInterface implements Observer {
 	private int kick = PlanTypes.ActionType.KICK.ordinal();
 	private int stop = PlanTypes.ActionType.STOP.ordinal();
 	
-	private int waitTime = 200; //Time robot waits between commands
-	
 
 	public ControlInterface(int lookahead) {
 		this.lookahead = lookahead;
@@ -73,8 +71,6 @@ public class ControlInterface implements Observer {
 		Point2D p = new Point2D(plan.getOurRobotPositionVisual());
 		double v = plan.getOurRobotAngle();
 		
-		v = this.convertAngle(v);
-		
 		try {
 			h = this.findGoalPoint(plan);
 		} catch(Exception e) {
@@ -85,6 +81,8 @@ public class ControlInterface implements Observer {
 				h = new Point2D(plan.getPath().get(0));
 			}
 		}
+		
+		logger.debug(String.format("v: %f", v));
 		
 		double alpha = Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))	- v;
 		logger.debug(String.format("Alpha: %f", alpha));
@@ -130,10 +128,11 @@ public class ControlInterface implements Observer {
 			int converted = (int)(conversion*path.getRadius());
 			logger.info("Action is to drive");
 			c.clearAllCommands();
+			
 			this.c.circleWithRadius(converted , path.isDirection());
 			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isDirection()));
 			try {
-				Thread.sleep(waitTime);
+				Thread.sleep(75);
 			} catch (InterruptedException e) {}
 		
 		} else if (plan.getAction() == kick) {
@@ -142,12 +141,12 @@ public class ControlInterface implements Observer {
 			this.c.circleWithRadius(converted , path.isDirection());
 			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isDirection()));
 			try {
-				Thread.sleep(waitTime);
+				Thread.sleep(75);
 			} catch (InterruptedException e) {}
 			c.kick();
 			logger.info("Command sent to robot: kick");
 			try {
-				Thread.sleep(waitTime);
+				Thread.sleep(75);
 			} catch (InterruptedException e) {}
 			
 		} else if (plan.getAction() == stop) {
@@ -155,7 +154,7 @@ public class ControlInterface implements Observer {
 			c.stop();
 			logger.info("Command sent to robot: stop");
 			try {
-				Thread.sleep(waitTime);
+				Thread.sleep(75);
 			} catch (InterruptedException e) {}
 			
 		
