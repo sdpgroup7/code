@@ -53,9 +53,9 @@ public class WorldState{
     	} else {
     		//TODO: Add the constants for pitch 2.
     		pitch = new Pitch(	new Point(40,104),
-					new Point(600,98),
-					new Point(40,394),
-					new Point(607,384));
+					            new Point(600,98),
+					            new Point(40,394),
+					            new Point(607,384));
     		pitch.setBuffers(86,612,402,24);
     	}
     	updateShootingDirection();
@@ -153,8 +153,8 @@ public class WorldState{
     	}
     }
     
-    public void setRoom(int room){
-
+    public void setRoom(int r){
+        this.room = r;
     }
     
     public int getRoom(){
