@@ -117,7 +117,7 @@ public class ControlInterface implements Observer {
 	public void implimentArc(Arc path, Plan plan) {
 
 		double pixelsPerNode = plan.getNodeInPixels();
-		logger.debug(String.format("pixelsPerNode: %d", pixelsPerNode));
+		logger.debug(String.format("pixelsPerNode: %f", pixelsPerNode));
 		int converted;
 		double conversion = (double) VisionTools.pixelsToCM(pixelsPerNode);
 		
@@ -147,7 +147,6 @@ public class ControlInterface implements Observer {
 			logger.info("Action is to stop");
 			c.stop();
 			logger.info("Command sent to robot: stop");
-<<<<<<< HEAD
 			waitABit();
 			
 		
@@ -171,15 +170,11 @@ public class ControlInterface implements Observer {
 			c.rotateBy(howMuchToTurn);
 			waitABit();
 		}
-		
-		
-=======
-			try {
-				Thread.sleep(75);
-			} catch (InterruptedException e) {}
-		}
->>>>>>> d6a797b29dd3c7e5fe1d3ab8937b4d338fcccc51
 	}
+	
+		
+	
+	
 	
 	/*
 	 * Changes the angle provided by vision into one required by the calculations
