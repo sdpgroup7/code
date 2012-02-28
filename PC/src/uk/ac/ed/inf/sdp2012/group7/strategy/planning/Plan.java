@@ -58,6 +58,7 @@ public class Plan {
 		logger.debug("Target Decision Position: " + targetDecision.getTargetAsNode().toString());
 		logger.debug("Ball Position: " + this.allStaticObjects.convertToNode(Vision.worldState.getBall().getPosition().getCentre()));
 		logger.debug("Robot Position: " + this.allStaticObjects.convertToNode(allMovingObjects.getOurPosition()).toString());
+		logger.debug("Their Robot Position: " + this.allStaticObjects.convertToNode(worldState.getOpponentsRobot().getPosition().getCentre()));
 		
 		//Now create an A* object from which we create a path
 		astar = new AStarRun(	this.allStaticObjects.getHeight(),
@@ -89,9 +90,13 @@ public class Plan {
 		return targetDecision.getAction();
 	}
 	
-	//Unused
+	//Plan Monitor
 	public double getOurRobotAngle(){
 		return allMovingObjects.getOurAngle();
+	}
+	
+	public Point getBallPosition(){
+		return allStaticObjects.convertToNode(allMovingObjects.getBallPosition());
 	}
 	
 	//Unused

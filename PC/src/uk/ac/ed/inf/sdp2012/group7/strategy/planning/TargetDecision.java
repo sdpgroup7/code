@@ -64,18 +64,17 @@ public class TargetDecision {
 		
 		
 		Point target = new Point();
-		//put it into node for assessment
-		//hack :o)
 		target = allStaticObjects.convertToNode(this.allMovingObjects.getBallPosition());
 		//boolean for knowing if the ball is on the pitch
+		//otherwise we crash..
 		boolean ballOnPitch = ((target.x >= 0) && (target.x <= allStaticObjects.getWidth()) && 
 							   (target.y >= 0) && (target.y <= allStaticObjects.getHeight()));
 		
 		if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
 		
-			//Lets get this shit in, and then go read about proper decision making structures later.
+			//Really need a better decision structure
 			if(!ballOnPitch){
-				//fuck off and sit next to our goal
+				//sit next to our goal
 				this.action = PlanTypes.ActionType.DRIVE.ordinal();
 				logger.debug("Ball is not found on pitch, driving to our goal");
 				return this.allStaticObjects.getInFrontOfOurGoal();
@@ -83,26 +82,41 @@ public class TargetDecision {
 				
 			} else {
 				if(this.ballIsTooCloseToWall){
+					//Need ability to dribble by next milestone
 					//go sit infront of our goal
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
 					logger.debug("Ball is too close to the wall, driving to our goal");
 					return this.allStaticObjects.getInFrontOfOurGoal();
+					
 				} else if (this.theyHaveBall){
 					//go sit infront of our goal
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
+					//would be great if we could go into penalty mode here
 					logger.debug("They have the ball, driving to our goal");
 					return this.allStaticObjects.getInFrontOfOurGoal();
+					
 				} else {
-					if(this.clearShot){
-						//here we kick
-						this.action = PlanTypes.ActionType.KICK.ordinal();
-						return target;
-					} else {
-						//here we should be providing either 
-						//a) best position for open shot -- so we need find position for open shot, and that angle
-						//b) best position for angular shot -- so we need find position for angular shot, and that angle
-						//c) dribble the ball out -- drive to ball, drive after ball <--
+					//weHaveBall && not @ bestAngle && not @ bestPosition
+					if(this.weHaveBall){
+						//drive towards their goal
 						this.action = PlanTypes.ActionType.DRIVE.ordinal();
+						logger.debug("We have the ball, we don't have a good angle to shoot or position; driving to their goal");
+						return this.allStaticObjects.getInFrontOfTheirGoal();
+						
+					//weHaveBall && not @ bestAngle && atBestPosition
+					} else if (this.weHaveBall) {
+						//turn to best angle
+						this.action = PlanTypes.ActionType.DRIVE.ordinal();
+						logger.debug("We have the ball, we don't have a good angle to shoot; turning to their goal");
+						return target;
+						
+					//weHaveBall && bestAngle && bestPosition
+					} else if (this.weHaveBall) {
+						this.action = PlanTypes.ActionType.KICK.ordinal();
+						logger.debug("We have the ball, we're on; kicking");
+						return target;
+						
+					} else {
 						return target;
 					}
 				}
@@ -114,10 +128,14 @@ public class TargetDecision {
 			return target;
 		}
 		//Penalty modes continue from here...
-		else {
+		else if(this.planType == PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
 			this.action = PlanTypes.ActionType.STOP.ordinal();
 			return target;		
-		}				
+		}
+		else {
+			this.action = PlanTypes.ActionType.STOP.ordinal();
+			return target;
+		}
 	}
 
 
@@ -140,6 +158,8 @@ public class TargetDecision {
 				weHaveBall = true;
 			}
 		}
+		
+		logger.debug("We have the ball : " + this.weHaveBall);
 
 
 	}
@@ -164,6 +184,7 @@ public class TargetDecision {
 			}
 		}
 
+		logger.debug("They have the ball : " + this.theyHaveBall);
 
 	}
 
@@ -243,19 +264,19 @@ public class TargetDecision {
 		
 		boolean insideLeftBoundary = ballPosition.x < b;
 		if(insideLeftBoundary){
-			logger.debug("inside left boundary..." + ballPosition.x);
+			logger.debug("inside left boundary... " + ballPosition.x);
 		}
 		boolean insideRightBoundary = ballPosition.x > ((rightWall - 1) -b);
 		if(insideRightBoundary){
-			logger.debug("inside right boundary..." + "boundary condition : " + ((rightWall - 1) -b));
+			logger.debug("inside right boundary... " + ballPosition.x + "boundary condition : " + ((rightWall - 1) -b));
 		}
 		boolean insideTopBoundary = ballPosition.y < b;
 		if(insideTopBoundary){
-			logger.debug("inside top boundary..." + ballPosition.y + "bounary is : " + b);
+			logger.debug("inside top boundary... " + ballPosition.y + "bounary is : " + b);
 		}
 		boolean insideBottomBoundary = ballPosition.y > ((bottomWall -1) -b);
 		if(insideBottomBoundary){
-			logger.debug("inside bottom boundary..." + ballPosition.y + "boundary condition : " + ((bottomWall -1) -b ));
+			logger.debug("inside bottom boundary... " + ballPosition.y + "boundary condition : " + ((bottomWall -1) -b ));
 		}
 		
 		this.ballIsTooCloseToWall = (insideLeftBoundary) || (insideRightBoundary) || (insideTopBoundary ) || (insideBottomBoundary);
