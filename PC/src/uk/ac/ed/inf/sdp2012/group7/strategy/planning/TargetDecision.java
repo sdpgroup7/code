@@ -447,4 +447,8 @@ public class TargetDecision {
 		return this.action;
 	}
 	
+	public double getAngleWanted(){
+		return this.bestAngle;
+	}
+	
 }

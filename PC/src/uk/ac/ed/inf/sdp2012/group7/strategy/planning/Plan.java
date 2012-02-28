@@ -128,5 +128,10 @@ public class Plan {
 	public int getHeightInNodes(){
 		return this.allStaticObjects.getHeight();
 	}
+	
+	//Return angle required...
+	public double getAngleWanted(){
+		return this.targetDecision.getAngleWanted();
+	}
 
 }
