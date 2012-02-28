@@ -23,6 +23,7 @@ public class FeedProcessor{
     private VisionFeed visionFeed;
     private OrientationFinder findAngle; // finds the angle
     private BufferedImage previousOverlay = null;
+    private DistortionFix fix= new DistortionFix();
     
     private int height;
     private int width;
@@ -50,6 +51,13 @@ public class FeedProcessor{
             calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
     	} else {
     		//image = removeBackground(image,Vision.backgroundImage);
+    		image = fix.removeBarrelDistortion(
+    		                                image,
+							                Vision.worldState.getPitch().getLeftBuffer(),
+							                Vision.worldState.getPitch().getRightBuffer(), 
+							                Vision.worldState.getPitch().getTopBuffer(),
+							                Vision.worldState.getPitch().getBottomBuffer()
+							                );
     		image = initialLocation.markImage(image);
             Graphics frameGraphics = label.getGraphics();
             Graphics imageGraphics = doThresh.getThresh(
