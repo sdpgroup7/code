@@ -61,9 +61,12 @@ public class PlanMonitor {
 	}
 	
 	public void outputPlan(){
+		long start = System.currentTimeMillis();
 		String plan = generateASCIIPlan();
 		System.out.println(plan);
 		generateImage(plan);
+		long timed = System.currentTimeMillis() - start;
+		Strategy.logger.info("Time to generate plan render: " + timed + "ms");
 	}
 	
 	public String generateASCIIPlan(){
