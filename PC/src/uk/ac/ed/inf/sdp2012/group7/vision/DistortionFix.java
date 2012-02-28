@@ -25,7 +25,7 @@ public class DistortionFix {
     	Vision.logger.info("This method has not yet been implemented.");
     	width = image.getWidth();
     	height = image.getHeight();
-    	BufferedImage newImage = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+    	BufferedImage newImage = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
     	
     	for (int i = left; i < right; i++) {
     		for (int j = top; j < bottom; j++) {
