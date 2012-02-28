@@ -9,11 +9,15 @@ public class VisionTools {
 		return (int) pixel;
 	}
 	
-	public static float pixelsToCM(int pixelValue){
+	public static float pixelsToCM(double pixelValue){
 		float width = (float) Vision.worldState.getPitch().getPitchWidth();
 		int pixelWidth = Vision.worldState.getPitch().getWidth();
-		float cm = width * pixelValue / pixelWidth;
+		float cm = (float)(width * pixelValue / (double)pixelWidth);
 		return cm;	
+	}
+	
+	public static float pixelsToCM(int pixelValue){
+		return pixelsToCM((double)pixelValue);	
 	}
 	
     public static double convertAngle(double a){

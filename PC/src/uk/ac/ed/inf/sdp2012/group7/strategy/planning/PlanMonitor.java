@@ -107,6 +107,7 @@ public class PlanMonitor {
 				if(n.isObstical()) ascii[y][x] = "X";
 				if(n.isStart()) ascii[y][x] = "S";
 				if(n.isVisited()) ascii[y][x] = " ";
+				if(currentPlan.getBallPosition().equals(new Point(x,y))) ascii[y][x] = "B";
 			}
 		}
 		for(int y = 0; y < ascii.length; y++){
@@ -140,7 +141,7 @@ public class PlanMonitor {
 	public BufferedImage markData(BufferedImage im){
 		Graphics2D graphics = im.createGraphics();
 		//ControlInterface ci = new ControlInterface(5);
-		/*Arc arc = ci.chooseArc(currentPlan);
+		Arc arc = ControlInterface.chooseArc(currentPlan);
 		double radius = arc.getRadius();
 		double angle = currentPlan.getOurRobotAngle();
 		if(arc.isLeft()) {
@@ -149,13 +150,19 @@ public class PlanMonitor {
 			angle = angle + Math.PI/2;
 		}
 		angle = angle % (Math.PI*2);
-		double retAngle = (Math.PI * 2) - angle;
-		int x = (int)(currentPlan.getOurRobotPosition().x + (radius*Math.cos(angle)));
-		int y = (int)(currentPlan.getOurRobotPosition().y + (radius*Math.sin(angle)));
+		double retAngle = (Math.PI + angle) % (Math.PI * 2);
+		int x = (int)(currentPlan.getNodeInPixels()*currentPlan.getOurRobotPosition().x + (currentPlan.getNodeInPixels()*radius*Math.cos(angle)));
+		int y = (int)(currentPlan.getNodeInPixels()*currentPlan.getOurRobotPosition().y + (currentPlan.getNodeInPixels()*radius*Math.sin(angle)));
+		
+		Strategy.logger.info("Arc info: " + String.format("%d,%d,%d,%d,%d,%d",x, y, 
+				(int)radius, (int)radius, 
+				(int)Math.toDegrees(VisionTools.convertAngleBack(retAngle)), 
+				(int)Math.toDegrees(VisionTools.convertAngleBack(Math.PI))));
+		
 		graphics.drawArc(	x, y, 
 							(int)radius, (int)radius, 
-							(int)VisionTools.convertAngleBack(retAngle), 
-							(int)VisionTools.convertAngleBack(Math.PI));*/
+							Math.abs((int)Math.toDegrees(VisionTools.convertAngleBack(retAngle))), 
+							Math.abs((int)Math.toDegrees(VisionTools.convertAngleBack(Math.PI))));
 		
 		graphics.drawOval(	(int)(	currentPlan.getNodeInPixels() * 
 									currentPlan.getOurRobotPositionVisual().x)-15, 

@@ -90,9 +90,13 @@ public class Plan {
 		return targetDecision.getAction();
 	}
 	
-	//Unused
+	//Plan Monitor
 	public double getOurRobotAngle(){
 		return allMovingObjects.getOurAngle();
+	}
+	
+	public Point getBallPosition(){
+		return allStaticObjects.convertToNode(allMovingObjects.getBallPosition());
 	}
 	
 	//Unused
@@ -123,6 +127,11 @@ public class Plan {
 	//For Control Interface
 	public int getHeightInNodes(){
 		return this.allStaticObjects.getHeight();
+	}
+	
+	//Return angle required...
+	public double getAngleWanted(){
+		return this.targetDecision.getAngleWanted();
 	}
 
 }

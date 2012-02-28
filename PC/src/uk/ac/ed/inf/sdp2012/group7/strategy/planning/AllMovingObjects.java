@@ -45,6 +45,12 @@ public class AllMovingObjects {
 	    
 	}
 	
+	
+	// method to trasform an angle between the coordinate system used in worldstate and the standard coordinate system used in strategy 
+	public double convertAngle(double angle) {
+		return Math.PI/2 - angle;
+	}
+	
 	public Point getOurPosition() {
 		return ourPosition;
 	}

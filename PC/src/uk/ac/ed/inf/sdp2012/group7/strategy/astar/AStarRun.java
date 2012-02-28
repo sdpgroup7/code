@@ -73,7 +73,7 @@ public class AStarRun {
 				return this.shortestPath.pathToPoints();
 			} catch (Exception ex) {
 				Strategy.logger.error("getPathInPoints return failed: " + ex.getMessage());
-				return this.shortestPath.pathToPoints();
+				return new ArrayList<Point>();
 			}
 		}
 }
