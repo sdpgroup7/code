@@ -11,13 +11,13 @@
 public class Arc {
 	
 	private double radius;
-	private boolean direction;
+	private boolean left;
 	private int command;
 	//This is the number of cm in a golf ball
 	
 	public Arc(double r, boolean d, int c) {
 		this.radius = r;
-		this.direction = d;
+		this.left = d;
 		this.command = c;
 	}
 	
@@ -29,12 +29,12 @@ public class Arc {
 		this.radius = radius;
 	}
 	
-	public boolean isDirection() {
-		return direction;
+	public boolean isLeft() {
+		return left;
 	}
 	
-	public void setDirection(boolean direction) {
-		this.direction = direction;
+	public void setLeft(boolean direction) {
+		this.left = direction;
 	}
 
 	public void setCommand(int command) {
