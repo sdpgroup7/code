@@ -153,8 +153,8 @@ public class WorldState{
     	}
     }
     
-    public void setRoom(int room){
-
+    public void setRoom(int r){
+        this.room = r;
     }
     
     public int getRoom(){
