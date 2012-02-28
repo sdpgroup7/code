@@ -15,7 +15,7 @@ public class DistortionFix {
 	ArrayList<Point> correctedPoints;
 	ArrayList<Color> colors ;
 
-    public BufferedImage removeBarrelDistortion(BufferedImage image){
+    public BufferedImage removeBarrelDistortion(BufferedImage image, int left, int right, int top, int bottom){
     	
     	ArrayList<Point> points = new ArrayList<Point>();
     	ArrayList<Point> correctedPoints = new ArrayList<Point>();
@@ -24,8 +24,8 @@ public class DistortionFix {
     	width = image.getWidth();
     	height = image.getHeight();
     	
-    	for (int i = 0; i < width; i++) {
-    		for (int j = 0; j < height; j++) {
+    	for (int i = left; i < right; i++) {
+    		for (int j = top; j < bottom; j++) {
     			points.add(new Point(i,j));
     			colors.add(new Color(image.getRGB(i, j)));
 			}
