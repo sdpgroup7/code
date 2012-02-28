@@ -28,12 +28,17 @@ public class AllStaticObjects {
 	private int height;
 	private int width;
 	private int boundary;
+	private int pitchHeight;
+	private int pitchWidth;
+	private double deceleration;
+	
 	private Point theirTopGoalPost;
 	private Point theirBottomGoalPost;
 	private Point ourTopGoalPost;
 	private Point ourBottomGoalPost;
 	private Point inFrontOfOurGoal;
 	private Point inFrontOfTheirGoal;
+	
 	
 	//worldstate getInstance
 	public WorldState worldState = WorldState.getInstance();
@@ -53,13 +58,14 @@ public class AllStaticObjects {
 		this.ourBottomGoalPost = worldState.getOurGoal().getBottomLeft();
 		this.pitchTopBuffer  = worldState.getPitch().getTopBuffer();
 		this.pitchLeftBuffer = worldState.getPitch().getLeftBuffer();
-		//this.pitch_bottom_buffer  = worldState.getPitch().getBottomBuffer();
-		//this.pitch_right_buffer = worldState.getPitch().getRightBuffer();
+		this.pitchHeight = worldState.getPitch().getHeightInPixels();
+		this.pitchWidth = worldState.getPitch().getWidthInPixels();
+		
 		
 		//hard code setting of grid resolution (Grid is used in A*)
 		this.height = 29;
 		this.width = 58;
-		this.nodeInPixels = (double)worldState.getPitch().getWidthInPixels()/(double)this.width;//width in pixels!
+		this.nodeInPixels = (double)this.pitchWidth/(double)this.width;//width in pixels!
 		Strategy.logger.info("Node size in pixels: " + nodeInPixels);
 		//Boundary around the edges of the pitch, to prevent the robot from hitting the walls
 		//So this is dependent on the resolution..
@@ -67,12 +73,14 @@ public class AllStaticObjects {
 		//set defence position
 		this.pointInfrontOfGoal();
 		this.pointInfrontOfTheirGoal();
+		
+		this.deceleration = 0;
 	}
 	
 	//Compacts WorldState position point into "Node" centre position
 	public Point convertToNode(Point p){
-		int x = (int)((double)(p.x - this.pitchLeftBuffer)/this.nodeInPixels);
-		int y = (int)((double)(p.y - this.pitchTopBuffer)/this.nodeInPixels);
+		int x = (int)((double)(p.x - (this.pitchLeftBuffer - 1))/this.nodeInPixels);
+		int y = (int)((double)(p.y - (this.pitchTopBuffer - 1))/this.nodeInPixels);
 
 		
 		return new Point(x,y);
@@ -175,13 +183,26 @@ public class AllStaticObjects {
 	
 	public void startRun() {
 		synchronized(this){
-			Strategy.logger.info("STARTED" + this.runFlag);
+			Strategy.logger.info("STARTED : " + this.runFlag);
 			this.runFlag = true;
 		}
 	}
 	
 	public boolean getRunFlag(){
-			return this.runFlag;
+		return this.runFlag;
 
 	}
+
+	public int getPitchHeight() {
+		return this.pitchHeight;
+	}
+
+	public int getPitchWidth() {
+		return this.pitchWidth;
+	}
+	
+	public double getDeceleration(){
+		return this.deceleration;
+	}
+	
 }
