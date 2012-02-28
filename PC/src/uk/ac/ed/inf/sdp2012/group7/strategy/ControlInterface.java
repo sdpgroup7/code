@@ -62,7 +62,7 @@ public class ControlInterface implements Observer {
 	public static Arc chooseArc(Plan plan){
 		Point2D p = new Point2D(plan.getOurRobotPositionVisual());
 		double v = plan.getOurRobotAngle();
-		return generateArc(p,plan.getPath(),v,plan.getAction(),lookahead);
+		return generateArc(p,plan.getPath(),v,plan.getAction(),lookahead, plan.getNodeInPixels());
 	}
 	
 	/*
@@ -70,7 +70,7 @@ public class ControlInterface implements Observer {
 	 * given using the pure pursuit algorithm
 	 */
 
-	public static Arc generateArc(Point2D p, ArrayList<Point> path, double v, int planAction, int lookahead) {
+	public static Arc generateArc(Point2D p, ArrayList<Point> path, double v, int planAction, int lookahead, double nodeInPixels) {
 		// The paper where this maths comes from can be found here
 		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
 		
@@ -113,8 +113,9 @@ public class ControlInterface implements Observer {
 		} else {
 			dir = true;
 		}
-
-		Arc arc = new Arc(R, dir, planAction);
+		
+		double conversion = (double) VisionTools.pixelsToCM(nodeInPixels);
+		Arc arc = new Arc(R*conversion, dir, planAction);
 
 		return arc;
 
@@ -122,28 +123,19 @@ public class ControlInterface implements Observer {
 
 	public void implimentArc(Arc path, Plan plan) {
 
-		double pixelsPerNode = plan.getNodeInPixels();
-		logger.debug(String.format("pixelsPerNode: %f", pixelsPerNode));
-		int converted;
-		double conversion = (double) VisionTools.pixelsToCM(pixelsPerNode);
-		
-		logger.debug(String.format("Conversion value: %f", conversion));
-
 		if (plan.getAction() == drive) {
 			
-			converted = (int)(conversion*path.getRadius());
 			logger.info("Action is to drive");
 			c.clearAllCommands();
 			
-			this.c.circleWithRadius(converted , path.isLeft());
-			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isLeft()));
+			this.c.circleWithRadius((int)path.getRadius() , path.isLeft());
+			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", (int)path.getRadius(), path.isLeft()));
 			waitABit();
 		
 		} else if (plan.getAction() == kick) {
 			logger.info("Action is to kick");
-			converted = (int)(conversion*path.getRadius());
-			this.c.circleWithRadius(converted , path.isLeft());
-			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isLeft()));
+			this.c.circleWithRadius((int)path.getRadius() , path.isLeft());
+			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", (int)path.getRadius(), path.isLeft()));
 			waitABit();
 			c.kick();
 			logger.info("Command sent to robot: kick");
