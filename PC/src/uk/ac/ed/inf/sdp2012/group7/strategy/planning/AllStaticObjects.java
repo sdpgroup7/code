@@ -33,6 +33,7 @@ public class AllStaticObjects {
 	private Point ourTopGoalPost;
 	private Point ourBottomGoalPost;
 	private Point inFrontOfOurGoal;
+	private Point inFrontOfTheirGoal;
 	
 	//worldstate getInstance
 	public WorldState worldState = WorldState.getInstance();
@@ -65,6 +66,7 @@ public class AllStaticObjects {
 		this.boundary = 3;
 		//set defence position
 		this.pointInfrontOfGoal();
+		this.pointInfrontOfTheirGoal();
 	}
 	
 	//Compacts WorldState position point into "Node" centre position
@@ -96,6 +98,18 @@ public class AllStaticObjects {
 		}
 		else {
 			this.inFrontOfOurGoal = new Point(this.boundary,this.height/2);
+		}
+	}
+	
+	//Method for finding the centre point just in front of their goal...
+	//Return this as a node!
+	private void pointInfrontOfTheirGoal(){
+		if(worldState.getShootingDirection() == -1){
+			this.inFrontOfTheirGoal = new Point((this.width - this.boundary),this.height/2);
+			
+		}
+		else {
+			this.inFrontOfTheirGoal = new Point(this.boundary,this.height/2);
 		}
 	}
 	
@@ -135,6 +149,10 @@ public class AllStaticObjects {
 	
 	public Point getInFrontOfOurGoal() {
 		return inFrontOfOurGoal;
+	}
+	
+	public Point getInFrontOfTheirGoal() {
+		return inFrontOfTheirGoal;
 	}
 
 	public int getPlanType(){
