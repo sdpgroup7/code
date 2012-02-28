@@ -116,7 +116,7 @@ public class ControlInterface implements Observer {
 	public void implimentArc(Arc path, Plan plan) {
 
 		double pixelsPerNode = plan.getNodeInPixels();
-		logger.debug(String.format("pixelsPerNode: %d", pixelsPerNode));
+		logger.debug(String.format("pixelsPerNode: %f", pixelsPerNode));
 		double conversion = (double) VisionTools.pixelsToCM(pixelsPerNode);
 		
 		logger.debug(String.format("Conversion value: %f", conversion));
