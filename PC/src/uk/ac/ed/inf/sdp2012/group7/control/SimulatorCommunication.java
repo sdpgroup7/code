@@ -2,6 +2,7 @@ package uk.ac.ed.inf.sdp2012.group7.control;
 
 import java.io.*;
 import java.net.*;
+import java.nio.ByteBuffer;
 
 public class SimulatorCommunication implements CommunicationInterface {
 
@@ -36,11 +37,14 @@ public class SimulatorCommunication implements CommunicationInterface {
 
 	public void sendToRobot(int command) {
 		try {
-			os.write(command);
+			byte[] bytes = ByteBuffer.allocate(4).putInt(command).array();
+			os.write(bytes);
+			os.flush();
 		} catch (Exception e) {
 			System.out.println("Sending command '"+command+"' to simulator at "+addr()+" failed: "+e.toString());
 		}
 	}
+
 	
 	public void openConnection() throws IOException {
 		System.out.print("Connecting to simulator at "+addr()+"...");

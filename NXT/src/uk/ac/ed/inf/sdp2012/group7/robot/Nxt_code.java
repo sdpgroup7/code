@@ -283,7 +283,7 @@ public class Nxt_code implements Runnable {
 					// we were going before the collision occurred
 					reacting = true;
 					tempCurSpeed = (float) pilot.getTravelSpeed();
-					pilot.quickStop();
+					pilot.stop();
 					// move back a little bit away from the wall
 					pilot.setTravelSpeed(200);
 					pilot.travel(-20);
