@@ -139,7 +139,7 @@ public class PlanMonitor {
 	
 	public BufferedImage markData(BufferedImage im){
 		Graphics2D graphics = im.createGraphics();
-		ControlInterface ci = new ControlInterface(5);
+		//ControlInterface ci = new ControlInterface(5);
 		/*Arc arc = ci.chooseArc(currentPlan);
 		double radius = arc.getRadius();
 		double angle = currentPlan.getOurRobotAngle();
