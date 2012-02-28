@@ -116,9 +116,7 @@ public class SimulatorFeed extends WindowAdapter {
 	};
 	
 	private void initFrameGenerator() {
-		
 		receiver.run();
-		
 	}
 
 	/**
