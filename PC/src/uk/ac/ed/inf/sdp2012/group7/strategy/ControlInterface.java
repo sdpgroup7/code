@@ -73,6 +73,8 @@ public class ControlInterface implements Observer {
 		Point2D p = new Point2D(plan.getOurRobotPositionVisual());
 		double v = plan.getOurRobotAngle();
 		
+		v = this.convertAngle(v);
+		
 		try {
 			h = this.findGoalPoint(plan);
 		} catch(Exception e) {
@@ -128,7 +130,6 @@ public class ControlInterface implements Observer {
 			int converted = (int)(conversion*path.getRadius());
 			logger.info("Action is to drive");
 			c.clearAllCommands();
-			c.beep();
 			this.c.circleWithRadius(converted , path.isDirection());
 			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isDirection()));
 			try {
@@ -138,7 +139,6 @@ public class ControlInterface implements Observer {
 		} else if (plan.getAction() == kick) {
 			logger.info("Action is to kick");
 			int converted = (int)(conversion*path.getRadius());
-			c.beep();
 			this.c.circleWithRadius(converted , path.isDirection());
 			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isDirection()));
 			try {

@@ -228,9 +228,10 @@ public class RobotControl {
 	public void circleWithRadius(int radius, boolean arcLeft) {
 
 		// interpreted on the robot as a negative
-		if (arcLeft)
+		if (arcLeft) {
+			radius = radius*(-1);
 			radius += 1000;
-
+		}
 		int command = ConstantsReuse.OpCodes.ARC.ordinal() | (radius << 8);
 		addCommand(command);
 
