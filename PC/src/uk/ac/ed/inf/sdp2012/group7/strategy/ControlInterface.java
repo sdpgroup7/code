@@ -71,6 +71,8 @@ public class ControlInterface implements Observer {
 		Point2D p = new Point2D(plan.getOurRobotPositionVisual());
 		double v = plan.getOurRobotAngle();
 		
+		v = this.convertAngle(v);
+		
 		try {
 			h = this.findGoalPoint(plan);
 		} catch(Exception e) {
