@@ -161,6 +161,18 @@ public class TargetDecision {
 
 	}
 
+	//This function should not check weHaveBall
+	//It should find the best position and angle for "a" shot
+	//update whether that target type is of open or angular
+	//and set a variable bestTargetAngle and bestTargetPosition which is where we want to be
+	//in the decision making getTargetNode it should then check if the robot
+	//is on that angle and position and respond, either by moving to the above
+	//of if on the above it should react - TURN / KICK
+	//Thus we need two functions - getBestAngular
+	//                           - getBestOpen
+	//these then set bestPosition and bestAngle
+	//and we just check if our robot is at these conditions...
+	
 	private void clearShot(){
 
 		if(weHaveBall){
