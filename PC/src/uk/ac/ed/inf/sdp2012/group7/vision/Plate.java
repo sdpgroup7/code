@@ -85,5 +85,23 @@ public class Plate{
 			return new Point(0,0);
 		}
 	}
-
+	/**
+	 * 
+	 * @param a point p
+	 * @param array of four points, forming a rectangle
+	 * @return whether p is in the rectangle formed from the four points
+	 */
+	public boolean isInRectangle(Point p, Point[] points){
+		if( p == new Point(0,0) ){
+			return false;
+		}
+		
+		boolean a; 
+		boolean b; 
+		
+		a = isPointInTriangle(points[0], points[2], points[3], p);
+		b = isPointInTriangle(points[1], points[2], points[3], p);
+		
+		return a || b;
+	}
 }

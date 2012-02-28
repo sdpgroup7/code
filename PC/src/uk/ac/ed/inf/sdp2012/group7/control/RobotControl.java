@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import uk.ac.ed.inf.sdp2012.group7.MainRunner;
+
 import lejos.pc.comm.NXTComm;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTInfo;
@@ -12,18 +14,21 @@ import lejos.pc.comm.NXTInfo;
  * This class holds the geometric location of our robot but is also responsible
  * for communicating with it.
  */
-public class RobotControl {
+public class RobotControl implements ConstantsReuse {
 
 	private CommunicationInterface comms;
 	private NXTComm nxtComm;
-	private NXTInfo info = new NXTInfo(NXTCommFactory.BLUETOOTH, ConstantsReuse.ROBOT_NAME,
-			ConstantsReuse.ROBOT_MAC);
+	private NXTInfo info = new NXTInfo(NXTCommFactory.BLUETOOTH, ROBOT_NAME,
+			ROBOT_MAC);
 	private Queue<Integer> commandList = new LinkedList<Integer>();
 
 	private boolean isConnected = false;
 	private boolean keepConnected = true;
 	public boolean askingToReset = false;
 	private volatile int currentSpeed = 0;
+	private boolean simulator = false;
+
+	public RobotControl() {}
 
 	/**
 	 * This method initialises the connection and starts the thread which sends
@@ -47,7 +52,7 @@ public class RobotControl {
 				// send data when necessary
 				while (keepConnected) {
 					if (commandList.isEmpty()) {
-						sendToRobot(ConstantsReuse.OpCodes.DO_NOTHING.ordinal());
+						sendToRobot(OpCodes.DO_NOTHING.ordinal());
 					} else {
 						sendToRobot(commandList.remove());
 					}
@@ -75,7 +80,12 @@ public class RobotControl {
 	 * Connects to the NXT
 	 */
 	private void connectToRobot() throws IOException {
-		comms = new BluetoothCommunication(nxtComm, info);
+		simulator = MainRunner.simulator;
+		if (simulator)
+			comms = new SimulatorCommunication();
+		else 
+			comms = new BluetoothCommunication(nxtComm, info);
+
 		comms.openConnection();
 		setConnected(true);
 		beep();
@@ -87,7 +97,8 @@ public class RobotControl {
 	private void disconnectFromRobot() {
 		try {
 			comms.closeConnection();
-			nxtComm.close();
+			if (!simulator)			
+				nxtComm.close();
 			setConnected(false);
 		} catch (IOException ex) {
 			System.err.println("Error Disconnecting from NXT");
@@ -152,7 +163,7 @@ public class RobotControl {
 	 */
 	public void moveForward() {
 		moving = true;
-		addCommand(ConstantsReuse.OpCodes.FORWARDS.ordinal());
+		addCommand(OpCodes.FORWARDS.ordinal());
 	}
 	
 	/**
@@ -160,7 +171,7 @@ public class RobotControl {
 	 */
 	public void moveForward(int distance) {
 		moving = true;
-		int command = ConstantsReuse.OpCodes.FORWARDS_WITH_DISTANCE.ordinal() | (distance << 8);
+		int command = OpCodes.FORWARDS_WITH_DISTANCE.ordinal() | (distance << 8);
 		addCommand(command);
 	}
 
@@ -169,14 +180,14 @@ public class RobotControl {
 	 */
 	public void moveBackward() {
 		moving = true;
-		addCommand(ConstantsReuse.OpCodes.BACKWARDS.ordinal());
+		addCommand(OpCodes.BACKWARDS.ordinal());
 	}
 
 	/**
 	 * Commands the robot to move back a little bit
 	 */
 	public void moveBackwardSlightly() {
-		addCommand(ConstantsReuse.OpCodes.BACKWARDS_SLIGHTLY.ordinal());
+		addCommand(OpCodes.BACKWARDS_SLIGHTLY.ordinal());
 	}
 
 	/**
@@ -184,14 +195,14 @@ public class RobotControl {
 	 */
 	public void stop() {
 		moving = false;
-		addCommand(ConstantsReuse.OpCodes.STOP.ordinal());
+		addCommand(OpCodes.STOP.ordinal());
 	}
 
 	/**
 	 * Sets the speed of the motors to a given integer (900 is the max)
 	 */
 	public void changeSpeed(int to) {
-		int command = ConstantsReuse.OpCodes.CHANGE_SPEED.ordinal() | (to << 8);
+		int command = OpCodes.CHANGE_SPEED.ordinal() | (to << 8);
 		currentSpeed = to;
 		addCommand(command);
 	}
@@ -201,7 +212,7 @@ public class RobotControl {
 	 */
 	public void kick() {
 		System.out.println("kick");
-		addCommand(ConstantsReuse.OpCodes.KICK.ordinal());
+		addCommand(OpCodes.KICK.ordinal());
 	}
 
 	/**
@@ -215,7 +226,7 @@ public class RobotControl {
 		if (radians < 0)
 			radians = (2 * Math.PI - radians);
 		if (radians != 0) {
-			int command = ConstantsReuse.OpCodes.ROTATE.ordinal() | ((int) Math.toDegrees(radians) << 8);
+			int command = OpCodes.ROTATE.ordinal() | ((int) Math.toDegrees(radians) << 8);
 			addCommand(command);
 		}
 
@@ -232,7 +243,8 @@ public class RobotControl {
 			radius = radius*(-1);
 			radius += 1000;
 		}
-		int command = ConstantsReuse.OpCodes.ARC.ordinal() | (radius << 8);
+
+		int command = OpCodes.ARC.ordinal() | (radius << 8);
 		addCommand(command);
 
 	}
@@ -241,7 +253,7 @@ public class RobotControl {
 	 * Commands steers the robot based on a given ratio
 	 */
 	public void steerWithRatio(float ratio) {
-		int command = ConstantsReuse.OpCodes.STEER_WITH_RATIO.ordinal() | ((int) ratio << 8);
+		int command = OpCodes.STEER_WITH_RATIO.ordinal() | ((int) ratio << 8);
 		addCommand(command);
 	}
 
@@ -249,14 +261,29 @@ public class RobotControl {
 	 * Commands the robot to make a noise
 	 */
 	public void beep() {
-		addCommand(ConstantsReuse.OpCodes.BEEP.ordinal());
+		addCommand(OpCodes.BEEP.ordinal());
+	}
+	
+	/**
+	 * Commands the robot to move 65 cm forward and start odometry from its initial position
+	 * (if the bluetooth connection is lost, it'll try to move back to the initial position)
+	 */
+	public void startMatch() {
+		addCommand(OpCodes.START_MATCH.ordinal());
+	}
+	
+	/**
+	 * Commands the robot to stop movement and odometry
+	 */
+	public void stopMatch() {
+		addCommand(OpCodes.STOP_MATCH.ordinal());
 	}
 
 	/**
 	 * Commands the robot to play a tune
 	 */
 	public void celebrate() {
-		addCommand(ConstantsReuse.OpCodes.CELEBRATE.ordinal());
+		addCommand(OpCodes.CELEBRATE.ordinal());
 	}
 
 	public void setConnected(boolean isConnected) {

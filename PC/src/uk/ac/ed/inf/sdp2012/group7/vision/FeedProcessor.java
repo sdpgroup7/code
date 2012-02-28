@@ -64,8 +64,8 @@ public class FeedProcessor{
             markObjects(imageGraphics);
             if(Vision.worldState.getGenerateOverlay()) drawOverlay(image);
     		calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
-            //calculateAngle();
-            //System.err.println(Vision.worldState.getOurRobot().getAngle());
+            
+            
         }
 
     }
@@ -91,27 +91,7 @@ public class FeedProcessor{
     	
     }
     
-    public void calculateAngle(){
-    	double blueAngle = findAngle.findOrientation(
-    		Vision.worldState.getBlueKeyPoint().x, 
-    	    Vision.worldState.getBlueKeyPoint().y,
-    	    Vision.worldState.getBlueRobot().getPosition().getCentre().x,
-    	    Vision.worldState.getBlueRobot().getPosition().getCentre().y
-    	   
-    	);
-    	double yellowAngle = findAngle.findOrientation(
-    	    Vision.worldState.getYellowRobot().getPosition().getCentre().x,
-    	    Vision.worldState.getYellowRobot().getPosition().getCentre().y, 
-    	    Vision.worldState.getYellowGrey().getPosition().getCentre().x, 
-    	    Vision.worldState.getYellowGrey().getPosition().getCentre().y
-    	);
-    	Vision.worldState.getBlueRobot().setAngle(blueAngle);
-    	Vision.worldState.getYellowRobot().setAngle(yellowAngle);
-    }
-    
-    /*
-    Neaten up the code in here, probably readable enough that no comments are needed
-    */
+
     
     public void markObjects(Graphics imageGraphics){
             Point ball = Vision.worldState.getBall().getPosition().getCentre();
@@ -126,13 +106,10 @@ public class FeedProcessor{
             imageGraphics.setColor(Color.yellow);
             imageGraphics.drawOval(yellow.x-15, yellow.y-15, 30,30);
             imageGraphics.setColor(Color.white);
-            //imageGraphics.drawLine(Vision.worldState.getOurGrey().getPosition().getCentre().x,Vision.worldState.getOurGrey().getPosition().getCentre().y,Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y);
-            //imageGraphics.drawLine(Vision.worldState.getOpponentsGrey().getPosition().getCentre().x,Vision.worldState.getOpponentsGrey().getPosition().getCentre().y,Vision.worldState.getOpponentsRobot().getPosition().getCentre().x,Vision.worldState.getOpponentsRobot().getPosition().getCentre().y);
-            //imageGraphics.drawLine(Vision.worldState.getOurRobot().getPosition().getCentre().x,Vision.worldState.getOurRobot().getPosition().getCentre().y, Vision.worldState.getOurKeyPoint().x,Vision.worldState.getOurKeyPoint().y);
-            //could the above line be shorter with the current worldState state?
             Vision.worldState.getBlueRobot().addAngle(
             	findAngle.findOrientation(Vision.worldState.getBluePixels(),Vision.worldState.getBlueRobot().getPosition().getCentre())
             );
+            //System.err.
             //Vision.logger.info("Blue robot: " + Vision.worldState.getBlueRobot().getAngle());
             Point p = Vision.worldState.getBlueRobot().tip;
             imageGraphics.drawLine(
