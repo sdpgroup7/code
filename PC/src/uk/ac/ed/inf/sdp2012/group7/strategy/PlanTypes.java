@@ -15,6 +15,8 @@ public class PlanTypes {
 		ANGLE_KICK,
 		STOP,
 		ANGLE,
+		EUCLID_FORWARDS,
+		EUCLID_BACKWARDS,
 	}
 
 }
