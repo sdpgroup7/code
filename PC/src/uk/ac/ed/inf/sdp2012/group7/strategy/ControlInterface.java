@@ -77,7 +77,7 @@ public class ControlInterface implements Observer {
 			h = findGoalPoint(plan);
 		} catch(Exception e) {
 			logger.debug(e);
-			if(plan.getPath().size() > 1){
+			if(plan.getPath().size() > 0){
 				h = new Point2D(plan.getPath().get(plan.getPath().size() -1));
 			} else {
 				h = new Point2D(0,0);
