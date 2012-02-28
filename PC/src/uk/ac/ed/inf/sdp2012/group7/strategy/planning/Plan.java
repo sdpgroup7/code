@@ -67,10 +67,25 @@ public class Plan {
 								this.allStaticObjects.convertToNode(allMovingObjects.getOurPosition()),
 								this.obstacles
 							);
-
+		
+		
 		//Requires method to convert from path to ArrayList<Point>
 		//Now grab path through A* method
 		this.path = astar.getPathInPoints();
+		
+		
+		//add in nav point to ensure we come in from the correct direction
+		//this should only happen if we don't have the ball
+		//because otherwise we should be either turning or kicking
+		
+		if(!this.targetDecision.getTheyHaveTheBall() && !this.targetDecision.getBallOnThePitch()){
+			//remove last 3 nodes to put in some navigation path
+			for(int i = 0; i < 3; i++){
+				this.path.remove(this.path.size() - 1);
+			}
+			this.path.add(this.targetDecision.getNav());
+			this.path.add(this.targetDecision.getTarget());
+		}
 		
 		logger.debug("Path length: " + this.path.size());
 		
