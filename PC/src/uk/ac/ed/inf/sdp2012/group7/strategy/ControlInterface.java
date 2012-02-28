@@ -128,14 +128,14 @@ public class ControlInterface implements Observer {
 			logger.info("Action is to drive");
 			c.clearAllCommands();
 			
-			this.c.circleWithRadius((int)path.getRadius() , path.isLeft());
-			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", (int)path.getRadius(), path.isLeft()));
+			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
+			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", (int)(path.getRadius()+0.5), path.isLeft()));
 			waitABit();
 		
 		} else if (plan.getAction() == kick) {
 			logger.info("Action is to kick");
-			this.c.circleWithRadius((int)path.getRadius() , path.isLeft());
-			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", (int)path.getRadius(), path.isLeft()));
+			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
+			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", (int)(path.getRadius()+0.5), path.isLeft()));
 			waitABit();
 			c.kick();
 			logger.info("Command sent to robot: kick");
@@ -182,13 +182,11 @@ public class ControlInterface implements Observer {
 	 */
 	public static double convertAngle(double angle) {
 		
-		double newAngle;
-		if (angle == 0) {
-			newAngle = 0;
-		} else {
-			newAngle = 2*Math.PI - angle;
+		double newAngle = angle;
+		if (angle > Math.PI) {
+			newAngle = angle - (2*Math.PI);
 		}
-		newAngle = (newAngle + Math.PI) % (2*Math.PI);
+		newAngle = -newAngle;
 		
 		logger.debug(String.format("Converted angle from %f to %f", angle, newAngle));
 		return newAngle;
