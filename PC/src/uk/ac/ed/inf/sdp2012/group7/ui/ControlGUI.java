@@ -62,6 +62,7 @@ public class ControlGUI implements ChangeListener {
 	private JCheckBox returnToGame;
 	
 	private JButton overlayButton;
+	private JButton barrelButton;
 	
 	
 	/* Tabs. */
@@ -276,14 +277,24 @@ public class ControlGUI implements ChangeListener {
 		JPanel overlayPanel = new JPanel();
 		
 		overlayButton = new JButton("Toggle Overlay");
+		barrelButton = new JButton("Toggle Barrel Fix");
 		
 		overlayPanel.add(overlayButton);
+		overlayPanel.add(barrelButton);
 		
 		overlayButton.addActionListener(new ActionListener() {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        worldState.setGenerateOverlay(!worldState.getGenerateOverlay());
+		    }
+		});
+		
+		barrelButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        worldState.setBarrelFix(!worldState.getBarrelFix());
 		    }
 		});
 		
