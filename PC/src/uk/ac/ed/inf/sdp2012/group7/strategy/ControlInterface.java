@@ -40,6 +40,7 @@ public class ControlInterface implements Observer {
 	private int drive = PlanTypes.ActionType.DRIVE.ordinal();
 	private int kick = PlanTypes.ActionType.KICK.ordinal();
 	private int stop = PlanTypes.ActionType.STOP.ordinal();
+	private int angle = PlanTypes.ActionType.ANGLE.ordinal();
 	
 
 	public ControlInterface(int lookahead) {
@@ -122,51 +123,57 @@ public class ControlInterface implements Observer {
 		int pixelsPerNode = world.getPitch().getHeight()/plan.getHeightInNodes();
 		logger.debug(String.format("pixelsPerNode: %d", pixelsPerNode));
 		double conversion = (double) vtools.pixelsToCM(pixelsPerNode);
+		int converted;
 		
 		logger.debug(String.format("Conversion value: %f", conversion));
 
 		if (plan.getAction() == drive) {
 			
-			int converted = (int)(conversion*path.getRadius());
+			converted = (int)(conversion*path.getRadius());
 			logger.info("Action is to drive");
 			c.clearAllCommands();
 			
 			this.c.circleWithRadius(converted , path.isLeft());
 			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isLeft()));
-			try {
-				Thread.sleep(75);
-			} catch (InterruptedException e) {}
+			waitABit();
 		
 		} else if (plan.getAction() == kick) {
 			logger.info("Action is to kick");
-			int converted = (int)(conversion*path.getRadius());
+			converted = (int)(conversion*path.getRadius());
 			this.c.circleWithRadius(converted , path.isLeft());
 			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isLeft()));
-			try {
-				Thread.sleep(75);
-			} catch (InterruptedException e) {}
+			waitABit();
 			c.kick();
 			logger.info("Command sent to robot: kick");
-			try {
-				Thread.sleep(75);
-			} catch (InterruptedException e) {}
+			waitABit();
 			
 		} else if (plan.getAction() == stop) {
 			logger.info("Action is to stop");
 			c.stop();
 			logger.info("Command sent to robot: stop");
-			try {
-				Thread.sleep(75);
-			} catch (InterruptedException e) {}
+			waitABit();
 			
 		
+		} else if (plan.getAction() == angle) {
+			logger.info("Action is to turn");
+			c.stop();
+			logger.info("Command sent to robot: stop");
+			waitABit();
+			double angleWanted = plan.getAngleWanted();
+			double ourAngle = plan.getOurRobotAngle();
+			
+			double howMuchToTurn = ourAngle - angleWanted;
+
+			// now adjust it so that it turns in the shortest direction (clockwise
+			// or counter clockwise)
+			if (howMuchToTurn < -Math.PI)
+				howMuchToTurn = 2 * Math.PI + howMuchToTurn;
+			else if (howMuchToTurn > Math.PI)
+				howMuchToTurn = -(2 * Math.PI - howMuchToTurn);
+
+			c.rotateBy(howMuchToTurn);
+			waitABit();
 		}
-		
-		
-		
-		
-		
-		
 		
 		
 	}
@@ -257,6 +264,12 @@ public class ControlInterface implements Observer {
 		Arc arcToDrive = this.chooseArc(plan);
 		this.implimentArc(arcToDrive, plan);
 		
+	}
+	
+	public void waitABit() {
+		try {
+			Thread.sleep(75);
+		} catch (InterruptedException e) {}
 	}
 
 	
