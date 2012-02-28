@@ -228,7 +228,7 @@ public class TargetDecision {
 		//or sit on the line which is their best attack
 		
 		//Positions
-		Point ballPosition = allMovingObjects.getBallPosition();
+		this.bestPosition = allMovingObjects.getBallPosition();
 		
 		//Angles
 		
@@ -236,7 +236,7 @@ public class TargetDecision {
 	
 	private void ballTooCloseToWall() {
 		
-		Point ballPosition = this.allMovingObjects.getBallPosition();
+		Point ballPosition = this.allStaticObjects.convertToNode(this.allMovingObjects.getBallPosition());
 		int rightWall = this.allStaticObjects.getWidth();
 		int bottomWall = this.allStaticObjects.getHeight();
 		int b = this.allStaticObjects.getBoundary();
