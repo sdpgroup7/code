@@ -51,14 +51,15 @@ public class FeedProcessor{
             calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
     	} else {
     		//image = removeBackground(image,Vision.backgroundImage);
-    		
-    		image = fix.removeBarrelDistortion(
+    		if (Vision.worldState.getBarrelFix()){
+    		    image = fix.removeBarrelDistortion(
     		                                image,
 							                Vision.worldState.getPitch().getLeftBuffer(),
 							                Vision.worldState.getPitch().getRightBuffer(),
 							                Vision.worldState.getPitch().getTopBuffer(),
 							                Vision.worldState.getPitch().getBottomBuffer()
 							                );
+		    }
 		    
     		image = initialLocation.markImage(image);
             Graphics frameGraphics = label.getGraphics();
