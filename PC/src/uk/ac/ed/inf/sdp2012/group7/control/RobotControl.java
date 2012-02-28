@@ -239,8 +239,10 @@ public class RobotControl implements ConstantsReuse {
 	public void circleWithRadius(int radius, boolean arcLeft) {
 
 		// interpreted on the robot as a negative
-		if (arcLeft)
+		if (arcLeft) {
+			radius = radius*(-1);
 			radius += 1000;
+		}
 
 		int command = OpCodes.ARC.ordinal() | (radius << 8);
 		addCommand(command);
