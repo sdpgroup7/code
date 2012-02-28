@@ -2,6 +2,7 @@ package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class WorldState{
@@ -26,6 +27,9 @@ public class WorldState{
 	volatile ArrayList<Point> yellowPixels = new ArrayList<Point>(); //Holds all the yellow pixels (the T)
 	volatile Point blueKeyPoint = new Point();
 	volatile Point yellowKeyPoint = new Point();
+	
+	volatile BufferedImage overlay = null;
+	volatile boolean generateOverlay = true;
 	
 	volatile private long lastUpdated = 0; //The timestamp of when worldstate was last updated
 	volatile private boolean clickingDone = false; //Says whether all clicking has been done (generally used by vision)
@@ -57,8 +61,21 @@ public class WorldState{
     	updateShootingDirection();
     }
 	
+    public void setGenerateOverlay(boolean set){
+    	generateOverlay = set;
+    }
+    
+    public boolean getGenerateOverlay(){
+    	return generateOverlay;
+    }
+    
+	public BufferedImage getOverlay(){
+		return overlay;
+	}
 	
-	
+	public void setOverlay(BufferedImage im){
+		overlay = im;
+	}
 	
 	public void setShootingDirection(int shoot){
 		this.shootingDirection = shoot;

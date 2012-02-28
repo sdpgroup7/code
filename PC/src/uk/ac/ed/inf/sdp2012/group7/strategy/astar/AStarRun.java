@@ -19,8 +19,12 @@ public class AStarRun {
 			map = new AreaMap(pitch_width_in_nodes, pitch_height_in_nodes);
 			
 			// set obstacles
-			for (Point obstacle : obstacles) {
-				map.setObstical(obstacle.x, obstacle.y, true);
+			if (obstacles.size() > 0){
+				for (Point obstacle : obstacles) {
+					if(!(obstacle.x < 0 || obstacle.y < 0)){
+						map.setObstical(obstacle.x, obstacle.y, true);
+					}
+				}
 			}
 			
 			// set heuristic and run the path finder
@@ -56,10 +60,20 @@ public class AStarRun {
 		}
 		
 		public Path getPath() {
-			return shortestPath;
+			try{
+				return shortestPath;
+			} catch (Exception ex) {
+				Strategy.logger.error("getPath return failed: " + ex.getMessage());
+				return shortestPath;
+			}
 		}
 		
 		public ArrayList<Point> getPathInPoints() {
-			return this.shortestPath.pathToPoints();
+			try {
+				return this.shortestPath.pathToPoints();
+			} catch (Exception ex) {
+				Strategy.logger.error("getPathInPoints return failed: " + ex.getMessage());
+				return this.shortestPath.pathToPoints();
+			}
 		}
 }

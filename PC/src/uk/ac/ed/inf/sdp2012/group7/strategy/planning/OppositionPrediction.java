@@ -12,27 +12,27 @@ import java.util.ArrayList;
  */
 public class OppositionPrediction {
 
-	private AllMovingObjects all_moving_objects;
-	private AllStaticObjects all_static_objects;
+	private AllMovingObjects allMovingObjects;
+	private AllStaticObjects allStaticObjects;
 	
 	/**
 	 * 
 	 */
 	public OppositionPrediction(AllMovingObjects aMO, AllStaticObjects aSO) {
 		
-		this.all_moving_objects = aMO;
-		this.all_static_objects = aSO;
+		this.allMovingObjects = aMO;
+		this.allStaticObjects = aSO;
 	}
 	
 	public ArrayList<Point> getDefaultObstacles(){
 		
 		ArrayList<Point> obstacles = new ArrayList<Point>();
-		int nodeInPixels = this.all_static_objects.getNodeInPixels();
+		double nodeInPixels = this.allStaticObjects.getNodeInPixels();
 		
-		Point position = this.all_moving_objects.getTheirPosition();
+		Point position = this.allMovingObjects.getTheirPosition();
 		//Possible problem with conversion back to Integers here..?
-		for(int x = (position.x - (2*nodeInPixels)); x <= position.x + 2*nodeInPixels; x = x + nodeInPixels){
-			for(int y = (position.y - (2*nodeInPixels)); y <= position.y + 2*nodeInPixels; y = y + nodeInPixels){
+		for(int x = (int)(position.x - (2*nodeInPixels)); x <= position.x + 2*nodeInPixels; x = x + (int)nodeInPixels){
+			for(int y = (int)(position.y - (2*nodeInPixels)); y <= position.y + 2*nodeInPixels; y = y + (int)nodeInPixels){
 				Point p = new Point(x,y);
 				obstacles.add(p);
 			}

@@ -23,24 +23,24 @@ public class TargetDecision {
 	/**
 	 * 
 	 */
-	private AllMovingObjects all_moving_objects;
-	private AllStaticObjects all_static_objects;
+	private AllMovingObjects allMovingObjects;
+	private AllStaticObjects allStaticObjects;
 	private ArrayList<Point> obstacles;
-	private int plan_type;
+	private int planType;
 	private int action;
-	private boolean clear_shot = false;
-	private boolean we_have_ball = false;
-	private boolean they_have_ball = false;
-	private boolean ball_is_too_close_to_wall = false;
+	private boolean clearShot = false;
+	private boolean weHaveBall = false;
+	private boolean theyHaveBall = false;
+	private boolean ballIsTooCloseToWall = false;
 	private WorldState worldState = WorldState.getInstance();
 
 	
 	//Constructor
 	public TargetDecision(AllMovingObjects aMO, AllStaticObjects aSO, ArrayList<Point> obstacles) {
-		this.all_moving_objects = aMO;
-		this.all_static_objects = aSO;
+		this.allMovingObjects = aMO;
+		this.allStaticObjects = aSO;
 		this.obstacles = obstacles;
-		this.plan_type = this.all_static_objects.getPlanType();
+		this.planType = this.allStaticObjects.getPlanType();
 		this.clearShot();
 		this.weHaveBall();
 		this.theyHaveBall();
@@ -60,31 +60,42 @@ public class TargetDecision {
 		Point target = new Point();
 		//put it into node for assessment
 		//hack :o)
-		target = all_static_objects.convertToNode(this.all_moving_objects.getBallPosition());
+		target = allStaticObjects.convertToNode(this.allMovingObjects.getBallPosition());
 		//boolean for knowing if the ball is on the pitch
-		boolean ballOnPitch = ((target.x >= 0) && (target.x <= all_static_objects.getWidth()) && 
-							   (target.y >= 0) && (target.y <= all_static_objects.getHeight()));
+		boolean ballOnPitch = ((target.x >= 0) && (target.x <= allStaticObjects.getWidth()) && 
+							   (target.y >= 0) && (target.y <= allStaticObjects.getHeight()));
 		
-		if(this.plan_type == PlanTypes.PlanType.FREE_PLAY.ordinal()){
+		if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
 		
 			//Lets get this shit in, and then go read about proper decision making structures later.
 			if(!ballOnPitch){
 				//fuck off and sit next to our goal
 				this.action = PlanTypes.ActionType.DRIVE.ordinal();
-				logger.debug("Ball is not found on pitch");
-				return this.all_static_objects.getInfront_of_our_goal();
+				logger.debug("Ball is not found on pitch, driving to our goal");
+				return this.allStaticObjects.getInFrontOfOurGoal();
+
 				
 			} else {
-				if(this.ball_is_too_close_to_wall){
-					//sit just near to the ball
+				if(this.ballIsTooCloseToWall){
+					//go sit infront of our goal
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
-					return this.handlingBallTooCloseWall(target);
-				}
-				else {
-					if(this.clear_shot){
+					logger.debug("Ball is too close to the wall, driving to our goal");
+					return this.allStaticObjects.getInFrontOfOurGoal();
+				} else if (this.theyHaveBall){
+					//go sit infront of our goal
+					this.action = PlanTypes.ActionType.DRIVE.ordinal();
+					logger.debug("They have the ball, driving to our goal");
+					return this.allStaticObjects.getInFrontOfOurGoal();
+				} else {
+					if(this.clearShot){
+						//here we kick
 						this.action = PlanTypes.ActionType.KICK.ordinal();
 						return target;
 					} else {
+						//here we should be providing either 
+						//a) best position for open shot -- so we need find position for open shot, and that angle
+						//b) best position for angular shot -- so we need find position for angular shot, and that angle
+						//c) dribble the ball out -- drive to ball, drive after ball <--
 						this.action = PlanTypes.ActionType.DRIVE.ordinal();
 						return target;
 					}
@@ -92,7 +103,7 @@ public class TargetDecision {
 			
 			}
 		} 
-		else if(this.plan_type == PlanTypes.PlanType.HALT.ordinal()){
+		else if(this.planType == PlanTypes.PlanType.HALT.ordinal()){
 			this.action = PlanTypes.ActionType.STOP.ordinal();
 			return target;
 		}
@@ -106,21 +117,21 @@ public class TargetDecision {
 
 	private void weHaveBall(){
 
-		Point our_position = all_moving_objects.getOurPosition();
-		Point ball_position = all_moving_objects.getBallPosition();
-		double our_angle = all_moving_objects.getOurAngle();
+		Point ourPosition = allMovingObjects.getOurPosition();
+		Point ball_position = allMovingObjects.getBallPosition();
+		double ourAngle = allMovingObjects.getOurAngle();
 
-		if(40 < (int)our_position.distance(ball_position)){
+		if(40 < (int)ourPosition.distance(ball_position)){
 
 
-			double angle_between_us_ball = Math.asin((ball_position.x - our_position.x)/our_position.distance(ball_position));
+			double angle_between_us_ball = Math.asin((ball_position.x - ourPosition.x)/ourPosition.distance(ball_position));
 
 			if (angle_between_us_ball < 0){ 
 				angle_between_us_ball = angle_between_us_ball + 360;
 			}
 
-			if(Math.abs(angle_between_us_ball - our_angle) < (30)){
-				we_have_ball = true;
+			if(Math.abs(angle_between_us_ball - ourAngle) < (30)){
+				weHaveBall = true;
 			}
 		}
 
@@ -129,9 +140,9 @@ public class TargetDecision {
 	
 	private void theyHaveBall(){
 
-		Point their_position = all_moving_objects.getTheirPosition();
-		Point ball_position = all_moving_objects.getBallPosition();
-		double their_angle = all_moving_objects.getTheirAngle();
+		Point their_position = allMovingObjects.getTheirPosition();
+		Point ball_position = allMovingObjects.getBallPosition();
+		double their_angle = allMovingObjects.getTheirAngle();
 
 		if(40 < (int)their_position.distance(ball_position)){
 
@@ -143,7 +154,7 @@ public class TargetDecision {
 			}
 
 			if(Math.abs(angle_between_them_ball - their_angle) < (30)){
-				they_have_ball = true;
+				theyHaveBall = true;
 			}
 		}
 
@@ -152,65 +163,63 @@ public class TargetDecision {
 
 	private void clearShot(){
 
-		if(we_have_ball){
+		if(weHaveBall){
 
 			//Positions
-			Point our_position = all_moving_objects.getOurPosition();
+			Point ourPosition = allMovingObjects.getOurPosition();
 
 
 			//Angles
-			double our_angle = all_moving_objects.getOurAngle();
-			double angle_with_top_post = Math.asin((all_static_objects.getTheir_top_goal_post().x 
-					- our_position.x)/(our_position.distance(all_static_objects.getTheir_top_goal_post())));
-			double angle_with_bottom_post = Math.asin((all_static_objects.getTheir_bottom_goal_post().x 
-					- our_position.x)/(our_position.distance(all_static_objects.getTheir_bottom_goal_post())));
+			double ourAngle = allMovingObjects.getOurAngle();
+			double angleWithTopPost = Math.asin((allStaticObjects.getTheirTopGoalPost().x 
+					- ourPosition.x)/(ourPosition.distance(allStaticObjects.getTheirTopGoalPost())));
+			double angleWithBottomPost = Math.asin((allStaticObjects.getTheirBottomGoalPost().x 
+					- ourPosition.x)/(ourPosition.distance(allStaticObjects.getTheirBottomGoalPost())));
 
 			//fix for normal angles into bearings.... :D
-			if(angle_with_top_post < 0){
-				angle_with_bottom_post = angle_with_bottom_post + 360;
-				angle_with_top_post = angle_with_top_post + 360;
+			if(angleWithTopPost < 0){
+				angleWithBottomPost = angleWithBottomPost + 360;
+				angleWithTopPost = angleWithTopPost + 360;
 			}
 
 			//Set clear shot boolean
 			if(worldState.getShootingDirection() == 1){
-				if(our_angle > angle_with_top_post && our_angle < angle_with_bottom_post){
-					this.clear_shot = true;
+				if(ourAngle > angleWithTopPost && ourAngle < angleWithBottomPost){
+					this.clearShot = true;
 				}
 			}
 			else{
-				if(our_angle < angle_with_top_post && our_angle > angle_with_bottom_post){
-					this.clear_shot = true;
+				if(ourAngle < angleWithTopPost && ourAngle > angleWithBottomPost){
+					this.clearShot = true;
 				}
 			}				
 		}
 	}
 	
+	private void findShot(){
+		
+		//Positions
+		Point ballPosition = allMovingObjects.getBallPosition();
+		
+		//Angles
+		
+	}
+	
 	private void ballTooCloseToWall() {
 		
-		this.ball_is_too_close_to_wall = this.obstacles.contains(all_static_objects.convertToNode(this.all_moving_objects.getBallPosition()));
+		Point ballPosition = this.allMovingObjects.getBallPosition();
+		int rightWall = this.allStaticObjects.getWidth();
+		int bottomWall = this.allStaticObjects.getHeight();
+		int b = this.allStaticObjects.getBoundary();
+		
+		this.ballIsTooCloseToWall = (ballPosition.x < b) || 
+				(ballPosition.x > ((rightWall -1) - b ) || 
+				(ballPosition.y < b ) || 
+				(ballPosition.x > ((bottomWall -1) - b )));
 	}
 	
 	public boolean getClearShot(){
-		return clear_shot;
-	}
-	public Point handlingBallTooCloseWall(Point p) {
-		//boundary handling...
-		Point position = p;
-		// 3 is the boundary variable	
-		if (position.x < 3) {
-			position.x = 3;
-		}
-		if (position.x > 47) {
-			position.x = 47;
-		}
-		if (position.y < 3) {
-			position.y = 3;
-		}
-		if (position.y > 22) {
-			position.y = 22;
-		}
-	
-		return position;
+		return clearShot;
 	}
 	
 	public int getAction(){
