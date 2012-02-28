@@ -26,20 +26,16 @@ public class DistortionFix {
     	
     	for (int i = left; i < right; i++) {
     		for (int j = top; j < bottom; j++) {
-    			points.add(new Point(i,j));
+    			correctedPoints.add(barrelCorrected(new Point(i,j)));
     			colors.add(new Color(image.getRGB(i, j)));
 			}
 		}
     	
-    	for(Point p : points){
-			correctedPoints.add(barrelCorrected(p));
-		}
     	
-    	
-    	assert correctedPoints.size() == colors.size();
+
     	
     	for (int i = 0; i < correctedPoints.size(); i++) {
-    		if(0 <= correctedPoints.get(i).x && correctedPoints.get(i).x < width && 0 <=  correctedPoints.get(i).y&& correctedPoints.get(i).y < height ){
+    		if(left <= correctedPoints.get(i).x && correctedPoints.get(i).x < right && top <=  correctedPoints.get(i).y&& correctedPoints.get(i).y < bottom ){
     			image.setRGB(correctedPoints.get(i).x,correctedPoints.get(i).y, colors.get(i).getRGB());
     		}
 			//image.setRGB(correctedPoints.get(i).x,correctedPoints.get(i).y, colors.get(i).getRGB());
