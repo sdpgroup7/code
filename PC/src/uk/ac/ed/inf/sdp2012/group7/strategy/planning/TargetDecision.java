@@ -137,12 +137,23 @@ public class TargetDecision {
 			this.action = PlanTypes.ActionType.STOP.ordinal();
 			return target;
 		}
-		//Penalty modes continue from here...
+		// Penalty offence
 		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
-			this.action = PlanTypes.ActionType.ANGLE.ordinal();
-			return target;		
+				
+			if(this.allStaticObjects.getCounter() % 2 == 0) {
+				double angle = allMovingObjects.getOurAngle() + Math.PI/18;
+				this.bestAngle = angle;
+				target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
+				this.action = PlanTypes.ActionType.ANGLE.ordinal();
+				this.allStaticObjects.setCounter();
+				return target;
+			} else {
+				this.action = PlanTypes.ActionType.KICK.ordinal();
+				this.allStaticObjects.setCounter();
+				return target;
+			}
 		}
-		//Penalty Defence
+		// No other plan types so must be penalty defence
 		else {
 			
 			this.action = PlanTypes.ActionType.STOP.ordinal();
