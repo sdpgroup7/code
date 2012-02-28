@@ -54,6 +54,10 @@ public class TargetDecision {
 		
 		/*
 		 * This whole section is experimental
+		 * 
+		 * This should be led by us trying to get to the best position and angle at all time
+		 * then if we are at these conditions we react, see comments above open_shot for details
+		 * 
 		 */
 		
 		
