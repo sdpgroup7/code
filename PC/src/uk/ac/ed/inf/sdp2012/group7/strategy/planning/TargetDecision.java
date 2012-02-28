@@ -33,6 +33,8 @@ public class TargetDecision {
 	private boolean theyHaveBall = false;
 	private boolean ballIsTooCloseToWall = false;
 	private WorldState worldState = WorldState.getInstance();
+	private Point bestPosition;
+	private double bestAngle;
 
 	
 	//Constructor
@@ -54,6 +56,10 @@ public class TargetDecision {
 		
 		/*
 		 * This whole section is experimental
+		 * 
+		 * This should be led by us trying to get to the best position and angle at all time
+		 * then if we are at these conditions we react, see comments above open_shot for details
+		 * 
 		 */
 		
 		
@@ -161,6 +167,18 @@ public class TargetDecision {
 
 	}
 
+	//This function should not check weHaveBall
+	//It should find the best position and angle for "a" shot
+	//update whether that target type is of open or angular
+	//and set a variable bestTargetAngle and bestTargetPosition which is where we want to be
+	//in the decision making getTargetNode it should then check if the robot
+	//is on that angle and position and respond, either by moving to the above
+	//of if on the above it should react - TURN / KICK
+	//Thus we need two functions - getBestAngular
+	//                           - getBestOpen
+	//these then set bestPosition and bestAngle
+	//and we just check if our robot is at these conditions...
+	
 	private void clearShot(){
 
 		if(weHaveBall){
@@ -196,7 +214,18 @@ public class TargetDecision {
 		}
 	}
 	
-	private void findShot(){
+	private void findBestShot(){
+		
+		//1 Choose best position for openShot
+		//2 return this angle
+		//3 test if the line to the goal from above position is blocked
+		//4 if not, set bestPosition & bestAngle to above
+		//5 if above blocked choose best position for angularShot
+		//6 return this angle
+		//7 test is the line to goal from above is blocked
+		//if not, set bestPosition & bestAngle to above
+		//if above blocked, we need to decide what dribbling is at this point
+		//or sit on the line which is their best attack
 		
 		//Positions
 		Point ballPosition = allMovingObjects.getBallPosition();
