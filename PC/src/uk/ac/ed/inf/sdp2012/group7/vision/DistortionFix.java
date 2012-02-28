@@ -26,7 +26,8 @@ public class DistortionFix {
     	
     	for (int i = left; i < right; i++) {
     		for (int j = top; j < bottom; j++) {
-    			correctedPoints.add(barrelCorrected(new Point(i,j)));
+    		    Point p = new Point(i,j);
+    			correctedPoints.add(barrelCorrected(p));
     			colors.add(new Color(image.getRGB(i, j)));
 			}
 		}
