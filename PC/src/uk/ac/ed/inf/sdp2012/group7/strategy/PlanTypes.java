@@ -13,6 +13,7 @@ public class PlanTypes {
 		DRIVE,
 		KICK,
 		STOP,
+		ANGLE,
 	}
 
 }
