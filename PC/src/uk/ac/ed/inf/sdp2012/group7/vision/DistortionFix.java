@@ -14,6 +14,8 @@ public class DistortionFix {
 	ArrayList<Point> points ;
 	ArrayList<Point> correctedPoints;
 	ArrayList<Color> colors ;
+	
+	private Point p = new Point();
 
     public BufferedImage removeBarrelDistortion(BufferedImage image, int left, int right, int top, int bottom){
     	
@@ -23,26 +25,19 @@ public class DistortionFix {
     	Vision.logger.info("This method has not yet been implemented.");
     	width = image.getWidth();
     	height = image.getHeight();
+    	BufferedImage newImage = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
     	
     	for (int i = left; i < right; i++) {
     		for (int j = top; j < bottom; j++) {
-    		    Point p = new Point(i,j);
-    			correctedPoints.add(barrelCorrected(p));
-    			colors.add(new Color(image.getRGB(i, j)));
+    			p = barrelCorrected(new Point(i,j));
+    			
+    			if(left <= p.x && p.x < right && top <=  p.y&& p.y < bottom ){
+    			newImage.setRGB(p.x,p.y, image.getRGB(i,j));
+    		    }
 			}
 		}
     	
-    	
-
-    	
-    	for (int i = 0; i < correctedPoints.size(); i++) {
-    		if(left <= correctedPoints.get(i).x && correctedPoints.get(i).x < right && top <=  correctedPoints.get(i).y&& correctedPoints.get(i).y < bottom ){
-    			image.setRGB(correctedPoints.get(i).x,correctedPoints.get(i).y, colors.get(i).getRGB());
-    		}
-			//image.setRGB(correctedPoints.get(i).x,correctedPoints.get(i).y, colors.get(i).getRGB());
-		}
-    	
-        return image;
+        return newImage;
     }
     public static Point barrelCorrected(Point p1) {
     	// System.out.println("Pixel: (" + x + ", " + y + ")");

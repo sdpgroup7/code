@@ -155,7 +155,7 @@ public class FeedProcessor{
 
         /* Display the FPS that the vision system is running at. */
         float fps = (1.0f)/((after - before) / 1000.0f);
-        imageGraphics.setColor(Color.white);
+        imageGraphics.setColor(Color.black);
         imageGraphics.drawString("FPS: " + fps, 15, 15);
         frameGraphics.drawImage(image, 0, 0, width, height, null);
     }
