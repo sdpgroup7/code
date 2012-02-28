@@ -84,6 +84,11 @@ public class Plan {
 	public ArrayList<Point> getPath(){
 		return this.path;
 	}
+	
+	public void setPath(ArrayList<Point> path){
+		this.path = path;
+	}
+	
 	//action = 0; nothing 
 	//action = 1; kick
 	public int getAction(){
@@ -127,6 +132,11 @@ public class Plan {
 	//For Control Interface
 	public int getHeightInNodes(){
 		return this.allStaticObjects.getHeight();
+	}
+
+	public void setOurPosition(Point point) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

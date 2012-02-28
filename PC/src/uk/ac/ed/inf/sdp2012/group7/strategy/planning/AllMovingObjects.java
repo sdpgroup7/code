@@ -23,6 +23,7 @@ public class AllMovingObjects {
 		update();
 	}
 	
+	
 	public void update(){
 		
 		this.ourPosition = worldState.getOurRobot().getPosition().getCentre();

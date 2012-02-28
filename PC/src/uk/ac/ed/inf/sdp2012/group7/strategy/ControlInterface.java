@@ -58,26 +58,32 @@ public class ControlInterface implements Observer {
 
 	}
 
+	public static Arc chooseArc(Plan plan){
+		Point2D p = new Point2D(plan.getOurRobotPositionVisual());
+		double v = plan.getOurRobotAngle();
+		return generateArc(p,plan.getPath(),v,plan.getAction(),lookahead);
+	}
+	
 	/*
 	 * Calculates the Arc that the robot has to follow for the set of points
 	 * given using the pure pursuit algorithm
 	 */
-	public static Arc chooseArc(Plan plan) {
+
+	public static Arc generateArc(Point2D p, ArrayList<Point> path, double v, int planAction, int lookahead) {
 		// The paper where this maths comes from can be found here
 		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
 		
 		Point2D h = null;
-		Point2D p = new Point2D(plan.getOurRobotPositionVisual());
-		double v = plan.getOurRobotAngle();
+
 		
 		v = convertAngle(v);
 		
 		try {
-			h = findGoalPoint(plan);
+			h = findGoalPoint(path, p, lookahead);
 		} catch(Exception e) {
 			logger.debug(e);
-			if(plan.getPath().size() > 1){
-				h = new Point2D(plan.getPath().get(plan.getPath().size() -1));
+			if(path.size() > 1){
+				h = new Point2D(path.get(path.size() -1));
 			} else {
 				h = new Point2D(0,0);
 			}
@@ -107,7 +113,7 @@ public class ControlInterface implements Observer {
 			dir = true;
 		}
 
-		Arc arc = new Arc(R, dir, plan.getAction());
+		Arc arc = new Arc(R, dir, planAction);
 
 		return arc;
 
@@ -171,6 +177,7 @@ public class ControlInterface implements Observer {
 		} else {
 			newAngle = 2*Math.PI - angle;
 		}
+		newAngle = (newAngle + Math.PI) % (2*Math.PI);
 		
 		logger.debug(String.format("Converted angle from %f to %f", angle, newAngle));
 		return newAngle;
@@ -183,11 +190,11 @@ public class ControlInterface implements Observer {
 	 * 
 	 * @return The goal point
 	 */
-	public static Point2D findGoalPoint(Plan p) throws Exception {
+	public static Point2D findGoalPoint(ArrayList<Point> p, Point2D pos, int lookahead) throws Exception {
 		
-		Circle2D zone = new Circle2D(p.getOurRobotPositionVisual().getX(), p.getOurRobotPositionVisual().getY(), lookahead);
-		logger.debug(String.format("Zone centre: (%f,%f)",p.getOurRobotPositionVisual().getX(),p.getOurRobotPositionVisual().getY()));
-		int size = p.getPath().size();
+		Circle2D zone = new Circle2D(pos.getX(), pos.getY(), lookahead);
+		logger.debug(String.format("Zone centre: (%f,%f)",pos.getX(),pos.getY()));
+		int size = p.size();
 		int i = 0;
 		
 		Point2D intersect = null;
@@ -199,8 +206,8 @@ public class ControlInterface implements Observer {
 				throw new Exception("Lookahead point unable to be found");
 			} 
 			
-			LineSegment2D line = new LineSegment2D(p.getPath().get(i).getX(), p.getPath().get(i).getY(), p.getPath().get(i+1).getX(), p.getPath().get(i+1).getY());
-			logger.debug(String.format("Line Points: P1: (%f,%f) P2: (%f,%f)",p.getPath().get(i).getX(), p.getPath().get(i).getY(), p.getPath().get(i+1).getX(), p.getPath().get(i+1).getY() ));
+			LineSegment2D line = new LineSegment2D(p.get(i).getX(), p.get(i).getY(), p.get(i+1).getX(), p.get(i+1).getY());
+			logger.debug(String.format("Line Points: P1: (%f,%f) P2: (%f,%f)",p.get(i).getX(), p.get(i).getY(), p.get(i+1).getX(), p.get(i+1).getY() ));
 			Collection<Point2D> intersections = zone.getIntersections(line);
 			
 			if (intersections.size() == 1 || intersections.size() == 2) {
