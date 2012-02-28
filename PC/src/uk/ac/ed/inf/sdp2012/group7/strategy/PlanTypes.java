@@ -12,6 +12,7 @@ public class PlanTypes {
 	public static enum ActionType {
 		DRIVE,
 		KICK,
+		ANGLE_KICK,
 		STOP,
 		ANGLE,
 	}

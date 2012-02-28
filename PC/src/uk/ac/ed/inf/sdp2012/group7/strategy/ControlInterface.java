@@ -40,6 +40,7 @@ public class ControlInterface implements Observer {
 	private int kick = PlanTypes.ActionType.KICK.ordinal();
 	private int stop = PlanTypes.ActionType.STOP.ordinal();
 	private int angle = PlanTypes.ActionType.ANGLE.ordinal();
+	private int angleKick = PlanTypes.ActionType.ANGLE_KICK.ordinal();
 	
 
 	public ControlInterface(int lookahead) {
@@ -153,21 +154,23 @@ public class ControlInterface implements Observer {
 			c.stop();
 			logger.info("Command sent to robot: stop");
 			waitABit();
-			double angleWanted = plan.getAngleWanted();
-			double ourAngle = plan.getOurRobotAngle();
-			
-			double howMuchToTurn = ourAngle - angleWanted;
+			double turnAngle = angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
+			c.rotateBy(turnAngle);
+			waitABit();
 
-			// now adjust it so that it turns in the shortest direction (clockwise
-			// or counter clockwise)
-			if (howMuchToTurn < -Math.PI)
-				howMuchToTurn = 2 * Math.PI + howMuchToTurn;
-			else if (howMuchToTurn > Math.PI)
-				howMuchToTurn = -(2 * Math.PI - howMuchToTurn);
-
-			c.rotateBy(howMuchToTurn);
+		
+		} else if (plan.getAction() == angleKick) {
+			logger.info("Action is to turn");
+			double turnAngle = angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
+			c.rotateBy(turnAngle);
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {}
+			logger.info("Action is to kick");
+			c.kick();
 			waitABit();
 		}
+
 	}
 	
 		
@@ -265,8 +268,22 @@ public class ControlInterface implements Observer {
 			Thread.sleep(75);
 		} catch (InterruptedException e) {}
 	}
-
 	
+	public double angleToTurn(double ourAngle, double angleWanted) {
+			
+		double howMuchToTurn = ourAngle - angleWanted;
+
+		// now adjust it so that it turns in the shortest direction (clockwise
+		// or counter clockwise)
+		if (howMuchToTurn < -Math.PI) {
+			howMuchToTurn = 2 * Math.PI + howMuchToTurn;
+		} else if  (howMuchToTurn > Math.PI) {
+			howMuchToTurn = -(2 * Math.PI - howMuchToTurn);
+		}
+	
+		return howMuchToTurn;
+
+	}
 
 	
 

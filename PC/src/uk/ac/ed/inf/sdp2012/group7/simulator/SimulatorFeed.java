@@ -116,9 +116,7 @@ public class SimulatorFeed extends WindowAdapter {
 	};
 	
 	private void initFrameGenerator() {
-		
 		receiver.run();
-		
 	}
 
 	/**
@@ -153,11 +151,9 @@ public class SimulatorFeed extends WindowAdapter {
 	 *
 	 * @param e         The window closing event.
 	 */
-	@SuppressWarnings("deprecation")
 	public void windowClosing(WindowEvent e) {
 		/* Dispose of the various swing and v4l4j components. */
-		receiver.stop(); //TODO: Replace this. It is a depreciated method. 
-
+		receiver = null;
 		windowFrame.dispose();
 		Simulator.logger.info("Simulator System Ending...");
 		System.exit(0);
