@@ -128,11 +128,13 @@ public class TargetDecision {
 			return target;
 		}
 		//Penalty modes continue from here...
-		else if(this.planType == PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
-			this.action = PlanTypes.ActionType.STOP.ordinal();
+		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
+			this.action = PlanTypes.ActionType.ANGLE.ordinal();
 			return target;		
 		}
+		//Penalty Defence
 		else {
+			
 			this.action = PlanTypes.ActionType.STOP.ordinal();
 			return target;
 		}
