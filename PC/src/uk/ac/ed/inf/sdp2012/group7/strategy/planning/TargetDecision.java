@@ -127,7 +127,7 @@ public class TargetDecision {
 		Point ball_position = allMovingObjects.getBallPosition();
 		double ourAngle = allMovingObjects.getOurAngle();
 
-		if(40 < (int)ourPosition.distance(ball_position)){
+		if(40 > (int)ourPosition.distance(ball_position)){
 
 
 			double angle_between_us_ball = Math.asin((ball_position.x - ourPosition.x)/ourPosition.distance(ball_position));
@@ -150,7 +150,7 @@ public class TargetDecision {
 		Point ball_position = allMovingObjects.getBallPosition();
 		double their_angle = allMovingObjects.getTheirAngle();
 
-		if(40 < (int)their_position.distance(ball_position)){
+		if(40 > (int)their_position.distance(ball_position)){
 
 
 			double angle_between_them_ball = Math.asin((ball_position.x - their_position.x)/their_position.distance(ball_position));

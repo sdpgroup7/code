@@ -111,7 +111,7 @@ public class AStar {
 			}
 			
 		}
-		return null;
+		return new Path();
 	}
 	
 	public void printPath() {
