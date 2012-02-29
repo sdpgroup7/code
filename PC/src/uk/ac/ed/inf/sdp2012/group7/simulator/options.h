@@ -12,12 +12,10 @@
 #define PITCH_X2 607
 #define PITCH_Y2 384
 
-#define BLUE_START_X 50
-#define BLUE_START_Y 110
-#define YELLOW_START_X 590
-#define YELLOW_START_Y 370
-#define BALL_START_X 320
-#define BALL_START_Y 240
+#define BLUE_START_X 180
+#define BLUE_START_Y 240
+#define YELLOW_START_X 440
+#define YELLOW_START_Y 240
 
 #define USEC_PER_ACTION 40000 // 25 fps = action every 0.04 s
 

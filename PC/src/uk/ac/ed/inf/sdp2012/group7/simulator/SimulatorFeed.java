@@ -180,7 +180,6 @@ public class SimulatorFeed extends WindowAdapter {
 	 */
 	
 	private void initFrameGenerator() {
-		
 		receiver.run();
 		
 	}
@@ -189,6 +188,9 @@ public class SimulatorFeed extends WindowAdapter {
 	 * Creates the world
 	 */
 	private void initWorldSimulation() {
+		/* Put ball on the pitch */
+		Simulator.worldState.getBall().setPosition(320, 240);
+		
 		/* Initialise world */
 		world = new World(new Vector2f(0, 10), 10, new QuadSpaceStrategy(20, 5));
 		world.clear();
