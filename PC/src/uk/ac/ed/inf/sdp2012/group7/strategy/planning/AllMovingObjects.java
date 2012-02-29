@@ -39,11 +39,11 @@ public class AllMovingObjects {
 		
 		this.ballVelocity = worldState.getBall().getVelocity();
 		
-	    this.ourAngle = worldState.getOurRobot().getAngle();
+	    this.ourAngle = convertAngle(worldState.getOurRobot().getAngle());
 	    
-	    this.theirAngle = worldState.getOpponentsRobot().getAngle();
+	    this.theirAngle = convertAngle(worldState.getOpponentsRobot().getAngle());
 	    
-	    this.ballAngle = worldState.getBall().getAngle();
+	    this.ballAngle = convertAngle(worldState.getBall().getAngle());
 	    
 	}
 	
