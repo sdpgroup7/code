@@ -133,10 +133,10 @@ public class AllStaticObjects {
 	//Return this as a node!
 	private void centreOfTheirGoal(){
 		if(worldState.getShootingDirection() == -1){
-			this.centreOfTheirGoal = new Point(0,this.height/2);
+			this.centreOfTheirGoal = new Point(1,this.height/2);
 		}
 		else {
-			this.centreOfTheirGoal = new Point(this.width,this.height/2);
+			this.centreOfTheirGoal = new Point(this.width - 2,this.height/2);
 		}
 	}
 	

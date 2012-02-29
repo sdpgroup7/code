@@ -150,5 +150,21 @@ public class Plan {
 	public double getAngleWanted(){
 		return this.targetDecision.getAngleWanted();
 	}
+	
+	public Point getTarget(){
+		return this.target;
+	}
+	
+	public Point getNavPoint(){
+		return this.navPoint;
+	}
+	
+	public Point getCentreOfTheirGoal(){
+		return this.allStaticObjects.getCentreOfTheirGoal();
+	}
+	
+	public AllStaticObjects getAllStaticObjects(){
+		return this.allStaticObjects;
+	}
 
 }
