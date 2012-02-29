@@ -627,9 +627,7 @@ public class Thresholding {
     	return new Point((int) (sumX/(double)listOfPoints.size() ), (int) (sumY/(double)listOfPoints.size()));
     }
 
-    public Point getBlueGreenPlateCentorid(){ 
-    	return blueGreenPlateCentroid;
-    }
+
     
     public boolean isBlue(Color c){
         return ( (c.getRed() <= blueRobotThresh[pitch][0]) && (c.getBlue() > blueRobotThresh[pitch][2])   && (c.getGreen() <= blueRobotThresh[pitch][1]));
@@ -672,72 +670,6 @@ public class Thresholding {
     }
 	
 	
-	//IS THIS FOR GREEN PLATE BOUNDING?
-    public Point[] findTheFourPoints(ArrayList<Point> points){
-    	Point[] ans = new Point[]{new Point(0,0),new Point(0,0),new Point(0,0),new Point(0,0)}; 
-    	/*
-    	 * ans[0] = xminP,
-    	 * ans[1] = xmaxP,
-    	 * ans[2] = yminP,
-    	 * ans[3] = ymaxP. 
-    	 */
-    	int minX = Integer.MAX_VALUE;
-    	int maxX = Integer.MIN_VALUE;
-    	int minY = Integer.MAX_VALUE;
-    	int maxY = Integer.MIN_VALUE;
-    	
-    	for (int i = 0; i < points.size(); i++) {
-			if(points.get(i).x < minX){
-				ans[0] = points.get(i);
-				minX = points.get(i).x;
-			}
-			if(points.get(i).x >= maxX){
-				ans[1] = points.get(i);
-				maxX = points.get(i).x;
-			}
-			if(points.get(i).y < minY){
-				ans[2] = points.get(i);
-				minY = points.get(i).y;
-			}
-			if(points.get(i).y >= maxY){
-				ans[3] = points.get(i);
-				maxY = points.get(i).y;
-			}
-		}
-    	/*for (int i = 0; i < ans.length; i++) {
-			System.err.println(i+" "+ans[i]);
-		}*/
-    	
-    	return ans;
-    }
-    
-    //IS THIS FOR THE FURTHEST AWAY POINT?
-	public Point findKeyPoint(Point[] points, Point cent){
-		
-		Point ans = new Point();
-		double firstMin = Integer.MAX_VALUE;
-		double secondMin = Integer.MAX_VALUE;
-		Point firstMinP = new Point(0,0);
-		Point secondMinP = new Point(0,0);
-
-		for (int i = 0; i < points.length; i++) {
-			if(Point.distance(points[i].x,points[i].y, cent.x, cent.y) < firstMin){
-				firstMinP = points[i];
-				firstMin = Point.distance(points[i].x,points[i].y, cent.x, cent.y);
-			}
-		}
-		for (int i = 0; i < points.length; i++) {
-			if( Point.distance(points[i].x,points[i].y, cent.x, cent.y) > 
-				Point.distance(firstMinP.x,firstMinP.y, cent.x, cent.y) && (secondMin > firstMin)){
-				secondMinP = points[i];
-				secondMin =  Point.distance(points[i].x,points[i].y, cent.x, cent.y);
-			}
-		}
-		//System.err.println("First point"+ firstMinP.x+","+firstMinP.y);
-		//System.err.println("Second point"+ secondMinP.x+","+secondMinP.y);
-		ans.setLocation( (firstMinP.x + secondMinP.x)/2, (firstMinP.y + secondMinP.y)/2);
-		return ans;
-	}
 	public Point[] getBlueGreenPlate4Points(){
 		return blueGreenPlate4Points;
 	}
