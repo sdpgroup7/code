@@ -20,6 +20,7 @@ import net.phys2d.raw.Body;
 import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.World;
 import net.phys2d.raw.shapes.Box;
+import net.phys2d.raw.shapes.Circle;
 import net.phys2d.raw.strategies.QuadSpaceStrategy;
 
 public class SimulatorFeed extends WindowAdapter {
@@ -189,13 +190,16 @@ public class SimulatorFeed extends WindowAdapter {
 		yellowRobot = new Body("yellow_robot", new Box(47, 33), 10000000);
 		yellowRobot.setFriction(100);
 		yellowRobot.setRestitution(1);
-		yellowRobot.setDamping(2f);
+		yellowRobot.setDamping(2);
 		yellowRobot.setRotatable(false);
 		world.add(yellowRobot);
 		
 		
 		/* Set up ball */
-		
+		ball = new Body("ball", new Circle(5), 5);
+		ball.setDamping(0.005f);
+		ball.setRestitution(0.8f);
+		ball.setCanRest(true);
 		world.add(ball);
 	}
 	
