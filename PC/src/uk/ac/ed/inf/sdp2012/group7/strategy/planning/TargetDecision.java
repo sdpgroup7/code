@@ -25,7 +25,6 @@ public class TargetDecision {
 	 */
 	private AllMovingObjects allMovingObjects;
 	private AllStaticObjects allStaticObjects;
-	private ArrayList<Point> obstacles;
 	private int planType;
 	private int action;
 	
@@ -39,6 +38,9 @@ public class TargetDecision {
 	//navigation point
 	private Point navPoint;
 	private Point target;
+	//navigation boolean
+	private boolean openShotPossible;
+	private boolean angularShotPossible;
 	
 	private double targetInCM;
 	
@@ -51,10 +53,11 @@ public class TargetDecision {
 
 	
 	//Constructor
-	public TargetDecision(AllMovingObjects aMO, AllStaticObjects aSO, ArrayList<Point> obstacles) {
+	public TargetDecision(AllMovingObjects aMO, AllStaticObjects aSO) {
+		
+		//get all information required
 		this.allMovingObjects = aMO;
 		this.allStaticObjects = aSO;
-		this.obstacles = obstacles;
 		this.planType = this.allStaticObjects.getPlanType();
 		
 		//initialise target
@@ -64,11 +67,16 @@ public class TargetDecision {
 		this.clearShot();
 		this.angularShot();
 		
-		
+		//conditions
 		this.weHaveBall();
 		this.theyHaveBall();
 		this.ballTooCloseToWall();
 		
+		//catch for when the ball is not on the pitch
+		this.ballOnPitch = ((target.x >= 0) && (target.x <= allStaticObjects.getWidth()) && 
+				   (target.y >= 0) && (target.y <= allStaticObjects.getHeight()));
+		
+		//setting nav and target
 		this.setTargets();
 		
 
@@ -80,102 +88,110 @@ public class TargetDecision {
 		/*
 		 * This whole section is experimental
 		 * 
-		 * This should be led by us trying to get to the best position and angle at all time
-		 * then if we are at these conditions we react, see comments above open_shot for details
+		 * set navPoint so we can start approaching the ball from the right angle
+		 * set target so we sit next to the ball
 		 * 
 		 */
 		
-		
-		this.target = allStaticObjects.convertToNode(this.allMovingObjects.getBallPosition());
-		//boolean for knowing if the ball is on the pitch
-		//otherwise we crash..
-		this.ballOnPitch = ((target.x >= 0) && (target.x <= allStaticObjects.getWidth()) && 
-							   (target.y >= 0) && (target.y <= allStaticObjects.getHeight()));
 		
 		if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
 		
 			//Really need a better decision structure
 			if(!this.ballOnPitch){
+				
 				//sit next to our goal
 				this.action = PlanTypes.ActionType.DRIVE.ordinal();
 				logger.debug("Ball is not found on pitch, driving to our goal");
 				this.target = this.allStaticObjects.getInFrontOfOurGoal();
+				this.navPoint = this.target;
+				
 			} else {
+				
 				if(this.ballIsTooCloseToWall){
+					
 					//Need ability to dribble by next milestone
 					//go sit infront of our goal
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
 					logger.debug("Ball is too close to the wall, driving to our goal");
 					this.target = this.allStaticObjects.getInFrontOfOurGoal();
+					this.navPoint = this.target;
+					
 				} else if (this.theyHaveBall){
+					
 					//go sit infront of our goal
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
 					//would be great if we could go into penalty mode here
 					logger.debug("They have the ball, driving to our goal");
 					this.target = this.allStaticObjects.getInFrontOfOurGoal();
+					this.navPoint = this.target;
+					
+				} else if (this.weHaveBall){
+					
+					logger.debug("We have the ball, kicking");
+					this.action = PlanTypes.ActionType.KICK.ordinal();
+					
 				} else {
-					//weHaveBall && not @ bestAngle && not @ bestPosition
-					if(!this.clearShot && this.weHaveBall){
-						//drive towards their goal
-						this.action = PlanTypes.ActionType.DRIVE.ordinal();
-						logger.debug("We have the ball, we don't have a good angle to shoot or position; driving to their goal");
-						this.target = this.allStaticObjects.getInFrontOfTheirGoal();
-					//weHaveBall && not @ bestAngle && atBestPosition
-					} else if (this.weHaveBall) {
-						//turn to best angle
-						this.action = PlanTypes.ActionType.DRIVE.ordinal();
-						logger.debug("We have the ball, we don't have a good angle to shoot; drive to their goal");
-						this.target = this.allStaticObjects.getInFrontOfTheirGoal();
-					//weHaveBall && bestAngle && bestPosition
-					} else if (this.weHaveBall) {
-						this.action = PlanTypes.ActionType.KICK.ordinal();
-						logger.debug("We have the ball, we're on; kicking");
-					} else {
+					
+					//create open shot nav and target
+					this.setTargetPointOpen();
+					this.setNavPointOpen();
+					
+					
+					//test to see if we can do an open shot...
+					this.openShotPossible = (this.navPoint.x > this.allStaticObjects.getPitchLeftBuffer() && 
+							this.navPoint.x < this.allStaticObjects.getPitchRightBuffer()) &&
+							(this.navPoint.y < this.allStaticObjects.getPitchBottomBuffer()&& 
+							this.navPoint.y > this.allStaticObjects.getPitchTopBuffer());
+					
+					logger.debug("Open shot possibility is : " + this.openShotPossible);
+					logger.debug("navPoint : " + this.openShotPossible);
+					
+					//And if we can't switch the target to an angular shot
+					if(!this.openShotPossible){
+						
+						this.setTargetPointAngular();
+						this.setNavPointAngular();
+						
+						//test to see if we can do an angular shot...
+						this.angularShotPossible = (this.navPoint.x > this.allStaticObjects.getPitchLeftBuffer() && 
+								this.navPoint.x < this.allStaticObjects.getPitchRightBuffer()) &&
+								(this.navPoint.y < this.allStaticObjects.getPitchBottomBuffer()&& 
+								this.navPoint.y > this.allStaticObjects.getPitchTopBuffer());
+						
+						logger.debug("Angular shot possibility is : " + this.angularShotPossible);
+						
+						//Just go to the ball
+						if(!this.angularShotPossible){
+							this.navPoint = this.allMovingObjects.getBallPosition();
+							this.target = this.allMovingObjects.getBallPosition();
+							
+							logger.debug("Just go to ball");
+							
+						}
+						
 					}
+				
+					this.action = PlanTypes.ActionType.DRIVE.ordinal();
+				
 				}
-			
 			}
 		} 
 		else if(this.planType == PlanTypes.PlanType.HALT.ordinal()){
 			this.action = PlanTypes.ActionType.STOP.ordinal();
 		}
 		// Penalty offence
-<<<<<<< HEAD
 		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {				
 			logger.debug("In penalty offence, will try to turn then kick");
 			double angle = allMovingObjects.getOurAngle() + Math.PI/18;
 			logger.debug("Trying to turn to angle "+angle);
 			this.bestAngle = angle;
-			target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
-			logger.debug("The target is "+target+" it should be our position");
 			this.action = PlanTypes.ActionType.ANGLE_KICK.ordinal();
-			return target;
-=======
-		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
-				
-			if(this.allStaticObjects.getCounter() % 2 == 0) {
-				logger.debug("In penalty offence, try to turn 20 degrees");
-				double angle = allMovingObjects.getOurAngle() + Math.PI/18;
-				logger.debug("Trying to turn to angle "+angle);
-				this.bestAngle = angle;
-				target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
-				logger.debug("The target is "+target+" it should be our position");
-				this.action = PlanTypes.ActionType.ANGLE.ordinal();
-				this.allStaticObjects.setCounter();
-				logger.debug("Counter incremented, next plan should try to kick");
-			} else {
-				logger.debug("In penalty offence, trying to kick");
-				this.action = PlanTypes.ActionType.KICK.ordinal();
-				this.allStaticObjects.setCounter();
-				target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
-				logger.debug("The target is "+target+" it should be our position");
-			}
->>>>>>> d298b501b847237596ffe082fa59cf92fc9b3992
+			this.target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
+			logger.debug("The target is "+target+" it should be our position");
 		}
-	
+			
 		// No other plan types so must be penalty defence
 		else {
-			
 			this.action = PlanTypes.ActionType.STOP.ordinal();
 		}
 	}
@@ -222,45 +238,109 @@ public class TargetDecision {
 		logger.debug("They have the ball : " + this.theyHaveBall);
 
 	}
-
-	//This function should not check weHaveBall
-	//It should find the best position and angle for "a" shot
-	//update whether that target type is of open or angular
-	//and set a variable bestTargetAngle and bestTargetPosition which is where we want to be
-	//in the decision making getTargetNode it should then check if the robot
-	//is on that angle and position and respond, either by moving to the above
-	//of if on the above it should react - TURN / KICK
-	//Thus we need two functions - getBestAngular
-	//                           - getBestOpen
-	//these then set bestPosition and bestAngle
-	//and we just check if our robot is at these conditions...
+	
+	
+	//set navPoint 6 nodes behind the ball
+	private void setNavPointOpen(){
+		
+		Point ballPosition = this.allMovingObjects.getBallPosition();
+		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
+		double angleBetweenBallAndGoal = allMovingObjects.angleBetween(ballPosition,centreGoal);
+		
+		int navX = ballPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*6*allStaticObjects.getNodeInPixels());
+		int navY = ballPosition.y - (int)(Math.sin(angleBetweenBallAndGoal)*6*allStaticObjects.getNodeInPixels());
+		
+		this.navPoint = new Point(navX,navY);
+		
+	}
+	
+	//set Target 3 nodes behind the ball (our robot width)
+	private void setTargetPointOpen(){
+		
+		Point ballPosition = this.allMovingObjects.getBallPosition();
+		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
+		double angleBetweenBallAndGoal = allMovingObjects.angleBetween(ballPosition,centreGoal);
+		
+		int navX = ballPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*3*allStaticObjects.getNodeInPixels());
+		int navY = ballPosition.y - (int)(Math.sin(angleBetweenBallAndGoal)*3*allStaticObjects.getNodeInPixels());
+		
+		this.target = new Point(navX,navY);
+		
+	}
+	
+	//set navPoint 6 nodes behind the ball
+	private void setNavPointAngular(){
+		
+		Point ballPosition = this.allMovingObjects.getBallPosition();
+		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
+		double angleBetweenBallAndGoal = allMovingObjects.angleBetween(ballPosition,centreGoal);
+		
+		int navX = ballPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*6*allStaticObjects.getNodeInPixels());
+		int navY = ballPosition.y - (int)(Math.sin(angleBetweenBallAndGoal)*6*allStaticObjects.getNodeInPixels());
+		
+		int distanceToTop = this.allStaticObjects.getPitchTopBuffer() - navY;
+		int distanceToBottom = navY - this.allStaticObjects.getPitchBottomBuffer(); 
+		
+		if(distanceToBottom < distanceToTop){
+			navY = navY + distanceToBottom;
+		}
+		else {
+			navY = navY - distanceToTop;
+		}
+		
+		this.navPoint = new Point(navX,navY);
+		
+	}
+	
+	//set Target 3 nodes behind the ball (our robot width)
+	private void setTargetPointAngular(){
+		
+		Point ballPosition = this.allMovingObjects.getBallPosition();
+		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
+		double angleBetweenBallAndGoal = allMovingObjects.angleBetween(ballPosition,centreGoal);
+		
+		int navX = ballPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*3*allStaticObjects.getNodeInPixels());
+		int navY = ballPosition.y - (int)(Math.sin(angleBetweenBallAndGoal)*3*allStaticObjects.getNodeInPixels());
+		
+		int distanceToTop = this.allStaticObjects.getPitchTopBuffer() - navY;
+		int distanceToBottom = navY - this.allStaticObjects.getPitchBottomBuffer(); 
+		
+		if(distanceToBottom < distanceToTop){
+			navY = navY + distanceToBottom;
+		}
+		else {
+			navY = navY - distanceToTop;
+		}
+		
+		this.navPoint = new Point(navX,navY);
+		
+	}
 	
 	private void clearShot(){
 
-		if(weHaveBall){
-
-			//Positions
-			Point ourPosition = allMovingObjects.getOurPosition();
+		//Positions
+		Point ourPosition = allMovingObjects.getOurPosition();
 
 
-			//Angles
-			double ourAngle = allMovingObjects.getOurAngle();
-			double angleWithTopPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirTopGoalPost()); 
-			double angleWithBottomPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirBottomGoalPost());
+		//Angles
+		double ourAngle = allMovingObjects.getOurAngle();
+		double angleWithTopPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirTopGoalPost()); 
+		double angleWithBottomPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirBottomGoalPost());
 
-			//Set clear shot boolean
-			if(worldState.getShootingDirection() == 1){
-				if(ourAngle > angleWithTopPost && ourAngle < angleWithBottomPost){
-					this.clearShot = true;
-				}
+		//Set clear shot boolean
+		if(worldState.getShootingDirection() == 1){
+			if(ourAngle > angleWithTopPost && ourAngle < angleWithBottomPost){
+				this.clearShot = true;
 			}
-			else{
-				if(ourAngle < angleWithTopPost && ourAngle > angleWithBottomPost){
-					this.clearShot = true;
-				}
-			}				
 		}
+		else{
+			if(ourAngle < angleWithTopPost && ourAngle > angleWithBottomPost){
+				this.clearShot = true;
+			}
+		}				
+
 	}
+	
 	
 	//Takes a point and an angle, returns true if there is a shot
 	private boolean clearShot(Point position,double angle) {
@@ -274,11 +354,6 @@ public class TargetDecision {
 			double our_angle = angle;
 			double angleWithTopPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirTopGoalPost()); 
 			double angleWithBottomPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirBottomGoalPost());
-			
-			int navX = ourPosition.x - (int)(Math.cos(our_angle)*3*allStaticObjects.getNodeInPixels());
-			int navY = ourPosition.y - (int)(Math.sin(our_angle)*3*allStaticObjects.getNodeInPixels());
-			
-			this.navPoint = new Point(navX,navY);
 			
 			//Set clear shot boolean
 			if(worldState.getShootingDirection() == 1){

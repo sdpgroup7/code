@@ -23,8 +23,9 @@ public class AllStaticObjects {
 	private double nodeInPixels;
 	private int pitchTopBuffer;
 	private int pitchLeftBuffer; 
-	//private int pitch_bottom_buffer;
-	//private int pitch_right_buffer; 
+	private int pitchBottomBuffer;
+	private int pitchRightBuffer; 
+
 	private int height;
 	private int width;
 	private int boundary;
@@ -38,6 +39,7 @@ public class AllStaticObjects {
 	private Point ourBottomGoalPost;
 	private Point inFrontOfOurGoal;
 	private Point inFrontOfTheirGoal;
+	private Point centreOfTheirGoal;
 	
 	//just a test counter for Laurie to use with penalty things
 	private int counter =0;
@@ -60,6 +62,8 @@ public class AllStaticObjects {
 		this.ourBottomGoalPost = worldState.getOurGoal().getBottomLeft();
 		this.pitchTopBuffer  = worldState.getPitch().getTopBuffer();
 		this.pitchLeftBuffer = worldState.getPitch().getLeftBuffer();
+		this.pitchBottomBuffer  = worldState.getPitch().getBottomBuffer();
+		this.pitchRightBuffer = worldState.getPitch().getRightBuffer();
 		this.pitchHeight = worldState.getPitch().getHeightInPixels();
 		this.pitchWidth = worldState.getPitch().getWidthInPixels();
 		
@@ -75,6 +79,7 @@ public class AllStaticObjects {
 		//set defence position
 		this.pointInfrontOfGoal();
 		this.pointInfrontOfTheirGoal();
+		this.centreOfTheirGoal();
 		
 		this.deceleration = 0;
 	}
@@ -103,11 +108,11 @@ public class AllStaticObjects {
 	//Return this as a node!
 	private void pointInfrontOfGoal(){
 		if(worldState.getShootingDirection() == 1){
-			this.inFrontOfOurGoal = new Point((this.width - this.boundary),this.height/2);
+			this.inFrontOfOurGoal = new Point(this.boundary,this.height/2);
 			
 		}
 		else {
-			this.inFrontOfOurGoal = new Point(this.boundary,this.height/2);
+			this.inFrontOfOurGoal = new Point((this.width - this.boundary),this.height/2);
 		}
 	}
 	
@@ -115,11 +120,23 @@ public class AllStaticObjects {
 	//Return this as a node!
 	private void pointInfrontOfTheirGoal(){
 		if(worldState.getShootingDirection() == -1){
-			this.inFrontOfTheirGoal = new Point((this.width - this.boundary),this.height/2);
+			this.inFrontOfTheirGoal = new Point(this.boundary,this.height/2);
 			
 		}
 		else {
-			this.inFrontOfTheirGoal = new Point(this.boundary,this.height/2);
+			this.inFrontOfTheirGoal = new Point((this.width - this.boundary),this.height/2);
+		}
+	}
+	
+	//Method for finding the centre point in their goal...
+	//Return this as a node!
+	private void centreOfTheirGoal(){
+		if(worldState.getShootingDirection() == -1){
+			this.inFrontOfTheirGoal = new Point(0,this.height/2);
+			
+		}
+		else {
+			this.inFrontOfTheirGoal = new Point(this.width,this.height/2);
 		}
 	}
 	
@@ -163,6 +180,10 @@ public class AllStaticObjects {
 	
 	public Point getInFrontOfTheirGoal() {
 		return inFrontOfTheirGoal;
+	}
+	
+	public Point getCentreOfTheirGoal() {
+		return centreOfTheirGoal;
 	}
 
 	public int getPlanType(){
@@ -213,6 +234,14 @@ public class AllStaticObjects {
 
 	public void setCounter() {
 		this.counter++;
+	}
+	
+	public int getPitchBottomBuffer() {
+		return pitchBottomBuffer;
+	}
+
+	public int getPitchRightBuffer() {
+		return pitchRightBuffer;
 	}
 	
 }

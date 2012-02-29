@@ -22,13 +22,18 @@ public class Plan {
 	private OppositionPrediction opposition;
 	private ArrayList<Point> obstacles;
 	private ArrayList<Point> path;
-	private AStarRun astar;
+	private AStarRun aStarTarget;
+	private AStarRun aStarNav;
 	private AllStaticObjects allStaticObjects;
 	public static final Logger logger = Logger.getLogger(Plan.class);
 
 	//World state info
 	private AllMovingObjects allMovingObjects;
 	private WorldState worldState = WorldState.getInstance();
+	
+	//targets and navs
+	private Point target;
+	private Point navPoint;
 	
 	//For testing
 	private Path nodePath;
@@ -53,10 +58,10 @@ public class Plan {
 		this.obstacles = allStaticObjects.convertToNodes(opposition.getDefaultObstacles());
 		
 		//Setup target for A*
-		this.targetDecision = new TargetDecision(this.allMovingObjects, this.allStaticObjects, this.obstacles);
+		this.targetDecision = new TargetDecision(this.allMovingObjects, this.allStaticObjects);
 		
-		Point target = this.targetDecision.getTargetAsNode();
-		Point navPoint = this.targetDecision.getNavAsNode();
+		this.target = this.targetDecision.getTargetAsNode();
+		this.navPoint = this.targetDecision.getNavAsNode();
 		
 		logger.debug("Target Decision Position: " + targetDecision.getTargetAsNode().toString());
 		logger.debug("NavPoint Decision Position: " + targetDecision.getNavAsNode().toString());
@@ -64,10 +69,10 @@ public class Plan {
 		logger.debug("Robot Position: " + this.allStaticObjects.convertToNode(allMovingObjects.getOurPosition()).toString());
 		logger.debug("Their Robot Position: " + this.allStaticObjects.convertToNode(worldState.getOpponentsRobot().getPosition().getCentre()));
 		
-		//Now create an A* object from which we create a path
-		astar = new AStarRun(	this.allStaticObjects.getHeight(),
+		//a* for Current position to navPpoint
+		aStarNav = new AStarRun(this.allStaticObjects.getHeight(),
 								this.allStaticObjects.getWidth(),
-								this.targetDecision.getTargetAsNode(),
+								navPoint,
 								this.allStaticObjects.convertToNode(allMovingObjects.getOurPosition()),
 								this.obstacles
 							);
@@ -75,12 +80,15 @@ public class Plan {
 		
 		//Requires method to convert from path to ArrayList<Point>
 		//Now grab path through A* method
-		this.path = astar.getPathInPoints();
+		this.path = aStarTarget.getPathInPoints();
+		
+		//Now add target to the end:
+		this.path.add(this.target);
 		
 		logger.debug("Path length: " + this.path.size());
 		
 		//Grab path in Node
-		this.nodePath = astar.getPath();
+		this.nodePath = aStarTarget.getPath();
 		
 		
 
@@ -126,7 +134,7 @@ public class Plan {
 	
 	//For testing
 	public AStarRun getAStar(){
-		return this.astar;
+		return this.aStarTarget;
 	}
 	
 	//For Control Interface
