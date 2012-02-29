@@ -41,6 +41,11 @@
 			<src path="src"/>
 			<classpath refid="PC.classpath"/>
 		</javac>
+		<exec executable="/bin/sh">
+			<arg value="-c"/>
+			<arg value="./compile-simulator.sh"/>
+		</exec>
+
 	</target>
 	<target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
 	<target name="MainRunner">

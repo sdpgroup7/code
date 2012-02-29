@@ -272,7 +272,7 @@ public class SimulatorFeed extends WindowAdapter {
 			File outputFile = new File(fn);
 			ImageIO.write(image, "png", outputFile);
 		} catch (Exception e) {
-			Vision.logger.error("Failed to write image: " + e.getMessage());
+			Simulator.logger.error("Failed to write image: " + e.getMessage());
 		}
 	}
 
@@ -288,7 +288,7 @@ public class SimulatorFeed extends WindowAdapter {
 		receiver.stop();
 
 		windowFrame.dispose();
-		Vision.logger.info("Vision System Ending...");
+		Simulator.logger.info("Vision System Ending...");
 		System.exit(0);
 	}
 }
