@@ -254,31 +254,31 @@ public class ControlInterface implements Observer {
 	
 	//Driving simply point to point
 	public void implementAStar(Plan plan) {
-		ArrayList<Point> path = plan.getPath();
-		Point firstPoint = path.get(0);
-		Point secondPoint = path.get(1);
+		synchronized (this){
+			ArrayList<Point> path = plan.getPath();
+			Point firstPoint = path.get(0);
+			Point secondPoint = path.get(1);
 		
-		double robotAngle = plan.getOurRobotAngle();
+			double targetAngle = Math.atan2((secondPoint.y - firstPoint.y),(secondPoint.x - firstPoint.x));
 		
-		double targetAngle = Tools.getAngleToFacePoint(firstPoint, robotAngle, secondPoint);
+			if (Math.abs(Math.toDegrees(targetAngle)) > 5) {
+				logger.debug("We need to rotate to the point");
+				c.stop();
+				waitABit(10);
+				c.rotateBy(targetAngle);
+				waitABit(10);
+			} else {
+				logger.debug("Don't need to rotate");
+			}
 		
-		if (Math.abs(Math.toDegrees(targetAngle)) > 5) {
-			logger.debug("We need to rotate to the point");
-			c.stop();
-			waitABit(200);
-			c.rotateBy(targetAngle);
-			waitABit(200);
-		} else {
-			logger.debug("Don't need to rotate");
+			double distanceToDrive = firstPoint.distance(secondPoint);
+		
+			double conversion = VisionTools.pixelsToCM(distanceToDrive * plan.getNodeInPixels());
+		
+			int distance = (int) conversion;
+			c.moveForward(distance);
+			waitABit(10);
 		}
-		
-		double distanceToDrive = firstPoint.distance(secondPoint);
-		
-		double conversion = VisionTools.pixelsToCM(distanceToDrive * plan.getNodeInPixels());
-		
-		int distance = (int) conversion;
-		c.moveForward(distance);
-		waitABit(200);
 	}
 		
 	
