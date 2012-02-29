@@ -29,24 +29,27 @@ public class PlanMonitor {
 	
 	private Plan currentPlan;
 	private WorldState worldState = WorldState.getInstance();
+	private double nodeInPixels;
 	
 	public PlanMonitor(Plan plan){
 		currentPlan = plan;
+		nodeInPixels = plan.getNodeInPixels();
 	}
 	
 	public PlanMonitor(){
-		this(null);
+		
 	}
 
 	public void setPlan(Plan plan){
 		currentPlan = plan;
+		nodeInPixels = plan.getNodeInPixels();
 	}
 	
 	public void savePlan(){
 		BufferedWriter out = null;
 		try {
 			out = new BufferedWriter(new FileWriter("plan.txt",true));
-			out.write(generateASCIIPlan());
+			out.write(generateASCIIPlan().toString());
 		} catch (IOException ex) { 
 			Strategy.logger.error("Could not write to file: " + ex.getMessage());
 		} finally {
@@ -62,23 +65,23 @@ public class PlanMonitor {
 	
 	public void outputPlan(){
 		long start = System.currentTimeMillis();
-		String plan = generateASCIIPlan();
-		System.out.println(plan);
+		String[][] plan = generateASCIIPlan();
+		System.out.println(plan.toString());
 		generateImage(plan);
 		long timed = System.currentTimeMillis() - start;
 		Strategy.logger.info("Time to generate plan render: " + timed + "ms");
 	}
 	
-	public String generateASCIIPlan(){
-		String output = "";
+	public String[][] generateASCIIPlan(){
 		AreaMap map = currentPlan.getAStar().getAreaMap();
 		ArrayList<Node> waypoints = null;
 		try{
 			waypoints = currentPlan.getAStar().getPath().getWayPoints();
 		} catch (Exception ex){
-			return "";
+			Strategy.logger.error("Waypoins in generateASCIIPlan is null");
+			return new String[0][0];
 		}
-		if(map.getNodes().length <= 0) return "";
+		if(map.getNodes().length <= 0) return new String[0][0];
 		String[][] ascii = new String[map.getMapHeight()][map.getMapWidth()];
 		for(int y = 0; y < ascii.length; y++){
 			for(int x = 0; x < ascii[y].length;x++){
@@ -118,16 +121,10 @@ public class PlanMonitor {
 				if(currentPlan.getBallPosition().equals(new Point(x,y))) ascii[y][x] = "B";
 			}
 		}
-		for(int y = 0; y < ascii.length; y++){
-			for(int x = 0; x < ascii[y].length; x++){
-				output += ascii[y][x] + " ";
-			}
-			output += "\n";
-		}
-		return output;
+		return ascii;
 	}
 	
-	public void saveImage(String text){
+	public void saveImage(String[][] text){
 		try {
 		    BufferedImage bi = generateImage(text);
 		    File outputfile = new File("planoutput.png");
@@ -137,13 +134,14 @@ public class PlanMonitor {
 		}
 	}
 	
-	public BufferedImage generateImage(String text){
-		BufferedImage im = new BufferedImage(900,620,BufferedImage.TYPE_INT_ARGB);
-		textOverlay(text,im);
-		BufferedImage returnImage = resize(im);
-		returnImage = markData(returnImage);
-		worldState.setOverlay(returnImage);
-		return returnImage;
+	public BufferedImage generateImage(String[][] text){
+		int width = worldState.getPitch().getWidthInPixels();
+		int height = worldState.getPitch().getHeightInPixels();
+		BufferedImage im = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+		im = generateOverlay(text,im);
+		im = markData(im);
+		worldState.setOverlay(im);
+		return im;
 	}
 	
 	public BufferedImage markData(BufferedImage im){
@@ -179,63 +177,24 @@ public class PlanMonitor {
 							30, 30);
 		return im;
 	}
-	
-	public BufferedImage resize(BufferedImage im){
-		int width = 0;
-		int height = 0;
-		int left = Integer.MAX_VALUE;
-		int right = 0;
-		int top = Integer.MAX_VALUE;
-		int bottom = 0;
-		for(int i = 0; i < im.getWidth(); i++){
-			for(int j = 0; j < im.getHeight(); j++){
-				if(im.getRGB(i, j) == Color.white.getRGB()){
-					if(i < left) left = i;
-					if(i > right) right = i;
-					if(j < top) top = j;
-					if(j > bottom) bottom = j;
-				}
-			}
-		}
-		width = right - left;
-		height = bottom - top;
 		
-		BufferedImage croppedImage = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
-		for(int i = left; i < right; i++){
-			for(int j = top; j < bottom; j++){
-				if(im.getRGB(i,j) == Color.white.getRGB()){
-					croppedImage.setRGB(i-left, j-top, Color.white.getRGB());
-				}
-			}
-		}
-		
-		int bufferWidth = worldState.getPitch().getWidthInPixels();
-		int bufferHeight = worldState.getPitch().getHeightInPixels();
-		
-		BufferedImage scaledImage = new BufferedImage(bufferWidth, bufferHeight, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D graphics2D = scaledImage.createGraphics();
-		AffineTransform xform = AffineTransform.getScaleInstance(
-									(double)bufferWidth/(double)croppedImage.getWidth(),
-									(double)bufferHeight/(double)croppedImage.getHeight());
-		graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-		graphics2D.drawImage(croppedImage, xform, null);
-		graphics2D.dispose();
-
-		return scaledImage;
-	}
-	
-	
-    public void textOverlay(String text, BufferedImage image){
-    	Graphics frameGraphics = image.getGraphics();
-        frameGraphics.setColor(Color.white);
-        frameGraphics.setFont(new Font(Font.MONOSPACED,Font.PLAIN,12));
-        int vShift = 20;
-        int lineCount = 0;
-        for(String s : text.split("\n")){
-        	lineCount++;
-        	frameGraphics.drawString(s, 15, vShift*lineCount);
+    public BufferedImage generateOverlay(String[][] ascii, BufferedImage image){
+    	Graphics graphics = image.getGraphics();
+        graphics.setColor(Color.white);
+        graphics.setFont(new Font(Font.MONOSPACED,Font.PLAIN,12));
+        for(int y = 0; y < ascii.length; y++){
+        	for(int x = 0; x < ascii[y].length; x++){
+        		if(ascii[y][x] != " "){
+        			int xp = (int)(x*nodeInPixels + (nodeInPixels / 4) + 0.5);
+        			int yp = (int)(y*nodeInPixels + (nodeInPixels / 4) + 0.5);
+        			int width = (int)((nodeInPixels/2)+0.5);
+        			int height = width;
+        			graphics.fillRect(xp, yp, width, height);
+        		}
+        	}
         }
-        frameGraphics.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
+        //graphics.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
+        return image;
     }
 	
 	
