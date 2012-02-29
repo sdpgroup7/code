@@ -18,7 +18,8 @@
         <pathelement location="/group/teaching/sdp/sdp7/lib/v4l4j.jar"/>
         <pathelement location="/group/teaching/sdp/sdp7/lib/log4j-1.2.16.jar"/>
     	<pathelement location="/group/teaching/sdp/sdp7/lib/javaGeom-0.10.1.jar"/>
-        <path refid="JUnit 4.libraryclasspath"/>
+	<pathelement location="/group/teaching/sdp/sdp7/phys2d/phys2d-060408.jar"/>
+	<path refid="JUnit 4.libraryclasspath"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
