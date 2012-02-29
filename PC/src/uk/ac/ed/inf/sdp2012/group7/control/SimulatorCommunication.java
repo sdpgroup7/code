@@ -29,7 +29,7 @@ public class SimulatorCommunication implements CommunicationInterface {
 		try {
 			return is.read();
 		} catch (Exception e) {
-			System.out.println("Receiving command from simulator at "+addr()+" failed: "+e.toString());
+			System.out.println("SC: Receiving command from simulator at "+addr()+" failed: "+e.toString());
 		}
 		return -1;
 	}
@@ -37,17 +37,18 @@ public class SimulatorCommunication implements CommunicationInterface {
 
 	public void sendToRobot(int command) {
 		try {
+			System.out.println("SC: Sending command '"+command+"' to simulator at "+addr());
 			byte[] bytes = ByteBuffer.allocate(4).putInt(command).array();
 			os.write(bytes);
 			os.flush();
 		} catch (Exception e) {
-			System.out.println("Sending command '"+command+"' to simulator at "+addr()+" failed: "+e.toString());
+			System.out.println("SC: Sending command '"+command+"' to simulator at "+addr()+" failed: "+e.toString());
 		}
 	}
 
 	
 	public void openConnection() throws IOException {
-		System.out.print("Connecting to simulator at "+addr()+"...");
+		System.out.print("SC: Connecting to simulator at "+addr()+"...");
 		try {
 			socket = new Socket(simHost, simPort);
 			os = socket.getOutputStream();
@@ -61,7 +62,7 @@ public class SimulatorCommunication implements CommunicationInterface {
 	}
 	
 	public void closeConnection() {
-		System.out.print("Disconnecting from simulator at "+addr()+"...");
+		System.out.print("SC: Disconnecting from simulator at "+addr()+"...");
 		try {
 			is.close();
 			os.close();

@@ -19,7 +19,7 @@ enum opcodes {
         QUIT
 };
 
-#define INSTR_MASK 0x000000FF
+#define INSTR_MASK 0x0000FFFF
 #define ARG_SHIFT  >> 8
 
 #endif
