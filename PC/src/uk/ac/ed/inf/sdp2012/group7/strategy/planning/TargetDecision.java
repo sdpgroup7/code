@@ -37,7 +37,7 @@ public class TargetDecision {
 	
 	
 	//navigation point
-	private Point navPoint;
+	private Point navPoint = new Point(0,0);
 	private Point target;
 	
 	private double targetInCM;
