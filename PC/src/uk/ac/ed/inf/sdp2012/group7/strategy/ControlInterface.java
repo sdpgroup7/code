@@ -252,22 +252,18 @@ public class ControlInterface implements Observer {
 		return intersect;
 	}
 	
+	//Driving simply point to point
 	public void implementAStar(Plan plan) {
 		ArrayList<Point> path = plan.getPath();
-		Point pointToDrive = new Point();
-		if (path.size() >= 4) {
-			pointToDrive = path.get(3);
-		} else if (path.size() > 1) {
-			pointToDrive = path.get(1);
-		} else {}
+		Point firstPoint = path.get(0);
+		Point secondPoint = path.get(1);
 		
-		Point robot = plan.getOurRobotPosition();
 		double robotAngle = plan.getOurRobotAngle();
 		
-		double targetAngle = Tools.getAngleToFacePoint(robot, robotAngle, pointToDrive);
+		double targetAngle = Tools.getAngleToFacePoint(firstPoint, robotAngle, secondPoint);
 		
 		if (Math.abs(Math.toDegrees(targetAngle)) > 5) {
-			logger.debug("We need to rotate to the ball");
+			logger.debug("We need to rotate to the point");
 			c.stop();
 			waitABit(200);
 			c.rotateBy(targetAngle);
@@ -275,12 +271,14 @@ public class ControlInterface implements Observer {
 		} else {
 			logger.debug("Don't need to rotate");
 		}
-		robot = plan.getOurRobotPosition();
-		double conversion = (double) VisionTools.pixelsToCM(plan.getNodeInPixels());
 		
-		int distance = (int) Math.round(robot.distance(pointToDrive)*conversion);
+		double distanceToDrive = firstPoint.distance(secondPoint);
+		
+		double conversion = VisionTools.pixelsToCM(distanceToDrive * plan.getNodeInPixels());
+		
+		int distance = (int) conversion;
 		c.moveForward(distance);
-		waitABit(1000);
+		waitABit(200);
 	}
 		
 	
