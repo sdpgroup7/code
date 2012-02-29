@@ -140,6 +140,17 @@ public class TargetDecision {
 			this.action = PlanTypes.ActionType.STOP.ordinal();
 		}
 		// Penalty offence
+<<<<<<< HEAD
+		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {				
+			logger.debug("In penalty offence, will try to turn then kick");
+			double angle = allMovingObjects.getOurAngle() + Math.PI/18;
+			logger.debug("Trying to turn to angle "+angle);
+			this.bestAngle = angle;
+			target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
+			logger.debug("The target is "+target+" it should be our position");
+			this.action = PlanTypes.ActionType.ANGLE_KICK.ordinal();
+			return target;
+=======
 		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
 				
 			if(this.allStaticObjects.getCounter() % 2 == 0) {
@@ -159,7 +170,9 @@ public class TargetDecision {
 				target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
 				logger.debug("The target is "+target+" it should be our position");
 			}
+>>>>>>> d298b501b847237596ffe082fa59cf92fc9b3992
 		}
+	
 		// No other plan types so must be penalty defence
 		else {
 			
