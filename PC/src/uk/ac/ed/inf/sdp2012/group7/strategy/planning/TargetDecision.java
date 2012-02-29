@@ -69,6 +69,8 @@ public class TargetDecision {
 		this.theyHaveBall();
 		this.ballTooCloseToWall();
 		
+		this.setTargets();
+		
 
 	}
 	

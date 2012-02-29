@@ -55,8 +55,6 @@ public class Plan {
 		//Setup target for A*
 		this.targetDecision = new TargetDecision(this.allMovingObjects, this.allStaticObjects, this.obstacles);
 		
-		this.targetDecision.setTargets();
-		
 		Point target = this.targetDecision.getTargetAsNode();
 		Point navPoint = this.targetDecision.getNavAsNode();
 		
