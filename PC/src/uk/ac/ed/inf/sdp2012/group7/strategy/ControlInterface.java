@@ -348,7 +348,7 @@ public class ControlInterface implements Observer {
 				
 			} else {
 				
-				kick()
+				kick();
 				
 			} 
 			
