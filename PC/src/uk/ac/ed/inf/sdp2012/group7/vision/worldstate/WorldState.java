@@ -34,6 +34,8 @@ public class WorldState{
 	volatile private long lastUpdated = 0; //The timestamp of when worldstate was last updated
 	volatile private boolean clickingDone = false; //Says whether all clicking has been done (generally used by vision)
 	
+	volatile private boolean barrelfix = false; //whether to do the barrell correction on whole image or not
+	
 
 	public static WorldState getInstance(){
 		if(worldState == null){
@@ -67,6 +69,14 @@ public class WorldState{
     
     public boolean getGenerateOverlay(){
     	return generateOverlay;
+    }
+    
+    public void setBarrelFix(boolean set){
+        this.barrelfix = set;
+    }
+    
+    public boolean getBarrelFix(){
+        return barrelfix;
     }
     
 	public BufferedImage getOverlay(){
