@@ -81,42 +81,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         Vision.logger.info("Vision System unpaused.");
     }
     
-	public void getPoints(){
-	
-		Vision.worldState.setPitch(new Pitch(
-				    getClickPoint("Click the top left corner"),
-				    getClickPoint("Click the top right corner"),
-				    getClickPoint("Click the bottom right corner"),
-				    getClickPoint("Click the bottom left corner")
-				));
-		
-		Vision.worldState.setPitchBuffers(
-				    getClickPoint("Click the top bulge").y,
-				    getClickPoint("Click the right bulge").x,
-				    getClickPoint("Click the bottom bulge").y,
-				    getClickPoint("Click the left bulge").x
-				);
-
-		
-	}
-    /*
-    just register the mouse click after being asked to by getClickPoint
-    */
-	public Point getClickPoint(String message){
-		System.out.println(message);
-        while (!mouseClick) {
-            try{
-                Thread.sleep(100);
-            } catch (Exception e) {}
-        }
-        mouseClick = false;
-        Vision.logger.debug(coords.toString());
-        return coords;
-    }
     
-    /*
-    TODO Get rid of prompts for what we dont need i.e. blue robot
-    */
     //Set the sliders on the GUI, the messages are used to tell the user what to click
     public void getColors(){
         setYellowValues(getClickColor("Click the yellow robot"));

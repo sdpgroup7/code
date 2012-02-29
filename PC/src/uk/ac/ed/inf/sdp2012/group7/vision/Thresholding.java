@@ -641,12 +641,6 @@ public class Thresholding {
         return ( GB > 70 && RG > 70 && c.getGreen() > greenPlatesThresh[pitch][0]);
     }
     
-    public boolean isGrey(Color c){
-        return ((c.getRed() >= ts.getGrey_r_low()) && (c.getRed() <= ts.getGrey_r_high()) && (c.getGreen() >= ts.getGrey_g_low()) && (c.getGreen() <= ts.getGrey_g_high()) && (c.getBlue() >= ts.getGrey_b_low()) && (c.getBlue() <= ts.getGrey_b_high()));
-    }
-    /*public boolean isGrey(Color c, int RG){
-        return (RG < 20 && c.getBlue() < 50 && c.getGreen() > 80 && c.getGreen() < 110 && c.getRed() > 80 && c.getRed() < 110);
-    }*/
     
     
     public boolean isYellow(Color c){
