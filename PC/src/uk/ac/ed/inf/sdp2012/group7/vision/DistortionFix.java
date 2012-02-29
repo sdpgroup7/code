@@ -20,7 +20,6 @@ public class DistortionFix {
     	ArrayList<Point> points = new ArrayList<Point>();
     	ArrayList<Point> correctedPoints = new ArrayList<Point>();
     	ArrayList<Color> colors = new ArrayList<Color>();
-    	Vision.logger.info("This method has not yet been implemented.");
     	width = image.getWidth();
     	height = image.getHeight();
     	

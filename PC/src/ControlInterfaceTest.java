@@ -30,7 +30,7 @@ public class ControlInterfaceTest {
 		path.add(new Point(0,8));
 		path.add(new Point(0,9));
 		path.add(new Point(0,10));
-		Arc generated = ControlInterface.generateArc(new Point2D(0,0),path,Math.PI,0,5);
+		Arc generated = ControlInterface.generateArc(new Point2D(0,0),path,Math.PI,0,5,10);
 		
 		assertTrue(generated.getRadius() == Double.MAX_VALUE);
 		System.err.println("Generated Radius: " + generated.getRadius());

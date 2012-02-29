@@ -33,6 +33,14 @@ public class TargetDecision {
 	private boolean clearShot = false;
 	private boolean angularShot = false;
 	
+	private boolean ballOnPitch;
+	
+	
+	//navigation point
+	private Point navPoint;
+	private Point target;
+	
+	private double targetInCM;
 	
 	private boolean weHaveBall = false;
 	private boolean theyHaveBall = false;
@@ -49,6 +57,9 @@ public class TargetDecision {
 		this.obstacles = obstacles;
 		this.planType = this.allStaticObjects.getPlanType();
 		
+		//initialise target
+		this.target = new Point(0,0);
+		
 		//shot methods
 		this.clearShot();
 		this.angularShot();
@@ -62,7 +73,7 @@ public class TargetDecision {
 	}
 	
 	
-	public Point getTargetAsNode() {
+	public void setTargets() {
 		
 		/*
 		 * This whole section is experimental
@@ -73,61 +84,51 @@ public class TargetDecision {
 		 */
 		
 		
-		Point target = new Point();
-		target = allStaticObjects.convertToNode(this.allMovingObjects.getBallPosition());
+		this.target = allStaticObjects.convertToNode(this.allMovingObjects.getBallPosition());
 		//boolean for knowing if the ball is on the pitch
 		//otherwise we crash..
-		boolean ballOnPitch = ((target.x >= 0) && (target.x <= allStaticObjects.getWidth()) && 
+		this.ballOnPitch = ((target.x >= 0) && (target.x <= allStaticObjects.getWidth()) && 
 							   (target.y >= 0) && (target.y <= allStaticObjects.getHeight()));
 		
 		if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
 		
 			//Really need a better decision structure
-			if(!ballOnPitch){
+			if(!this.ballOnPitch){
 				//sit next to our goal
 				this.action = PlanTypes.ActionType.DRIVE.ordinal();
 				logger.debug("Ball is not found on pitch, driving to our goal");
-				return this.allStaticObjects.getInFrontOfOurGoal();
-
-				
+				this.target = this.allStaticObjects.getInFrontOfOurGoal();
 			} else {
 				if(this.ballIsTooCloseToWall){
 					//Need ability to dribble by next milestone
 					//go sit infront of our goal
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
 					logger.debug("Ball is too close to the wall, driving to our goal");
-					return this.allStaticObjects.getInFrontOfOurGoal();
-					
+					this.target = this.allStaticObjects.getInFrontOfOurGoal();
 				} else if (this.theyHaveBall){
 					//go sit infront of our goal
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
 					//would be great if we could go into penalty mode here
 					logger.debug("They have the ball, driving to our goal");
-					return this.allStaticObjects.getInFrontOfOurGoal();
-					
+					this.target = this.allStaticObjects.getInFrontOfOurGoal();
 				} else {
 					//weHaveBall && not @ bestAngle && not @ bestPosition
-					if(this.weHaveBall){
+					if(!this.clearShot && this.weHaveBall){
 						//drive towards their goal
 						this.action = PlanTypes.ActionType.DRIVE.ordinal();
 						logger.debug("We have the ball, we don't have a good angle to shoot or position; driving to their goal");
-						return this.allStaticObjects.getInFrontOfTheirGoal();
-						
+						this.target = this.allStaticObjects.getInFrontOfTheirGoal();
 					//weHaveBall && not @ bestAngle && atBestPosition
 					} else if (this.weHaveBall) {
 						//turn to best angle
 						this.action = PlanTypes.ActionType.DRIVE.ordinal();
-						logger.debug("We have the ball, we don't have a good angle to shoot; turning to their goal");
-						return target;
-						
+						logger.debug("We have the ball, we don't have a good angle to shoot; drive to their goal");
+						this.target = this.allStaticObjects.getInFrontOfTheirGoal();
 					//weHaveBall && bestAngle && bestPosition
 					} else if (this.weHaveBall) {
 						this.action = PlanTypes.ActionType.KICK.ordinal();
 						logger.debug("We have the ball, we're on; kicking");
-						return target;
-						
 					} else {
-						return target;
 					}
 				}
 			
@@ -135,9 +136,9 @@ public class TargetDecision {
 		} 
 		else if(this.planType == PlanTypes.PlanType.HALT.ordinal()){
 			this.action = PlanTypes.ActionType.STOP.ordinal();
-			return target;
 		}
 		// Penalty offence
+<<<<<<< HEAD
 		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {				
 			logger.debug("In penalty offence, will try to turn then kick");
 			double angle = allMovingObjects.getOurAngle() + Math.PI/18;
@@ -147,13 +148,33 @@ public class TargetDecision {
 			logger.debug("The target is "+target+" it should be our position");
 			this.action = PlanTypes.ActionType.ANGLE_KICK.ordinal();
 			return target;
+=======
+		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
+				
+			if(this.allStaticObjects.getCounter() % 2 == 0) {
+				logger.debug("In penalty offence, try to turn 20 degrees");
+				double angle = allMovingObjects.getOurAngle() + Math.PI/18;
+				logger.debug("Trying to turn to angle "+angle);
+				this.bestAngle = angle;
+				target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
+				logger.debug("The target is "+target+" it should be our position");
+				this.action = PlanTypes.ActionType.ANGLE.ordinal();
+				this.allStaticObjects.setCounter();
+				logger.debug("Counter incremented, next plan should try to kick");
+			} else {
+				logger.debug("In penalty offence, trying to kick");
+				this.action = PlanTypes.ActionType.KICK.ordinal();
+				this.allStaticObjects.setCounter();
+				target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
+				logger.debug("The target is "+target+" it should be our position");
+			}
+>>>>>>> d298b501b847237596ffe082fa59cf92fc9b3992
 		}
 	
 		// No other plan types so must be penalty defence
 		else {
 			
 			this.action = PlanTypes.ActionType.STOP.ordinal();
-			return target;
 		}
 	}
 
@@ -251,7 +272,11 @@ public class TargetDecision {
 			double our_angle = angle;
 			double angleWithTopPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirTopGoalPost()); 
 			double angleWithBottomPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirBottomGoalPost());
-
+			
+			int navX = ourPosition.x - (int)(Math.cos(our_angle)*3*allStaticObjects.getNodeInPixels());
+			int navY = ourPosition.y - (int)(Math.sin(our_angle)*3*allStaticObjects.getNodeInPixels());
+			
+			this.navPoint = new Point(navX,navY);
 			
 			//Set clear shot boolean
 			if(worldState.getShootingDirection() == 1){
@@ -325,26 +350,6 @@ public class TargetDecision {
 		Point midGoal = new Point(x,y);
 		
 		return 0;
-	}
-	
-	private void findBestShot(){
-		
-		//1 Choose best position for openShot
-		//2 return this angle
-		//3 test if the line to the goal from above position is blocked
-		//4 if not, set bestPosition & bestAngle to above
-		//5 if above blocked choose best position for angularShot
-		//6 return this angle
-		//7 test is the line to goal from above is blocked
-		//if not, set bestPosition & bestAngle to above
-		//if above blocked, we need to decide what dribbling is at this point
-		//or sit on the line which is their best attack
-		
-		//Positions
-		this.bestPosition = allMovingObjects.getBallPosition();
-		
-		//Angles
-		
 	}
 	
 	private void ballTooCloseToWall() {
@@ -439,4 +444,31 @@ public class TargetDecision {
 		return this.bestAngle;
 	}
 	
+	public Point getTarget(){
+		return this.target;
+	}
+	
+	public boolean getWeHaveTheBall(){
+		return this.weHaveBall;
+	}	
+	
+	public boolean getTheyHaveTheBall(){
+		return this.theyHaveBall;
+	}	
+	
+	public boolean getBallOnThePitch(){
+		return this.ballOnPitch;
+	}
+	
+	public Point getTargetAsNode(){
+		return this.target;
+	}
+	
+	public Point getNavAsNode(){
+		return this.navPoint;
+	}
+	
+	public double getTargetCM(){
+		return this.targetInCM;
+	}
 }

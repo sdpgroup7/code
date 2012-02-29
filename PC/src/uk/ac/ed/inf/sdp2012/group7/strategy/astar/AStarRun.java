@@ -22,7 +22,11 @@ public class AStarRun {
 			if (obstacles.size() > 0){
 				for (Point obstacle : obstacles) {
 					if(!(obstacle.x < 0 || obstacle.y < 0)){
-						map.setObstical(obstacle.x, obstacle.y, true);
+						try{
+							map.setObstical(obstacle.x, obstacle.y, true);
+						} catch (Exception ex){
+							//Do Nothing
+						}
 					}
 				}
 			}

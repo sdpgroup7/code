@@ -16,6 +16,7 @@ public class Arc {
 	//This is the number of cm in a golf ball
 	
 	public Arc(double r, boolean d, int c) {
+		Strategy.logger.info("New arc created: (radius,left):(" + r + "," + Boolean.toString(d) + ")");
 		this.radius = r;
 		this.left = d;
 		this.command = c;
