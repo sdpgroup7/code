@@ -22,7 +22,11 @@ public class AStarRun {
 			if (obstacles.size() > 0){
 				for (Point obstacle : obstacles) {
 					if(!(obstacle.x < 0 || obstacle.y < 0)){
-						map.setObstical(obstacle.x, obstacle.y, true);
+						try{
+							map.setObstical(obstacle.x, obstacle.y, true);
+						} catch (Exception ex){
+							//Do Nothing
+						}
 					}
 				}
 			}
@@ -31,6 +35,10 @@ public class AStarRun {
 			AStarHeuristic heuristic = new ClosestHeuristic();
 			AStar pathFinder = new AStar(map, heuristic);
 			try{
+//				Strategy.logger.error("start x: " + some_robot.x);
+//				Strategy.logger.error("start y: " + some_robot.y);
+//				Strategy.logger.error("ball x: " + ball.x);
+//				Strategy.logger.error("ball y: " + ball.y);
 				shortestPath = pathFinder.calcShortestPath(some_robot.x, some_robot.y, ball.x, ball.y);
 			} catch (Exception ex) {
 				Strategy.logger.error("Shortest path calculation failed: " + ex.getMessage());

@@ -6,6 +6,8 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
@@ -20,11 +22,14 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
  */
 public class AllStaticObjects {
 	
+	public static final Logger logger = Logger.getLogger(PlanningThread.class);
+	
 	private double nodeInPixels;
 	private int pitchTopBuffer;
 	private int pitchLeftBuffer; 
-	//private int pitch_bottom_buffer;
-	//private int pitch_right_buffer; 
+	private int pitchBottomBuffer;
+	private int pitchRightBuffer; 
+
 	private int height;
 	private int width;
 	private int boundary;
@@ -38,8 +43,9 @@ public class AllStaticObjects {
 	private Point ourBottomGoalPost;
 	private Point inFrontOfOurGoal;
 	private Point inFrontOfTheirGoal;
-	
-	
+	private Point centreOfTheirGoal;
+	private Point centreOfOurGoal;
+
 	//worldstate getInstance
 	public WorldState worldState = WorldState.getInstance();
 	
@@ -58,6 +64,8 @@ public class AllStaticObjects {
 		this.ourBottomGoalPost = worldState.getOurGoal().getBottomLeft();
 		this.pitchTopBuffer  = worldState.getPitch().getTopBuffer();
 		this.pitchLeftBuffer = worldState.getPitch().getLeftBuffer();
+		this.pitchBottomBuffer  = worldState.getPitch().getBottomBuffer();
+		this.pitchRightBuffer = worldState.getPitch().getRightBuffer();
 		this.pitchHeight = worldState.getPitch().getHeightInPixels();
 		this.pitchWidth = worldState.getPitch().getWidthInPixels();
 		
@@ -69,10 +77,11 @@ public class AllStaticObjects {
 		Strategy.logger.info("Node size in pixels: " + nodeInPixels);
 		//Boundary around the edges of the pitch, to prevent the robot from hitting the walls
 		//So this is dependent on the resolution..
-		this.boundary = 3;
+		this.boundary = 2;
 		//set defence position
 		this.pointInfrontOfGoal();
 		this.pointInfrontOfTheirGoal();
+		this.centreOfTheirGoal();
 		
 		this.deceleration = 0;
 	}
@@ -101,11 +110,11 @@ public class AllStaticObjects {
 	//Return this as a node!
 	private void pointInfrontOfGoal(){
 		if(worldState.getShootingDirection() == 1){
-			this.inFrontOfOurGoal = new Point((this.width - this.boundary),this.height/2);
+			this.inFrontOfOurGoal = new Point(this.boundary,this.height/2);
 			
 		}
 		else {
-			this.inFrontOfOurGoal = new Point(this.boundary,this.height/2);
+			this.inFrontOfOurGoal = new Point((this.width - this.boundary),this.height/2);
 		}
 	}
 	
@@ -113,11 +122,33 @@ public class AllStaticObjects {
 	//Return this as a node!
 	private void pointInfrontOfTheirGoal(){
 		if(worldState.getShootingDirection() == -1){
-			this.inFrontOfTheirGoal = new Point((this.width - this.boundary),this.height/2);
+			this.inFrontOfTheirGoal = new Point(this.boundary,this.height/2);
 			
 		}
 		else {
-			this.inFrontOfTheirGoal = new Point(this.boundary,this.height/2);
+			this.inFrontOfTheirGoal = new Point((this.width - this.boundary),this.height/2);
+		}
+	}
+	
+	//Method for finding the centre point in their goal...
+	//Return this as a node!
+	private void centreOfTheirGoal(){
+		if(worldState.getShootingDirection() == -1){
+			this.centreOfTheirGoal = new Point(1,this.height/2);
+		}
+		else {
+			this.centreOfTheirGoal = new Point(this.width - 2,this.height/2);
+		}
+	}
+	
+	//Method for finding the centre point in their goal...
+	//Return this as a node!
+	private void centreOfOurGoal(){
+		if(worldState.getShootingDirection() == 1){
+			this.centreOfOurGoal = new Point(1,this.height/2);
+		}
+		else {
+			this.centreOfOurGoal = new Point(this.width - 2,this.height/2);
 		}
 	}
 	
@@ -156,11 +187,23 @@ public class AllStaticObjects {
 	}
 	
 	public Point getInFrontOfOurGoal() {
+		this.pointInfrontOfGoal();
 		return inFrontOfOurGoal;
 	}
 	
 	public Point getInFrontOfTheirGoal() {
+		this.pointInfrontOfTheirGoal();
 		return inFrontOfTheirGoal;
+	}
+	
+	public Point getCentreOfTheirGoal() {
+		this.centreOfTheirGoal();
+		return centreOfTheirGoal;
+	}
+	
+	public Point getCentreOfOurGoal() {
+		this.centreOfOurGoal();
+		return centreOfOurGoal;
 	}
 
 	public int getPlanType(){
@@ -205,4 +248,12 @@ public class AllStaticObjects {
 		return this.deceleration;
 	}
 	
+	public int getPitchBottomBuffer() {
+		return pitchBottomBuffer;
+	}
+
+	public int getPitchRightBuffer() {
+		return pitchRightBuffer;
+	}
+
 }
