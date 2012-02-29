@@ -153,7 +153,7 @@ public class SimulatorFeed extends WindowAdapter {
 					}
 				}
 				
-		
+				Simulator.worldState.getBall().setPosition((int)ball.getPosition().getX(), (int)ball.getPosition().getY());
 				
 				frameImage.setData(background.getData());
 				Graphics2D g = (Graphics2D) frameImage.getGraphics();
@@ -165,6 +165,9 @@ public class SimulatorFeed extends WindowAdapter {
 				AffineTransform at_y = AffineTransform.getTranslateInstance(yellowRobot.getPosition().getX()-47/2,yellowRobot.getPosition().getY()-33/2);
 				at_y.rotate(yellowRobot.getRotation(), 47/2,33/2);
 				g.drawImage(yellowRobot_img, at_y, null);
+				
+				g.setColor(Color.red);
+				g.fillOval((int)ball.getPosition().getX()-5, (int)ball.getPosition().getY()-5, 11, 11);
 				
 				label.getGraphics().drawImage(frameImage, 0, 0, frameImage.getWidth(), frameImage.getHeight(), null);
 			}
