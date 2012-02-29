@@ -34,6 +34,8 @@ public class WorldState{
 	volatile private long lastUpdated = 0; //The timestamp of when worldstate was last updated
 	volatile private boolean clickingDone = false; //Says whether all clicking has been done (generally used by vision)
 	
+	volatile private boolean barrelfix = false; //whether to do the barrell correction on whole image or not
+	
 
 	public static WorldState getInstance(){
 		if(worldState == null){
@@ -53,9 +55,9 @@ public class WorldState{
     	} else {
     		//TODO: Add the constants for pitch 2.
     		pitch = new Pitch(	new Point(40,104),
-					new Point(600,98),
-					new Point(40,394),
-					new Point(607,384));
+					            new Point(600,98),
+					            new Point(40,394),
+					            new Point(607,384));
     		pitch.setBuffers(86,612,402,24);
     	}
     	updateShootingDirection();
@@ -67,6 +69,14 @@ public class WorldState{
     
     public boolean getGenerateOverlay(){
     	return generateOverlay;
+    }
+    
+    public void setBarrelFix(boolean set){
+        this.barrelfix = set;
+    }
+    
+    public boolean getBarrelFix(){
+        return barrelfix;
     }
     
 	public BufferedImage getOverlay(){
@@ -153,8 +163,8 @@ public class WorldState{
     	}
     }
     
-    public void setRoom(int room){
-
+    public void setRoom(int r){
+        this.room = r;
     }
     
     public int getRoom(){

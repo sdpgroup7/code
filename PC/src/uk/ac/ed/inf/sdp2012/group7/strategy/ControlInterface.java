@@ -31,15 +31,15 @@ public class ControlInterface implements Observer {
 	public static final Logger logger = Logger.getLogger(ControlInterface.class);
 	
 	private WorldState world = WorldState.getInstance();
-	private VisionTools vtools = new VisionTools();
 	
-	private int lookahead;
+	private static int lookahead;
 	private RobotControl c;
 	
 	//So planning and us are working off the same page
 	private int drive = PlanTypes.ActionType.DRIVE.ordinal();
 	private int kick = PlanTypes.ActionType.KICK.ordinal();
 	private int stop = PlanTypes.ActionType.STOP.ordinal();
+	private int angle = PlanTypes.ActionType.ANGLE.ordinal();
 	
 
 	public ControlInterface(int lookahead) {
@@ -63,7 +63,7 @@ public class ControlInterface implements Observer {
 	 * Calculates the Arc that the robot has to follow for the set of points
 	 * given using the pure pursuit algorithm
 	 */
-	public Arc chooseArc(Plan plan) {
+	public static Arc chooseArc(Plan plan) {
 		// The paper where this maths comes from can be found here
 		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
 		
@@ -71,16 +71,20 @@ public class ControlInterface implements Observer {
 		Point2D p = new Point2D(plan.getOurRobotPositionVisual());
 		double v = plan.getOurRobotAngle();
 		
+		v = convertAngle(v);
+		
 		try {
-			h = this.findGoalPoint(plan);
+			h = findGoalPoint(plan);
 		} catch(Exception e) {
 			logger.debug(e);
 			if(plan.getPath().size() > 1){
 				h = new Point2D(plan.getPath().get(plan.getPath().size() -1));
 			} else {
-				h = new Point2D(plan.getPath().get(0));
+				h = new Point2D(0,0);
 			}
 		}
+		
+		logger.debug(String.format("v: %f", v));
 		
 		double alpha = Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))	- v;
 		logger.debug(String.format("Alpha: %f", alpha));
@@ -111,60 +115,65 @@ public class ControlInterface implements Observer {
 	}
 
 	public void implimentArc(Arc path, Plan plan) {
+
+		double pixelsPerNode = plan.getNodeInPixels();
 		
-		
-		
-		
-		int pixelsPerNode = world.getPitch().getHeight()/plan.getHeightInNodes();
-		logger.debug(String.format("pixelsPerNode: %d", pixelsPerNode));
-		double conversion = (double) vtools.pixelsToCM(pixelsPerNode);
+		logger.debug(String.format("pixelsPerNode: %f", pixelsPerNode));
+		int converted;
+
+		double conversion = (double) VisionTools.pixelsToCM(pixelsPerNode);
 		
 		logger.debug(String.format("Conversion value: %f", conversion));
 
 		if (plan.getAction() == drive) {
 			
-			int converted = (int)(conversion*path.getRadius());
+			converted = (int)(conversion*path.getRadius());
 			logger.info("Action is to drive");
 			c.clearAllCommands();
 			
-			this.c.circleWithRadius(converted , path.isDirection());
-			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isDirection()));
-			try {
-				Thread.sleep(75);
-			} catch (InterruptedException e) {}
+			this.c.circleWithRadius(converted , path.isLeft());
+			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isLeft()));
+			waitABit();
 		
 		} else if (plan.getAction() == kick) {
 			logger.info("Action is to kick");
-			int converted = (int)(conversion*path.getRadius());
-			this.c.circleWithRadius(converted , path.isDirection());
-			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isDirection()));
-			try {
-				Thread.sleep(75);
-			} catch (InterruptedException e) {}
+			converted = (int)(conversion*path.getRadius());
+			this.c.circleWithRadius(converted , path.isLeft());
+			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", converted, path.isLeft()));
+			waitABit();
 			c.kick();
 			logger.info("Command sent to robot: kick");
-			try {
-				Thread.sleep(75);
-			} catch (InterruptedException e) {}
+			waitABit();
 			
 		} else if (plan.getAction() == stop) {
 			logger.info("Action is to stop");
 			c.stop();
 			logger.info("Command sent to robot: stop");
-			try {
-				Thread.sleep(75);
-			} catch (InterruptedException e) {}
+			waitABit();
 			
 		
+		} else if (plan.getAction() == angle) {
+			logger.info("Action is to turn");
+			c.stop();
+			logger.info("Command sent to robot: stop");
+			waitABit();
+			double angleWanted = plan.getAngleWanted();
+			double ourAngle = plan.getOurRobotAngle();
+			
+			double howMuchToTurn = ourAngle - angleWanted;
+
+			// now adjust it so that it turns in the shortest direction (clockwise
+			// or counter clockwise)
+			if (howMuchToTurn < -Math.PI)
+				howMuchToTurn = 2 * Math.PI + howMuchToTurn;
+			else if (howMuchToTurn > Math.PI)
+				howMuchToTurn = -(2 * Math.PI - howMuchToTurn);
+
+			c.rotateBy(howMuchToTurn);
+			waitABit();
 		}
 		
-		
-		
-		
-		
-		
-		
-		
+			
 	}
 	
 	/*
@@ -173,7 +182,7 @@ public class ControlInterface implements Observer {
 	 * 
 	 * @return The converted angle so it is measured off the y axis rather than the x
 	 */
-	public double convertAngle(double angle) {
+	public static double convertAngle(double angle) {
 		
 		double newAngle;
 		if (angle == 0) {
@@ -193,17 +202,16 @@ public class ControlInterface implements Observer {
 	 * 
 	 * @return The goal point
 	 */
-	public Point2D findGoalPoint(Plan p) throws Exception {
+	public static Point2D findGoalPoint(Plan p) throws Exception {
 		
-		Circle2D zone = new Circle2D(p.getOurRobotPositionVisual().getX(), p.getOurRobotPositionVisual().getY(), this.lookahead);
+		Circle2D zone = new Circle2D(p.getOurRobotPositionVisual().getX(), p.getOurRobotPositionVisual().getY(), lookahead);
 		logger.debug(String.format("Zone centre: (%f,%f)",p.getOurRobotPositionVisual().getX(),p.getOurRobotPositionVisual().getY()));
-		boolean run = true;
 		int size = p.getPath().size();
 		int i = 0;
 		
 		Point2D intersect = null;
 		
-		while(run) {
+		while(true) {
 			
 			if (i == size-1) {
 				logger.error("Lookahead point unable to be found");
@@ -217,13 +225,13 @@ public class ControlInterface implements Observer {
 			if (intersections.size() == 1 || intersections.size() == 2) {
 
 				if (intersections.size() == 2) {
-					logger.debug("I found 2 points, taking the last point.");
+					logger.debug("I found 2 points, taking the first point.");
 				}
 				for (Point2D point : intersections) {
 					intersect = new Point2D(point);
 				}
 				logger.debug(String.format("Goal point found at (%f,%f)", intersect.getX(), intersect.getY()));
-				run = false;
+				break;
 
 			} else {
 				logger.debug("No points found, going to next line segment");
@@ -250,9 +258,15 @@ public class ControlInterface implements Observer {
 	public void update(Observable arg0, Object arg1) {
 		logger.debug("Got a new plan");
 		Plan plan = (Plan) arg1;
-		Arc arcToDrive = this.chooseArc(plan);
+		Arc arcToDrive = chooseArc(plan);
 		this.implimentArc(arcToDrive, plan);
 		
+	}
+	
+	public void waitABit() {
+		try {
+			Thread.sleep(75);
+		} catch (InterruptedException e) {}
 	}
 
 	

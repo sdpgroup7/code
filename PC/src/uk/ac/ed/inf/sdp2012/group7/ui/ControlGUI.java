@@ -62,6 +62,7 @@ public class ControlGUI implements ChangeListener {
 	private JCheckBox returnToGame;
 	
 	private JButton overlayButton;
+	private JButton barrelButton;
 	
 	
 	/* Tabs. */
@@ -276,8 +277,10 @@ public class ControlGUI implements ChangeListener {
 		JPanel overlayPanel = new JPanel();
 		
 		overlayButton = new JButton("Toggle Overlay");
+		barrelButton = new JButton("Toggle Barrel Fix");
 		
 		overlayPanel.add(overlayButton);
+		overlayPanel.add(barrelButton);
 		
 		overlayButton.addActionListener(new ActionListener() {
 		    
@@ -287,10 +290,18 @@ public class ControlGUI implements ChangeListener {
 		    }
 		});
 		
+		barrelButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        worldState.setBarrelFix(!worldState.getBarrelFix());
+		    }
+		});
+		
 		defaultPanel.add(overlayPanel);
 		
 		/*
-		Penalty Mode buttons.  Stop button must be pressed first
+		Penalty Mode buttons. 
 		*/
 		
 		JPanel penaltyPanel = new JPanel();
@@ -323,7 +334,7 @@ public class ControlGUI implements ChangeListener {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        //call to strategy letting them know that bot is taking a penalty
-		        System.err.println("Penalty Attack");
+		        strat.startPlanningThread(PlanTypes.PlanType.PENALTY_OFFENCE.ordinal());
 		    }
 		});
 		
@@ -331,8 +342,7 @@ public class ControlGUI implements ChangeListener {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        //call to strategy to let them know to prepare to save
-		        System.err.println("Goalie Mode");
+		    	strat.startPlanningThread(PlanTypes.PlanType.PENALTY_DEFENCE.ordinal());
 		    }
 		});
 		

@@ -48,7 +48,7 @@ public class MovingObject {
     	Point c = new Point(a.x - b.x, a.y - b.y);
     	double v = Math.sqrt(c.x*c.x + c.y*c.y);
     	v = v/(b.getTimestamp()-a.getTimestamp());
-    	this.velocity = v;
+    	this.velocity = v*1000;
     }
 	
 	public void setAngle(double angle){

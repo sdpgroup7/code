@@ -18,54 +18,53 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
  */
 public class Plan {
 
-	private TargetDecision target_decision;
+	private TargetDecision targetDecision;
 	private OppositionPrediction opposition;
 	private ArrayList<Point> obstacles;
 	private ArrayList<Point> path;
 	private AStarRun astar;
-	private AllStaticObjects all_static_objects;
+	private AllStaticObjects allStaticObjects;
 	public static final Logger logger = Logger.getLogger(Plan.class);
 
 	//World state info
-	private AllMovingObjects all_moving_objects;
+	private AllMovingObjects allMovingObjects;
 	private WorldState worldState = WorldState.getInstance();
 	
 	//For testing
-	private Path node_path;
+	private Path nodePath;
 
 	/**
 	 * 
 	 */
 	//Constructor
-	public Plan(AllStaticObjects all_static_objects, AllMovingObjects all_moving_objects) {
+	public Plan(AllStaticObjects allStaticObjects, AllMovingObjects allMovingObjects) {
 		
-		this.all_static_objects = all_static_objects;
-		this.all_moving_objects = all_moving_objects;
-		all_moving_objects.update();
+		logger.debug("Plan being generated");
+		
+		this.allStaticObjects = allStaticObjects;
+		this.allMovingObjects = allMovingObjects;
+		allMovingObjects.update();
 		
 		//Set up obstacles created by opposition
-		opposition = new OppositionPrediction(all_moving_objects, this.all_static_objects);
+		opposition = new OppositionPrediction(allMovingObjects, this.allStaticObjects);
 		
 		//Add the opposition obstacles to the overall obstacles
 		//IE add in the boundary...
-		this.obstacles = all_static_objects.convertToNodes(opposition.getDefaultObstacles());
+		this.obstacles = allStaticObjects.convertToNodes(opposition.getDefaultObstacles());
 		
 		//Setup target for A*
-		target_decision = new TargetDecision(this.all_moving_objects, this.all_static_objects, this.obstacles);
+		targetDecision = new TargetDecision(this.allMovingObjects, this.allStaticObjects, this.obstacles);
 		
-		logger.debug("Target Decision Position: " + target_decision.getTargetAsNode().toString());
-		logger.debug("Ball Position: " + this.all_static_objects.convertToNode(Vision.worldState.getBall().getPosition().getCentre()));
-		logger.debug("Robot Position: " + this.all_static_objects.convertToNode(all_moving_objects.getOurPosition()).toString());
-		logger.debug("lb,tb: " + this.all_static_objects.convertToNode(new Point(Vision.worldState.getPitch().getLeftBuffer(),Vision.worldState.getPitch().getTopBuffer())));
-		logger.debug("rb,bb: " + this.all_static_objects.convertToNode(new Point(Vision.worldState.getPitch().getRightBuffer() - 9,Vision.worldState.getPitch().getBottomBuffer() - 9)));
-		logger.debug("pitch height: " + this.all_static_objects.getHeight());
-		logger.debug("pitch width: " + this.all_static_objects.getWidth());
+		logger.debug("Target Decision Position: " + targetDecision.getTargetAsNode().toString());
+		logger.debug("Ball Position: " + this.allStaticObjects.convertToNode(Vision.worldState.getBall().getPosition().getCentre()));
+		logger.debug("Robot Position: " + this.allStaticObjects.convertToNode(allMovingObjects.getOurPosition()).toString());
+		logger.debug("Their Robot Position: " + this.allStaticObjects.convertToNode(worldState.getOpponentsRobot().getPosition().getCentre()));
 		
 		//Now create an A* object from which we create a path
-		astar = new AStarRun(	this.all_static_objects.getHeight(),
-								this.all_static_objects.getWidth(),
-								this.target_decision.getTargetAsNode(),
-								this.all_static_objects.convertToNode(all_moving_objects.getOurPosition()),
+		astar = new AStarRun(	this.allStaticObjects.getHeight(),
+								this.allStaticObjects.getWidth(),
+								this.targetDecision.getTargetAsNode(),
+								this.allStaticObjects.convertToNode(allMovingObjects.getOurPosition()),
 								this.obstacles
 							);
 
@@ -73,8 +72,10 @@ public class Plan {
 		//Now grab path through A* method
 		this.path = astar.getPathInPoints();
 		
+		logger.debug("Path length: " + this.path.size());
+		
 		//Grab path in Node
-		this.node_path = astar.getPath();
+		this.nodePath = astar.getPath();
 		
 		
 
@@ -86,27 +87,31 @@ public class Plan {
 	//action = 0; nothing 
 	//action = 1; kick
 	public int getAction(){
-		return target_decision.getAction();
+		return targetDecision.getAction();
 	}
 	
-	//Unused
+	//Plan Monitor
 	public double getOurRobotAngle(){
-		return all_moving_objects.getOurAngle();
+		return allMovingObjects.getOurAngle();
+	}
+	
+	public Point getBallPosition(){
+		return allStaticObjects.convertToNode(allMovingObjects.getBallPosition());
 	}
 	
 	//Unused
 	public Point getOurRobotPosition() {
-		return all_static_objects.convertToNode(all_moving_objects.getOurPosition());
+		return allStaticObjects.convertToNode(allMovingObjects.getOurPosition());
 	}
 	
 	//For Control Interface
 	public Point getOurRobotPositionVisual() {
-		return all_static_objects.convertToNode(worldState.getOurRobot().getPosition().getCentre());
+		return allStaticObjects.convertToNode(worldState.getOurRobot().getPosition().getCentre());
 	}
 	
 	//For testing
 	public Path getNodePath(){
-		return this.node_path;
+		return this.nodePath;
 	}
 	
 	//For testing
@@ -116,12 +121,17 @@ public class Plan {
 	
 	//For Control Interface
 	public double getNodeInPixels(){
-		return this.all_static_objects.getNodeInPixels();
+		return this.allStaticObjects.getNodeInPixels();
 	}
 	
 	//For Control Interface
 	public int getHeightInNodes(){
-		return this.all_static_objects.getHeight();
+		return this.allStaticObjects.getHeight();
+	}
+	
+	//Return angle required...
+	public double getAngleWanted(){
+		return this.targetDecision.getAngleWanted();
 	}
 
 }

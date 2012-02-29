@@ -15,58 +15,72 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
  * @author s0955088
  * This class holds all static elements required for planning
  * including the grid setup, the grid is used in A* planning
+ * It also contains the commands for running the Planning thread
  *
  */
 public class AllStaticObjects {
 	
 	private double nodeInPixels;
-	private int pitch_top_buffer;
-	private int pitch_left_buffer; 
+	private int pitchTopBuffer;
+	private int pitchLeftBuffer; 
 	//private int pitch_bottom_buffer;
 	//private int pitch_right_buffer; 
 	private int height;
 	private int width;
 	private int boundary;
-	private Point their_top_goal_post;
-	private Point their_bottom_goal_post;
-	private Point our_top_goal_post;
-	private Point our_bottom_goal_post;
-	private Point infront_of_our_goal;
+	private int pitchHeight;
+	private int pitchWidth;
+	private double deceleration;
+	
+	private Point theirTopGoalPost;
+	private Point theirBottomGoalPost;
+	private Point ourTopGoalPost;
+	private Point ourBottomGoalPost;
+	private Point inFrontOfOurGoal;
+	private Point inFrontOfTheirGoal;
+	
 	
 	//worldstate getInstance
 	public WorldState worldState = WorldState.getInstance();
 	
 	//changes the type of plan to be created
-	private int plan_type;
+	private int planType;
+
+	//controls planning thread
+	private volatile boolean runFlag;
 	
 	
 	public AllStaticObjects (){
 		while(worldState.getLastUpdateTime() == 0){}
-		this.their_top_goal_post = worldState.getOpponentsGoal().getTopLeft();
-		this.their_bottom_goal_post = worldState.getOpponentsGoal().getBottomLeft();
-		this.our_top_goal_post = worldState.getOurGoal().getTopLeft();
-		this.our_bottom_goal_post = worldState.getOurGoal().getBottomLeft();
-		this.pitch_top_buffer  = worldState.getPitch().getTopBuffer();
-		this.pitch_left_buffer = worldState.getPitch().getLeftBuffer();
-		//this.pitch_bottom_buffer  = worldState.getPitch().getBottomBuffer();
-		//this.pitch_right_buffer = worldState.getPitch().getRightBuffer();
+		this.theirTopGoalPost = worldState.getOpponentsGoal().getTopLeft();
+		this.theirBottomGoalPost = worldState.getOpponentsGoal().getBottomLeft();
+		this.ourTopGoalPost = worldState.getOurGoal().getTopLeft();
+		this.ourBottomGoalPost = worldState.getOurGoal().getBottomLeft();
+		this.pitchTopBuffer  = worldState.getPitch().getTopBuffer();
+		this.pitchLeftBuffer = worldState.getPitch().getLeftBuffer();
+		this.pitchHeight = worldState.getPitch().getHeightInPixels();
+		this.pitchWidth = worldState.getPitch().getWidthInPixels();
+		
 		
 		//hard code setting of grid resolution (Grid is used in A*)
 		this.height = 29;
 		this.width = 58;
-		this.nodeInPixels = (double)worldState.getPitch().getWidthInPixels()/(double)this.width;//width in pixels!
+		this.nodeInPixels = (double)this.pitchWidth/(double)this.width;//width in pixels!
 		Strategy.logger.info("Node size in pixels: " + nodeInPixels);
 		//Boundary around the edges of the pitch, to prevent the robot from hitting the walls
 		//So this is dependent on the resolution..
 		this.boundary = 3;
 		//set defence position
 		this.pointInfrontOfGoal();
+		this.pointInfrontOfTheirGoal();
+		
+		this.deceleration = 0;
 	}
 	
 	//Compacts WorldState position point into "Node" centre position
 	public Point convertToNode(Point p){
-		int x = (int)((double)(p.x - this.pitch_left_buffer)/this.nodeInPixels);
-		int y = (int)((double)(p.y - this.pitch_top_buffer)/this.nodeInPixels);
+		int x = (int)((double)(p.x - (this.pitchLeftBuffer - 1))/this.nodeInPixels);
+		int y = (int)((double)(p.y - (this.pitchTopBuffer - 1))/this.nodeInPixels);
 
 		
 		return new Point(x,y);
@@ -74,29 +88,36 @@ public class AllStaticObjects {
 	
 	//Compacts WorldState position points into "Node" centre positions
 	public ArrayList<Point> convertToNodes(ArrayList<Point> l){
-		ArrayList<Point> node_points = new ArrayList<Point>();
+		ArrayList<Point> nodePoints = new ArrayList<Point>();
 
 		for (Point p : l) {
-			node_points.add(convertToNode(p));
+			nodePoints.add(convertToNode(p));
 		}
 
-		return node_points;
+		return nodePoints;
 	}
 	
 	//Method for finding the centre point just in front of our goal...
 	//Return this as a node!
 	private void pointInfrontOfGoal(){
 		if(worldState.getShootingDirection() == 1){
-			this.infront_of_our_goal = new Point(	
-					(this.width - (this.boundary - 1)),
-					(int)(((this.our_bottom_goal_post.y - this.our_top_goal_post.y) - this.pitch_top_buffer)/this.nodeInPixels));
+			this.inFrontOfOurGoal = new Point((this.width - this.boundary),this.height/2);
 			
 		}
 		else {
-			this.infront_of_our_goal = new Point(
-					(this.boundary),
-					(int)(((this.our_bottom_goal_post.y - this.our_top_goal_post.y) 
-														- this.pitch_top_buffer)/this.nodeInPixels));
+			this.inFrontOfOurGoal = new Point(this.boundary,this.height/2);
+		}
+	}
+	
+	//Method for finding the centre point just in front of their goal...
+	//Return this as a node!
+	private void pointInfrontOfTheirGoal(){
+		if(worldState.getShootingDirection() == -1){
+			this.inFrontOfTheirGoal = new Point((this.width - this.boundary),this.height/2);
+			
+		}
+		else {
+			this.inFrontOfTheirGoal = new Point(this.boundary,this.height/2);
 		}
 	}
 	
@@ -106,12 +127,12 @@ public class AllStaticObjects {
 		return this.nodeInPixels;
 	}
 
-	public int getPitch_top_buffer() {
-		return this.pitch_top_buffer;
+	public int getPitchTopBuffer() {
+		return this.pitchTopBuffer;
 	}
 
-	public int getPitch_left_buffer() {
-		return this.pitch_left_buffer;
+	public int getPitchLeftBuffer() {
+		return this.pitchLeftBuffer;
 	}
 
 	public int getHeight() {
@@ -126,24 +147,62 @@ public class AllStaticObjects {
 		return this.boundary;
 	}
 	
-	public Point getTheir_top_goal_post() {
-		return their_top_goal_post;
+	public Point getTheirTopGoalPost() {
+		return theirTopGoalPost;
 	}
 	
-	public Point getTheir_bottom_goal_post() {
-		return their_bottom_goal_post;
+	public Point getTheirBottomGoalPost() {
+		return theirBottomGoalPost;
 	}
 	
-	public Point getInfront_of_our_goal() {
-		return infront_of_our_goal;
+	public Point getInFrontOfOurGoal() {
+		return inFrontOfOurGoal;
+	}
+	
+	public Point getInFrontOfTheirGoal() {
+		return inFrontOfTheirGoal;
 	}
 
 	public int getPlanType(){
-		return this.plan_type;
+		return this.planType;
 	}
 	
 	public void setPlanType(int pT){
-		this.plan_type = pT;
+		synchronized(this){
+			Strategy.logger.info("PLAN CHANGED : " + this.planType);
+			this.planType = pT;
+		}
 	}
 
+	public void stopRun() {
+		synchronized(this){
+			Strategy.logger.info("STOPPED : " + this.runFlag);
+			this.runFlag = false;
+		}
+	}
+	
+	public void startRun() {
+		synchronized(this){
+			Strategy.logger.info("STARTED : " + this.runFlag);
+			this.runFlag = true;
+		}
+	}
+	
+	public boolean getRunFlag(){
+		return this.runFlag;
+
+	}
+
+	public int getPitchHeight() {
+		return this.pitchHeight;
+	}
+
+	public int getPitchWidth() {
+		return this.pitchWidth;
+	}
+	
+	public double getDeceleration(){
+		return this.deceleration;
+	}
+	
 }
