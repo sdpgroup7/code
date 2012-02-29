@@ -72,7 +72,12 @@ public class PlanMonitor {
 	public String generateASCIIPlan(){
 		String output = "";
 		AreaMap map = currentPlan.getAStar().getAreaMap();
-		ArrayList<Node> waypoints = currentPlan.getAStar().getPath().getWayPoints();
+		ArrayList<Node> waypoints = null;
+		try{
+			waypoints = currentPlan.getAStar().getPath().getWayPoints();
+		} catch (Exception ex){
+			return "";
+		}
 		if(map.getNodes().length <= 0) return "";
 		String[][] ascii = new String[map.getMapHeight()][map.getMapWidth()];
 		for(int y = 0; y < ascii.length; y++){

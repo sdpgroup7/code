@@ -36,7 +36,7 @@ public class TargetDecision {
 	
 	
 	//navigation point
-	private Point navPoint;
+	private Point navPoint = new Point(0,0);
 	private Point target;
 	//navigation boolean
 	private boolean openShotPossible;
@@ -179,6 +179,7 @@ public class TargetDecision {
 		else if(this.planType == PlanTypes.PlanType.HALT.ordinal()){
 			this.action = PlanTypes.ActionType.STOP.ordinal();
 		}
+		
 		// Penalty offence
 		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {				
 			logger.debug("In penalty offence, will try to turn then kick");
