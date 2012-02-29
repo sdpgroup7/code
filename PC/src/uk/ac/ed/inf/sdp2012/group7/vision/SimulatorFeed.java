@@ -2,6 +2,7 @@ package uk.ac.ed.inf.sdp2012.group7.vision;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -32,6 +33,8 @@ public class SimulatorFeed extends WindowAdapter {
 	private BufferedImage frameImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
 	
 	private BufferedImage background;
+	private BufferedImage blueRobot_img;
+	private BufferedImage yellowRobot_img;
 	public boolean paused = false;
 	int count = 0;
 	
@@ -54,8 +57,10 @@ public class SimulatorFeed extends WindowAdapter {
 	public SimulatorFeed() {
 		try {
 			background = ImageIO.read(new File("simData/background.png"));
+			blueRobot_img = ImageIO.read(new File("simData/blue.png"));
+			yellowRobot_img = ImageIO.read(new File("simData/yellow.png"));
 		} catch (IOException e) {
-			Simulator.logger.fatal("Can't load background: "+e.toString());
+			Simulator.logger.fatal("Can't load file: "+e.toString());
 		}
 		
 
@@ -151,15 +156,16 @@ public class SimulatorFeed extends WindowAdapter {
 		
 				
 				frameImage.setData(background.getData());
+				Graphics2D g = (Graphics2D) frameImage.getGraphics();
 				
-				Graphics g = frameImage.getGraphics();
-				g.setColor(Color.blue);
-				g.fillRect(buf[0]-24, buf[1]-17, 47, 33);
-				g.setColor(Color.yellow);
-				g.fillRect(buf[3]-24, buf[4]-17, 47, 33);
-				g.setColor(Color.red);
-				g.fillOval(buf[6]-5, buf[7]-5, 11, 11);
-								
+				AffineTransform at_b = AffineTransform.getTranslateInstance(blueRobot.getPosition().getX()-47/2,blueRobot.getPosition().getY()-33/2);
+				at_b.rotate(blueRobot.getRotation(), 47/2,33/2);
+				g.drawImage(blueRobot_img, at_b, null);
+				
+				AffineTransform at_y = AffineTransform.getTranslateInstance(yellowRobot.getPosition().getX()-47/2,yellowRobot.getPosition().getY()-33/2);
+				at_y.rotate(yellowRobot.getRotation(), 47/2,33/2);
+				g.drawImage(yellowRobot_img, at_y, null);
+				
 				label.getGraphics().drawImage(frameImage, 0, 0, frameImage.getWidth(), frameImage.getHeight(), null);
 			}
 		}
