@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
-
+import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 
 
 /**
@@ -40,6 +40,7 @@ public class TargetDecision {
 	private Point navPoint;
 	private Point target;
 	
+	//penalty defence
 	private double targetInCM;
 	
 	private boolean weHaveBall = false;
@@ -153,7 +154,31 @@ public class TargetDecision {
 	
 		// No other plan types so must be penalty defence
 		else {
-			this.action = PlanTypes.ActionType.STOP.ordinal();
+			double distanceBetween=Point.distance(this.allMovingObjects.getOurPosition().x, this.allMovingObjects.getOurPosition().y, this.allMovingObjects.getTheirPosition().x, this.allMovingObjects.getTheirPosition().y);
+			double theirAngle = this.allMovingObjects.getTheirAngle();
+			// they are facing right when taking penalty
+			if(theirAngle < 110 && theirAngle > 70) {
+				double diversionFrom90 = Math.abs(theirAngle-90);
+				double pixelsToMove = Math.sin(diversionFrom90)*distanceBetween;
+				this.targetInCM = VisionTools.pixelsToCM(pixelsToMove);
+				// they are pointing towards the top of the goal
+				if (90-theirAngle >= 0) {
+					this.action = PlanTypes.ActionType.EUCLID_FORWARDS.ordinal();
+				} else {
+					this.action = PlanTypes.ActionType.EUCLID_BACKWARDS.ordinal();
+				}
+			// they are facing left
+			} else {
+				double diversionFrom270 = Math.abs(theirAngle-270);
+				double pixelsToMove = Math.sin(diversionFrom270)*distanceBetween;
+				this.targetInCM = VisionTools.pixelsToCM(pixelsToMove);
+				// they are pointing towards top of the goal
+				if (theirAngle-270 >= 0) {
+					this.action = PlanTypes.ActionType.EUCLID_FORWARDS.ordinal();
+				} else {
+					this.action = PlanTypes.ActionType.EUCLID_BACKWARDS.ordinal();
+				}
+			}
 		}
 	}
 
