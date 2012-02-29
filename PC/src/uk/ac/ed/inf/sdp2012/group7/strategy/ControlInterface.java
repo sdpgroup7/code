@@ -174,10 +174,10 @@ public class ControlInterface implements Observer {
 			waitABit();
 		} else if (plan.getAction() == euclidForward) {
 			logger.info("Action is to drive forward");
-			//c.moveForward(plan.getDistanceInCm());
+			c.moveForward((int)plan.getDistanceInCM());
 		} else if (plan.getAction() == euclidBackWards) {
 			logger.info("Action is drive backwards"); 
-		//	c.moveBackward(plan.getDistanceInCm());
+			c.moveBackwardSlightly();
 		}
 
 	}
@@ -336,10 +336,16 @@ public class ControlInterface implements Observer {
 			} catch (InterruptedException e) {}
 			logger.info("Now kick");
 			c.kick();
-			waitABit();
+			c.stop();
 		} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
-			
-			
+			logger.info("Defending a penalty - will repeatedly use euclidForward and euclidBackwards");
+			if (plan.getAction() == euclidForward) {
+				logger.info("Action is euclidForwards"); 
+				c.moveForward((int)plan.getDistanceInCM());
+			} else {
+				logger.info("Action is euclidBackwards"); 
+				c.moveBackwardSlightly();
+			}
 		} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
 			
 			if(plan.getAction() == PlanTypes.ActionType.DRIVE.ordinal()){

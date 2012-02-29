@@ -205,9 +205,15 @@ public class TargetDecision {
 		// Penalty offence
 		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {				
 			logger.debug("In penalty offence, will try to turn then kick");
-			double angle = allMovingObjects.getOurAngle() + Math.PI/18;
-			logger.debug("Trying to turn to angle "+angle);
-			this.bestAngle = angle;
+			double randomDecision = Math.random();
+			double angleToTurn;
+			if (randomDecision >= 0.5) {
+				angleToTurn = allMovingObjects.getOurAngle() + Math.PI/24;
+			} else {
+				angleToTurn = allMovingObjects.getOurAngle() - Math.PI/24;
+			}
+			logger.debug("Trying to turn to angle "+angleToTurn);
+			this.bestAngle = angleToTurn;
 			this.action = PlanTypes.ActionType.ANGLE_KICK.ordinal();
 			this.target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
 			logger.debug("The target is "+target+" it should be our position");

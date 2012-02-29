@@ -171,6 +171,8 @@ public class Plan {
 		return this.allStaticObjects;
 	}
 	
-	
+	public double getDistanceInCM() {
+		return this.targetDecision.getTargetCM();
+	}
 
 }
