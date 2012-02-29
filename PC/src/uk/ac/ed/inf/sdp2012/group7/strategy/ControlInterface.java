@@ -327,6 +327,17 @@ public class ControlInterface implements Observer {
 	public void update(Observable arg0, Object arg1) {
 		logger.debug("Got a new plan");
 		Plan plan = (Plan) arg1;
+		if(plan.getPlanType()==PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
+			logger.info("Taking a penalty - first turn required angle");
+			double turnAngle = angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
+			c.rotateBy(turnAngle);
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {}
+			logger.info("Now kick");
+			c.kick();
+			waitABit();
+		}
 		//Arc arcToDrive = chooseArc(plan);
 		//implimentArc(arcToDrive, plan);
 		implementAStar(plan);
