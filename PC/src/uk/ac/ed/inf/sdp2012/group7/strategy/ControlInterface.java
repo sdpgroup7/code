@@ -337,7 +337,11 @@ public class ControlInterface implements Observer {
 			logger.info("Now kick");
 			c.kick();
 			waitABit();
-		}
+		} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
+		} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
+		}else if (plan.getPlanType()==PlanTypes.PlanType.HALT.ordinal()) {
+		} else {}
+
 		//Arc arcToDrive = chooseArc(plan);
 		//implimentArc(arcToDrive, plan);
 		implementAStar(plan);
