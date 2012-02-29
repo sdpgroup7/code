@@ -159,7 +159,39 @@ public class FeedProcessor{
         /* Display the FPS that the vision system is running at. */
         float fps = (1.0f)/((after - before) / 1000.0f);
         imageGraphics.setColor(Color.white);
-        imageGraphics.drawString("FPS: " + fps, 15, 15);
+        imageGraphics.drawString("FPS: " + fps, 30, 420);
+        if (Vision.worldState.getColor() == Color.blue){
+            imageGraphics.drawString("Our Colour: Blue", 30, 435);
+        }else{
+            imageGraphics.drawString("Our Colour: Yellow", 30, 435);
+        }
+        if (Vision.worldState.getRoom() == 0){
+            imageGraphics.drawString("Pitch: Main", 30, 450);
+        }else{
+            imageGraphics.drawString("Pitch: Secondary", 30, 450);
+        }
+        if (Vision.worldState.getShootingDirection() == 1){
+            imageGraphics.drawString("Shooting: Right", 30, 465);
+        }else{
+            imageGraphics.drawString("Shooting: Left", 30, 465);
+        }
+        
+        imageGraphics.drawString("Our Position: (" + Vision.worldState.getOurRobot().getPosition().getCentre().x + "," + Vision.worldState.getOurRobot().getPosition().getCentre().y + ")", 30, 20);
+        imageGraphics.drawString("Our Velocity: " + String.format("%.4g%n", Vision.worldState.getOurRobot().getVelocity()) + "px/s", 30, 35);
+        imageGraphics.drawString("Our Bearing: " + String.format("%.4g%n", Vision.worldState.getOurRobot().getAngle()) + "rads", 30, 50);
+        imageGraphics.drawString("Dist to Ball: " + String.format("%.4g%n",Point.distance(Vision.worldState.getOurRobot().getPosition().getCentre().x, Vision.worldState.getOurRobot().getPosition().getCentre().y, Vision.worldState.getBall().getPosition().getCentre().x, Vision.worldState.getBall().getPosition().getCentre().y)) + "px", 30, 65);
+        imageGraphics.drawString("Dist to Opp: " + String.format("%.4g%n",Point.distance(Vision.worldState.getOurRobot().getPosition().getCentre().x, Vision.worldState.getOurRobot().getPosition().getCentre().y, Vision.worldState.getOpponentsRobot().getPosition().getCentre().x, Vision.worldState.getOpponentsRobot().getPosition().getCentre().y)) + "px", 30, 80);
+        
+        imageGraphics.drawString("Opp Position: (" + Vision.worldState.getOpponentsRobot().getPosition().getCentre().x + "," + Vision.worldState.getOpponentsRobot().getPosition().getCentre().y + ")", 220, 20);
+        imageGraphics.drawString("Opp Velocity: " + String.format("%.4g%n", Vision.worldState.getOpponentsRobot().getVelocity()) + "px/s", 220, 35);
+        imageGraphics.drawString("Opp Bearing: " + String.format("%.4g%n", Vision.worldState.getOpponentsRobot().getAngle()) + "rads", 220, 50);
+        imageGraphics.drawString("Dist to Ball: " + String.format("%.4g%n",Point.distance(Vision.worldState.getOpponentsRobot().getPosition().getCentre().x, Vision.worldState.getOpponentsRobot().getPosition().getCentre().y, Vision.worldState.getBall().getPosition().getCentre().x, Vision.worldState.getBall().getPosition().getCentre().y)) + "px", 220, 65);
+        imageGraphics.drawString("Dist to Us: " + String.format("%.4g%n",Point.distance(Vision.worldState.getOurRobot().getPosition().getCentre().x, Vision.worldState.getOurRobot().getPosition().getCentre().y, Vision.worldState.getOpponentsRobot().getPosition().getCentre().x, Vision.worldState.getOpponentsRobot().getPosition().getCentre().y)) + "px", 220, 80);
+        
+        imageGraphics.drawString("Ball Position: (" + Vision.worldState.getBall().getPosition().getCentre().x + "," + Vision.worldState.getBall().getPosition().getCentre().y + ")", 410, 20);
+        imageGraphics.drawString("Ball Velocity: " + String.format("%.4g%n", Vision.worldState.getBall().getVelocity()) + "px/s", 410, 35);
+        
+        
         frameGraphics.drawImage(image, 0, 0, width, height, null);
     }
     
