@@ -182,7 +182,11 @@ public class PlanMonitor {
         for(int y = 0; y < ascii.length; y++){
         	for(int x = 0; x < ascii[y].length; x++){
         		if(ascii[y][x] != " "){
-        			graphics.fillRect((int)(x*nodeInPixels+0.5), (int)(y*nodeInPixels+0.5), (int)(nodeInPixels+0.5), (int)(nodeInPixels+0.5));
+        			int xp = (int)(x*nodeInPixels + (nodeInPixels / 4) + 0.5);
+        			int yp = (int)(y*nodeInPixels + (nodeInPixels / 4) + 0.5);
+        			int width = (int)((nodeInPixels/2)+0.5);
+        			int height = width;
+        			graphics.fillRect(xp, yp, width, height);
         		}
         	}
         }
