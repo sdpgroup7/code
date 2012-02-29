@@ -11,6 +11,7 @@ import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
 import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.control.RobotControl;
+import uk.ac.ed.inf.sdp2012.group7.control.Tools;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 
@@ -41,6 +42,8 @@ public class ControlInterface implements Observer {
 	private int stop = PlanTypes.ActionType.STOP.ordinal();
 	private int angle = PlanTypes.ActionType.ANGLE.ordinal();
 	private int angleKick = PlanTypes.ActionType.ANGLE_KICK.ordinal();
+	private int euclidForward = PlanTypes.ActionType.EUCLID_FORWARDS.ordinal();
+	private int euclidBackWards = PlanTypes.ActionType.EUCLID_BACKWARDS.ordinal();
 	
 
 	public ControlInterface(int lookahead) {
@@ -169,6 +172,12 @@ public class ControlInterface implements Observer {
 			logger.info("Action is to kick");
 			c.kick();
 			waitABit();
+		} else if (plan.getAction() == euclidForward) {
+			logger.info("Action is to drive forward");
+			//c.moveForward(plan.getDistanceInCm());
+		} else if (plan.getAction() == euclidBackWards) {
+			logger.info("Action is drive backwards"); 
+		//	c.moveBackward(plan.getDistanceInCm());
 		}
 
 	}
@@ -243,6 +252,38 @@ public class ControlInterface implements Observer {
 		return intersect;
 	}
 	
+	public void implementAStar(Plan plan) {
+		ArrayList<Point> path = plan.getPath();
+		Point pointToDrive = new Point();
+		if (path.size() >= 4) {
+			pointToDrive = path.get(3);
+		} else if (path.size() > 1) {
+			pointToDrive = path.get(1);
+		} else {}
+		
+		Point robot = plan.getOurRobotPosition();
+		double robotAngle = plan.getOurRobotAngle();
+		
+		double targetAngle = Tools.getAngleToFacePoint(robot, robotAngle, pointToDrive);
+		
+		if (Math.abs(Math.toDegrees(targetAngle)) > 5) {
+			logger.debug("We need to rotate to the ball");
+			c.stop();
+			waitABit(200);
+			c.rotateBy(targetAngle);
+			waitABit(200);
+		} else {
+			logger.debug("Don't need to rotate");
+		}
+		robot = plan.getOurRobotPosition();
+		double conversion = (double) VisionTools.pixelsToCM(plan.getNodeInPixels());
+		
+		int distance = (int) Math.round(robot.distance(pointToDrive)*conversion);
+		c.moveForward(distance);
+		waitABit(1000);
+	}
+		
+	
 	public void kick() {
 		c.clearAllCommands();
 		c.kick();
@@ -254,18 +295,17 @@ public class ControlInterface implements Observer {
 		c.moveForward(60);
 	}
 
-	@Override
-	public void update(Observable arg0, Object arg1) {
-		logger.debug("Got a new plan");
-		Plan plan = (Plan) arg1;
-		Arc arcToDrive = chooseArc(plan);
-		this.implimentArc(arcToDrive, plan);
-		
-	}
+	
 	
 	public void waitABit() {
 		try {
-			Thread.sleep(75);
+			Thread.sleep(200);
+		} catch (InterruptedException e) {}
+	}
+	
+	public void waitABit(long value) {
+		try {
+			Thread.sleep(value);
 		} catch (InterruptedException e) {}
 	}
 	
@@ -283,6 +323,16 @@ public class ControlInterface implements Observer {
 	
 		return howMuchToTurn;
 
+	}
+	
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		logger.debug("Got a new plan");
+		Plan plan = (Plan) arg1;
+		//Arc arcToDrive = chooseArc(plan);
+		//implimentArc(arcToDrive, plan);
+		implementAStar(plan);
+		
 	}
 
 	
