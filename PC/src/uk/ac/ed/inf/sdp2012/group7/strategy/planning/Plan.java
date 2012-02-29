@@ -22,13 +22,17 @@ public class Plan {
 	private OppositionPrediction opposition;
 	private ArrayList<Point> obstacles;
 	private ArrayList<Point> path;
-	private AStarRun astar;
+	private AStarRun aStarNav;
 	private AllStaticObjects allStaticObjects;
 	public static final Logger logger = Logger.getLogger(Plan.class);
 
 	//World state info
 	private AllMovingObjects allMovingObjects;
 	private WorldState worldState = WorldState.getInstance();
+	
+	//targets and navs
+	private Point target;
+	private Point navPoint;
 	
 	//For testing
 	private Path nodePath;
@@ -46,36 +50,44 @@ public class Plan {
 		allMovingObjects.update();
 		
 		//Set up obstacles created by opposition
-		opposition = new OppositionPrediction(allMovingObjects, this.allStaticObjects);
+		this.opposition = new OppositionPrediction(allMovingObjects, this.allStaticObjects);
 		
 		//Add the opposition obstacles to the overall obstacles
 		//IE add in the boundary...
 		this.obstacles = allStaticObjects.convertToNodes(opposition.getDefaultObstacles());
 		
 		//Setup target for A*
-		targetDecision = new TargetDecision(this.allMovingObjects, this.allStaticObjects, this.obstacles);
+		this.targetDecision = new TargetDecision(this.allMovingObjects, this.allStaticObjects);
+		
+		this.target = this.targetDecision.getTargetAsNode();
+		this.navPoint = this.targetDecision.getNavAsNode();
 		
 		logger.debug("Target Decision Position: " + targetDecision.getTargetAsNode().toString());
+		logger.debug("NavPoint Decision Position: " + targetDecision.getNavAsNode().toString());
 		logger.debug("Ball Position: " + this.allStaticObjects.convertToNode(Vision.worldState.getBall().getPosition().getCentre()));
 		logger.debug("Robot Position: " + this.allStaticObjects.convertToNode(allMovingObjects.getOurPosition()).toString());
 		logger.debug("Their Robot Position: " + this.allStaticObjects.convertToNode(worldState.getOpponentsRobot().getPosition().getCentre()));
 		
-		//Now create an A* object from which we create a path
-		astar = new AStarRun(	this.allStaticObjects.getHeight(),
+		//a* for Current position to navPpoint
+		aStarNav = new AStarRun(this.allStaticObjects.getHeight(),
 								this.allStaticObjects.getWidth(),
-								this.targetDecision.getTargetAsNode(),
+								navPoint,
 								this.allStaticObjects.convertToNode(allMovingObjects.getOurPosition()),
 								this.obstacles
 							);
-
+		
+		
 		//Requires method to convert from path to ArrayList<Point>
 		//Now grab path through A* method
-		this.path = astar.getPathInPoints();
+		this.path = aStarNav.getPathInPoints();
+		
+		//Now add target to the end:
+		this.path.add(this.target);
 		
 		logger.debug("Path length: " + this.path.size());
 		
 		//Grab path in Node
-		this.nodePath = astar.getPath();
+		this.nodePath = aStarNav.getPath();
 		
 		
 
@@ -84,10 +96,19 @@ public class Plan {
 	public ArrayList<Point> getPath(){
 		return this.path;
 	}
+	
+	public void setPath(ArrayList<Point> path){
+		this.path = path;
+	}
+	
 	//action = 0; nothing 
 	//action = 1; kick
 	public int getAction(){
 		return targetDecision.getAction();
+	}
+	
+	public int getPlanType(){
+		return targetDecision.getPlanType();
 	}
 	
 	//Plan Monitor
@@ -99,7 +120,7 @@ public class Plan {
 		return allStaticObjects.convertToNode(allMovingObjects.getBallPosition());
 	}
 	
-	//Unused
+	//Plan Monitor
 	public Point getOurRobotPosition() {
 		return allStaticObjects.convertToNode(allMovingObjects.getOurPosition());
 	}
@@ -116,7 +137,7 @@ public class Plan {
 	
 	//For testing
 	public AStarRun getAStar(){
-		return this.astar;
+		return this.aStarNav;
 	}
 	
 	//For Control Interface
@@ -132,6 +153,26 @@ public class Plan {
 	//Return angle required...
 	public double getAngleWanted(){
 		return this.targetDecision.getAngleWanted();
+	}
+	
+	public Point getTarget(){
+		return this.target;
+	}
+	
+	public Point getNavPoint(){
+		return this.navPoint;
+	}
+	
+	public Point getCentreOfTheirGoal(){
+		return this.allStaticObjects.getCentreOfTheirGoal();
+	}
+	
+	public AllStaticObjects getAllStaticObjects(){
+		return this.allStaticObjects;
+	}
+	
+	public double getDistanceInCM() {
+		return this.targetDecision.getTargetCM();
 	}
 
 }

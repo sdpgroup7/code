@@ -88,6 +88,7 @@ public class WorldState{
 	}
 	
 	public void setShootingDirection(int shoot){
+
 		this.shootingDirection = shoot;
 	}
 	
