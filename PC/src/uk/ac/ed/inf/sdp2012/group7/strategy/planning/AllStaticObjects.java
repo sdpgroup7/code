@@ -40,9 +40,6 @@ public class AllStaticObjects {
 	private Point inFrontOfOurGoal;
 	private Point inFrontOfTheirGoal;
 	private Point centreOfTheirGoal;
-	
-	//just a test counter for Laurie to use with penalty things
-	private int counter =0;
 
 	//worldstate getInstance
 	public WorldState worldState = WorldState.getInstance();
@@ -226,14 +223,6 @@ public class AllStaticObjects {
 	
 	public double getDeceleration(){
 		return this.deceleration;
-	}
-	
-	public int getCounter() {
-		return counter;
-	}
-
-	public void setCounter() {
-		this.counter++;
 	}
 	
 	public int getPitchBottomBuffer() {
