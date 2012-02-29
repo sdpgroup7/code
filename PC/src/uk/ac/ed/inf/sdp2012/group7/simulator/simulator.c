@@ -81,20 +81,14 @@ int main(int argc, char **argv) {
 	struct robot_status blue_status;
 	struct robot_status yellow_status;
 	struct world_state world_state;
-	struct ball ball_state;
 	world_state.blue = &blue_status;
 	world_state.yellow = &yellow_status;
-	world_state.ball = &ball_state;
 	memset(&blue_status, 0, sizeof blue_status);
 	memset(&yellow_status, 0, sizeof yellow_status);
-	memset(&ball_state, 0, sizeof ball_state);
 	blue_status.x = BLUE_START_X;
 	blue_status.y = BLUE_START_Y;
 	yellow_status.x = YELLOW_START_X;
 	yellow_status.y = YELLOW_START_Y;
-	ball_state.x = BALL_START_X;
-	ball_state.y = BALL_START_Y;
-
 
 	printf("Blue port: %s\nYellow port: %s\nWorld state port: %s\n", port_dummy(blue_port), port_dummy(yellow_port), world_state_port);
 

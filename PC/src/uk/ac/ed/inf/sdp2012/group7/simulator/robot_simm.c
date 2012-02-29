@@ -45,6 +45,7 @@ void robot_thread(void *args) {
 		
 		while ((recv_size = recv(socket, &buf, sizeof buf, 0)) > 0) {
 			if (recv_size == sizeof(opcode_t)) {
+				buf = ntohl(buf);
 				RT_SAY2("received opcode %i\n", buf);
 				decode_command(buf, &cmd);
 				RT_SAY3("decoded as instr=%i arg=%i\n", cmd.instr, cmd.arg);
@@ -101,7 +102,7 @@ void action(void* args) {
 					   break;
 			case ARC: AT_STUB("ARC\n"); break;
 			case STEER_WITH_RATIO: AT_STUB("STEER_WITH_RATIO\n"); break;
-			case BEEP: AT_SAY("bleep blop.\n"); break;
+			case BEEP: AT_SAY("bleep blop.\n"); a->cmd->instr = DO_NOTHING;  break;
 			case CELEBRATE: AT_SAY("bleep blop win!\n"); break;
 			case FORWARDS_WITH_DISTANCE:
 					distance = a->cmd->arg; break;
