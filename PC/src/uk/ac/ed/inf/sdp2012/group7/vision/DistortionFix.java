@@ -11,17 +11,17 @@ public class DistortionFix {
 	private static int height;
 	private static final double barrelCorrectionX = -0.01;
 	private static final double barrelCorrectionY = -0.055;
-	ArrayList<Point> points ;
-	ArrayList<Point> correctedPoints;
-	ArrayList<Color> colors ;
+	//ArrayList<Point> points ;
+	//ArrayList<Point> correctedPoints;
+	//ArrayList<Color> colors ;
 	
 	private Point p = new Point();
 
     public BufferedImage removeBarrelDistortion(BufferedImage image, int left, int right, int top, int bottom){
     	
-    	ArrayList<Point> points = new ArrayList<Point>();
+    /*	ArrayList<Point> points = new ArrayList<Point>();
     	ArrayList<Point> correctedPoints = new ArrayList<Point>();
-    	ArrayList<Color> colors = new ArrayList<Color>();
+    	ArrayList<Color> colors = new ArrayList<Color>();*/
     	Vision.logger.info("This method has not yet been implemented.");
     	width = image.getWidth();
     	height = image.getHeight();
@@ -39,6 +39,7 @@ public class DistortionFix {
     	
         return newImage;
     }
+    
     public static Point barrelCorrected(Point p1) {
     	// System.out.println("Pixel: (" + x + ", " + y + ")");
     	// first normalise pixel

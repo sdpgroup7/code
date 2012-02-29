@@ -35,8 +35,9 @@ public class Thresholding {
 	private Point[] blueGreenPlate4Points = new Point[]{new Point(0,0),new Point(0,0),new Point(0,0),new Point(0,0)};
 	private Point[] yellowGreenPlate4Points = new Point[]{new Point(0,0),new Point(0,0),new Point(0,0),new Point(0,0)};
 	
-
-    private Color c;
+	private DistortionFix fix= new DistortionFix();
+    
+	private Color c;
     /*The north, south, east and west immediate pixel's colors of c*/
     private Color cS;
     private Color cE;
@@ -146,9 +147,9 @@ public class Thresholding {
 		yellowRobotThresh[1][0] = 150;
 		yellowRobotThresh[1][1] = 190;
 		yellowRobotThresh[1][2] = 140;
-		blueRobotThresh[0][0] = 130;
-		blueRobotThresh[0][1] = 180;
-		blueRobotThresh[0][2] = 100;
+		blueRobotThresh[0][0] = 120;
+		blueRobotThresh[0][1] = 170;
+		blueRobotThresh[0][2] = 90;
 		blueRobotThresh[1][0] = 130;
 		blueRobotThresh[1][1] = 140;
 		blueRobotThresh[1][2] = 90;
@@ -671,7 +672,7 @@ public class Thresholding {
     }
     
     public boolean isGreen(Color c, int GB, int RG){
-        return ( GB > 70 && RG > 70 && c.getGreen() > greenPlatesThresh[pitch][0]);
+        return ( GB > 50 && RG > 50 && c.getGreen() > greenPlatesThresh[pitch][0]);
     }
     
     public boolean isGrey(Color c){
