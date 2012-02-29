@@ -137,43 +137,20 @@ public class TargetDecision {
 		else if(this.planType == PlanTypes.PlanType.HALT.ordinal()){
 			this.action = PlanTypes.ActionType.STOP.ordinal();
 		}
+		
 		// Penalty offence
-<<<<<<< HEAD
 		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {				
 			logger.debug("In penalty offence, will try to turn then kick");
 			double angle = allMovingObjects.getOurAngle() + Math.PI/18;
 			logger.debug("Trying to turn to angle "+angle);
 			this.bestAngle = angle;
-			target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
-			logger.debug("The target is "+target+" it should be our position");
 			this.action = PlanTypes.ActionType.ANGLE_KICK.ordinal();
-			return target;
-=======
-		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
-				
-			if(this.allStaticObjects.getCounter() % 2 == 0) {
-				logger.debug("In penalty offence, try to turn 20 degrees");
-				double angle = allMovingObjects.getOurAngle() + Math.PI/18;
-				logger.debug("Trying to turn to angle "+angle);
-				this.bestAngle = angle;
-				target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
-				logger.debug("The target is "+target+" it should be our position");
-				this.action = PlanTypes.ActionType.ANGLE.ordinal();
-				this.allStaticObjects.setCounter();
-				logger.debug("Counter incremented, next plan should try to kick");
-			} else {
-				logger.debug("In penalty offence, trying to kick");
-				this.action = PlanTypes.ActionType.KICK.ordinal();
-				this.allStaticObjects.setCounter();
-				target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
-				logger.debug("The target is "+target+" it should be our position");
-			}
->>>>>>> d298b501b847237596ffe082fa59cf92fc9b3992
+			this.target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
+			logger.debug("The target is "+target+" it should be our position");
 		}
 	
 		// No other plan types so must be penalty defence
 		else {
-			
 			this.action = PlanTypes.ActionType.STOP.ordinal();
 		}
 	}
