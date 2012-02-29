@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -78,6 +80,18 @@ public class SimulatorFeed extends WindowAdapter {
 			return simAngle;
 		}
 		
+		private boolean isBallClose(Body robot) {
+			AffineTransform at = AffineTransform.getRotateInstance(
+					(robot.getRotation()*(-1)), robot.getPosition().getX(), robot.getPosition().getY());
+			Point2D.Double p = new Point2D.Double((double) ball.getPosition().getX(), (double) ball.getPosition().getY());
+			at.transform(p,p);
+			int kickDist = 20;
+			if ((Math.abs(p.getX() - robot.getPosition().getX() - (47/2)) <= kickDist) && (Math.abs(p.getY() - robot.getPosition().getY()) <= (33/2))) {
+				return true;
+			}
+			return false;
+		}
+		
 		public void run() {
 			try {
 				socket = new Socket(simHost, simPort);
@@ -108,9 +122,33 @@ public class SimulatorFeed extends WindowAdapter {
 				
 				Simulator.worldState.getBlueRobot().setPosition(buf[0], buf[1]);
 				Simulator.worldState.getBlueRobot().setAngle(Math.toRadians(buf[2]));
+				blueRobot.setPosition(buf[0], buf[1]);
+				blueRobot.setRotation((float) Math.toRadians(buf[2]));
+				
 				Simulator.worldState.getYellowRobot().setPosition(buf[3], buf[4]);
 				Simulator.worldState.getYellowRobot().setAngle(Math.toRadians(buf[5]));
-				Simulator.worldState.getBall().addPosition(new Point(buf[6], buf[7]));
+				yellowRobot.setPosition(buf[3], buf[4]);
+				yellowRobot.setRotation((float) Math.toRadians(buf[5]));
+				
+				if (buf[6] > 0) {
+					if (isBallClose(blueRobot)) {
+						ball.addForce(new Vector2f(
+								10000*(float)Math.cos(blueRobot.getRotation()),
+								10000*(float)Math.sin(blueRobot.getRotation())
+						));
+					}
+				}
+				
+				if (buf[7] > 0) {
+					if (isBallClose(yellowRobot)) {
+						ball.addForce(new Vector2f(
+								10000*(float)Math.cos(yellowRobot.getRotation()),
+								10000*(float)Math.sin(yellowRobot.getRotation())
+						));
+					}
+				}
+				
+		
 				
 				frameImage.setData(background.getData());
 				
