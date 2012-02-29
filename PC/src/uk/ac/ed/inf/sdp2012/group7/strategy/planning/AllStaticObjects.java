@@ -6,6 +6,8 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
@@ -19,6 +21,8 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
  *
  */
 public class AllStaticObjects {
+	
+	public static final Logger logger = Logger.getLogger(PlanningThread.class);
 	
 	private double nodeInPixels;
 	private int pitchTopBuffer;
@@ -129,11 +133,10 @@ public class AllStaticObjects {
 	//Return this as a node!
 	private void centreOfTheirGoal(){
 		if(worldState.getShootingDirection() == -1){
-			this.inFrontOfTheirGoal = new Point(0,this.height/2);
-			
+			this.centreOfTheirGoal = new Point(0,this.height/2);
 		}
 		else {
-			this.inFrontOfTheirGoal = new Point(this.width,this.height/2);
+			this.centreOfTheirGoal = new Point(this.width,this.height/2);
 		}
 	}
 	

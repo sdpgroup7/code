@@ -22,7 +22,6 @@ public class Plan {
 	private OppositionPrediction opposition;
 	private ArrayList<Point> obstacles;
 	private ArrayList<Point> path;
-	private AStarRun aStarTarget;
 	private AStarRun aStarNav;
 	private AllStaticObjects allStaticObjects;
 	public static final Logger logger = Logger.getLogger(Plan.class);
@@ -80,7 +79,7 @@ public class Plan {
 		
 		//Requires method to convert from path to ArrayList<Point>
 		//Now grab path through A* method
-		this.path = aStarTarget.getPathInPoints();
+		this.path = aStarNav.getPathInPoints();
 		
 		//Now add target to the end:
 		this.path.add(this.target);
@@ -88,7 +87,7 @@ public class Plan {
 		logger.debug("Path length: " + this.path.size());
 		
 		//Grab path in Node
-		this.nodePath = aStarTarget.getPath();
+		this.nodePath = aStarNav.getPath();
 		
 		
 
@@ -134,7 +133,7 @@ public class Plan {
 	
 	//For testing
 	public AStarRun getAStar(){
-		return this.aStarTarget;
+		return this.aStarNav;
 	}
 	
 	//For Control Interface

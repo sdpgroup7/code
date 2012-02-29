@@ -2,6 +2,7 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 
 
 import java.awt.Point;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
@@ -78,7 +79,11 @@ public class TargetDecision {
 				   (target.y >= 0) && (target.y <= allStaticObjects.getHeight()));
 		
 		//setting nav and target
-		this.setTargets();
+		try {
+			this.setTargets();
+		} catch (Exception ex) { 
+			Strategy.logger.error("Could not setTargets: " + ex.getMessage());
+		}
 		
 
 	}
@@ -134,9 +139,16 @@ public class TargetDecision {
 				} else {
 					
 					//create open shot nav and target
-					this.setTargetPointOpen();
-					this.setNavPointOpen();
-					
+					try {
+						this.setTargetPointOpen();
+					} catch (Exception ex) { 
+						Strategy.logger.error("Could not setTargetPointOpen: " + ex.getMessage());
+					}
+					try {	
+						this.setNavPointOpen();
+					} catch (Exception ex) { 
+						Strategy.logger.error("Could not setTargetPointOpen: " + ex.getMessage());
+					}
 					
 					//test to see if we can do an open shot...
 					this.openShotPossible = (this.navPoint.x > this.allStaticObjects.getPitchLeftBuffer() && 
@@ -173,7 +185,8 @@ public class TargetDecision {
 					}
 				
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
-				
+					this.target = this.allStaticObjects.convertToNode(this.target);
+					this.navPoint = this.allStaticObjects.convertToNode(this.navPoint);
 				}
 			}
 		} 
@@ -271,7 +284,13 @@ public class TargetDecision {
 		
 		Point ballPosition = this.allMovingObjects.getBallPosition();
 		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
+		
+		logger.debug("ballPosition : " + ballPosition);
+		logger.debug("centreGoal : " + centreGoal);
+		
 		double angleBetweenBallAndGoal = allMovingObjects.angleBetween(ballPosition,centreGoal);
+		
+		logger.debug("angleBetweenBallAndGoal : " + angleBetweenBallAndGoal);
 		
 		int navX = ballPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*6*allStaticObjects.getNodeInPixels());
 		int navY = ballPosition.y - (int)(Math.sin(angleBetweenBallAndGoal)*6*allStaticObjects.getNodeInPixels());
@@ -286,6 +305,9 @@ public class TargetDecision {
 		Point ballPosition = this.allMovingObjects.getBallPosition();
 		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
 		double angleBetweenBallAndGoal = allMovingObjects.angleBetween(ballPosition,centreGoal);
+		
+		logger.debug("ballPosition : " + ballPosition);
+		logger.debug("centreGoal : " + centreGoal);
 		
 		int navX = ballPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*3*allStaticObjects.getNodeInPixels());
 		int navY = ballPosition.y - (int)(Math.sin(angleBetweenBallAndGoal)*3*allStaticObjects.getNodeInPixels());
