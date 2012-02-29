@@ -22,6 +22,8 @@ void ws_thread(void * args) {
 	/* Send packets! */
 	struct ws_packet p;
 
+	int frame = 0;
+
 	TIMED_LOOP
 
 		p.blue_x = a->ws->blue->x;
@@ -35,10 +37,14 @@ void ws_thread(void * args) {
 		p.blue_kick = a->ws->blue->kicker;
 		p.yellow_kick = a->ws->yellow->kicker;
 		
-		WS_SAY_ "bx=%u by=%u ba=%u yx=%u yy=%u ya=%u bk=%u yk=%u\r", p.blue_x, p.blue_y, p.blue_a, p.yellow_x, p.yellow_y, p.yellow_a, p.blue_kick, p.yellow_kick);
+		WS_SAY_ "[%02i] bx=%u by=%u ba=%u yx=%u yy=%u ya=%u bk=%u yk=%u\r", frame, p.blue_x, p.blue_y, p.blue_a, p.yellow_x, p.yellow_y, p.yellow_a, p.blue_kick, p.yellow_kick);
 
 		if (send(socket, &p, sizeof p, 0) == -1)
 			WS_SAY("send failed\n");
+
+		++frame;
+		if (frame > 24)
+				  frame = 0;
 
 	TIMED_LOOP_END
 }
