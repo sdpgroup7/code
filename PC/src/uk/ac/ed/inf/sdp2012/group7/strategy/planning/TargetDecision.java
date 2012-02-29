@@ -38,10 +38,11 @@ public class TargetDecision {
 	
 	//navigation point
 	private Point navPoint = new Point(0,0);
-	private Point target;
+	private Point target = new Point(0,0);
 	//navigation boolean
 	private boolean openShotPossible;
 	private boolean angularShotPossible;
+
 	
 	//penalty defence
 	private double targetInCM;
