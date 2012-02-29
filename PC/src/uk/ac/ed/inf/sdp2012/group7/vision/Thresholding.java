@@ -169,8 +169,6 @@ public class Thresholding {
     		pitch = Vision.worldState.getRoom();
     		width = right-left;
     		height = top-bottom;
-    	 
-		 //  BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
             
            /*
            Initialising to one to stop java dividing by 0 when it shouldn't
@@ -217,6 +215,7 @@ public class Thresholding {
 					GB = Math.abs((c.getBlue() - c.getGreen()));
 					RG = Math.abs((c.getRed() - c.getGreen()));
 					RB = Math.abs((c.getRed() - c.getBlue()));
+					
 					if(isRed(c, GB)){ //  was inside  RB > 50 && RG > 50
 						img.setRGB(i, j, Color.red.getRGB()); //Red Ball
 						randy = Math.random();
@@ -325,8 +324,6 @@ public class Thresholding {
 			if (yellowCountD == 0) yellowCountD++;
 			if (yellowCountE == 0) yellowCountE++;
 			
-			
-	    	//Vision.logger.debug("End Iteration");
 			
 			//TODO: Run these points through the parralax fix
 			totalRedX = 0;
@@ -478,11 +475,10 @@ public class Thresholding {
 			
 			blueGreenPlate4Points = plate.getCorners(blueGreenPlate);
 			yellowGreenPlate4Points = plate.getCorners(yellowGreenPlate);
+			
 			Vision.worldState.getBlueRobot().getPosition().setCorners(blueGreenPlate4Points);
 			Vision.worldState.getYellowRobot().getPosition().setCorners(yellowGreenPlate4Points);
 
-			/*blueGreenPlate4Points = findTheFourPoints(blueGreenPlate);
-			yellowGreenPlate4Points = findTheFourPoints(yellowGreenPlate);*/
 			
 			if ((redX != 0) && (redY != 0)) {
 			    if (Vision.worldState.getBarrelFix()){
@@ -537,14 +533,9 @@ public class Thresholding {
 			
 			//The above is supposed to filter the pixels and pick up only the T pixels, but the orientation then is always with the (0,0) point 
 			
-			//System.err.println(newYellowPixels.size());
 			
 			blueGreenPlate.clear();
 			yellowGreenPlate.clear();
-			
-			//Vision.worldState.setBluePixels(bluePixels);//This must be removed to get the upper thing running
-			//Vision.worldState.setYellowPixels(yellowPixels); //This must be removed to get the upper thing running
-			
 			
     	}
     		
@@ -646,23 +637,7 @@ public class Thresholding {
     public boolean isYellow(Color c){
         return ((c.getRed() >= ts.getYellow_r_low()) && (c.getRed() <= ts.getYellow_r_high()) && (c.getGreen() >= ts.getYellow_g_low()) && (c.getGreen() <= ts.getYellow_g_high()) && (c.getBlue() >= ts.getYellow_b_low()) && (c.getBlue() <= ts.getYellow_b_high()));
     }
-    
-    public ArrayList<Integer> getBlueX(){
-        return blueRobotX;
-    }
-    
-    public ArrayList<Integer> getBlueY(){
-        return blueRobotY;
-    }
-    
-    public ArrayList<Integer> getYellowX(){
-        return yellowRobotX;
-    }
-    
-    public ArrayList<Integer> getYellowY(){
-        return yellowRobotY;
-    }
-	
+
 	
 	public Point[] getBlueGreenPlate4Points(){
 		return blueGreenPlate4Points;
