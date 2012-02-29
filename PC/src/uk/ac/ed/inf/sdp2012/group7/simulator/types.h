@@ -18,7 +18,7 @@ struct robot_status {
 	java_int x;
 	java_int y;
 	java_int angle;
-	int kicker;
+	java_int kicker;
 };
 
 struct robot_thread_args {
@@ -34,17 +34,9 @@ struct robot_action_thread_args {
 	int robot;
 };
 
-struct ball {
-	java_int x;
-	java_int y;
-	int angle;
-	int speed;
-};
-
 struct world_state {
 	struct robot_status * blue;
 	struct robot_status * yellow;
-	struct ball * ball;
 };
 
 struct ws_thread_args {
@@ -62,8 +54,8 @@ struct ws_packet {
 	java_int yellow_y;
 	java_int yellow_a;
 
-	java_int ball_x;
-	java_int ball_y;
+	java_int blue_kick;
+	java_int yellow_kick;
 };
 
 #endif
