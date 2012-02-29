@@ -595,6 +595,10 @@ public class TargetDecision {
 		return this.action;
 	}
 	
+	public int getPlanType(){
+		return this.planType;
+	}
+	
 	public double getAngleWanted(){
 		return this.bestAngle;
 	}
@@ -634,4 +638,5 @@ public class TargetDecision {
 	public double getTargetCM(){
 		return this.targetInCM;
 	}
+
 }

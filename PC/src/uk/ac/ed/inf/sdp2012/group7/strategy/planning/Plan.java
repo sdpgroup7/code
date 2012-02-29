@@ -107,6 +107,10 @@ public class Plan {
 		return targetDecision.getAction();
 	}
 	
+	public int getPlanType(){
+		return targetDecision.getPlanType();
+	}
+	
 	//Plan Monitor
 	public double getOurRobotAngle(){
 		return allMovingObjects.getOurAngle();
@@ -166,5 +170,7 @@ public class Plan {
 	public AllStaticObjects getAllStaticObjects(){
 		return this.allStaticObjects;
 	}
+	
+	
 
 }
