@@ -2,9 +2,12 @@ package uk.ac.ed.inf.sdp2012.group7.simulator;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +18,13 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import net.phys2d.math.Vector2f;
+import net.phys2d.raw.Body;
+import net.phys2d.raw.StaticBody;
+import net.phys2d.raw.World;
+import net.phys2d.raw.shapes.Box;
+import net.phys2d.raw.shapes.Circle;
+import net.phys2d.raw.strategies.QuadSpaceStrategy;
 
 public class SimulatorFeed extends WindowAdapter {
 	private JLabel label;
@@ -23,6 +33,8 @@ public class SimulatorFeed extends WindowAdapter {
 	private BufferedImage frameImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
 	
 	private BufferedImage background;
+	private BufferedImage blueRobot_img;
+	private BufferedImage yellowRobot_img;
 	public boolean paused = false;
 	int count = 0;
 	
@@ -32,6 +44,11 @@ public class SimulatorFeed extends WindowAdapter {
 	private Socket       socket;
 	private InputStream  is;
 	
+	private World world;
+	private Body blueRobot;
+	private Body yellowRobot;
+	private Body ball;
+	
 	/**
 	 * Default constructor.
 	 *
@@ -40,13 +57,16 @@ public class SimulatorFeed extends WindowAdapter {
 	public SimulatorFeed() {
 		try {
 			background = ImageIO.read(new File("simData/background.png"));
+			blueRobot_img = ImageIO.read(new File("simData/blue.png"));
+			yellowRobot_img = ImageIO.read(new File("simData/yellow.png"));
 		} catch (IOException e) {
-			Simulator.logger.fatal("Can't load background: "+e.toString());
+			Simulator.logger.fatal("Can't load file: "+e.toString());
 		}
 		
 
 		/* Initialise the GUI that displays the video feed. */
 		initGUI();
+		initWorldSimulation();
 		initFrameGenerator();
 		Simulator.worldState.setClickingDone(true);
 	}
@@ -65,12 +85,24 @@ public class SimulatorFeed extends WindowAdapter {
 			return simAngle;
 		}
 		
+		private boolean isBallClose(Body robot) {
+			AffineTransform at = AffineTransform.getRotateInstance(
+					(robot.getRotation()*(-1)), robot.getPosition().getX(), robot.getPosition().getY());
+			Point2D.Double p = new Point2D.Double((double) ball.getPosition().getX(), (double) ball.getPosition().getY());
+			at.transform(p,p);
+			int kickDist = 20;
+			if ((Math.abs(p.getX() - robot.getPosition().getX() - (47/2)) <= kickDist) && (Math.abs(p.getY() - robot.getPosition().getY()) <= (33/2))) {
+				return true;
+			}
+			return false;
+		}
+		
 		public void run() {
 			try {
 				socket = new Socket(simHost, simPort);
 				is = socket.getInputStream();
-			} catch (Exception ex) {
-				Simulator.logger.fatal("Connecting to simulator failed: " + ex.toString());
+			} catch (Exception e) {
+				Simulator.logger.fatal("Connecting to simulator failed: "+e.toString());
 			}
 			
 			while(true) {
@@ -80,8 +112,8 @@ public class SimulatorFeed extends WindowAdapter {
 				for (int i = 0; i < 8; ++i) {
 					try {
 						is.read(int_buf);
-					} catch (IOException ex) {
-						Simulator.logger.fatal("Failed to receive packet: " + ex.toString());
+					} catch (IOException e) {
+						Simulator.logger.fatal("Failed to receive packet: "+e.toString());
 					}
 					buf[i] = (0x000000FF & (int)int_buf[0])
 					      | ((0x000000FF & (int)int_buf[1]) << 8)
@@ -95,30 +127,129 @@ public class SimulatorFeed extends WindowAdapter {
 				
 				Simulator.worldState.getBlueRobot().setPosition(buf[0], buf[1]);
 				Simulator.worldState.getBlueRobot().setAngle(Math.toRadians(buf[2]));
+				blueRobot.setPosition(buf[0], buf[1]);
+				blueRobot.setRotation((float) Math.toRadians(buf[2]));
+				
 				Simulator.worldState.getYellowRobot().setPosition(buf[3], buf[4]);
 				Simulator.worldState.getYellowRobot().setAngle(Math.toRadians(buf[5]));
-				Simulator.worldState.getBall().addPosition(new Point(buf[6], buf[7]));
+				yellowRobot.setPosition(buf[3], buf[4]);
+				yellowRobot.setRotation((float) Math.toRadians(buf[5]));
+				
+				if (buf[6] > 0) {
+					if (isBallClose(blueRobot)) {
+						ball.addForce(new Vector2f(
+								10000*(float)Math.cos(blueRobot.getRotation()),
+								10000*(float)Math.sin(blueRobot.getRotation())
+						));
+					}
+				}
+				
+				if (buf[7] > 0) {
+					if (isBallClose(yellowRobot)) {
+						ball.addForce(new Vector2f(
+								10000*(float)Math.cos(yellowRobot.getRotation()),
+								10000*(float)Math.sin(yellowRobot.getRotation())
+						));
+					}
+				}
+				
+				Simulator.worldState.getBall().setPosition((int)ball.getPosition().getX(), (int)ball.getPosition().getY());
 				
 				frameImage.setData(background.getData());
+				Graphics2D g = (Graphics2D) frameImage.getGraphics();
 				
-				Graphics g = frameImage.getGraphics();
-				g.setColor(Color.blue);
-				g.fillRect(buf[0]-24, buf[1]-17, 47, 33);
-				g.setColor(Color.yellow);
-				g.fillRect(buf[3]-24, buf[4]-17, 47, 33);
+				AffineTransform at_b = AffineTransform.getTranslateInstance(blueRobot.getPosition().getX()-47/2,blueRobot.getPosition().getY()-33/2);
+				at_b.rotate(blueRobot.getRotation(), 47/2,33/2);
+				g.drawImage(blueRobot_img, at_b, null);
+				
+				AffineTransform at_y = AffineTransform.getTranslateInstance(yellowRobot.getPosition().getX()-47/2,yellowRobot.getPosition().getY()-33/2);
+				at_y.rotate(yellowRobot.getRotation(), 47/2,33/2);
+				g.drawImage(yellowRobot_img, at_y, null);
+				
 				g.setColor(Color.red);
-				g.fillOval(buf[6]-5, buf[7]-5, 11, 11);
-								
+				g.fillOval((int)ball.getPosition().getX()-5, (int)ball.getPosition().getY()-5, 11, 11);
+				
 				label.getGraphics().drawImage(frameImage, 0, 0, frameImage.getWidth(), frameImage.getHeight(), null);
 			}
 		}
 		
 	};
 	
+	/**
+	 * Starts the frame generator
+	 */
+	
 	private void initFrameGenerator() {
+		
 		receiver.run();
+		
 	}
 
+	/**
+	 * Creates the world
+	 */
+	private void initWorldSimulation() {
+		/* Initialise world */
+		world = new World(new Vector2f(0, 10), 10, new QuadSpaceStrategy(20, 5));
+		world.clear();
+		world.setGravity(0, 0);
+		
+		/* Build walls */
+		Body topWall = new StaticBody("top_wall", new Box(640, 104));
+		topWall.setPosition(0, 0);
+		topWall.setRestitution(1);
+		world.add(topWall);
+		
+		Body bottomWall = new StaticBody("bottom_wall", new Box(640, 104));
+		bottomWall.setPosition(0, 384);
+		bottomWall.setRestitution(1);
+		world.add(bottomWall);
+		
+		/* Needs to be done this way because we want to leave a hole for the goals */
+		Body leftWall_top = new StaticBody("left_top_wall", new Box(40, 196));
+		leftWall_top.setPosition(0, 0);
+		leftWall_top.setRestitution(1);
+		world.add(leftWall_top);
+		
+		Body leftWall_bottom = new StaticBody("left_bottom_wall", new Box(40, 196));
+		leftWall_bottom.setPosition(0, 337);
+		leftWall_bottom.setRestitution(1);
+		world.add(leftWall_bottom);
+		
+		Body rightWall_top = new StaticBody("right_top_wall", new Box(40, 196));
+		rightWall_top.setPosition(607, 0);
+		rightWall_top.setRestitution(1);
+		world.add(rightWall_top);
+		
+		Body rightWall_bottom = new StaticBody("right_bottom_wall", new Box(40, 196));
+		rightWall_bottom.setPosition(607, 337);
+		rightWall_bottom.setRestitution(1);
+		world.add(rightWall_bottom);
+		
+		/* Set up robots */
+		blueRobot = new Body("blue_robot", new Box(47, 33), 10000000);
+		blueRobot.setFriction(100);
+		blueRobot.setRestitution(1);
+		blueRobot.setDamping(2f);
+		blueRobot.setRotatable(false);
+		world.add(blueRobot);
+		
+		yellowRobot = new Body("yellow_robot", new Box(47, 33), 10000000);
+		yellowRobot.setFriction(100);
+		yellowRobot.setRestitution(1);
+		yellowRobot.setDamping(2);
+		yellowRobot.setRotatable(false);
+		world.add(yellowRobot);
+		
+		
+		/* Set up ball */
+		ball = new Body("ball", new Circle(5), 5);
+		ball.setDamping(0.005f);
+		ball.setRestitution(0.8f);
+		ball.setCanRest(true);
+		world.add(ball);
+	}
+	
 	/**
 	 * Creates the graphical interface components and initialises them
 	 */
@@ -141,7 +272,7 @@ public class SimulatorFeed extends WindowAdapter {
 			File outputFile = new File(fn);
 			ImageIO.write(image, "png", outputFile);
 		} catch (Exception e) {
-			Simulator.logger.error("Failed to write image: " + e.getMessage());
+			Vision.logger.error("Failed to write image: " + e.getMessage());
 		}
 	}
 
@@ -151,11 +282,13 @@ public class SimulatorFeed extends WindowAdapter {
 	 *
 	 * @param e         The window closing event.
 	 */
+	@SuppressWarnings("deprecation")
 	public void windowClosing(WindowEvent e) {
 		/* Dispose of the various swing and v4l4j components. */
-		receiver = null;
+		receiver.stop();
+
 		windowFrame.dispose();
-		Simulator.logger.info("Simulator System Ending...");
+		Vision.logger.info("Vision System Ending...");
 		System.exit(0);
 	}
 }

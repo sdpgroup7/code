@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 public class Simulator {
-	public static WorldState worldState = WorldState.getInstance();
+	public static WorldState worldState;
 	public static final Logger logger = Logger.getLogger(Simulator.class);
 	public static final boolean TESTING = false;
 	public static BufferedImage backgroundImage;
@@ -54,6 +54,9 @@ public class Simulator {
 				//System.exit(0);
 			}
 		}
+
+		worldState = WorldState.getInstance();
+
 
 		try {
 			new SimulatorFeed();
