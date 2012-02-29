@@ -46,16 +46,22 @@ public class Plan {
 		allMovingObjects.update();
 		
 		//Set up obstacles created by opposition
-		opposition = new OppositionPrediction(allMovingObjects, this.allStaticObjects);
+		this.opposition = new OppositionPrediction(allMovingObjects, this.allStaticObjects);
 		
 		//Add the opposition obstacles to the overall obstacles
 		//IE add in the boundary...
 		this.obstacles = allStaticObjects.convertToNodes(opposition.getDefaultObstacles());
 		
 		//Setup target for A*
-		targetDecision = new TargetDecision(this.allMovingObjects, this.allStaticObjects, this.obstacles);
+		this.targetDecision = new TargetDecision(this.allMovingObjects, this.allStaticObjects, this.obstacles);
+		
+		this.targetDecision.setTargets();
+		
+		Point target = this.targetDecision.getTargetAsNode();
+		Point navPoint = this.targetDecision.getNavAsNode();
 		
 		logger.debug("Target Decision Position: " + targetDecision.getTargetAsNode().toString());
+		logger.debug("NavPoint Decision Position: " + targetDecision.getNavAsNode().toString());
 		logger.debug("Ball Position: " + this.allStaticObjects.convertToNode(Vision.worldState.getBall().getPosition().getCentre()));
 		logger.debug("Robot Position: " + this.allStaticObjects.convertToNode(allMovingObjects.getOurPosition()).toString());
 		logger.debug("Their Robot Position: " + this.allStaticObjects.convertToNode(worldState.getOpponentsRobot().getPosition().getCentre()));
@@ -72,20 +78,6 @@ public class Plan {
 		//Requires method to convert from path to ArrayList<Point>
 		//Now grab path through A* method
 		this.path = astar.getPathInPoints();
-		
-		
-		//add in nav point to ensure we come in from the correct direction
-		//this should only happen if we don't have the ball
-		//because otherwise we should be either turning or kicking
-		
-		if(!this.targetDecision.getTheyHaveTheBall() && !this.targetDecision.getBallOnThePitch()){
-			//remove last 3 nodes to put in some navigation path
-			for(int i = 0; i < 3; i++){
-				this.path.remove(this.path.size() - 1);
-			}
-			this.path.add(this.targetDecision.getNav());
-			this.path.add(this.targetDecision.getTarget());
-		}
 		
 		logger.debug("Path length: " + this.path.size());
 		
@@ -119,7 +111,7 @@ public class Plan {
 		return allStaticObjects.convertToNode(allMovingObjects.getBallPosition());
 	}
 	
-	//Unused
+	//Plan Monitor
 	public Point getOurRobotPosition() {
 		return allStaticObjects.convertToNode(allMovingObjects.getOurPosition());
 	}
@@ -152,11 +144,6 @@ public class Plan {
 	//Return angle required...
 	public double getAngleWanted(){
 		return this.targetDecision.getAngleWanted();
-	}
-
-	public void setOurPosition(Point point) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

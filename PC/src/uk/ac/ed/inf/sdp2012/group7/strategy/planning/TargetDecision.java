@@ -38,9 +38,9 @@ public class TargetDecision {
 	
 	//navigation point
 	private Point navPoint;
-	
-	//target point
 	private Point target;
+	
+	private double targetInCM;
 	
 	private boolean weHaveBall = false;
 	private boolean theyHaveBall = false;
@@ -73,7 +73,7 @@ public class TargetDecision {
 	}
 	
 	
-	public Point getTargetAsNode() {
+	public void setTargets() {
 		
 		/*
 		 * This whole section is experimental
@@ -98,9 +98,6 @@ public class TargetDecision {
 				this.action = PlanTypes.ActionType.DRIVE.ordinal();
 				logger.debug("Ball is not found on pitch, driving to our goal");
 				this.target = this.allStaticObjects.getInFrontOfOurGoal();
-				return this.target;
-
-				
 			} else {
 				if(this.ballIsTooCloseToWall){
 					//Need ability to dribble by next milestone
@@ -108,16 +105,12 @@ public class TargetDecision {
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
 					logger.debug("Ball is too close to the wall, driving to our goal");
 					this.target = this.allStaticObjects.getInFrontOfOurGoal();
-					return this.target;
-					
 				} else if (this.theyHaveBall){
 					//go sit infront of our goal
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
 					//would be great if we could go into penalty mode here
 					logger.debug("They have the ball, driving to our goal");
 					this.target = this.allStaticObjects.getInFrontOfOurGoal();
-					return this.target;
-					
 				} else {
 					//weHaveBall && not @ bestAngle && not @ bestPosition
 					if(!this.clearShot && this.weHaveBall){
@@ -125,24 +118,17 @@ public class TargetDecision {
 						this.action = PlanTypes.ActionType.DRIVE.ordinal();
 						logger.debug("We have the ball, we don't have a good angle to shoot or position; driving to their goal");
 						this.target = this.allStaticObjects.getInFrontOfTheirGoal();
-						return this.target;
-						
 					//weHaveBall && not @ bestAngle && atBestPosition
 					} else if (this.weHaveBall) {
 						//turn to best angle
 						this.action = PlanTypes.ActionType.DRIVE.ordinal();
 						logger.debug("We have the ball, we don't have a good angle to shoot; drive to their goal");
 						this.target = this.allStaticObjects.getInFrontOfTheirGoal();
-						return this.target;
-						
 					//weHaveBall && bestAngle && bestPosition
 					} else if (this.weHaveBall) {
 						this.action = PlanTypes.ActionType.KICK.ordinal();
 						logger.debug("We have the ball, we're on; kicking");
-						return target;
-						
 					} else {
-						return target;
 					}
 				}
 			
@@ -150,7 +136,6 @@ public class TargetDecision {
 		} 
 		else if(this.planType == PlanTypes.PlanType.HALT.ordinal()){
 			this.action = PlanTypes.ActionType.STOP.ordinal();
-			return target;
 		}
 		// Penalty offence
 		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
@@ -165,21 +150,18 @@ public class TargetDecision {
 				this.action = PlanTypes.ActionType.ANGLE.ordinal();
 				this.allStaticObjects.setCounter();
 				logger.debug("Counter incremented, next plan should try to kick");
-				return target;
 			} else {
 				logger.debug("In penalty offence, trying to kick");
 				this.action = PlanTypes.ActionType.KICK.ordinal();
 				this.allStaticObjects.setCounter();
 				target = allStaticObjects.convertToNode(this.allMovingObjects.getOurPosition());
 				logger.debug("The target is "+target+" it should be our position");
-				return target;
 			}
 		}
 		// No other plan types so must be penalty defence
 		else {
 			
 			this.action = PlanTypes.ActionType.STOP.ordinal();
-			return target;
 		}
 	}
 
@@ -453,10 +435,6 @@ public class TargetDecision {
 		return this.target;
 	}
 	
-	public Point getNav(){
-		return this.navPoint;
-	}	
-	
 	public boolean getWeHaveTheBall(){
 		return this.weHaveBall;
 	}	
@@ -467,5 +445,17 @@ public class TargetDecision {
 	
 	public boolean getBallOnThePitch(){
 		return this.ballOnPitch;
+	}
+	
+	public Point getTargetAsNode(){
+		return this.target;
+	}
+	
+	public Point getNavAsNode(){
+		return this.navPoint;
+	}
+	
+	public double getTargetCM(){
+		return this.targetInCM;
 	}
 }
