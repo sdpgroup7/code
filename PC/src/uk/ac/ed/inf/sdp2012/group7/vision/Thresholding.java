@@ -122,7 +122,6 @@ public class Thresholding {
     
     private int numRedCentroids = 0;
     
-    private Color centroidColor;
     
     private DistortionFix fix = new DistortionFix();
 
@@ -601,25 +600,7 @@ public class Thresholding {
         }
         
     }
-    /**
-     * 
-     * @param listOfPoints
-     * @return centroidPoint
-     * Given an array of points return its centorid
-     */
-    public Point findCentroid(ArrayList<Point> listOfPoints){
-    	int sumX = 0;
-    	int sumY = 0;
-    	for (int i = 0; i < listOfPoints.size(); i++) {
-			sumX += listOfPoints.get(i).x;
-			sumY += listOfPoints.get(i).y;
-		}
-    	
-    	return new Point((int) (sumX/(double)listOfPoints.size() ), (int) (sumY/(double)listOfPoints.size()));
-    }
 
-
-    
     public boolean isBlue(Color c){
         return ( (c.getRed() <= blueRobotThresh[pitch][0]) && (c.getBlue() > blueRobotThresh[pitch][2])   && (c.getGreen() <= blueRobotThresh[pitch][1]));
     }
@@ -631,9 +612,7 @@ public class Thresholding {
     public boolean isGreen(Color c, int GB, int RG){
         return ( GB > 70 && RG > 70 && c.getGreen() > greenPlatesThresh[pitch][0]);
     }
-    
-    
-    
+
     public boolean isYellow(Color c){
         return ((c.getRed() >= ts.getYellow_r_low()) && (c.getRed() <= ts.getYellow_r_high()) && (c.getGreen() >= ts.getYellow_g_low()) && (c.getGreen() <= ts.getYellow_g_high()) && (c.getBlue() >= ts.getYellow_b_low()) && (c.getBlue() <= ts.getYellow_b_high()));
     }
