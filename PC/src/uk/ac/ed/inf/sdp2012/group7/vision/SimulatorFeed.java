@@ -39,6 +39,9 @@ public class SimulatorFeed extends WindowAdapter {
 	private InputStream  is;
 	
 	private World world;
+	private Body blueRobot;
+	private Body yellowRobot;
+	private Body ball;
 	
 	/**
 	 * Default constructor.
@@ -174,6 +177,26 @@ public class SimulatorFeed extends WindowAdapter {
 		rightWall_bottom.setPosition(607, 337);
 		rightWall_bottom.setRestitution(1);
 		world.add(rightWall_bottom);
+		
+		/* Set up robots */
+		blueRobot = new Body("blue_robot", new Box(47, 33), 10000000);
+		blueRobot.setFriction(100);
+		blueRobot.setRestitution(1);
+		blueRobot.setDamping(2f);
+		blueRobot.setRotatable(false);
+		world.add(blueRobot);
+		
+		yellowRobot = new Body("yellow_robot", new Box(47, 33), 10000000);
+		yellowRobot.setFriction(100);
+		yellowRobot.setRestitution(1);
+		yellowRobot.setDamping(2f);
+		yellowRobot.setRotatable(false);
+		world.add(yellowRobot);
+		
+		
+		/* Set up ball */
+		
+		world.add(ball);
 	}
 	
 	/**
