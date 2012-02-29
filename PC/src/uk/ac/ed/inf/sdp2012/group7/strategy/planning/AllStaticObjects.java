@@ -44,6 +44,7 @@ public class AllStaticObjects {
 	private Point inFrontOfOurGoal;
 	private Point inFrontOfTheirGoal;
 	private Point centreOfTheirGoal;
+	private Point centreOfOurGoal;
 
 	//worldstate getInstance
 	public WorldState worldState = WorldState.getInstance();
@@ -76,7 +77,7 @@ public class AllStaticObjects {
 		Strategy.logger.info("Node size in pixels: " + nodeInPixels);
 		//Boundary around the edges of the pitch, to prevent the robot from hitting the walls
 		//So this is dependent on the resolution..
-		this.boundary = 3;
+		this.boundary = 2;
 		//set defence position
 		this.pointInfrontOfGoal();
 		this.pointInfrontOfTheirGoal();
@@ -140,6 +141,17 @@ public class AllStaticObjects {
 		}
 	}
 	
+	//Method for finding the centre point in their goal...
+	//Return this as a node!
+	private void centreOfOurGoal(){
+		if(worldState.getShootingDirection() == 1){
+			this.centreOfOurGoal = new Point(1,this.height/2);
+		}
+		else {
+			this.centreOfOurGoal = new Point(this.width - 2,this.height/2);
+		}
+	}
+	
 
 
 	public double getNodeInPixels() {
@@ -175,15 +187,23 @@ public class AllStaticObjects {
 	}
 	
 	public Point getInFrontOfOurGoal() {
+		this.pointInfrontOfGoal();
 		return inFrontOfOurGoal;
 	}
 	
 	public Point getInFrontOfTheirGoal() {
+		this.pointInfrontOfTheirGoal();
 		return inFrontOfTheirGoal;
 	}
 	
 	public Point getCentreOfTheirGoal() {
+		this.centreOfTheirGoal();
 		return centreOfTheirGoal;
+	}
+	
+	public Point getCentreOfOurGoal() {
+		this.centreOfOurGoal();
+		return centreOfOurGoal;
 	}
 
 	public int getPlanType(){

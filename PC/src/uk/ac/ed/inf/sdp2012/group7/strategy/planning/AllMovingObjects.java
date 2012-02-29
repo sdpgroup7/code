@@ -58,6 +58,11 @@ public class AllMovingObjects {
 		return angle;
 	}
 	
+	public double angleBetweenBasic(Point p1, Point p2) {
+		double angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+		return angle;
+	}
+	
 	public Point getOurPosition() {
 		return ourPosition;
 	}

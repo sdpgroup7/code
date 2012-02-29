@@ -50,8 +50,10 @@ public class TargetDecision {
 	private boolean theyHaveBall = false;
 	private boolean ballIsTooCloseToWall = false;
 	private WorldState worldState = WorldState.getInstance();
-	private Point bestPosition;
+
 	private double bestAngle;
+	
+	private boolean goHome = false;
 
 	
 	//Constructor
@@ -62,9 +64,6 @@ public class TargetDecision {
 		this.allStaticObjects = aSO;
 		this.planType = this.allStaticObjects.getPlanType();
 		
-		//initialise target
-		this.target = new Point(0,0);
-		
 		//shot methods
 		this.clearShot();
 		this.angularShot();
@@ -73,10 +72,6 @@ public class TargetDecision {
 		this.weHaveBall();
 		this.theyHaveBall();
 		this.ballTooCloseToWall();
-		
-		//catch for when the ball is not on the pitch
-		this.ballOnPitch = ((target.x >= 0) && (target.x <= allStaticObjects.getWidth()) && 
-				   (target.y >= 0) && (target.y <= allStaticObjects.getHeight()));
 		
 		//setting nav and target
 		try {
@@ -98,6 +93,12 @@ public class TargetDecision {
 		 * set target so we sit next to the ball
 		 * 
 		 */
+		
+		Point ballPosition = allStaticObjects.convertToNode(worldState.getBall().getPosition().getCentre());
+		
+		//catch for when the ball is not on the pitch
+		this.ballOnPitch = ((ballPosition.x >= 0) && (ballPosition.x <= allStaticObjects.getWidth()) && 
+				   (ballPosition.y >= 0) && (ballPosition.y <= allStaticObjects.getHeight()));
 		
 		
 		if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
@@ -128,36 +129,34 @@ public class TargetDecision {
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
 					//would be great if we could go into penalty mode here
 					logger.debug("They have the ball, driving to our goal");
+					//quick hack...
+					goHome = true;
 					this.target = this.allStaticObjects.getInFrontOfOurGoal();
 					this.navPoint = this.target;
 					
 				} else if (this.weHaveBall){
 					
-					logger.debug("We have the ball, kicking");
+					logger.debug("We have the ball, kicking WOOT!");
 					this.action = PlanTypes.ActionType.KICK.ordinal();
+					this.target = this.allMovingObjects.getBallPosition();
+					this.setNavPointOpenNoOption();
 					
 				} else {
 					
 					//create open shot nav and target
-					try {
-						this.setTargetPointOpen();
-					} catch (Exception ex) { 
-						Strategy.logger.error("Could not setTargetPointOpen: " + ex.getMessage());
-					}
-					try {	
-						this.setNavPointOpen();
-					} catch (Exception ex) { 
-						Strategy.logger.error("Could not setTargetPointOpen: " + ex.getMessage());
-					}
+					this.setTargetPointOpen();
+					this.setNavPointOpen();
+					
+					double b = 3;
+					Point node1 = allStaticObjects.convertToNode(this.navPoint);
 					
 					//test to see if we can do an open shot...
-					this.openShotPossible = (this.navPoint.x > this.allStaticObjects.getPitchLeftBuffer() && 
-							this.navPoint.x < this.allStaticObjects.getPitchRightBuffer()) &&
-							(this.navPoint.y < this.allStaticObjects.getPitchBottomBuffer()&& 
-							this.navPoint.y > this.allStaticObjects.getPitchTopBuffer());
+					this.openShotPossible = (node1.x > b) && 
+					node1.x < (this.allStaticObjects.getWidth() - b) &&
+							(node1.y < (this.allStaticObjects.getHeight() - b)&& 
+									node1.y > (b));
 					
 					logger.debug("Open shot possibility is : " + this.openShotPossible);
-					logger.debug("navPoint : " + this.openShotPossible);
 					
 					//And if we can't switch the target to an angular shot
 					if(!this.openShotPossible){
@@ -165,28 +164,37 @@ public class TargetDecision {
 						this.setTargetPointAngular();
 						this.setNavPointAngular();
 						
+						Point node2 = allStaticObjects.convertToNode(this.navPoint);
+						
 						//test to see if we can do an angular shot...
-						this.angularShotPossible = (this.navPoint.x > this.allStaticObjects.getPitchLeftBuffer() && 
-								this.navPoint.x < this.allStaticObjects.getPitchRightBuffer()) &&
-								(this.navPoint.y < this.allStaticObjects.getPitchBottomBuffer()&& 
-								this.navPoint.y > this.allStaticObjects.getPitchTopBuffer());
+						this.angularShotPossible = (node2.x > b) && 
+						node2.x < (this.allStaticObjects.getWidth() - b) &&
+						(node2.y < (this.allStaticObjects.getHeight() - b)&& 
+								node2.y > (b));
+						
+						logger.debug("navPoint from angular is : " + this.allStaticObjects.convertToNode(this.navPoint).toString());
 						
 						logger.debug("Angular shot possibility is : " + this.angularShotPossible);
 						
 						//Just go to the ball
 						if(!this.angularShotPossible){
-							this.navPoint = this.allMovingObjects.getBallPosition();
-							this.target = this.allMovingObjects.getBallPosition();
 							
-							logger.debug("Just go to ball");
+							
+							this.setNavPointOpenNoOption();
+							
+							
+							logger.debug("navPoint from no option is : " + this.allStaticObjects.convertToNode(this.navPoint).toString());
+							
+							logger.debug("Fuck it, just go to ball, with our goal behind");
 							
 						}
 						
 					}
 				
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
-					this.target = this.allStaticObjects.convertToNode(this.target);
-					this.navPoint = this.allStaticObjects.convertToNode(this.navPoint);
+					this.target = this.allMovingObjects.getBallPosition();
+					
+					
 				}
 			}
 		} 
@@ -245,11 +253,11 @@ public class TargetDecision {
 		if(40 > (int)ourPosition.distance(ballPosition)){
 
 
-			double angleBetweenUsBall = allMovingObjects.angleBetween(ourPosition, ballPosition);
+			//double angleBetweenUsBall = allMovingObjects.angleBetween(ourPosition, ballPosition);
 
-			if(Math.abs(angleBetweenUsBall - ourAngle) < (Math.PI/6)){
+			//if(Math.abs(angleBetweenUsBall - ourAngle) < (Math.PI/6)){
 				weHaveBall = true;
-			}
+			//}
 		}
 		
 		logger.debug("We have the ball : " + this.weHaveBall);
@@ -263,78 +271,98 @@ public class TargetDecision {
 		Point ballPosition = allMovingObjects.getBallPosition();
 		double theirAngle = allMovingObjects.getTheirAngle();
 
-		if(40 > (int)theirPosition.distance(ballPosition)){
+		if(30 > (int)theirPosition.distance(ballPosition)){
 
 
-			double angleBetweenThemBall = allMovingObjects.angleBetween(theirPosition, ballPosition);
+			//double angleBetweenThemBall = allMovingObjects.angleBetween(theirPosition, ballPosition);
 
 			
-			if(Math.abs(angleBetweenThemBall - theirAngle) < (Math.PI/6)){
+			//if(Math.abs(angleBetweenThemBall - theirAngle) < (Math.PI/6)){
 				theyHaveBall = true;
-			}
+			//}
 		}
 
 		logger.debug("They have the ball : " + this.theyHaveBall);
 
 	}
 	
-	
-	//set navPoint 6 nodes behind the ball
-	private void setNavPointOpen(){
+	//set navPoint 7 nodes behind the ball
+	private void setNavPointOpenNoOption(){
 		
-		Point ballPosition = this.allMovingObjects.getBallPosition();
-		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
+		Point ballPosition = this.allStaticObjects.convertToNode(this.allMovingObjects.getBallPosition());
+		Point ballReturnPosition = this.allMovingObjects.getBallPosition();
+		Point centreGoal = this.allStaticObjects.getCentreOfOurGoal();
 		
-		logger.debug("ballPosition : " + ballPosition);
-		logger.debug("centreGoal : " + centreGoal);
+		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
 		
-		double angleBetweenBallAndGoal = allMovingObjects.angleBetween(ballPosition,centreGoal);
 		
-		logger.debug("angleBetweenBallAndGoal : " + angleBetweenBallAndGoal);
-		
-		int navX = ballPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*6*allStaticObjects.getNodeInPixels());
-		int navY = ballPosition.y - (int)(Math.sin(angleBetweenBallAndGoal)*6*allStaticObjects.getNodeInPixels());
+		int navX = ballReturnPosition.x + (int)(Math.cos(angleBetweenBallAndGoal)*4*allStaticObjects.getNodeInPixels());
+		int navY = ballReturnPosition.y + (int)(Math.sin(angleBetweenBallAndGoal)*4*allStaticObjects.getNodeInPixels());
 		
 		this.navPoint = new Point(navX,navY);
+		
+		
+	}
+	
+
+	
+	//set navPoint 7 nodes behind the ball
+	private void setNavPointOpen(){
+		
+		Point ballPosition = this.allStaticObjects.convertToNode(this.allMovingObjects.getBallPosition());
+		Point ballReturnPosition = this.allMovingObjects.getBallPosition();
+		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
+		
+		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
+		
+		
+		int navX = ballReturnPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*7*allStaticObjects.getNodeInPixels());
+		int navY = ballReturnPosition.y - (int)(Math.sin(angleBetweenBallAndGoal)*7*allStaticObjects.getNodeInPixels());
+		
+		this.navPoint = new Point(navX,navY);
+		
 		
 	}
 	
 	//set Target 3 nodes behind the ball (our robot width)
 	private void setTargetPointOpen(){
 		
-		Point ballPosition = this.allMovingObjects.getBallPosition();
+		Point ballPosition = this.allStaticObjects.convertToNode(this.allMovingObjects.getBallPosition());
+		Point ballReturnPosition = this.allMovingObjects.getBallPosition();
 		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
-		double angleBetweenBallAndGoal = allMovingObjects.angleBetween(ballPosition,centreGoal);
 		
-		logger.debug("ballPosition : " + ballPosition);
-		logger.debug("centreGoal : " + centreGoal);
+		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
 		
-		int navX = ballPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*3*allStaticObjects.getNodeInPixels());
-		int navY = ballPosition.y - (int)(Math.sin(angleBetweenBallAndGoal)*3*allStaticObjects.getNodeInPixels());
+		
+		int navX = ballReturnPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*3*allStaticObjects.getNodeInPixels());
+		int navY = ballReturnPosition.y - (int)(Math.sin(angleBetweenBallAndGoal)*3*allStaticObjects.getNodeInPixels());
 		
 		this.target = new Point(navX,navY);
 		
+		
 	}
 	
-	//set navPoint 6 nodes behind the ball
+	//set navPoint 7 nodes behind the ball
 	private void setNavPointAngular(){
 		
-		Point ballPosition = this.allMovingObjects.getBallPosition();
+		Point ballPosition = this.allStaticObjects.convertToNode(this.allMovingObjects.getBallPosition());
+		Point ballReturnPosition = this.allMovingObjects.getBallPosition();
 		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
-		double angleBetweenBallAndGoal = allMovingObjects.angleBetween(ballPosition,centreGoal);
 		
-		int navX = ballPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*6*allStaticObjects.getNodeInPixels());
-		int navY = ballPosition.y - (int)(Math.sin(angleBetweenBallAndGoal)*6*allStaticObjects.getNodeInPixels());
+		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
 		
-		int distanceToTop = this.allStaticObjects.getPitchTopBuffer() - navY;
-		int distanceToBottom = navY - this.allStaticObjects.getPitchBottomBuffer(); 
+		int navX = ballReturnPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*7*allStaticObjects.getNodeInPixels());
+		int navY = ballReturnPosition.y + (int)(Math.sin(angleBetweenBallAndGoal)*7*allStaticObjects.getNodeInPixels());
 		
-		if(distanceToBottom < distanceToTop){
-			navY = navY + distanceToBottom;
-		}
-		else {
-			navY = navY - distanceToTop;
-		}
+		//int distanceToTop = this.allStaticObjects.getPitchTopBuffer() - navY;
+		//int distanceToBottom = navY - this.allStaticObjects.getPitchBottomBuffer(); 
+		
+		//if(distanceToBottom < distanceToTop){
+		//	navY = navY + distanceToBottom;
+		//}
+		//else {
+		//	navY = navY - distanceToTop;
+		//}
 		
 		this.navPoint = new Point(navX,navY);
 		
@@ -343,22 +371,24 @@ public class TargetDecision {
 	//set Target 3 nodes behind the ball (our robot width)
 	private void setTargetPointAngular(){
 		
-		Point ballPosition = this.allMovingObjects.getBallPosition();
+		Point ballPosition = this.allStaticObjects.convertToNode(this.allMovingObjects.getBallPosition());
+		Point ballReturnPosition = this.allMovingObjects.getBallPosition();
 		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
-		double angleBetweenBallAndGoal = allMovingObjects.angleBetween(ballPosition,centreGoal);
 		
-		int navX = ballPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*3*allStaticObjects.getNodeInPixels());
-		int navY = ballPosition.y - (int)(Math.sin(angleBetweenBallAndGoal)*3*allStaticObjects.getNodeInPixels());
+		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
 		
-		int distanceToTop = this.allStaticObjects.getPitchTopBuffer() - navY;
-		int distanceToBottom = navY - this.allStaticObjects.getPitchBottomBuffer(); 
+		int navX = ballReturnPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*3*allStaticObjects.getNodeInPixels());
+		int navY = ballReturnPosition.y - (int)(Math.sin(angleBetweenBallAndGoal)*3*allStaticObjects.getNodeInPixels());
 		
-		if(distanceToBottom < distanceToTop){
-			navY = navY + distanceToBottom;
-		}
-		else {
-			navY = navY - distanceToTop;
-		}
+//		int distanceToTop = this.allStaticObjects.getPitchTopBuffer() - navY;
+//		int distanceToBottom = navY - this.allStaticObjects.getPitchBottomBuffer(); 
+//		
+//		if(distanceToBottom < distanceToTop){
+//			navY = navY + distanceToBottom;
+//		}
+//		else {
+//			navY = navY - distanceToTop;
+//		}
 		
 		this.navPoint = new Point(navX,navY);
 		
@@ -586,11 +616,19 @@ public class TargetDecision {
 	}
 	
 	public Point getTargetAsNode(){
-		return this.target;
+		if(goHome){
+			return this.target;
+		} else {
+			return this.allStaticObjects.convertToNode(this.target);
+		}
 	}
 	
 	public Point getNavAsNode(){
-		return this.navPoint;
+		if(goHome){
+			return this.navPoint;
+		} else {
+			return this.allStaticObjects.convertToNode(this.navPoint);
+		}
 	}
 	
 	public double getTargetCM(){

@@ -229,15 +229,15 @@ public class ControlGUI implements ChangeListener {
 		direction_right.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e){
-				Vision.worldState.setShootingDirection(1);
-				System.err.println(Integer.toString(Vision.worldState.getShootingDirection()));
+				worldState.setShootingDirection(1);
+				System.err.println(Integer.toString(worldState.getShootingDirection()));
 			}
 		});
 		direction_left.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e){
-				Vision.worldState.setShootingDirection(-1);
-				System.err.println(Integer.toString(Vision.worldState.getShootingDirection()));
+				worldState.setShootingDirection(-1);
+				System.err.println(Integer.toString(worldState.getShootingDirection()));
 			}
 		});
 		
