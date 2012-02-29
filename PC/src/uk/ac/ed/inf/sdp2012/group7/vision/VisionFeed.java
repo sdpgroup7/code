@@ -44,7 +44,6 @@ public class VisionFeed extends WindowAdapter {
     private BufferedImage frameImage;
     //private ControlGUI thresholdGUI;
     private FeedProcessor processor;
-    private JavaCVProcessor cvProcessor;
     public boolean paused = false;
     int count = 0;
     /**
