@@ -338,13 +338,32 @@ public class ControlInterface implements Observer {
 			c.kick();
 			waitABit();
 		} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
+			
+			
 		} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
+			
+			if(plan.getAction() == PlanTypes.ActionType.DRIVE.ordinal()){
+				
+				implementAStar(plan);
+				
+			} else {
+				
+				kick()
+				
+			} 
+			
 		}else if (plan.getPlanType()==PlanTypes.PlanType.HALT.ordinal()) {
+			
+			logger.info("Action is to stop");
+			c.stop();
+			logger.info("Command sent to robot: stop");
+			waitABit();
+			
 		} else {}
 
 		//Arc arcToDrive = chooseArc(plan);
 		//implimentArc(arcToDrive, plan);
-		implementAStar(plan);
+		
 		
 	}
 
