@@ -2,6 +2,8 @@ package uk.ac.ed.inf.sdp2012.group7.control;
 
 import java.awt.Point;
 
+import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
+
 public class Tools {
 
 	private Tools() {
@@ -28,13 +30,15 @@ public class Tools {
 			Point target) {
 
 		// first I want to find where the target is in relation to our robot
-		Point targetRelativePos = Tools.getRelativePos(ourCoor, target);
+/*		Point targetRelativePos = Tools.getRelativePos(ourCoor, target);
 
 		double targetFromNxt = Tools.getAngleFrom0_0(targetRelativePos);
 		
 		if (targetFromNxt < 0)
 			targetFromNxt = 2 * Math.PI + targetFromNxt;
-
+*/
+		double targetFromNxt = Math.atan2(target.y - ourCoor.y, target.x - ourCoor.x);
+		targetFromNxt = VisionTools.convertAngle(targetFromNxt);
 		// now find how much our robot has to turn to face target
 		// (turning by negative getAngle returns it to face 0 then add on ball
 		// Angle

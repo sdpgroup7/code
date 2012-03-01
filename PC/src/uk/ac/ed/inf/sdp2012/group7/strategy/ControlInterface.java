@@ -8,6 +8,7 @@ import java.util.Observer;
 
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
+import uk.ac.ed.inf.sdp2012.group7.strategy.planning.AllMovingObjects;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
 import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.control.RobotControl;
@@ -256,28 +257,33 @@ public class ControlInterface implements Observer {
 	public void implementAStar(Plan plan) {
 		synchronized (this){
 			ArrayList<Point> path = plan.getPath();
-			Point firstPoint = path.get(0);
-			Point secondPoint = path.get(1);
-		
-			double targetAngle = Math.atan2((secondPoint.y - firstPoint.y),(secondPoint.x - firstPoint.x));
-		
-			if (Math.abs(Math.toDegrees(targetAngle)) > 5) {
-				logger.debug("We need to rotate to the point");
-				c.stop();
+			path.add(plan.getTarget());
+			if(path.size() > 2) {
+				
+				Point firstPoint = path.get(0);
+				Point secondPoint = path.get(2);
+			
+				double targetAngle = Tools.getAngleToFacePoint(firstPoint,plan.getOurRobotAngle() , secondPoint);
+			
+				if (Math.abs(Math.toDegrees(targetAngle)) > 5) {
+					logger.debug("We need to rotate to the point");
+					//c.stop();
+					//waitABit(10);
+					c.rotateBy(targetAngle);
+					waitABit(10);
+				} else {
+					logger.debug("Don't need to rotate");
+				}
+			
+				double distanceToDrive = firstPoint.distance(secondPoint);
+			
+				double conversion = VisionTools.pixelsToCM(distanceToDrive * plan.getNodeInPixels());
+			
+				int distance = (int) conversion;
+				c.moveForward(distance);
 				waitABit(10);
-				c.rotateBy(targetAngle);
-				waitABit(10);
-			} else {
-				logger.debug("Don't need to rotate");
 			}
 		
-			double distanceToDrive = firstPoint.distance(secondPoint);
-		
-			double conversion = VisionTools.pixelsToCM(distanceToDrive * plan.getNodeInPixels());
-		
-			int distance = (int) conversion;
-			c.moveForward(distance);
-			waitABit(10);
 		}
 	}
 		
@@ -327,6 +333,7 @@ public class ControlInterface implements Observer {
 	public void update(Observable arg0, Object arg1) {
 		logger.debug("Got a new plan");
 		Plan plan = (Plan) arg1;
+
 		if(plan.getPlanType()==PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
 			logger.info("Taking a penalty - first turn required angle");
 			double turnAngle = angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());

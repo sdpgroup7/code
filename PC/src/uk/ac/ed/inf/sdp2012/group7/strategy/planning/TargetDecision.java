@@ -611,7 +611,7 @@ public class TargetDecision {
 	}
 	
 	public Point getTarget(){
-		return this.target;
+		return this.ballPrediction(3);
 	}
 	
 	public boolean getWeHaveTheBall(){
