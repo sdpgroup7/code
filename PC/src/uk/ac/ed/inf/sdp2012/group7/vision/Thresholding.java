@@ -35,7 +35,7 @@ public class Thresholding {
 	private Point[] blueGreenPlate4Points = new Point[]{new Point(0,0),new Point(0,0),new Point(0,0),new Point(0,0)};
 	private Point[] yellowGreenPlate4Points = new Point[]{new Point(0,0),new Point(0,0),new Point(0,0),new Point(0,0)};
 	
-	private DistortionFix fix= new DistortionFix();
+	private DistortionFix fix = new DistortionFix();
     
 	private Color c;
     /*The north, south, east and west immediate pixel's colors of c*/
@@ -124,7 +124,6 @@ public class Thresholding {
     private int numRedCentroids = 0;
     
     
-    private DistortionFix fix = new DistortionFix();
 
     
     
