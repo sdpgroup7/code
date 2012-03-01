@@ -50,23 +50,7 @@ public class Vision {
         } else {
          Vision.logger.info("Vision System Started");
         }
-        try {
-         //For some reason, if this is anywhere else it fails to load the stream.
-            backgroundImage = ImageIO.read(new File("testData/.background.png"));
-            Vision.logger.info("Loaded background image.");
-        } catch (Exception e) {
-        	Vision.logger.fatal("Failed to load backgroundImage");
-        } finally {
-        	if(backgroundImage == null){
-        		Vision.logger.fatal("Background Image is null. Program ending.");
-        		//System.exit(0);
-        	}
-        }
-        //Vision.logger.debug("Sample debug message");
-        //Vision.logger.info("Sample info message");
-        //Vision.logger.warn("Sample warn message");
-        //Vision.logger.error("Sample error message");
-        //Vision.logger.fatal("Sample fatal message");
+        
         worldState = WorldState.getInstance();
 
         /* Default to main pitch. */

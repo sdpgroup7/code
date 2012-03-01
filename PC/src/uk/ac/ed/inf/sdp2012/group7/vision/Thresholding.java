@@ -60,9 +60,6 @@ public class Thresholding {
     private int height;
     private int width;
     
-    private Point pastBlueGreyCent = new Point();
-    private Point pastYellowGreyCent = new Point();
-    
     private Point redCentroidA = new Point();
     private Point redCentroidB = new Point();
     private Point redCentroidC = new Point();
@@ -79,8 +76,6 @@ public class Thresholding {
     private Point yellowCentroidD = new Point();
     private Point yellowCentroidE = new Point();
     private Point blueGreenPlateCentroid = new Point();
-    private Point blueGreyCentroid = new Point();
-    private Point yellowGreyCentroid = new Point();
     
     private int redCountA;
     private int redCountB;
@@ -97,8 +92,6 @@ public class Thresholding {
     private int blueCountC;
     private int blueCountD;
     private int blueCountE;
-    private int blueGreyCount;
-    private int yellowGreyCount;
  //    private int robot; // 0 for Yellow, 1 for Blue(our robot)  We will use the world state
     
     private ThresholdsState ts;
@@ -130,7 +123,8 @@ public class Thresholding {
     
     private int numRedCentroids = 0;
     
-    private Color centroidColor;
+    
+    private DistortionFix fix = new DistortionFix();
 
     
     
@@ -175,10 +169,6 @@ public class Thresholding {
     		pitch = Vision.worldState.getRoom();
     		width = right-left;
     		height = top-bottom;
-    	 
-    	  	pastBlueGreyCent = Vision.worldState.getBlueGrey().getPosition().getCentre();
-    	  	pastYellowGreyCent = Vision.worldState.getYellowGrey().getPosition().getCentre();
-		 //  BufferedImage threshed = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
             
            /*
            Initialising to one to stop java dividing by 0 when it shouldn't
@@ -215,12 +205,6 @@ public class Thresholding {
            yellowCentroidC.setLocation(0,0);
            yellowCentroidD.setLocation(0,0);
            yellowCentroidE.setLocation(0,0);
-           
-           blueGreyCount = 0;
-           blueGreyCentroid.setLocation(0,0);
-           
-           yellowGreyCount = 0;
-           blueGreyCentroid.setLocation(0,0);
 
            //Vision.logger.debug("Iterating image");
 	    	for (int i = left; i < right; i++) {
@@ -231,6 +215,7 @@ public class Thresholding {
 					GB = Math.abs((c.getBlue() - c.getGreen()));
 					RG = Math.abs((c.getRed() - c.getGreen()));
 					RB = Math.abs((c.getRed() - c.getBlue()));
+					
 					if(isRed(c, GB)){ //  was inside  RB > 50 && RG > 50
 						img.setRGB(i, j, Color.red.getRGB()); //Red Ball
 						randy = Math.random();
@@ -319,28 +304,7 @@ public class Thresholding {
 						}
 
 					}
-					else if (isGrey(c) && (	Point.distance(	pastBlueGreyCent.x,
-															pastBlueGreyCent.y,
-															i,j) < 15) && (
-											Point.distance(	Vision.worldState.getBlueRobot().getPosition().getCentre().x,
-															Vision.worldState.getBlueRobot().getPosition().getCentre().y,
-															i,j) < 22.5))  {
-						
-					    img.setRGB(i,j, Color.orange.getRGB());
-					    blueGreyCount++;
-					    blueGreyCentroid.setLocation(blueGreyCentroid.getX() + i, blueGreyCentroid.getY() + j);
-					} else if (isGrey(c) && (	Point.distance(	pastYellowGreyCent.x,
-																pastYellowGreyCent.y,
-																i,j) < 15) && (
-												Point.distance(	Vision.worldState.getYellowRobot().getPosition().getCentre().x,
-																Vision.worldState.getYellowRobot().getPosition().getCentre().y,
-																i,j) < 22.5)) {
-						
-					    img.setRGB(i,j, Color.pink.getRGB());
-					    yellowGreyCount++;
-					    yellowGreyCentroid.setLocation(yellowGreyCentroid.getX() + i, yellowGreyCentroid.getY() + j);
-
-					}
+					
 				}
 			}
 			
@@ -359,11 +323,7 @@ public class Thresholding {
 			if (yellowCountC == 0) yellowCountC++;
 			if (yellowCountD == 0) yellowCountD++;
 			if (yellowCountE == 0) yellowCountE++;
-			if (blueGreyCount == 0) blueGreyCount++;
-			if (yellowGreyCount == 0) yellowGreyCount++;
 			
-			
-	    	//Vision.logger.debug("End Iteration");
 			
 			//TODO: Run these points through the parralax fix
 			totalRedX = 0;
@@ -398,9 +358,6 @@ public class Thresholding {
 			blueCentroidC.setLocation(blueCentroidC.getX()/blueCountC, blueCentroidC.getY()/blueCountC);
 			blueCentroidD.setLocation(blueCentroidD.getX()/blueCountD, blueCentroidD.getY()/blueCountD);
 			blueCentroidE.setLocation(blueCentroidE.getX()/blueCountE, blueCentroidE.getY()/blueCountE);
-			
-			blueGreyCentroid.setLocation(blueGreyCentroid.getX()/blueGreyCount, blueGreyCentroid.getY()/blueGreyCount);
-			yellowGreyCentroid.setLocation(yellowGreyCentroid.getX()/yellowGreyCount, yellowGreyCentroid.getY()/yellowGreyCount);
 			
 			c = new Color(img.getRGB((int)redCentroidA.getX(), (int)redCentroidA.getY()));
 			if (isRed(c, GB)) {
@@ -518,49 +475,56 @@ public class Thresholding {
 			
 			blueGreenPlate4Points = plate.getCorners(blueGreenPlate);
 			yellowGreenPlate4Points = plate.getCorners(yellowGreenPlate);
+			
 			Vision.worldState.getBlueRobot().getPosition().setCorners(blueGreenPlate4Points);
 			Vision.worldState.getYellowRobot().getPosition().setCorners(yellowGreenPlate4Points);
 
-			/*blueGreenPlate4Points = findTheFourPoints(blueGreenPlate);
-			yellowGreenPlate4Points = findTheFourPoints(yellowGreenPlate);*/
 			
 			if ((redX != 0) && (redY != 0)) {
-			    Vision.worldState.setBallPosition(redX,redY);
+			    if (Vision.worldState.getBarrelFix()){
+			        Vision.worldState.setBallPosition(redX,redY);
+			    }else{
+			        Point fixBall = new Point(redX,redY);
+			        Vision.worldState.setBallPosition(fix.barrelCorrected(fixBall));
+			    }
 			}
 			
 			if ((blueX != 0) && (blueY != 0)) {
-			    Vision.worldState.setBlueRobotPosition(blueX,blueY);
+			    if (Vision.worldState.getBarrelFix()){
+			        Vision.worldState.setBlueRobotPosition(blueX,blueY);
+			    }else{
+			        Point fixBlue = new Point(blueX,blueY);
+			        Vision.worldState.setBlueRobotPosition(fix.barrelCorrected(fixBlue));
+			    }
 			}
 			
 			if ((yellowX != 0) && (yellowY != 0)) {
-			    Vision.worldState.setYellowRobotPosition(yellowX,yellowY);
+			    if (Vision.worldState.getBarrelFix()){
+			        Vision.worldState.setYellowRobotPosition(yellowX,yellowY);
+			    }else{
+			        Point fixYell = new Point(yellowX,yellowY);
+			        Vision.worldState.setYellowRobotPosition(fix.barrelCorrected(fixYell));
+			    }
 			}
-
-			if(	Point.distance(	Vision.worldState.getBlueRobot().getPosition().getCentre().x,
-								Vision.worldState.getBlueRobot().getPosition().getCentre().y,
-								blueGreyCentroid.x,
-								blueGreyCentroid.y) < 20){
-				Vision.worldState.setBlueGreyPosition((int)blueGreyCentroid.getX() ,(int)blueGreyCentroid.getY());
-			}
-			if(	Point.distance(	Vision.worldState.getYellowRobot().getPosition().getCentre().x,
-								Vision.worldState.getYellowRobot().getPosition().getCentre().y,
-								yellowGreyCentroid.x,
-								yellowGreyCentroid.y) < 20 ){
-				Vision.worldState.setYellowGreyPosition((int)yellowGreyCentroid.getX(), (int)yellowGreyCentroid.getY());
-			}
-			
-			
 			
 			for(Point p : bluePixels){
 				
 				if( plate.isInRectangle(p,blueGreenPlate4Points)  ){
-					newBluePixels.add(p);
+				    if (Vision.worldState.getBarrelFix()){
+					    newBluePixels.add(p);
+					}else{
+					    newBluePixels.add(fix.barrelCorrected(p));
+					}
 				}
 			}
 			for(Point p : yellowPixels){
 				
 				if( plate.isInRectangle(p,yellowGreenPlate4Points) ){
-					newYellowPixels.add(p);
+				    if (Vision.worldState.getBarrelFix()){
+					    newYellowPixels.add(p);
+					}else{
+					    newYellowPixels.add(fix.barrelCorrected(p));
+					}
 				}
 			}
 			
@@ -569,14 +533,9 @@ public class Thresholding {
 			
 			//The above is supposed to filter the pixels and pick up only the T pixels, but the orientation then is always with the (0,0) point 
 			
-			//System.err.println(newYellowPixels.size());
 			
 			blueGreenPlate.clear();
 			yellowGreenPlate.clear();
-			
-			//Vision.worldState.setBluePixels(bluePixels);//This must be removed to get the upper thing running
-			//Vision.worldState.setYellowPixels(yellowPixels); //This must be removed to get the upper thing running
-			
 			
     	}
     		
@@ -642,27 +601,7 @@ public class Thresholding {
         }
         
     }
-    /**
-     * 
-     * @param listOfPoints
-     * @return centroidPoint
-     * Given an array of points return its centorid
-     */
-    public Point findCentroid(ArrayList<Point> listOfPoints){
-    	int sumX = 0;
-    	int sumY = 0;
-    	for (int i = 0; i < listOfPoints.size(); i++) {
-			sumX += listOfPoints.get(i).x;
-			sumY += listOfPoints.get(i).y;
-		}
-    	
-    	return new Point((int) (sumX/(double)listOfPoints.size() ), (int) (sumY/(double)listOfPoints.size()));
-    }
 
-    public Point getBlueGreenPlateCentorid(){ 
-    	return blueGreenPlateCentroid;
-    }
-    
     public boolean isBlue(Color c){
         return ( (c.getRed() <= blueRobotThresh[pitch][0]) && (c.getBlue() > blueRobotThresh[pitch][2])   && (c.getGreen() <= blueRobotThresh[pitch][1]));
     }
@@ -674,102 +613,12 @@ public class Thresholding {
     public boolean isGreen(Color c, int GB, int RG){
         return ( GB > 50 && RG > 50 && c.getGreen() > greenPlatesThresh[pitch][0]);
     }
-    
-    public boolean isGrey(Color c){
-        return ((c.getRed() >= ts.getGrey_r_low()) && (c.getRed() <= ts.getGrey_r_high()) && (c.getGreen() >= ts.getGrey_g_low()) && (c.getGreen() <= ts.getGrey_g_high()) && (c.getBlue() >= ts.getGrey_b_low()) && (c.getBlue() <= ts.getGrey_b_high()));
-    }
-    /*public boolean isGrey(Color c, int RG){
-        return (RG < 20 && c.getBlue() < 50 && c.getGreen() > 80 && c.getGreen() < 110 && c.getRed() > 80 && c.getRed() < 110);
-    }*/
-    
-    
+
     public boolean isYellow(Color c){
         return ((c.getRed() >= ts.getYellow_r_low()) && (c.getRed() <= ts.getYellow_r_high()) && (c.getGreen() >= ts.getYellow_g_low()) && (c.getGreen() <= ts.getYellow_g_high()) && (c.getBlue() >= ts.getYellow_b_low()) && (c.getBlue() <= ts.getYellow_b_high()));
     }
-    
-    public ArrayList<Integer> getBlueX(){
-        return blueRobotX;
-    }
-    
-    public ArrayList<Integer> getBlueY(){
-        return blueRobotY;
-    }
-    
-    public ArrayList<Integer> getYellowX(){
-        return yellowRobotX;
-    }
-    
-    public ArrayList<Integer> getYellowY(){
-        return yellowRobotY;
-    }
-	
-	
-	//IS THIS FOR GREEN PLATE BOUNDING?
-    public Point[] findTheFourPoints(ArrayList<Point> points){
-    	Point[] ans = new Point[]{new Point(0,0),new Point(0,0),new Point(0,0),new Point(0,0)}; 
-    	/*
-    	 * ans[0] = xminP,
-    	 * ans[1] = xmaxP,
-    	 * ans[2] = yminP,
-    	 * ans[3] = ymaxP. 
-    	 */
-    	int minX = Integer.MAX_VALUE;
-    	int maxX = Integer.MIN_VALUE;
-    	int minY = Integer.MAX_VALUE;
-    	int maxY = Integer.MIN_VALUE;
-    	
-    	for (int i = 0; i < points.size(); i++) {
-			if(points.get(i).x < minX){
-				ans[0] = points.get(i);
-				minX = points.get(i).x;
-			}
-			if(points.get(i).x >= maxX){
-				ans[1] = points.get(i);
-				maxX = points.get(i).x;
-			}
-			if(points.get(i).y < minY){
-				ans[2] = points.get(i);
-				minY = points.get(i).y;
-			}
-			if(points.get(i).y >= maxY){
-				ans[3] = points.get(i);
-				maxY = points.get(i).y;
-			}
-		}
-    	/*for (int i = 0; i < ans.length; i++) {
-			System.err.println(i+" "+ans[i]);
-		}*/
-    	
-    	return ans;
-    }
-    
-    //IS THIS FOR THE FURTHEST AWAY POINT?
-	public Point findKeyPoint(Point[] points, Point cent){
-		
-		Point ans = new Point();
-		double firstMin = Integer.MAX_VALUE;
-		double secondMin = Integer.MAX_VALUE;
-		Point firstMinP = new Point(0,0);
-		Point secondMinP = new Point(0,0);
 
-		for (int i = 0; i < points.length; i++) {
-			if(Point.distance(points[i].x,points[i].y, cent.x, cent.y) < firstMin){
-				firstMinP = points[i];
-				firstMin = Point.distance(points[i].x,points[i].y, cent.x, cent.y);
-			}
-		}
-		for (int i = 0; i < points.length; i++) {
-			if( Point.distance(points[i].x,points[i].y, cent.x, cent.y) > 
-				Point.distance(firstMinP.x,firstMinP.y, cent.x, cent.y) && (secondMin > firstMin)){
-				secondMinP = points[i];
-				secondMin =  Point.distance(points[i].x,points[i].y, cent.x, cent.y);
-			}
-		}
-		//System.err.println("First point"+ firstMinP.x+","+firstMinP.y);
-		//System.err.println("Second point"+ secondMinP.x+","+secondMinP.y);
-		ans.setLocation( (firstMinP.x + secondMinP.x)/2, (firstMinP.y + secondMinP.y)/2);
-		return ans;
-	}
+	
 	public Point[] getBlueGreenPlate4Points(){
 		return blueGreenPlate4Points;
 	}

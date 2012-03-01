@@ -44,7 +44,6 @@ public class VisionFeed extends WindowAdapter {
     private BufferedImage frameImage;
     //private ControlGUI thresholdGUI;
     private FeedProcessor processor;
-    private JavaCVProcessor cvProcessor;
     public boolean paused = false;
     int count = 0;
     /**
@@ -69,13 +68,11 @@ public class VisionFeed extends WindowAdapter {
     	initGUI(); //This line and the next line MUST be this way round. 
     	initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         
-        //this.thresholdGUI = thresholdsGUI;
         ThresholdsState thresholdsState = new ThresholdsState();
         InitialLocation il = new InitialLocation(this, this.windowFrame, thresholdsState);
         processor = new FeedProcessor(il, height, width, this, thresholdsState);
         Vision.logger.info("VisionFeed Initialised");
         System.out.println("Please select what colour we are using the GUI.");
-        //il.getPoints();
         il.getColors();
         Vision.logger.info("Vision System Calibrated");
         Vision.worldState.setClickingDone(true);
@@ -141,15 +138,10 @@ public class VisionFeed extends WindowAdapter {
                 	frameImage = frame.getBufferedImage();
                 }
                 frame.recycle();
-                //processor.processAndUpdateImage(frameImage, before, label, labelThresh);
                processor.processAndUpdateImage(frameImage, before, label);
                 
-               // cvProcessor.cvProcess(frameImage, label);
                 
                 count++;
-                if (count == 15){
-                	writeImage(frameImage, "backGround");
-                }
             }
         });
 
@@ -172,16 +164,6 @@ public class VisionFeed extends WindowAdapter {
 
     }
     
-    
-    //can output the buffered image to disk, can normalise if necessary
-    public static void writeImage(BufferedImage image, String fn){
-        try {
-            File outputFile = new File(fn);
-            ImageIO.write(image, "png", outputFile);
-        } catch (Exception e) {
-        	Vision.logger.error("Failed to write image: " + e.getMessage());
-        }
-    }
 
     /**
      * Catches the window closing event, so that we can free up resources
