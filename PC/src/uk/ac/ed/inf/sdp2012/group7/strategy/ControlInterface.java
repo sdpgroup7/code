@@ -83,9 +83,15 @@ public class ControlInterface implements Observer {
 		
 		v = convertAngle(v); //TODO: Double check this. Should it be plus or minus?
 		
+        //Attempts to find a goal point. Searches along the path given by plan
+        //and finds a point which is exactly a lookahead distance (euclidian)
+        //away from the robot. This point can be a point on a line between two
+        //of the path way point.
 		try {
 			h = findGoalPoint(path, p, lookahead);
 		} catch(Exception e) {
+            //Catches if the path is not long enough. Will just take one of the
+            //points below the lookahead distance
 			logger.debug(e);
 			if(path.size() > 1){
 				h = new Point2D(path.get(path.size() -1));
@@ -98,15 +104,25 @@ public class ControlInterface implements Observer {
 		
 		double alpha = Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))	- v;
 		logger.debug(String.format("Alpha: %f", alpha));
+        //alpha is the angle from a line through the axis of the robot to the
+        //goal point
 
 		double d = h.getDistance(p);
 		logger.debug(String.format("d: %f",d));
+        //This is the distance from the robot to the goal point. Should always
+        //be te lookahead distance unless the path was too short.
 	
 		double xhc = d * Math.cos(alpha);
 		logger.debug(String.format("xhc: %f",xhc));
+        //This is the x coordinate in refrence to the viechales corrdinate
+        //system. Ie the y axis is projected in the direction the robot is
+        //facing and the x axis is orthognal to this and passes through the
+        //axel system.
 
 		double R = Math.abs((Math.pow(d, 2) / (2 * xhc)));
 		logger.debug(String.format("R: %f",R));
+        //THis is the radius of the circle the robot has to drive on. An arc is
+        //a circle in essance.
 
 		boolean dir;
 
