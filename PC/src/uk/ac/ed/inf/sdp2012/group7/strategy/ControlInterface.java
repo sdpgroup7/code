@@ -81,7 +81,7 @@ public class ControlInterface implements Observer {
 		Point2D h = null;
 
 		
-		v = convertAngle(v);
+		v = convertAngle(v); //TODO: Double check this. Should it be plus or minus?
 		
 		try {
 			h = findGoalPoint(path, p, lookahead);
