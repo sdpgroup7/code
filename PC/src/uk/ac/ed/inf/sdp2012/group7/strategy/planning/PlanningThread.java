@@ -43,6 +43,18 @@ public class PlanningThread extends Observable implements Runnable{
 
 	@Override
 	public void run() {
+		
+		while(!worldStateIsPopulated){
+			Strategy.logger.info(worldState.getLastUpdateTime());
+			setWorldStateIsPopulated();
+		}
+		
+		Plan temp_plan = new Plan(this.allStaticObjects, this.allMovingObjects);
+		setChanged();
+		notifyObservers(temp_plan);
+		logger.debug("Plan type: " + this.planType);
+		
+		/*
 		boolean keepPlanning = true;
 		while(keepPlanning || this.allStaticObjects.getRunFlag()){
 			if(worldStateIsPopulated){
@@ -75,7 +87,7 @@ public class PlanningThread extends Observable implements Runnable{
 				}
 			}
 			
-		}
+		}*/
 		
 	}
 	

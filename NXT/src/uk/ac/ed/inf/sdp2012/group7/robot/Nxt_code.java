@@ -64,9 +64,9 @@ public class Nxt_code implements Runnable {
 		
 		// set initial pilot variables to produce maximum speed
 		//pilot.regulateSpeed(true);
-		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()*0.7);
-		pilot.setRotateSpeed(pilot.getMaxRotateSpeed()*0.7);
-		pilot.setAcceleration(1000);
+		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()*0.45);
+		pilot.setRotateSpeed(pilot.getMaxRotateSpeed()*0.45);
+		pilot.setAcceleration(500);
 		
 		while (true) {
 			try {
