@@ -65,7 +65,29 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     	Vision.logger.info("Saving image.");
     	writeImage(image,filename + ".png");
     	Vision.logger.info("Image saved.");
-
+    	
+    	getClickColor("Click yellow centroid");
+    	points.add(coords);
+    	getClickColor("Click bottom of yellow T");
+    	points.add(coords);
+    	
+    	getClickColor("Click blue centroid");
+    	points.add(coords);
+    	getClickColor("Click bottom of blue T");
+    	points.add(coords);
+    	
+    	getClickColor("Click ball centroid");
+    	points.add(coords);
+    	
+    	//for checking that pixelstoCM and cmtoPixels is working, and that o
+    	getClickColor("Click left goal line");
+    	points.add(coords);
+    	
+    	getClickColor("Click right goal line");
+    	points.add(coords);
+    	
+    	
+    	/*
     	points.add(Vision.worldState.getBall().getPosition().getCentre());
     	Point[] corners = Vision.worldState.getBlueRobot().getPosition().getCorners();
     	points.add(corners[0]);
@@ -77,6 +99,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     	points.add(corners[1]);
     	points.add(corners[2]);
     	points.add(corners[3]);
+    	*/
         visionFeed.paused = false;
         Vision.logger.info("Vision System unpaused.");
     }

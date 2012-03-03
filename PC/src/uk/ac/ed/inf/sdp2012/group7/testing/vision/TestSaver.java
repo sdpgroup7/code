@@ -40,28 +40,30 @@ public class TestSaver {
         	root.setAttribute("location", filename + ".png");
         	doc.appendChild(root);
         	Element childElement = doc.createElement("blue");
-        	childElement.setAttribute("orientation","" + blueO );
+        	Element centroid = doc.createElement("centroid");
+        	centroid.setAttribute("x", Integer.toString(pts[2].x));
+        	centroid.setAttribute("y", Integer.toString(pts[2].y));
+        	childElement.appendChild(centroid);
+        	Element blueBottom = doc.createElement("blueBottom");
+        	blueBottom.setAttribute("x", Integer.toString(pts[3].x));
+        	blueBottom.setAttribute("y", Integer.toString(pts[3].y));
+        	childElement.appendChild(blueBottom);
         	root.appendChild(childElement);
-        	for(int i = 1;i<5;i++){
-        		Element corner = doc.createElement("corner");
-        		corner.setAttribute("vertex", Integer.toString(i-1));
-        		corner.setAttribute("x", Integer.toString(pts[i].x));
-        		corner.setAttribute("y", Integer.toString(pts[i].y));
-        		childElement.appendChild(corner);
-        	}
+        	
         	childElement = doc.createElement("yellow");
-        	childElement.setAttribute("orientation","" + yellowO);
+        	Element centroidY = doc.createElement("centroid");
+        	centroidY.setAttribute("x", Integer.toString(pts[0].x));
+        	centroidY.setAttribute("y", Integer.toString(pts[0].y));
+        	childElement.appendChild(centroid);
+        	Element yBottom = doc.createElement("yellowBottom");
+        	yBottom.setAttribute("x", Integer.toString(pts[1].x));
+        	yBottom.setAttribute("y", Integer.toString(pts[1].y));
+        	childElement.appendChild(yBottom);
         	root.appendChild(childElement);
-        	for(int i = 5;i<9;i++){
-        		Element corner = doc.createElement("corner");
-        		corner.setAttribute("vertex", Integer.toString(i-5));
-        		corner.setAttribute("x", Integer.toString(pts[i].x));
-        		corner.setAttribute("y", Integer.toString(pts[i].y));
-        		childElement.appendChild(corner);
-        	}
+        	
         	childElement = doc.createElement("ball");
-        	childElement.setAttribute("x",Integer.toString(pts[0].x));
-        	childElement.setAttribute("y",Integer.toString(pts[0].y));
+        	childElement.setAttribute("x",Integer.toString(pts[4].x));
+        	childElement.setAttribute("y",Integer.toString(pts[4].y));
         	root.appendChild(childElement);
         	TransformerFactory tranFactory = TransformerFactory.newInstance(); 
         	Transformer aTransformer = tranFactory.newTransformer(); 
