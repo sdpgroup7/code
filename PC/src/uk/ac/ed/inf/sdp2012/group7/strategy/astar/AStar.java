@@ -30,7 +30,7 @@ public class AStar {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				if ((j!=0) || (i!=0)) {
-					Node neighbour = map.getNode(current.getX()+i, current.getY()+j);
+					Node neighbour = map.getNode((int)current.getX()+i, (int)current.getY()+j);
 					if (neighbour != null) {
 						result.add(neighbour);
 					}
@@ -68,7 +68,7 @@ public class AStar {
 			// check if our current Node location is the goal Node. If it is, we are done.
 			if(current.getX() == map.getGoalLocationX() && current.getY() == map.getGoalLocationY()) {
 				Path tempPath = reconstructPath(current);
-				//printPath();
+				printPath();
 				return tempPath;
 			}
 			
@@ -104,12 +104,12 @@ public class AStar {
 					if (neighbourIsBetter) {
 						neighbour.setPreviousNode(current);
 						neighbour.setDistanceFromStart(neighbourDistanceFromStart);
-						neighbour.setHeuristicDistanceFromGoal(heuristic.getEstimatedDistanceToGoal(neighbour.getX(), neighbour.getY(), map.getGoalLocationX(), map.getGoalLocationY()));
+						neighbour.setHeuristicDistanceFromGoal(heuristic.getEstimatedDistanceToGoal((int)neighbour.getX(), (int)neighbour.getY(), map.getGoalLocationX(), map.getGoalLocationY()));
 					}
 				}
 				
 			}
-			
+	
 		}
 		return new Path();
 	}
@@ -123,9 +123,9 @@ public class AStar {
 				node = map.getNode(x, y);
 				boolean pathtest = false;
 				try{
-					pathtest = shortestPath.contains(node.getX(), node.getY());
+					pathtest = shortestPath.contains((int)node.getX(),(int) node.getY());
 				} catch (Exception ex){
-					Strategy.logger.error("Shortest path error: (X,Y) = (" + Integer.toString(node.getX()) + "," + Integer.toString(node.getY()) + ")");
+					Strategy.logger.error("Shortest path error: (X,Y) = (" + Integer.toString((int)node.getX()) + "," + Integer.toString((int)node.getY()) + ")");
 				}
 				if (node.isObstacle) {
 					System.out.print("O");

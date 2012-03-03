@@ -11,13 +11,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
-import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
+import com.googlecode.javacv.cpp.ARToolKitPlus.Logger;
+
+import uk.ac.ed.inf.sdp2012.group7.strategy.StrategyOld;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
 import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
@@ -40,7 +40,7 @@ public class ControlGUI implements ChangeListener {
 	 * shooting direction, ball location, etc. */
 	private WorldState worldState = WorldState.getInstance();
 	
-	private final Strategy strat;
+	private final StrategyOld strat;
 	
 	/* The main frame holding the Control GUI. */
 	private JFrame frame;
@@ -88,7 +88,7 @@ public class ControlGUI implements ChangeListener {
 	 * @param worldState		A WorldState object to update the pitch choice, shooting
 	 * 							direction, etc.
 	 */
-	public ControlGUI(Strategy s) {
+	public ControlGUI(StrategyOld s) {
 		
 		/* All three state objects must not be null. */
 		assert (thresholdsState != null);
@@ -255,7 +255,7 @@ public class ControlGUI implements ChangeListener {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        strat.startPlanningThread(PlanTypes.PlanType.FREE_PLAY.ordinal());
+		        strat.mileStone3NavigateOn();
 		    }
 		});
 		
@@ -267,7 +267,7 @@ public class ControlGUI implements ChangeListener {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        strat.stopPlanningThread();
+		    	strat.mileStone3NavigateOff();
 		    }
 		});
 		
@@ -334,7 +334,8 @@ public class ControlGUI implements ChangeListener {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        //call to strategy letting them know that bot is taking a penalty
-		        strat.startPlanningThread(PlanTypes.PlanType.PENALTY_OFFENCE.ordinal());
+		        //strat.startPlanningThread(PlanTypes.PlanType.PENALTY_OFFENCE.ordinal());
+		    	Vision.logger.info("Penalty not in Milestone3.");
 		    }
 		});
 		
@@ -342,7 +343,8 @@ public class ControlGUI implements ChangeListener {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		    	strat.startPlanningThread(PlanTypes.PlanType.PENALTY_DEFENCE.ordinal());
+		    	//strat.startPlanningThread(PlanTypes.PlanType.PENALTY_DEFENCE.ordinal());
+		    	Vision.logger.info("Penalty not in Milestone3.");
 		    }
 		});
 		
@@ -363,7 +365,7 @@ public class ControlGUI implements ChangeListener {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        //call to control saying kick
-		        strat.getControlInterface().kick();
+		        strat.mileStone1(true);
 		    }
 		});
 		
@@ -372,7 +374,7 @@ public class ControlGUI implements ChangeListener {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        //call to control saying to drive
-		    	strat.getControlInterface().drive();
+		    	strat.mileStone1(false);
 		    }
 		});
 		

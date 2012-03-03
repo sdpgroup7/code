@@ -2,7 +2,9 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 
 import java.awt.Point;
 
-public class Node implements Comparable<Node> {
+public class Node extends Point implements Comparable<Node> {
+	
+	private static final long serialVersionUID = -1084579547399653262L;
 	
 	// properties of this node
 	AreaMap map;
@@ -10,19 +12,16 @@ public class Node implements Comparable<Node> {
 	float distanceFromStart;
 	float heuristicDistanceFromGoal;
 	Node previousNode;
-	int x;
-	int y;
 	boolean isObstacle;
 	boolean isStart;
 	private boolean isGoal;
 	
-	Node(int x, int y) {
-		this(x,y,false,Float.MAX_VALUE,false,false,false);
+	public Node(int x, int y) {
+		this(x,y,false,java.lang.Float.MAX_VALUE,false,false,false);
 	}
 	
-	Node (int x, int y, boolean visited, float distanceFromStart, boolean isObstical, boolean isStart, boolean isGoal) {
-		this.x = x;
-		this.y = y;
+	public Node (int x, int y, boolean visited, float distanceFromStart, boolean isObstical, boolean isStart, boolean isGoal) {
+		super(x, y);
 		this.visited = visited;
 		this.distanceFromStart = distanceFromStart;
 		this.isObstacle = isObstical;
@@ -63,22 +62,6 @@ public class Node implements Comparable<Node> {
 		this.heuristicDistanceFromGoal = heuristicDistanceFromGoal;
 	}
 
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-	
 	public boolean isObstical() {
 		return isObstacle;
 	}
@@ -102,18 +85,6 @@ public class Node implements Comparable<Node> {
 	public void setGoal(boolean isGoal) {
 		this.isGoal = isGoal;
 	}
-
-	
-	// converts a single node into a point
-	public Point nodeToPoint(Node node) {
-		Point point = new Point(node.getX(),node.getY());
-		return point;
-	}
-	
-	public Point nodeToPoint(){
-		return nodeToPoint(this);
-	}
-
 
 	public boolean equals(Node node) {
 		return (node.x == x) && (node.y == y);

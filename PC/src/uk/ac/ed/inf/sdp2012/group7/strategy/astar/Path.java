@@ -1,6 +1,5 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 
-import java.awt.Point;
 import java.util.ArrayList;
 
 public class Path {
@@ -30,7 +29,7 @@ public class Path {
 	 * @return The x coordinate at the waypoint.
 	 */
 	public int getX(int index) {
-		return getWayPoint(index).getX();
+		return (int)getWayPoint(index).x;
 	}
 
 	/**
@@ -40,7 +39,7 @@ public class Path {
 	 * @return The y coordinate at the waypoint.
 	 */
 	public int getY(int index) {
-		return getWayPoint(index).getY();
+		return (int)getWayPoint(index).y;
 	}
 
 	/**
@@ -72,26 +71,15 @@ public class Path {
 	 */
 	public boolean contains(int x, int y) {
 		for(Node node : waypoints) {
-			if (node.getX() == x && node.getY() == y)
+			if (node.x == x && node.y == y)
 				return true;
 		}
 		return false;
 	}
 	
-	// only needed if path is to be given as an arraylist of points
-	// that's useful then! 
-	public ArrayList<Point> pathToPoints() {
-		ArrayList<Point> points = new ArrayList<Point>();
-		for (Node node : waypoints) {
-			Point point = node.nodeToPoint(node);
-			points.add(point);
-		}
-		return points;
-	} 
-	
 	public void printWaypoints() {
 		for(Node node : waypoints) {
-			System.out.println("("+node.getX()+","+node.getY()+") ");
+			System.out.println("("+node.x+","+node.y+") ");
 		}
 	}
 

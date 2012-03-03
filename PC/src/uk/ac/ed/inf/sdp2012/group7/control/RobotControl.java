@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.apache.log4j.Logger;
+
 import uk.ac.ed.inf.sdp2012.group7.MainRunner;
+import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 
 import lejos.pc.comm.NXTComm;
 import lejos.pc.comm.NXTCommFactory;
@@ -16,6 +19,8 @@ import lejos.pc.comm.NXTInfo;
  */
 public class RobotControl implements ConstantsReuse {
 
+	
+	public static final Logger logger = Logger.getLogger(RobotControl.class);
 	private CommunicationInterface comms;
 	private NXTComm nxtComm;
 	private NXTInfo info = new NXTInfo(NXTCommFactory.BLUETOOTH, ROBOT_NAME,
@@ -171,6 +176,7 @@ public class RobotControl implements ConstantsReuse {
 	 */
 	public void moveForward(int distance) {
 		moving = true;
+		logger.debug("Move: " + distance);
 		int command = OpCodes.FORWARDS_WITH_DISTANCE.ordinal() | (distance << 8);
 		addCommand(command);
 	}
@@ -211,7 +217,7 @@ public class RobotControl implements ConstantsReuse {
 	 * Commands the robot to kick
 	 */
 	public void kick() {
-		System.out.println("kick");
+		logger.debug("kick");
 		addCommand(OpCodes.KICK.ordinal());
 	}
 
@@ -220,7 +226,7 @@ public class RobotControl implements ConstantsReuse {
 	 */
 	public void rotateBy(double radians) {
 
-		System.out.println("Rotate by " + radians + ":  "
+		logger.debug("Rotate by " + radians + ":  "
 				+ Math.toDegrees(radians));
 
 		if (radians < 0)
