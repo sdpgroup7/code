@@ -46,6 +46,7 @@ public class VisionFeed extends WindowAdapter {
     private FeedProcessor processor;
     public boolean paused = false;
     int count = 0;
+    private DistortionFix fix = new DistortionFix();
     /**
      * Default constructor.
      *
@@ -86,7 +87,11 @@ public class VisionFeed extends WindowAdapter {
         	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         	Date date = new Date();
         	String filename = "testData/" + dateFormat.format(date);
-        	il.getTestData(frameImage,filename);
+        	il.getTestData(fix.removeBarrelDistortion(frameImage, Vision.worldState.getPitch().getLeftBuffer(),
+	                Vision.worldState.getPitch().getRightBuffer(),
+	                Vision.worldState.getPitch().getTopBuffer(),
+	                Vision.worldState.getPitch().getBottomBuffer()
+	                ),filename);
         	TestSaver ts = new TestSaver();
         	ts.writePoints(il.getTestPoints(), frameImage, filename);
         	Vision.logger.info("Vision testing complete.");

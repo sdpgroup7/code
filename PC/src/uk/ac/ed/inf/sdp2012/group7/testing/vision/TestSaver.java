@@ -54,7 +54,7 @@ public class TestSaver {
         	Element centroidY = doc.createElement("centroid");
         	centroidY.setAttribute("x", Integer.toString(pts[0].x));
         	centroidY.setAttribute("y", Integer.toString(pts[0].y));
-        	childElement.appendChild(centroid);
+        	childElement.appendChild(centroidY);
         	Element yBottom = doc.createElement("yellowBottom");
         	yBottom.setAttribute("x", Integer.toString(pts[1].x));
         	yBottom.setAttribute("y", Integer.toString(pts[1].y));
@@ -65,6 +65,15 @@ public class TestSaver {
         	childElement.setAttribute("x",Integer.toString(pts[4].x));
         	childElement.setAttribute("y",Integer.toString(pts[4].y));
         	root.appendChild(childElement);
+        	
+        	childElement = doc.createElement("leftGoal");
+        	childElement.setAttribute("x", Integer.toString(pts[5].x));
+        	root.appendChild(childElement);
+        	
+        	childElement = doc.createElement("rightGoal");
+        	childElement.setAttribute("x", Integer.toString(pts[6].x));
+        	root.appendChild(childElement);
+        	
         	TransformerFactory tranFactory = TransformerFactory.newInstance(); 
         	Transformer aTransformer = tranFactory.newTransformer(); 
 

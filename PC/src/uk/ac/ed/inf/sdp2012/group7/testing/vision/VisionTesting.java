@@ -35,7 +35,14 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     public static double blueO = 0;
     public static double blueOrientation = 0;
     public static double yellowOrientation = 0;
+    
     public static Point ball;
+    public static Point blueCentroid;
+    public static Point yellowCentroid;
+    public static Point blueBottom;
+    public static Point yellowBottom;
+    public static int left;
+    public static int right;
     
     public void mouseExited(MouseEvent e){}
     public void mouseEntered(MouseEvent e){}
@@ -235,44 +242,38 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
             Node blue = data.item(0);
             Node yellow = data.item(1);
             Element ballE = (Element)data.item(2);
-            
+            Element goalLeft = (Element)data.item(3);
+            Element goalRight = (Element)data.item(4);
             
             ball = new Point(	Integer.parseInt(ballE.getAttribute("x")),
             						Integer.parseInt(ballE.getAttribute("y")));
             
-            Element blueE = (Element)blue;
-            Element yellowE = (Element)yellow;
+            left = Integer.parseInt(goalLeft.getAttribute("x"));
+            right = Integer.parseInt(goalRight.getAttribute("x"));
             
-            blueO = Double.parseDouble(blueE.getAttribute("orientation"));
-            yellowO = Double.parseDouble(yellowE.getAttribute("orientation"));
+            Node blueCent = blue.getFirstChild();
+            Node blueBum = blue.getLastChild();
             
-            for(int i = 0;i<blue.getChildNodes().getLength();i++){
-            	Point p;
-            	Node corner = blue.getChildNodes().item(i);
-            	Element elementCorner = (Element)corner;
-            	p = new Point(	Integer.parseInt(elementCorner.getAttribute("x")),
-            					Integer.parseInt(elementCorner.getAttribute("y")));
-            	blueC.add(p);
-            }
-            for(int i = 0;i<yellow.getChildNodes().getLength();i++){
-            	Point p;
-            	Node corner = yellow.getChildNodes().item(i);
-            	Element elementCorner = (Element)corner;
-            	p = new Point(	Integer.parseInt(elementCorner.getAttribute("x")),
-            					Integer.parseInt(elementCorner.getAttribute("y")));
-            	yellowC.add(p);
-            }
+            Node yellowCent = blue.getFirstChild();
+            Node yellowBum = blue.getLastChild();
+            
+            Element blueE = (Element)blueCent;
+            Element blueET = (Element)blueBum;
+            Element yellowE = (Element)yellowCent;
+            Element yellowET = (Element)yellowBum;
+            
+            blueCentroid = new Point(Integer.parseInt(blueE.getAttribute("x")), Integer.parseInt(blueE.getAttribute("y")));
+            yellowCentroid = new Point(Integer.parseInt(yellowE.getAttribute("x")), Integer.parseInt(yellowE.getAttribute("y")));
+            
+            blueBottom = new Point(Integer.parseInt(blueET.getAttribute("x")), Integer.parseInt(blueET.getAttribute("y")));
+            yellowBottom = new Point(Integer.parseInt(yellowET.getAttribute("x")), Integer.parseInt("y"));
             
             System.out.println("Blue Robot:");
-            System.out.println("Orientation: " + blueO);
-            for(Point p: blueC){
-            	System.out.println(p.toString());
-            }
+            System.out.println("Centroid: " + blueCentroid);
+
             System.out.println("Yellow Robot:");
-            System.out.println("Orientation: " + yellowO);
-            for(Point p: yellowC){
-            	System.out.println(p.toString());
-            }
+            System.out.println("Centroid: " + yellowCentroid);
+
 
         } catch (SAXParseException err) {
         	System.out.println ("** Parsing error" + ", line " + err.getLineNumber () + ", uri " + err.getSystemId ());
