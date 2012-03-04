@@ -137,9 +137,9 @@ public class Thresholding {
     	redBallThresh[0][0] = 130;
     	redBallThresh[0][1] = 90;
     	redBallThresh[0][2] = 90;
-    	redBallThresh[1][0] = 170;
-    	redBallThresh[1][1] = 170;
-    	redBallThresh[1][2] = 170;
+    	redBallThresh[1][0] = 150;
+    	redBallThresh[1][1] = 150;
+    	redBallThresh[1][2] = 150;
     	yellowRobotThresh[0][0] = 140;
     	yellowRobotThresh[0][1] = 140;
     	yellowRobotThresh[0][2] = 170;
@@ -149,13 +149,13 @@ public class Thresholding {
 		blueRobotThresh[0][0] = 120;
 		blueRobotThresh[0][1] = 170;
 		blueRobotThresh[0][2] = 90;
-		blueRobotThresh[1][0] = 160;
-		blueRobotThresh[1][1] = 230;
-		blueRobotThresh[1][2] = 215;
+		blueRobotThresh[1][0] = 170;
+		blueRobotThresh[1][1] = 200;
+		blueRobotThresh[1][2] = 150;
 
 	
 		greenPlatesThresh[0][0] = 120;
-		greenPlatesThresh[1][0] = 205;
+		greenPlatesThresh[1][0] = 160;
 
     	
     	this.ts = ts;
@@ -675,7 +675,7 @@ public class Thresholding {
     		return ( GB > 50 && RG > 50 && c.getGreen() > greenPlatesThresh[pitch][0]);
     	}
     	else {
-    		return ( GB >= 50 && RG >= 50 && c.getGreen() > greenPlatesThresh[pitch][0]);
+    		return ( GB >= 35 && RG >= 35 && c.getGreen() > greenPlatesThresh[pitch][0]);
     	}
     }
     
