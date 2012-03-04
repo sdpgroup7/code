@@ -37,6 +37,8 @@ public class AllStaticObjects {
 	private int width;
 	private int boundary;
 	private double nodeInPixels;
+	private double widthOfPitchInRobotsCM;
+	private double widthOfRobotInNodes;
 	
 	//In Nodes :: ONLY FOR USE IN PLANNING THREAD
 	private Point theirTopGoalPost;
@@ -59,6 +61,10 @@ public class AllStaticObjects {
 
 	//controls planning thread
 	private volatile boolean runFlag;
+
+	
+
+	
 
 
 	
@@ -84,6 +90,20 @@ public class AllStaticObjects {
 		this.height = 29;
 		this.width = 58;
 		this.nodeInPixels = (double)this.pitchWidth/(double)this.width;//width in pixels!
+		
+		
+		//assume robot is 20cm^2
+		//pitch is 243.84 wide
+		//pitch is 121.92 high
+		//pW / mW = node
+		//~How to work out number of nodes in a robot...
+		//pW / rW = width of pitch in robots
+		//widthOfPitchInRobots / widthOfPitchInNodes = number of nodes per robot...
+		this.widthOfPitchInRobotsCM = 243.84 / 20;
+		this.widthOfRobotInNodes = this.widthOfPitchInRobotsCM / this.nodeInPixels;
+		this.boundary = (int)(this.widthOfRobotInNodes / 2);
+		
+		
 		//set defence position
 		this.pointInfrontOfGoal();
 		this.pointInfrontOfTheirGoal();

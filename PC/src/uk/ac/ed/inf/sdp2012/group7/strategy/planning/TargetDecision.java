@@ -146,7 +146,7 @@ public class TargetDecision {
 					this.setTargetPointOpen();
 					this.setNavPointOpen();
 					
-					double b = 3;
+					double b = allStaticObjects.getBoundary();
 					Point node1 = this.navPoint;
 					
 					//test to see if we can do an open shot...
