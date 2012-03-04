@@ -27,6 +27,9 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     //private JFrame windowFrame;
     //The below variables are for the testing system
     private ArrayList<Point> points = new ArrayList<Point>();
+    private ArrayList<Point> autoPoints = new ArrayList<Point>();
+    private ArrayList<Double> angles = new ArrayList<Double>();
+    private ArrayList<Integer> pitch = new ArrayList<Integer>();
     public boolean testMouseClick = false;
     public Point testCoords = new Point(0,0);
 
@@ -59,6 +62,18 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     	return this.points;
     }
     
+    public ArrayList<Point> getTestPointsAuto(){
+    	return this.autoPoints;
+    }
+    
+    public ArrayList<Double> getOrientationPoints(){
+    	return this.angles;
+    }
+    
+    public ArrayList<Integer> getPitchPoints(){
+    	return this.pitch;
+    }
+    
     public void getTestData(BufferedImage image, String filename){
     	visionFeed.paused = true;
     	Vision.logger.info("Feed paused.");
@@ -87,19 +102,15 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     	points.add(coords);
     	
     	
-    	/*
-    	points.add(Vision.worldState.getBall().getPosition().getCentre());
-    	Point[] corners = Vision.worldState.getBlueRobot().getPosition().getCorners();
-    	points.add(corners[0]);
-    	points.add(corners[1]);
-    	points.add(corners[2]);
-    	points.add(corners[3]);
-    	corners = Vision.worldState.getYellowRobot().getPosition().getCorners();
-    	points.add(corners[0]);
-    	points.add(corners[1]);
-    	points.add(corners[2]);
-    	points.add(corners[3]);
-    	*/
+    	
+    	autoPoints.add(Vision.worldState.getBall().getPosition().getCentre());
+        autoPoints.add(Vision.worldState.getOurRobot().getPosition().getCentre());
+        angles.add(Vision.worldState.getOurRobot().getAngle());
+        autoPoints.add(Vision.worldState.getOpponentsRobot().getPosition().getCentre());
+        angles.add(Vision.worldState.getOpponentsRobot().getAngle());
+        pitch.add(Vision.worldState.getPitch().getLeftBuffer());
+        pitch.add(Vision.worldState.getPitch().getRightBuffer());
+    	
         visionFeed.paused = false;
         Vision.logger.info("Vision System unpaused.");
     }

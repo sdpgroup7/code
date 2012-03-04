@@ -21,7 +21,7 @@ import org.w3c.dom.Element;
 import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 
 public class TestSaver {
-	public void writePoints(ArrayList<Point> points, BufferedImage image,String filename){
+	public void writePoints(ArrayList<Point> points,ArrayList<Point> autoPoints, ArrayList<Double> angles, ArrayList<Integer> pitch, BufferedImage image,String filename){
 		Vision.logger.info("Starting XML generation");
         try{
         	//TODO: verify angles

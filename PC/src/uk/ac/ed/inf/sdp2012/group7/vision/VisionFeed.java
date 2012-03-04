@@ -93,7 +93,7 @@ public class VisionFeed extends WindowAdapter {
 	                Vision.worldState.getPitch().getBottomBuffer()
 	                ),filename);
         	TestSaver ts = new TestSaver();
-        	ts.writePoints(il.getTestPoints(), frameImage, filename);
+        	ts.writePoints(il.getTestPoints(),il.getTestPointsAuto(), il.getOrientationPoints(), il.getPitchPoints(), frameImage, filename);
         	Vision.logger.info("Vision testing complete.");
         }
     }
