@@ -29,25 +29,29 @@ public class OppositionPrediction {
 		ArrayList<Point> obstacles = new ArrayList<Point>();
 		double nodeInPixels = this.allStaticObjects.getNodeInPixels();
 		
+		
+		//shit naive method to make the robot avoid the opposition
+		//notice the huge square, because we have to take into account our our width
 		Point position = this.allMovingObjects.getTheirPosition();
-		//Possible problem with conversion back to Integers here..?
-		for(int x = (int)(position.x - (5*nodeInPixels)); x <= position.x + 5*nodeInPixels; x = x + (int)nodeInPixels){
-			for(int y = (int)(position.y - (5*nodeInPixels)); y <= position.y + 5*nodeInPixels; y = y + (int)nodeInPixels){
+
+		//Everything is in nodes...
+		for(int x = (position.x - 5); x <= position.x + 5; x++){
+			for(int y = (position.y - 5); y <= position.y + 5; y++){
 				Point p = new Point(x,y);
 				obstacles.add(p);
 			}
 		}
 		
+		
+		//Required to prevent the robot from driving into the ball when we don't need it to
 		Point positionBall = this.allMovingObjects.getBallPosition();
 		//Possible problem with conversion back to Integers here..?
-		for(int x = (int)(positionBall.x - (2*nodeInPixels)); x <= positionBall.x + 2*nodeInPixels; x = x + (int)nodeInPixels){
-			for(int y = (int)(positionBall.y - (2*nodeInPixels)); y <= positionBall.y + 2*nodeInPixels; y = y + (int)nodeInPixels){
+		for(int x = (position.x - 2); x <= position.x + 2; x++){
+			for(int y = (position.y - 2); y <= position.y + 2; y++){
 				Point p = new Point(x,y);
 				obstacles.add(p);
 			}
 		}
-		
-		
 		
 		return obstacles;
 	}

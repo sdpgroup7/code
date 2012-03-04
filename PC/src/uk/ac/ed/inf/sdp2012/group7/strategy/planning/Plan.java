@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.*;
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
@@ -47,32 +46,31 @@ public class Plan {
 		
 		this.allStaticObjects = allStaticObjects;
 		this.allMovingObjects = allMovingObjects;
-		allMovingObjects.update();
+		allMovingObjects.update(allStaticObjects);
 		
 		//Set up obstacles created by opposition
 		this.opposition = new OppositionPrediction(allMovingObjects, this.allStaticObjects);
 		
 		//Add the opposition obstacles to the overall obstacles
-		//IE add in the boundary...
-		this.obstacles = allStaticObjects.convertToNodes(opposition.getDefaultObstacles());
+		this.obstacles = opposition.getDefaultObstacles();
 		
 		//Setup target for A*
 		this.targetDecision = new TargetDecision(this.allMovingObjects, this.allStaticObjects);
 		
-		this.target = this.targetDecision.getTargetAsNode();
-		this.navPoint = this.targetDecision.getNavAsNode();
+		this.target = this.targetDecision.getTarget();
+		this.navPoint = this.targetDecision.getNavPoint();
 		
-		logger.debug("Target Decision Position: " + targetDecision.getTargetAsNode().toString());
-		logger.debug("NavPoint Decision Position: " + targetDecision.getNavAsNode().toString());
-		logger.debug("Ball Position: " + this.allStaticObjects.convertToNode(Vision.worldState.getBall().getPosition().getCentre()));
-		logger.debug("Robot Position: " + this.allStaticObjects.convertToNode(allMovingObjects.getOurPosition()).toString());
-		logger.debug("Their Robot Position: " + this.allStaticObjects.convertToNode(worldState.getOpponentsRobot().getPosition().getCentre()));
+		logger.debug("Target Decision Position: " + targetDecision.getTarget().toString());
+		logger.debug("NavPoint Decision Position: " + targetDecision.getNavPoint().toString());
+		logger.debug("Ball Position: " + this.allMovingObjects.getBallPosition());
+		logger.debug("Robot Position: " + this.allMovingObjects.getOurPosition().toString());
+		logger.debug("Their Robot Position: " + this.allMovingObjects.getTheirPosition().toString());
 		
 		//a* for Current position to navPpoint
 		aStarNav = new AStarRun(this.allStaticObjects.getHeight(),
 								this.allStaticObjects.getWidth(),
 								navPoint,
-								this.allStaticObjects.convertToNode(allMovingObjects.getOurPosition()),
+								allMovingObjects.getOurPosition(),
 								this.obstacles
 							);
 		
@@ -117,17 +115,17 @@ public class Plan {
 	}
 	
 	public Point getBallPosition(){
-		return allStaticObjects.convertToNode(allMovingObjects.getBallPosition());
+		return allMovingObjects.getBallPosition();
 	}
 	
 	//Plan Monitor
 	public Point getOurRobotPosition() {
-		return allStaticObjects.convertToNode(allMovingObjects.getOurPosition());
+		return allMovingObjects.getOurPosition();
 	}
 	
 	//For Control Interface
 	public Point getOurRobotPositionVisual() {
-		return allStaticObjects.convertToNode(worldState.getOurRobot().getPosition().getCentre());
+		return worldState.getOurRobot().getPosition().getCentre();
 	}
 	
 	//For testing

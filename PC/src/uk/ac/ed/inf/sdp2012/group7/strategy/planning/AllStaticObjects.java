@@ -24,27 +24,32 @@ public class AllStaticObjects {
 	
 	public static final Logger logger = Logger.getLogger(PlanningThread.class);
 	
-	private double nodeInPixels;
+	//Straight from Visual and remains as visual data :: DO NOT USE IN PLANNING THREAD.
 	private int pitchTopBuffer;
 	private int pitchLeftBuffer; 
 	private int pitchBottomBuffer;
 	private int pitchRightBuffer; 
-
+	private int pitchHeight;
+	private int pitchWidth;
+	
+	//Node related
 	private int height;
 	private int width;
 	private int boundary;
-	private int pitchHeight;
-	private int pitchWidth;
-	private double deceleration;
+	private double nodeInPixels;
 	
+	//In Nodes :: ONLY FOR USE IN PLANNING THREAD
 	private Point theirTopGoalPost;
 	private Point theirBottomGoalPost;
-	private Point ourTopGoalPost;
-	private Point ourBottomGoalPost;
 	private Point inFrontOfOurGoal;
 	private Point inFrontOfTheirGoal;
 	private Point centreOfTheirGoal;
 	private Point centreOfOurGoal;
+	private Point ourTopGoalPost;
+	private Point ourBottomGoalPost;
+	
+	//physics
+	private double deceleration;
 
 	//worldstate getInstance
 	public WorldState worldState = WorldState.getInstance();
@@ -54,14 +59,14 @@ public class AllStaticObjects {
 
 	//controls planning thread
 	private volatile boolean runFlag;
+
+
 	
 	
 	public AllStaticObjects (){
 		while(worldState.getLastUpdateTime() == 0){}
-		this.theirTopGoalPost = worldState.getOpponentsGoal().getTopLeft();
-		this.theirBottomGoalPost = worldState.getOpponentsGoal().getBottomLeft();
-		this.ourTopGoalPost = worldState.getOurGoal().getTopLeft();
-		this.ourBottomGoalPost = worldState.getOurGoal().getBottomLeft();
+		
+		//VISUAL
 		this.pitchTopBuffer  = worldState.getPitch().getTopBuffer();
 		this.pitchLeftBuffer = worldState.getPitch().getLeftBuffer();
 		this.pitchBottomBuffer  = worldState.getPitch().getBottomBuffer();
@@ -69,15 +74,16 @@ public class AllStaticObjects {
 		this.pitchHeight = worldState.getPitch().getHeightInPixels();
 		this.pitchWidth = worldState.getPitch().getWidthInPixels();
 		
+		//NODE
+		this.theirTopGoalPost = this.convertToNode(worldState.getOpponentsGoal().getTopLeft());
+		this.theirBottomGoalPost = this.convertToNode(worldState.getOpponentsGoal().getBottomLeft());
+		this.ourTopGoalPost = this.convertToNode(worldState.getOurGoal().getTopLeft());
+		this.ourBottomGoalPost = this.convertToNode(worldState.getOurGoal().getBottomLeft());
 		
-		//hard code setting of grid resolution (Grid is used in A*)
+		//A* Settings
 		this.height = 29;
 		this.width = 58;
 		this.nodeInPixels = (double)this.pitchWidth/(double)this.width;//width in pixels!
-		Strategy.logger.info("Node size in pixels: " + nodeInPixels);
-		//Boundary around the edges of the pitch, to prevent the robot from hitting the walls
-		//So this is dependent on the resolution..
-		this.boundary = 2;
 		//set defence position
 		this.pointInfrontOfGoal();
 		this.pointInfrontOfTheirGoal();
@@ -153,7 +159,9 @@ public class AllStaticObjects {
 	}
 	
 
-
+//ALL GETTERS SHOULD BE RETURNING AS NODES NOT AS VISUAL POINTS
+	
+	
 	public double getNodeInPixels() {
 		return this.nodeInPixels;
 	}

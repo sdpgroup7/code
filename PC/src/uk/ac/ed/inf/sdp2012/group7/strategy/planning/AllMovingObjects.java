@@ -7,6 +7,11 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 public class AllMovingObjects {
 	
+	//REQUIRED TO TURN ALL TO NODES
+	private AllStaticObjects allStaticObjects;
+	
+	
+	//ALL SHOULD BE CONVERTED TO NODE
 	private Point ourPosition ;
 	private Point theirPosition;
 	private Point ballPosition;
@@ -20,33 +25,42 @@ public class AllMovingObjects {
 	//worldstate getInstance
 	public WorldState worldState = WorldState.getInstance();
 	
-	public AllMovingObjects() {
-		update();
+	public AllMovingObjects(AllStaticObjects aSO) {
+		update(aSO);
 	}
 	
 	
-	public void update(){
+	public void update(AllStaticObjects aSO){
 		
-		this.ourPosition = worldState.getOurRobot().getPosition().getCentre();
+		this.allStaticObjects = aSO;
 		
-		this.theirPosition = worldState.getOpponentsRobot().getPosition().getCentre();
+		//CONVERT ALL TO NODES
 		
-		this.ballPosition = worldState.getBall().getPosition().getCentre();
+		this.ourPosition = allStaticObjects.convertToNode(worldState.getOurRobot().getPosition().getCentre());
 		
-		this.ourVelocity = worldState.getOurRobot().getVelocity();
+		this.theirPosition = allStaticObjects.convertToNode(worldState.getOpponentsRobot().getPosition().getCentre());
 		
-		this.theirVelocity = worldState.getOpponentsRobot().getVelocity();
+		this.ballPosition = allStaticObjects.convertToNode(worldState.getBall().getPosition().getCentre());
 		
-		this.ballVelocity = worldState.getBall().getVelocity();
+		//CONVERT ANGLES REQUIRED? DARIE
 		
 	    this.ourAngle = convertAngle(worldState.getOurRobot().getAngle());
 	    
 	    this.theirAngle = convertAngle(worldState.getOpponentsRobot().getAngle());
 	    
 	    this.ballAngle = convertAngle(worldState.getBall().getAngle());
+		
+	    //CONVERSION? DARIE
 	    
+		this.ourVelocity = worldState.getOurRobot().getVelocity();
+		
+		this.theirVelocity = worldState.getOpponentsRobot().getVelocity();
+		
+		this.ballVelocity = worldState.getBall().getVelocity();	    
 	}
 	
+	
+	//SO ARE THESE CORRECT DARIE?
 	
 	// method to trasform an angle between the coordinate system used in worldstate and the standard coordinate system used in strategy 
 	public double convertAngle(double angle) {
@@ -62,6 +76,8 @@ public class AllMovingObjects {
 		double angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
 		return angle;
 	}
+	
+	//ALL GETTERS SHOULD RETURN IN NODE SYSTEM
 	
 	public Point getOurPosition() {
 		return ourPosition;
