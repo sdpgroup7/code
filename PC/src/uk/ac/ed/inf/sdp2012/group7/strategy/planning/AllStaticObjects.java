@@ -37,10 +37,16 @@ public class AllStaticObjects {
 
 	// Compacts WorldState position point into "Node" centre position
 	public Point convertToNode(Point p) {
+		if (p.x < worldState.getPitch().getTopLeft().x || p.x > worldState.getPitch().getTopRight().x) {
+			return new Point(-1,-1);
+		} else {
+			
+		
 		int x = (int) Math.round(((double) (p.x - (worldState.getPitch().getLeftBuffer() - 1)) / this.nodeInPixels));
 		int y = (int) Math.round(((double) (p.y - (worldState.getPitch().getTopBuffer() - 1)) / this.nodeInPixels));
 
 		return new Point(x, y);
+		}
 	}
 
 	//Compacts WorldState position points into "Node" centre positions

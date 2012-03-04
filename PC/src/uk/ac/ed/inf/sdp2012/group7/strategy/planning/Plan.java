@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.AStarRun;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.ObjectPosition;
@@ -18,10 +19,30 @@ public class Plan {
 		ArrayList<Point> obstacles = new ArrayList<Point>();
 		double nodeInPixels = this.allStaticObjects.getNodeInPixels();
 
+		//bounding box
 		ObjectPosition position = this.allMovingObjects.getTheirPosition();
+		int minX = position.getBottomLeft().x;
+		int minY = position.getBottomLeft().y;
+		int maxX = position.getTopRight().x;
+		int maxY = position.getTopRight().y;
+		Point[] rectangle = new Point[] {position.getBottomLeft(),position.getBottomRight(),position.getTopLeft(),position.getTopRight()};
+		for (Point corner : rectangle) {
+			if (corner.x > maxX) {
+				maxX = corner.x;
+			} else if (corner.x < minX) {
+				minX = corner.x;
+			}
+			if (corner.y > maxY) {
+				maxY = corner.y;
+			} else if (corner.y < minY) {
+				minY = corner.y;
+			}
+		}
+		rectangle = null;
+		int ratio = 8;
 		
-		for(int x = (int)(position.getBottomLeft().x - (5*nodeInPixels)); x <= position.getTopRight().x + 5*nodeInPixels; x = x + (int)nodeInPixels){
-			for(int y = (int)(position.getBottomLeft().y - (5*nodeInPixels)); y <= position.getTopRight().y + 5*nodeInPixels; y = y + (int)nodeInPixels){
+		for(int x = (int)(minX - (ratio*nodeInPixels)); x <= maxX + ratio*nodeInPixels; x = x + (int)nodeInPixels){
+			for(int y = (int)(minY - (ratio*nodeInPixels)); y <= maxY + ratio*nodeInPixels; y = y + (int)nodeInPixels){
 				Point p = new Point(x,y);
 				obstacles.add(p);
 			}
@@ -81,22 +102,33 @@ public class Plan {
 		}
 	}
 
+	private boolean isBallOnThePitch() {
+		Point ballPosition = allStaticObjects.convertToNode(allMovingObjects.getBallPosition());
+		Strategy.logger.debug("Ball position: " + ballPosition);
+		return ((ballPosition.x >= 0) && (ballPosition.x <= allStaticObjects.getWidth()) &&
+				(ballPosition.y >= 0) && (ballPosition.y <= allStaticObjects.getHeight()));
+	}
+	
 		public Point getPointToGoTo() {
-			TargetDecision td = new TargetDecision(allMovingObjects, allStaticObjects);
-			Node navPoint = td.getNavPoint();
-			if (navPoint == null) {
-				return null;
-			} else {
-				AStarRun aStarNav = new AStarRun(this.allStaticObjects.getHeight(),
-						this.allStaticObjects.getWidth(),
-						this.allStaticObjects.convertToNode(navPoint),
-						this.allStaticObjects.convertToNode(allMovingObjects.getOurPosition()),
-						this.allStaticObjects.convertToNodes(this.getDefaultObstacles())
-				);
-				if (aStarNav.getPath() == null)
+			if (isBallOnThePitch()) {
+				TargetDecision td = new TargetDecision(allMovingObjects, allStaticObjects);
+				Node navPoint = td.getNavPoint();
+				if (navPoint == null) {
 					return null;
-				else
-					return chopPath(aStarNav.getPath().getWayPoints());
+				} else {
+					AStarRun aStarNav = new AStarRun(this.allStaticObjects.getHeight(),
+							this.allStaticObjects.getWidth(),
+							this.allStaticObjects.convertToNode(navPoint),
+							this.allStaticObjects.convertToNode(allMovingObjects.getOurPosition()),
+							this.allStaticObjects.convertToNodes(this.getDefaultObstacles())
+					);
+					if (aStarNav.getPath() == null)
+						return null;
+					else
+						return chopPath(aStarNav.getPath().getWayPoints());
+				}
+			} else {
+				return null;
 			}
 		}
 	}

@@ -1,8 +1,9 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy;
 
 import java.awt.Point;
-
-import lejos.robotics.pathfinding.PathFinder;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
@@ -25,6 +26,9 @@ public class StrategyOld {
 	private WorldState worldState = WorldState.getInstance();
 	private AllMovingObjects allMovingObjects;
 	private AllStaticObjects allStaticObjects;
+	private DummyPlanning planner;
+	private ScheduledFuture<?> plannerTask;
+	private ScheduledThreadPoolExecutor scheduler;
 
 	public void mileStone1(boolean kick) {
 		if (kick) {
@@ -34,61 +38,24 @@ public class StrategyOld {
 			controller.moveForward(60);
 		}
 	}
-
-	private boolean isBallOnThePitch() {
-		Point ballPosition = allStaticObjects.convertToNode(allMovingObjects.getBallPosition());
-		return ((ballPosition.x >= 0) && (ballPosition.x <= allStaticObjects.getWidth()) &&
-				(ballPosition.y >= 0) && (ballPosition.y <= allStaticObjects.getHeight()));
-	}
 	
 	/**
 	 * click by click so far
 	 */
-	public void mileStone3NavigateOn() {
-
-		if (worldState.getOurRobot().getPosition().getCentre().distance(worldState.getBall().getPosition().getCentre()) < 50) {
-			double targetAngle = Tools.getAngleToFacePoint(worldState.getOurRobot().getPosition().getCentre(),worldState.getOurRobot().getAngle(), worldState.getBall().getPosition().getCentre());
-			controller.rotateBy(targetAngle);
-			controller.kick();
-			
-		} else {
-			controller.stop();
-			Plan pl = new Plan(allStaticObjects, allMovingObjects);
-			Point navPoint = pl.getPointToGoTo();
-			
-			if (navPoint == null) {
-				if (isBallOnThePitch()) {
-					double targetAngle = Tools.getAngleToFacePoint(worldState.getOurRobot().getPosition().getCentre(),worldState.getOurRobot().getAngle(), worldState.getBall().getPosition().getCentre());
-					controller.rotateBy(targetAngle);
-					waitABit(500);
-					double distance = allMovingObjects.getOurPosition().distance(allMovingObjects.getBallPosition());
-					controller.moveForward(Math.round(VisionTools.pixelsToCM(distance)));
-				}
-			} else {
-			
-				double targetAngle = Tools.getAngleToFacePoint(allStaticObjects.convertToNode(worldState.getOurRobot().getPosition().getCentre()),worldState.getOurRobot().getAngle(), navPoint);
-				controller.rotateBy(targetAngle);
-				waitABit(500);
-				double distance = allMovingObjects.getOurPosition().distance(allMovingObjects.getBallPosition());
-				controller.moveForward(Math.round(VisionTools.pixelsToCM(distance))/3);
-			}
-			waitABit(1500);
-		}
+	public synchronized void mileStone3NavigateOn() {
+		controller.changeSpeed(30);
+		plannerTask = scheduler.scheduleWithFixedDelay(planner, 500, 2000, TimeUnit.MILLISECONDS);
+		
 	}
 
-	public void mileStone3NavigateOff() {
-
+	public synchronized void mileStone3NavigateOff() {
+		controller.stop();
+		scheduler.remove(planner);
+		plannerTask.cancel(true);
+		scheduler.purge();
 	}
 
 	private RobotControl controller;
-
-	public void waitABit(long value) {
-		try {
-			Thread.sleep(value);
-		} catch (InterruptedException e) {
-			logger.debug(e);
-		}
-	}
 
 
 	public StrategyOld() {
@@ -97,8 +64,69 @@ public class StrategyOld {
 
 		controller = new RobotControl();
 		controller.startCommunications();
+		planner = new DummyPlanning();
+		scheduler = new ScheduledThreadPoolExecutor(1);
 
+	}
+	
+	private class DummyPlanning implements Runnable {
 
+		private boolean isBallOnThePitch() {
+			Point ballPosition = allStaticObjects.convertToNode(allMovingObjects.getBallPosition());
+			return ((ballPosition.x >= 0) && (ballPosition.x <= allStaticObjects.getWidth()) &&
+					(ballPosition.y >= 0) && (ballPosition.y <= allStaticObjects.getHeight()));
+		}
+		
+		public void waitABit(long value) {
+			try {
+				Thread.sleep(value);
+			} catch (InterruptedException e) {
+				logger.debug(e);
+			}
+		}
+		
+		@Override
+		public void run() {
+			if (worldState.getOurRobot().getPosition().getCentre().distance(worldState.getBall().getPosition().getCentre()) < 40) {
+				double targetAngle = Tools.getAngleToFacePoint(worldState.getOurRobot().getPosition().getCentre(),worldState.getOurRobot().getAngle(), worldState.getBall().getPosition().getCentre());
+				controller.rotateBy(targetAngle);
+				controller.moveForward(5);
+				
+				controller.kick();
+				
+			} else {
+				controller.stop();
+				Plan pl = new Plan(allStaticObjects, allMovingObjects);
+				Point navPoint = pl.getPointToGoTo();
+				
+				if (navPoint == null) {
+					if (isBallOnThePitch()) {
+						Strategy.logger.debug("Robot: " + worldState.getOurRobot().getPosition().getCentre());
+						Strategy.logger.debug("Robot's angle: " + worldState.getOurRobot().getAngle());
+						Strategy.logger.debug("Ball: " + worldState.getBall().getPosition().getCentre());
+						
+						
+						double targetAngle = Tools.getAngleToFacePoint(worldState.getOurRobot().getPosition().getCentre(),worldState.getOurRobot().getAngle(), worldState.getBall().getPosition().getCentre());
+						controller.rotateBy(targetAngle);
+						waitABit(500);
+						double distance = allMovingObjects.getOurPosition().distance(allMovingObjects.getBallPosition());
+						controller.moveForward(Math.round(VisionTools.pixelsToCM(distance))/4);
+					}
+				} else {
+					Strategy.logger.debug("Robot in the grid: " + allStaticObjects.convertToNode(worldState.getOurRobot().getPosition().getCentre()));
+					Strategy.logger.debug("Robot's angle: " + worldState.getOurRobot().getAngle());
+					Strategy.logger.debug("Go to this point: " + navPoint);
+					Strategy.logger.debug("Ball in the grid: " + allStaticObjects.convertToNode(worldState.getBall().getPosition().getCentre()));
+					double targetAngle = Tools.getAngleToFacePoint(allStaticObjects.convertToNode(worldState.getOurRobot().getPosition().getCentre()),worldState.getOurRobot().getAngle(), navPoint);
+					controller.rotateBy(targetAngle);
+					waitABit(500);
+					double distance = allMovingObjects.getOurPosition().distance(allMovingObjects.getBallPosition());
+					controller.moveForward(Math.round(VisionTools.pixelsToCM(distance))/4);
+				}
+			}
+			
+		}
+		
 	}
 
 

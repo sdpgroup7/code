@@ -66,7 +66,7 @@ public class Nxt_code implements Runnable {
 		//pilot.regulateSpeed(true);
 		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()*0.45);
 		pilot.setRotateSpeed(pilot.getMaxRotateSpeed()*0.45);
-		pilot.setAcceleration(500);
+		pilot.setAcceleration(60);
 		
 		while (true) {
 			try {
