@@ -2,6 +2,9 @@ package uk.ac.ed.inf.sdp2012.group7.vision;
 
 public class VisionTools {
 	
+	
+	//TODO: Test ALL of these. Comment to confirm
+	
 	public static int cmToPixels(float cm){
 		float width = (float) Vision.worldState.getPitch().getPitchWidth();
 		int pixelWidth = Vision.worldState.getPitch().getWidth();

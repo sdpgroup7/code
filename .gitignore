@@ -1,9 +1,16 @@
+#Project specific #
 testData/**
 PC/junit/*.xml
 PC/backGround
 
+# OS Files #
+
+.DS_Store
+*.thumbs
+
 # Java #
 
+*.java~
 *.class
 
 # Package Files #
