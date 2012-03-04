@@ -49,16 +49,15 @@ public class WorldState{
     	if(room == 0){
     		pitch = new Pitch(	new Point(40,104),
     							new Point(600,98),
-    							new Point(40,394),
-    							new Point(607,384));
+    							new Point(607,384),
+    							new Point(40,394));
     		pitch.setBuffers(86,612,402,24);
     	} else {
-    		//TODO: Add the constants for pitch 2.
-    		pitch = new Pitch(	new Point(40,104),
-					            new Point(600,98),
-					            new Point(40,394),
-					            new Point(607,384));
-    		pitch.setBuffers(86,612,402,24);
+    		pitch = new Pitch(	new Point(62,123),
+		            new Point(581,137),
+		            new Point(584,399),
+		            new Point(64,398));
+    		pitch.setBuffers(90,580,391,43);
     	}
     	updateShootingDirection();
     }
@@ -166,6 +165,20 @@ public class WorldState{
     
     public void setRoom(int r){
         this.room = r;
+        if(room == 0){
+    		pitch = new Pitch(	new Point(40,104),
+    							new Point(600,98),
+    							new Point(607,384),
+    							new Point(40,394));
+    		pitch.setBuffers(86,612,402,24);
+    	} else {
+    		pitch = new Pitch(	new Point(62,123),
+					            new Point(581,137),
+					            new Point(584,399),
+					            new Point(64,398));
+    		pitch.setBuffers(90,580,391,43);
+    	}
+    	updateShootingDirection();
     }
     
     public int getRoom(){

@@ -138,9 +138,9 @@ public class Thresholding {
     	redBallThresh[0][0] = 130;
     	redBallThresh[0][1] = 90;
     	redBallThresh[0][2] = 90;
-    	redBallThresh[1][0] = 150;
-    	redBallThresh[1][1] = 100;
-    	redBallThresh[1][2] = 100;
+    	redBallThresh[1][0] = 170;
+    	redBallThresh[1][1] = 170;
+    	redBallThresh[1][2] = 170;
     	yellowRobotThresh[0][0] = 140;
     	yellowRobotThresh[0][1] = 140;
     	yellowRobotThresh[0][2] = 170;
@@ -150,13 +150,13 @@ public class Thresholding {
 		blueRobotThresh[0][0] = 120;
 		blueRobotThresh[0][1] = 170;
 		blueRobotThresh[0][2] = 90;
-		blueRobotThresh[1][0] = 130;
-		blueRobotThresh[1][1] = 140;
-		blueRobotThresh[1][2] = 90;
+		blueRobotThresh[1][0] = 160;
+		blueRobotThresh[1][1] = 230;
+		blueRobotThresh[1][2] = 215;
 
 	
 		greenPlatesThresh[0][0] = 120;
-		greenPlatesThresh[1][0] = 140;
+		greenPlatesThresh[1][0] = 205;
 
     	
     	this.ts = ts;
@@ -672,7 +672,12 @@ public class Thresholding {
     }
     
     public boolean isGreen(Color c, int GB, int RG){
-        return ( GB > 50 && RG > 50 && c.getGreen() > greenPlatesThresh[pitch][0]);
+    	if(pitch == 0){
+    		return ( GB > 50 && RG > 50 && c.getGreen() > greenPlatesThresh[pitch][0]);
+    	}
+    	else {
+    		return ( GB >= 50 && RG >= 50 && c.getGreen() > greenPlatesThresh[pitch][0]);
+    	}
     }
     
     public boolean isGrey(Color c){
