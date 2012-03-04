@@ -36,7 +36,7 @@ public class TestSaver {
         	DocumentBuilder docBuilder = factory.newDocumentBuilder();
         	Document doc = docBuilder.newDocument();
         	Element root = doc.createElement("data");
-        	root.setAttribute("location", filename+"clicks" + ".png");
+        	root.setAttribute("location", filename + ".png");
         	doc.appendChild(root);
         	Element childElement = doc.createElement("blue");
         	Element centroid = doc.createElement("centroid");
@@ -77,7 +77,7 @@ public class TestSaver {
         	Transformer aTransformer = tranFactory.newTransformer(); 
 
         	Source src = new DOMSource(doc); 
-        	Result dest = new StreamResult(new File(filename+"clicks" + ".xml")); 
+        	Result dest = new StreamResult(new File(filename + ".xml")); 
         	aTransformer.transform(src, dest); 
         	Vision.logger.info("XML creation complete.");
         }catch(Exception e){
