@@ -159,7 +159,7 @@ public class AllStaticObjects {
 	}
 	
 
-//ALL GETTERS SHOULD BE RETURNING AS NODES NOT AS VISUAL POINTS
+//ALL GETTERS SHOULD BE RETURNING AS NODES! NOT AS VISUAL POINTS!
 	
 	
 	public double getNodeInPixels() {
