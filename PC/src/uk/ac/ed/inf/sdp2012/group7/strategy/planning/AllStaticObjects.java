@@ -36,7 +36,7 @@ public class AllStaticObjects {
 
 		this.nodeInPixels = (double) worldState.getPitch().getWidthInPixels() / (double) this.width;// width in pixels!
 		this.nodeWidthInPixels = this.nodeInPixels;
-		this.nodeWidthInPixels = (double) worldState.getPitch().getHeightInPixels() / (double) this.height;
+		this.nodeHeightInPixels = (double) worldState.getPitch().getHeightInPixels() / (double) this.height;
 	}
 
 	// Compacts WorldState position point into "Node" centre position

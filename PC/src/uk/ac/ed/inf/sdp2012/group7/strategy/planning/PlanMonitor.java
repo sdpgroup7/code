@@ -31,11 +31,11 @@ public class PlanMonitor {
 	private Plan currentPlan;
 	private WorldState worldState = WorldState.getInstance();
 	private double nodeInPixels;
-
+	private double nodeWidthInPixels;
+	private double nodeHeightInPixels;
 	
 	public PlanMonitor(Plan plan){
-		currentPlan = plan;
-		nodeInPixels = currentPlan.getAllStaticObjects().getNodeInPixels();
+		setPlan(plan);
 	}
 	
 	public PlanMonitor(){
@@ -45,6 +45,8 @@ public class PlanMonitor {
 	public void setPlan(Plan plan){
 		currentPlan = plan;
 		nodeInPixels = currentPlan.getAllStaticObjects().getNodeInPixels();
+		nodeWidthInPixels = currentPlan.getAllStaticObjects().getNodeWidthInPixels();
+		nodeHeightInPixels = currentPlan.getAllStaticObjects().getNodeHeightInPixels();
 	}
 	
 	public void savePlan(){
@@ -78,7 +80,7 @@ public class PlanMonitor {
 		String output = "";
 		for(int i = 0; i < a.length; i++){
 			for(int j = 0; j < a[i].length; j++){
-				output += a[i][j] + " ";
+				output += a[i][j];
 			}
 			output += "\n";
 		}
@@ -126,7 +128,7 @@ public class PlanMonitor {
 				if(n.isObstical()) ascii[y][x] = "X";
 				if(currentPlan.getAllStaticObjects().getCentreOfTheirGoal().equals(new Point(x,y))) ascii[y][x] = "C";
 				if(n.isStart()) ascii[y][x] = "S";
-				if(currentPlan.getAStarRun().getPath().getWayPoint(currentPlan.getAStarRun().getPath().getLength()-1).equals(new Point(x,y))) ascii[y][x] = "N";
+				//if(currentPlan.getAStarRun().getPath().getWayPoint(currentPlan.getAStarRun().getPath().getLength()-1).equals(new Point(x,y))) ascii[y][x] = "N";
 				if(currentPlan.getAllMovingObjects().getBallPosition().equals(new Point(x,y))) ascii[y][x] = "B";
 			}
 		}
@@ -146,6 +148,7 @@ public class PlanMonitor {
 	public BufferedImage generateImage(String[][] text){
 		int width = worldState.getPitch().getWidthInPixels();
 		int height = worldState.getPitch().getHeightInPixels();
+        Strategy.logger.info("Buffer dimensions: " + Integer.toString(width) + "," + Integer.toString(height));
 		BufferedImage im = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
 		im = generateOverlay(text,im);
 		worldState.setOverlay(im);
@@ -159,15 +162,20 @@ public class PlanMonitor {
         for(int y = 0; y < ascii.length; y++){
         	for(int x = 0; x < ascii[y].length; x++){
         		if(ascii[y][x] != " "){
-        			int xp = (int)(x*nodeInPixels + (nodeInPixels / 4) + 0.5);
-        			int yp = (int)(y*nodeInPixels + (nodeInPixels / 4) + 0.5);
-        			int width = (int)((nodeInPixels/2)+0.5);
-        			int height = width;
+                    graphics.setColor(Color.white);
+        			int xp = (int)((double)x*nodeWidthInPixels + (nodeWidthInPixels / 4) + 0.5);
+        			int yp = (int)((double)y*nodeHeightInPixels + (nodeHeightInPixels / 4) + 0.5);
+        			int width = (int)((nodeWidthInPixels/2) + 0.5);
+        			int height = (int)((nodeHeightInPixels/2) + 0.5);
         			if(ascii[y][x] == "X"){
-        				graphics.setColor(Color.black);
+        				graphics.setColor(new Color(100,100,100));
         			} else if(ascii[y][x] == "S"){
         				graphics.setColor(Color.blue);
-        			}
+        			} else if(ascii[y][x] == "C"){
+                        graphics.setColor(Color.red);
+                    } else if(ascii[y][x] == "B"){
+                        graphics.setColor(Color.red);
+                    }
         				
         				
         			graphics.fillRect(xp, yp, width, height);
