@@ -98,4 +98,9 @@ public class Node extends Point implements Comparable<Node> {
 		// if positive, otherNode is chosen as it has a smaller total distance from goal
 		return (int) (thisTotalDistanceFromGoal - otherTotalDistanceFromGoal);
 	}
+	
+	public Point nodeToPoint() {
+		Point point = new Point(this.x,this.y);
+		return point;
+	}
 }

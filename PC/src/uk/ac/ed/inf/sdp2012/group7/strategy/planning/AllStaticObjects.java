@@ -15,6 +15,9 @@ public class AllStaticObjects {
 	private int boundary;
 
 	private double nodeInPixels;
+	private double nodeHeightInPixels;
+	private double nodeWidthInPixels;
+	
 
 	// worldstate getInstance
 	private WorldState worldState = WorldState.getInstance();
@@ -31,8 +34,9 @@ public class AllStaticObjects {
 		// So this is dependent on the resolution..
 		this.boundary = 2;
 
-		this.nodeInPixels = (double) worldState.getPitch().getWidthInPixels()
-		/ (double) this.width;// width in pixels!
+		this.nodeInPixels = (double) worldState.getPitch().getWidthInPixels() / (double) this.width;// width in pixels!
+		this.nodeWidthInPixels = this.nodeInPixels;
+		this.nodeHeightInPixels = (double) worldState.getPitch().getHeightInPixels() / (double) this.height;
 	}
 
 	// Compacts WorldState position point into "Node" centre position
@@ -104,4 +108,11 @@ public class AllStaticObjects {
 		return this.nodeInPixels;
 	}
 
+	public double getNodeWidthInPixels() {
+		return this.nodeWidthInPixels;
+	}
+	
+	public double getNodeHeightInPixels() {
+		return this.nodeHeightInPixels;
+	}
 }

@@ -7,12 +7,14 @@ import java.util.List;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.AStarRun;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
+import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Path;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.ObjectPosition;
 
 public class Plan {
 
 	private AllStaticObjects allStaticObjects;
 	private AllMovingObjects allMovingObjects;
+	private AStarRun aStarRun;
 
 	private ArrayList<Point> getDefaultObstacles(){
 
@@ -122,13 +124,29 @@ public class Plan {
 							this.allStaticObjects.convertToNode(allMovingObjects.getOurPosition()),
 							this.allStaticObjects.convertToNodes(this.getDefaultObstacles())
 					);
+					aStarRun = aStarNav;
 					if (aStarNav.getPath() == null)
 						return null;
 					else
+						
+						
 						return chopPath(aStarNav.getPath().getWayPoints());
 				}
 			} else {
 				return null;
 			}
 		}
+
+		public AllStaticObjects getAllStaticObjects() {
+			return allStaticObjects;
+		}
+
+		public AllMovingObjects getAllMovingObjects() {
+			return allMovingObjects;
+		}
+
+		public AStarRun getAStarRun() {
+			return aStarRun;
+		}
+		
 	}
