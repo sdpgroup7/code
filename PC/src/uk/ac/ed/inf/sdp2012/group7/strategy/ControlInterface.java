@@ -227,6 +227,7 @@ public class ControlInterface implements Observer {
 	 * 
 	 * @return The goal point
 	 */
+	@SuppressWarnings("null")
 	public static Point2D findGoalPoint(ArrayList<Point> p, Point2D pos, int lookahead) throws Exception {
 		
 		Circle2D zone = new Circle2D(pos.getX(), pos.getY(), lookahead);

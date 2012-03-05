@@ -5,8 +5,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -145,6 +143,7 @@ public class PlanMonitor {
 	}
 	
 	public BufferedImage markData(BufferedImage im){
+		//TODO: Check this. It doesn't appear to work correctly. 
 		Graphics2D graphics = im.createGraphics();
 		//ControlInterface ci = new ControlInterface(5);
 		Arc arc = ControlInterface.chooseArc(currentPlan);
@@ -193,7 +192,6 @@ public class PlanMonitor {
         		}
         	}
         }
-        //graphics.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
         return image;
     }
 	
