@@ -19,6 +19,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException; 
 
 import org.w3c.dom.NodeList;
+import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 
 public class VisionTesting extends Panel implements MouseListener, MouseMotionListener  {
 
@@ -132,6 +133,41 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
 
     	
     	int total = 0;
+    	/*
+    	if (Point.distanceSq(blueCentroid.x, blueCentroid.y, blueCentroidAuto.x, blueCentroidAuto.y) < 25){
+    		System.out.println("Blue Centroid Passed");
+    		total++;
+    	}else{
+    		System.out.println("Blue Centroid Failed");
+    	}
+    	
+    	if (Point.distanceSq(yellowCentroid.x, yellowCentroid.y, yellowCentroidAuto.x, yellowCentroidAuto.y) < 25){
+    		System.out.println("Yellow Centroid Passed");
+    		total++;
+    	}else{
+    		System.out.println("Yellow Centroid Failed");
+    	}
+    	
+    	if (Point.distanceSq(ball.x, ball.y, ballAuto.x, ballAuto.y) < 25){
+    		System.out.println("Ball Centroid Passed");
+    		total++;
+    	}else{
+    		System.out.println("Ball Centroid Failed");
+    	}
+    	
+    	if ((VisionTools.pixelsToCM((double)right-left) >= 240) && (VisionTools.pixelsToCM((double)right-left) <= 250)){
+    		System.out.println("pixelsToCM works");
+    	}else{
+    		System.out.println("pixelsToCM fails");
+    	}
+    	
+    	if ((VisionTools.cmToPixels(243) <= (right-left+5)) && (VisionTools.cmToPixels(243) >= (right-left-5))){
+    		System.out.println("cmToPixels works");
+    	}else{
+    		System.out.println("cmToPixels fails");
+    	}
+    	*/
+    	System.out.println(Integer.toString(total));
     	
 
     	
