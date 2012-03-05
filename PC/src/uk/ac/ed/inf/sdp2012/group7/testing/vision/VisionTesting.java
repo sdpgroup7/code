@@ -20,6 +20,8 @@ import org.xml.sax.SAXParseException;
 
 import org.w3c.dom.NodeList;
 
+import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+
 public class VisionTesting extends Panel implements MouseListener, MouseMotionListener  {
 
 
@@ -154,8 +156,21 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     		System.out.println("Ball Centroid Failed");
     	}
     	
+    	if ((cmToPixels(244f) <= (right-left+10)) && (cmToPixels(244f) >= (right-left-10))){
+    		System.out.println("cmToPixels Passed");
+    		total++;
+    	}else{
+    		System.out.println("cmToPixels Failed");
+    	}
     	
-
+    	if ((pixelsToCM(right-left) <= 250f) && (pixelsToCM(right-left) >= 240f)){
+    		System.out.println("pixelsToCM Passed");
+    		total++;
+    	}else{
+    		System.out.println("pixelsToCM Failed");
+    	}
+    	
+    	System.out.println("Tests passed: " + Integer.toString(total) + "/5");
     	
     
     }
@@ -327,4 +342,15 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
         }
     }
     
+	public static int cmToPixels(float cm){
+		float width = (float)(rightAuto - leftAuto);
+		float pixel = ((width/244f)*cm);
+		return (int) pixel;
+	}
+	
+	public static float pixelsToCM(double pixelValue){
+		float width = (float)(rightAuto - leftAuto);
+		float cm = (float)((244f/width)*pixelValue);
+		return cm;	
+	}
 }
