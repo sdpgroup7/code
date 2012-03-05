@@ -15,7 +15,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.googlecode.javacv.cpp.ARToolKitPlus.Logger;
+//import com.googlecode.javacv.cpp.ARToolKitPlus.Logger;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.StrategyOld;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;

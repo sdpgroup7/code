@@ -12,6 +12,7 @@ import uk.ac.ed.inf.sdp2012.group7.control.Tools;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.AllMovingObjects;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.AllStaticObjects;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
+import uk.ac.ed.inf.sdp2012.group7.strategy.planning.PlanMonitor;
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
@@ -98,6 +99,8 @@ public class StrategyOld {
 				controller.stop();
 				Plan pl = new Plan(allStaticObjects, allMovingObjects);
 				Point navPoint = pl.getPointToGoTo();
+				PlanMonitor planMonitor = new PlanMonitor(pl);
+				planMonitor.outputPlan();
 				
 				if (navPoint == null) {
 					if (isBallOnThePitch()) {
