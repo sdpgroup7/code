@@ -19,7 +19,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException; 
 
 import org.w3c.dom.NodeList;
-import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 
 public class VisionTesting extends Panel implements MouseListener, MouseMotionListener  {
 
@@ -130,10 +129,10 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     	
 	    VisionTesting v = new VisionTesting();
  	
-
+	   
     	
     	int total = 0;
-    	/*
+    	
     	if (Point.distanceSq(blueCentroid.x, blueCentroid.y, blueCentroidAuto.x, blueCentroidAuto.y) < 25){
     		System.out.println("Blue Centroid Passed");
     		total++;
@@ -155,19 +154,6 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     		System.out.println("Ball Centroid Failed");
     	}
     	
-    	if ((VisionTools.pixelsToCM((double)right-left) >= 240) && (VisionTools.pixelsToCM((double)right-left) <= 250)){
-    		System.out.println("pixelsToCM works");
-    	}else{
-    		System.out.println("pixelsToCM fails");
-    	}
-    	
-    	if ((VisionTools.cmToPixels(243) <= (right-left+5)) && (VisionTools.cmToPixels(243) >= (right-left-5))){
-    		System.out.println("cmToPixels works");
-    	}else{
-    		System.out.println("cmToPixels fails");
-    	}
-    	*/
-    	System.out.println(Integer.toString(total));
     	
 
     	
@@ -270,8 +256,8 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
             Element yellowE = (Element)yellowCent;
             Element yellowET = (Element)yellowBum;
             
-            blueCentroidAuto = new Point(Integer.parseInt(blueE.getAttribute("x")), Integer.parseInt(blueE.getAttribute("y")));
-            yellowCentroidAuto = new Point(Integer.parseInt(yellowE.getAttribute("x")), Integer.parseInt(yellowE.getAttribute("y")));
+            blueCentroid = new Point(Integer.parseInt(blueE.getAttribute("x")), Integer.parseInt(blueE.getAttribute("y")));
+            yellowCentroid = new Point(Integer.parseInt(yellowE.getAttribute("x")), Integer.parseInt(yellowE.getAttribute("y")));
             
             blueBottom = new Point(Integer.parseInt(blueET.getAttribute("x")), Integer.parseInt(blueET.getAttribute("y")));
             yellowBottom = new Point(Integer.parseInt(yellowET.getAttribute("x")), Integer.parseInt(yellowET.getAttribute("y")));
