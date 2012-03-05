@@ -68,10 +68,21 @@ public class PlanMonitor {
 	public void outputPlan(){
 		long start = System.currentTimeMillis();
 		String[][] plan = generateASCIIPlan();
-		System.out.println(plan.toString());
+		System.out.println(array2DToString(plan));
 		generateImage(plan);
 		long timed = System.currentTimeMillis() - start;
 		Strategy.logger.info("Time to generate plan render: " + timed + "ms");
+	}
+	
+	public String array2DToString(String[][] a){
+		String output = "";
+		for(int i = 0; i < a.length; i++){
+			for(int j = 0; j < a[i].length; j++){
+				output += a[i][j] + " ";
+			}
+			output += "\n";
+		}
+		return output;
 	}
 	
 	public String[][] generateASCIIPlan(){
@@ -112,12 +123,9 @@ public class PlanMonitor {
 					}
 				}
 				Node n = map.getNode(x,y);
-				//if(n.isGoal()) ascii[y][x] = "T";
-				if(n.isObstical()) ascii[y][x] = "X";
 				if(n.isObstical()) ascii[y][x] = "X";
 				if(currentPlan.getAllStaticObjects().getCentreOfTheirGoal().equals(new Point(x,y))) ascii[y][x] = "C";
 				if(n.isStart()) ascii[y][x] = "S";
-				if(n.isVisited()) ascii[y][x] = " ";
 				if(currentPlan.getAStarRun().getPath().getWayPoint(currentPlan.getAStarRun().getPath().getLength()-1).equals(new Point(x,y))) ascii[y][x] = "N";
 				if(currentPlan.getAllMovingObjects().getBallPosition().equals(new Point(x,y))) ascii[y][x] = "B";
 			}
@@ -140,49 +148,14 @@ public class PlanMonitor {
 		int height = worldState.getPitch().getHeightInPixels();
 		BufferedImage im = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
 		im = generateOverlay(text,im);
-		//im = markData(im);
 		worldState.setOverlay(im);
 		return im;
 	}
 	
-	/*public BufferedImage markData(BufferedImage im){
-		Graphics2D graphics = im.createGraphics();
-		ControlInterface ci = new ControlInterface(5);
-		Arc arc = ControlInterface.chooseArc(currentPlan);
-		double radius = arc.getRadius();
-		double angle = currentPlan.getOurRobotAngle();
-		if(arc.isLeft()) {
-			angle = angle + (Math.PI * 2) - (Math.PI/2);
-		} else {
-			angle = angle + Math.PI/2;
-		}
-		angle = angle % (Math.PI*2);
-		double retAngle = (Math.PI + angle) % (Math.PI * 2);
-		int x = (int)(currentPlan.getNodeInPixels()*currentPlan.getOurRobotPosition().x + (currentPlan.getNodeInPixels()*radius*Math.cos(angle)));
-		int y = (int)(currentPlan.getNodeInPixels()*currentPlan.getOurRobotPosition().y + (currentPlan.getNodeInPixels()*radius*Math.sin(angle)));
-		
-		Strategy.logger.info("Arc info: " + String.format("%d,%d,%d,%d,%d,%d",x, y, 
-				(int)radius, (int)radius, 
-				(int)Math.toDegrees(VisionTools.convertAngleBack(retAngle)), 
-				(int)Math.toDegrees(VisionTools.convertAngleBack(Math.PI))));
-		
-		graphics.drawArc(	x, y, 
-							(int)radius, (int)radius, 
-							Math.abs((int)Math.toDegrees(VisionTools.convertAngleBack(retAngle))), 
-							Math.abs((int)Math.toDegrees(VisionTools.convertAngleBack(Math.PI))));
-		
-		graphics.drawOval(	(int)(	currentPlan.getNodeInPixels() * 
-									currentPlan.getOurRobotPositionVisual().x)-15, 
-							(int)(	currentPlan.getNodeInPixels() *
-									currentPlan.getOurRobotPositionVisual().y)-15,
-							30, 30);
-		return im;
-	}*/
 		
     public BufferedImage generateOverlay(String[][] ascii, BufferedImage image){
     	Graphics graphics = image.getGraphics();
         graphics.setColor(Color.white);
-        graphics.setFont(new Font(Font.MONOSPACED,Font.PLAIN,12));
         for(int y = 0; y < ascii.length; y++){
         	for(int x = 0; x < ascii[y].length; x++){
         		if(ascii[y][x] != " "){
@@ -190,6 +163,13 @@ public class PlanMonitor {
         			int yp = (int)(y*nodeInPixels + (nodeInPixels / 4) + 0.5);
         			int width = (int)((nodeInPixels/2)+0.5);
         			int height = width;
+        			if(ascii[y][x] == "X"){
+        				graphics.setColor(Color.black);
+        			} else if(ascii[y][x] == "S"){
+        				graphics.setColor(Color.blue);
+        			}
+        				
+        				
         			graphics.fillRect(xp, yp, width, height);
         		}
         	}
