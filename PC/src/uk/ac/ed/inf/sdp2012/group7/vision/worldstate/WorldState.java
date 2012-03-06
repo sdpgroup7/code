@@ -53,10 +53,10 @@ public class WorldState{
     							new Point(40,394));
     		pitch.setBuffers(86,612,402,24);
     	} else {
-    		pitch = new Pitch(	new Point(42,123),
+    		pitch = new Pitch(	new Point(65,123),
 		            new Point(560,137),
 		            new Point(562,399),
-		            new Point(44,398));
+		            new Point(70,398));
     		pitch.setBuffers(90,580,391,43);
     	}
     	updateShootingDirection();

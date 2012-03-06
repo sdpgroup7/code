@@ -87,12 +87,13 @@ public class StrategyOld {
 		
 		@Override
 		public void run() {
-			if (worldState.getOurRobot().getPosition().getCentre().distance(worldState.getBall().getPosition().getCentre()) < 40) {
+			if (worldState.getOurRobot().getPosition().getCentre().distance(worldState.getBall().getPosition().getCentre()) < 45) {
 				double targetAngle = Tools.getAngleToFacePoint(worldState.getOurRobot().getPosition().getCentre(),worldState.getOurRobot().getAngle(), worldState.getBall().getPosition().getCentre());
 				controller.rotateBy(targetAngle);
-				controller.moveForward(5);
-				
+				controller.moveForward(3);
 				controller.kick();
+				
+				
 				
 			} else {
 				controller.stop();
@@ -120,8 +121,8 @@ public class StrategyOld {
 					double targetAngle = Tools.getAngleToFacePoint(allStaticObjects.convertToNode(worldState.getOurRobot().getPosition().getCentre()),worldState.getOurRobot().getAngle(), navPoint);
 					controller.rotateBy(targetAngle);
 					waitABit(500);
-					double distance = allMovingObjects.getOurPosition().distance(allMovingObjects.getBallPosition());
-					controller.moveForward(Math.round(VisionTools.pixelsToCM(distance))/4);
+					double distance = allStaticObjects.convertToNode(allMovingObjects.getOurPosition()).distance(navPoint)*allStaticObjects.getNodeInPixels();
+					controller.moveForward(Math.round(VisionTools.pixelsToCM(distance)));
 				}
 			}
 			

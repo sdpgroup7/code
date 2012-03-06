@@ -39,7 +39,7 @@ public class Plan {
 			}
 		}
 		rectangle = null;
-		int ratio = 8;
+		int ratio = 7;
 		
 		for(int x = (int)(minX - (ratio*nodeInPixels)); x <= maxX + ratio*nodeInPixels; x = x + (int)nodeInPixels){
 			for(int y = (int)(minY - (ratio*nodeInPixels)); y <= maxY + ratio*nodeInPixels; y = y + (int)nodeInPixels){
@@ -65,7 +65,7 @@ public class Plan {
 		this.allStaticObjects = allStaticObjects;
 	}
 
-	private Point chopPath(List<Node> path) {
+	public static Point chopPath(List<Node> path) {
 		Point firstPoint;
 		Point secondPoint;
 		if(path.size() > 2) {
@@ -75,21 +75,26 @@ public class Plan {
 
 			//Find the furthest away point that is roughly in the same direction as the direction of p1 -> p2.
 			//initialAngle = targetAngle
-			double initialAngle = Math.atan2((secondPoint.y - firstPoint.y),(secondPoint.x - firstPoint.x));
+			//double initialAngle = Math.atan2((secondPoint.y - firstPoint.y),(secondPoint.x - firstPoint.x));
+			Point initalVector = new Point(secondPoint.x-firstPoint.x,secondPoint.y-firstPoint.y);
 			int index = 1;
 			boolean takeNextPoint = true;
 
 			while (takeNextPoint) {
 				//nextAngle is the angle between p1 and the next point in the path
-				double nextAngle ;
-
+				//double nextAngle ;
+				Point nextVector;
 				if (path.size() > (index + 1)) {
-					nextAngle = Math.atan2((path.get(index+1).y - firstPoint.y),(path.get(index+1).x - firstPoint.x));
+					nextVector = new Point(path.get(index+1).x-path.get(index).x,path.get(index+1).y-path.get(index).y);
+				//	nextAngle = Math.atan2((path.get(index+1).y - firstPoint.y),(path.get(index+1).x - firstPoint.x));
 				} else {
-					nextAngle = initialAngle;
+					nextVector = initalVector;
+					takeNextPoint = false;
+				//	nextAngle = initialAngle;
 				}
 
-				if (Math.abs(Math.toDegrees(initialAngle-nextAngle))>5) {
+				//if (Math.abs(Math.toDegrees(initialAngle-nextAngle))>5) {
+				if ((nextVector.x == initalVector.x) && (nextVector.y == initalVector.y)) {
 					index++;
 				} else {
 					takeNextPoint = false;
