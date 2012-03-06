@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 public class Vision {
     public static WorldState worldState;
     public static final Logger logger = Logger.getLogger(Vision.class);
-    public static boolean TESTING = true;
+    public static boolean TESTING = false;
     public static BufferedImage backgroundImage;
     public static int testCount = 0;
     
