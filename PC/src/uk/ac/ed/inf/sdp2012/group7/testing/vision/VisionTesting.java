@@ -48,6 +48,8 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     public static int right;
     public static int leftAuto;
     public static int rightAuto;
+    public static double blueAngleClick;
+    public static double yellowAngleClick;
     public static double blueAngle;
     public static double yellowAngle;
     
@@ -142,6 +144,20 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     		System.out.println("Blue Centroid Failed");
     	}
     	
+    	if (Math.abs(blueAngle-blueAngleClick) <= 0.5){
+    		System.out.println("Blue Direction Passed");
+    		total++;
+    	}else{
+    		System.out.println("Blue Direction Failed");
+    	}
+    	
+    	if (Math.abs(yellowAngle-yellowAngleClick) <= 0.5){
+    		System.out.println("Yellow Direction Passed");
+    		total++;
+    	}else{
+    		System.out.println("Yellow Direction Failed");
+    	}
+    	
     	if (Point.distanceSq(yellowCentroid.x, yellowCentroid.y, yellowCentroidAuto.x, yellowCentroidAuto.y) < 25){
     		System.out.println("Yellow Centroid Passed");
     		total++;
@@ -170,22 +186,19 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     		System.out.println("pixelsToCM Failed");
     	}
     	
-    	System.out.println("Tests passed: " + Integer.toString(total) + "/5");
+    	System.out.println("Tests passed: " + Integer.toString(total) + "/7");
     	
     
     }
     
     public static double getOrientation(Point greyCircle,Point top){
     	double a = Math.atan2(top.y-greyCircle.y,top.x-greyCircle.y);
-    	System.out.println("Debug: " + a);
     	if(a < 0){
-    		a = -a;
-    	} else {
-    		a = (2.0*Math.PI) - a;
-    	}
-    	System.out.println("Debug: " + a);
-    	a = (a + (Math.PI/2.0)) % (2*Math.PI); 
-    	System.out.println("Debug: " + a);
+    		a = (2.0*Math.PI) + a;
+    	}    	
+    	a += (2*Math.PI);
+    	a = a - (3*Math.PI/2);
+    	a = a % (2*Math.PI);
     	return a;
     }
     
@@ -254,6 +267,8 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
             Element goalLeft = (Element)data.item(3);
             Element goalRight = (Element)data.item(4);
             
+            
+            
             ball = new Point(	Integer.parseInt(ballE.getAttribute("x")),
             						Integer.parseInt(ballE.getAttribute("y")));
             
@@ -276,7 +291,9 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
             
             blueBottom = new Point(Integer.parseInt(blueET.getAttribute("x")), Integer.parseInt(blueET.getAttribute("y")));
             yellowBottom = new Point(Integer.parseInt(yellowET.getAttribute("x")), Integer.parseInt(yellowET.getAttribute("y")));
-
+            
+            blueAngleClick = getOrientation(blueBottom, blueCentroid);
+            yellowAngleClick = getOrientation(yellowBottom, yellowCentroid);
 
         } catch (SAXParseException err) {
         	System.out.println ("** Parsing error" + ", line " + err.getLineNumber () + ", uri " + err.getSystemId ());
