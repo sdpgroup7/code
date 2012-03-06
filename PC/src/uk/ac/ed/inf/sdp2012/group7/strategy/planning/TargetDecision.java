@@ -222,7 +222,10 @@ public class TargetDecision {
 			
 		// No other plan types so must be penalty defence
 		else {
-			double distanceBetween=Point.distance(this.allMovingObjects.getOurPosition().x, this.allMovingObjects.getOurPosition().y, this.allMovingObjects.getTheirPosition().x, this.allMovingObjects.getTheirPosition().y);
+			double distanceBetween=Point.distance(	this.allMovingObjects.getOurPosition().x, 
+													this.allMovingObjects.getOurPosition().y, 
+													this.allMovingObjects.getTheirPosition().x, 
+													this.allMovingObjects.getTheirPosition().y);
 			double theirAngle = this.allMovingObjects.getTheirAngle();
 			// they are facing right when taking penalty
 			if(theirAngle < 110 && theirAngle > 70) {

@@ -66,7 +66,7 @@ public class MovingObject {
 		} else {
 			angles.add(p);
 		}
-		if(movedAngles.size() > 10){
+		if(movedAngles.size() > 3){
 			angles.clear();
 			Point c = new Point(0,0);
 			for(Point m : movedAngles){

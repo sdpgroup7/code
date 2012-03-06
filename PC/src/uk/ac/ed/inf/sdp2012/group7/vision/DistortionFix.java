@@ -7,23 +7,15 @@ import java.util.ArrayList;
 
 public class DistortionFix {
 	
-	private static int width;
-	private static int height;
+	private static int width = 640;
+	private static int height = 480;
 	private static final double barrelCorrectionX = -0.01;
 	private static final double barrelCorrectionY = -0.055;
-	ArrayList<Point> points ;
-	ArrayList<Point> correctedPoints;
-	ArrayList<Color> colors ;
-	
+
 	private Point p = new Point();
 
     public BufferedImage removeBarrelDistortion(BufferedImage image, int left, int right, int top, int bottom){
-    	
-    	ArrayList<Point> points = new ArrayList<Point>();
-    	ArrayList<Point> correctedPoints = new ArrayList<Point>();
-    	ArrayList<Color> colors = new ArrayList<Color>();
-    	width = image.getWidth();
-    	height = image.getHeight();
+
     	BufferedImage newImage = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
     	
     	for (int i = left; i < right; i++) {
@@ -38,6 +30,7 @@ public class DistortionFix {
     	
         return newImage;
     }
+    
     public static Point barrelCorrected(Point p1) {
     	// System.out.println("Pixel: (" + x + ", " + y + ")");
     	// first normalise pixel
