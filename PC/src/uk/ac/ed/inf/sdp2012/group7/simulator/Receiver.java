@@ -135,6 +135,7 @@ public class Receiver extends Thread {
 			g.fillOval((int)ball.getPosition().getX()-5, (int)ball.getPosition().getY()-5, 11, 11);
 			
 			label.getGraphics().drawImage(frameImage, 0, 0, frameImage.getWidth(), frameImage.getHeight(), null);
+			Simulator.worldState.setUpdatedTime();
 		}
 	}
 	
