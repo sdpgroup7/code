@@ -12,7 +12,6 @@ import uk.ac.ed.inf.sdp2012.group7.control.Tools;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.AllMovingObjects;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.AllStaticObjects;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
-import uk.ac.ed.inf.sdp2012.group7.strategy.planning.PlanMonitor;
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
@@ -88,19 +87,18 @@ public class StrategyOld {
 		
 		@Override
 		public void run() {
-			if (worldState.getOurRobot().getPosition().getCentre().distance(worldState.getBall().getPosition().getCentre()) < 40) {
+			if (worldState.getOurRobot().getPosition().getCentre().distance(worldState.getBall().getPosition().getCentre()) < 45) {
 				double targetAngle = Tools.getAngleToFacePoint(worldState.getOurRobot().getPosition().getCentre(),worldState.getOurRobot().getAngle(), worldState.getBall().getPosition().getCentre());
 				controller.rotateBy(targetAngle);
-				controller.moveForward(5);
-				
+				controller.moveForward(3);
 				controller.kick();
+				
+				
 				
 			} else {
 				controller.stop();
 				Plan pl = new Plan(allStaticObjects, allMovingObjects);
 				Point navPoint = pl.getPointToGoTo();
-				PlanMonitor planMonitor = new PlanMonitor(pl);
-				planMonitor.outputPlan();
 				
 				if (navPoint == null) {
 					if (isBallOnThePitch()) {

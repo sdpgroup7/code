@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.awt.Point;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import uk.ac.ed.inf.sdp2012.group7.control.Tools;
@@ -61,7 +62,7 @@ public class ToolsTest {
 	@Test
 	public void test1GetAngleToFacePoint() {
 		double actual = Tools.getAngleToFacePoint(new Point(1,1), 3*Math.PI/2, new Point(1,2));
-		double expected = 0 ;
+		double expected = -Math.PI/2 ;
 		System.out.println("Running the first test of getAngleToFacePoint, result: " + actual);
 		assertTrue(actual == expected);
 	}
@@ -69,9 +70,25 @@ public class ToolsTest {
 	@Test
 	public void test2GetAngleToFacePoint() {
 		double actual = Tools.getAngleToFacePoint(new Point(1,1), Math.PI/2, new Point(2,1));
-		double expected = -Math.PI/2;
+		double expected = 0;
 		System.out.println("Running the second test of getAngleToFacePoint, result: " + actual);
 		assertTrue(actual == expected);
+	} 
+	
+	@Test
+	public void test3GetAngleToFacePoint() {
+		double actual = Tools.getAngleToFacePoint(new Point(2,2),Math.PI/4, new Point(1,2));
+		double expected = -3*Math.PI/4;
+		System.out.println("Running the third test of getAngleToFacePoint, result: " + actual);
+		assertTrue(actual == expected);
+	} 
+	
+	@Test
+	public void test4GetAngleToFacePoint() {
+		double actual = Tools.getAngleToFacePoint(new Point(2,2),Math.PI/3, new Point(1,2));
+		double expected = -5*Math.PI/6;
+		System.out.println("Running the fourth test of getAngleToFacePoint, result: " + actual);
+		Assert.assertEquals(expected, actual, 0.001);
 	} 
 
 }

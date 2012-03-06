@@ -137,9 +137,9 @@ public class Thresholding {
     	redBallThresh[0][0] = 130;
     	redBallThresh[0][1] = 90;
     	redBallThresh[0][2] = 90;
-    	redBallThresh[1][0] = 150;
-    	redBallThresh[1][1] = 150;
-    	redBallThresh[1][2] = 150;
+    	redBallThresh[1][0] = 145;
+    	redBallThresh[1][1] = 120;
+    	redBallThresh[1][2] = 120;
     	yellowRobotThresh[0][0] = 140;
     	yellowRobotThresh[0][1] = 140;
     	yellowRobotThresh[0][2] = 170;
