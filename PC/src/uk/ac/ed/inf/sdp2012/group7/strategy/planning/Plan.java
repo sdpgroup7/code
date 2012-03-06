@@ -100,8 +100,11 @@ public class Plan {
 					takeNextPoint = false;
 				}
 			}
-
-			return path.get(index);
+			if (index >= path.size() ) {
+				return path.get(path.size()-1);
+			} else {
+					return path.get(index);
+				}
 		} else {
 			return null;
 		}
