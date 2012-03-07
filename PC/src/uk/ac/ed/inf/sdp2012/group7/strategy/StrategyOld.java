@@ -121,7 +121,7 @@ public class StrategyOld {
 					double targetAngle = Tools.getAngleToFacePoint(allStaticObjects.convertToNode(worldState.getOurRobot().getPosition().getCentre()),worldState.getOurRobot().getAngle(), navPoint);
 					controller.rotateBy(targetAngle);
 					waitABit(500);
-					double distance = allStaticObjects.convertToNode(allMovingObjects.getOurPosition()).distance(navPoint)*allStaticObjects.getNodeInPixels();
+					double distance = allStaticObjects.convertToNode(allMovingObjects.getOurPosition()).distance(navPoint)*allStaticObjects.getNodeInPixels()*0.75;
 					controller.moveForward(Math.round(VisionTools.pixelsToCM(distance)));
 				}
 			}

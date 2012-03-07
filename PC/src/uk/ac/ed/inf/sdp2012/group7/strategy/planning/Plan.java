@@ -47,16 +47,16 @@ public class Plan {
 				obstacles.add(p);
 			}
 		}
-
-	/*	Point positionBall = this.allMovingObjects.getBallPosition();
+		/*
+		Point positionBall = this.allMovingObjects.getBallPosition();
 		//Possible problem with conversion back to Integers here..?
-		for(int x = (int)(positionBall.x - (2*nodeInPixels)); x <= positionBall.x + 2*nodeInPixels; x = x + (int)nodeInPixels){
-			for(int y = (int)(positionBall.y - (2*nodeInPixels)); y <= positionBall.y + 2*nodeInPixels; y = y + (int)nodeInPixels){
+		for(int x = (int)(positionBall.x - (3*nodeInPixels)); x <= positionBall.x + 3*nodeInPixels; x = x + (int)nodeInPixels){
+			for(int y = (int)(positionBall.y - (3*nodeInPixels)); y <= positionBall.y + 3*nodeInPixels; y = y + (int)nodeInPixels){
 				Point p = new Point(x,y);
 				obstacles.add(p);
 			}
 		}
-*/
+		*/
 		return obstacles;
 	}
 
