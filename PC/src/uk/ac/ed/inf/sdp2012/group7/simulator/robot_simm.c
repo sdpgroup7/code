@@ -104,7 +104,16 @@ void action(void* args) {
 			case BEEP: AT_SAY("bleep blop.\n"); a->cmd->instr = DO_NOTHING;  break;
 			case CELEBRATE: AT_SAY("bleep blop win!\n"); break;
 			case FORWARDS_WITH_DISTANCE:
-					distance = a->cmd->arg; break;
+					if (!distance)
+						distance = a->cmd->arg;
+					else {
+						distance -= speed;
+						a->rs->x = a->rs->x - speed * cos(a->rs->angle);
+						a->rs->y = a->rs->y - speed * sin(a->rs->angle);
+					}
+					if (distance < 0)
+						distance == 0;
+					break;
 			case START_MATCH: AT_STUB("START_MATCH\n"); break;
 			case STOP_MATCH: AT_STUB("STOP_MATCH\n"); break;
 			case QUIT: AT_SAY("quitting action thread.\n"); return 0;
