@@ -96,9 +96,8 @@ void action(void* args) {
 					   a->rs->kicker = 1;
 					   break;
 			case ROTATE: 
-					   angle_temp = a->rs->angle + a->cmd->arg;
-					   if (angle_temp >= 360) angle_temp = angle_temp - 360;
-					   a->rs->angle = angle_temp;
+					   angle_temp = a->cmd->arg <= 360?a->cmd->arg:-(a->cmd->arg-360);
+					   a->rs->angle = angle_temp % 360;
 					   break;
 			case ARC: AT_STUB("ARC\n"); break;
 			case STEER_WITH_RATIO: AT_STUB("STEER_WITH_RATIO\n"); break;
