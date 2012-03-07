@@ -106,6 +106,8 @@ void action(void* args) {
 			case CELEBRATE: AT_SAY("bleep blop win!\n"); break;
 			case FORWARDS_WITH_DISTANCE:
 					distance = a->cmd->arg; break;
+			case START_MATCH: AT_STUB("START_MATCH\n"); break;
+			case STOP_MATCH: AT_STUB("STOP_MATCH\n"); break;
 			case QUIT: AT_SAY("quitting action thread.\n"); return 0;
 		}
 
