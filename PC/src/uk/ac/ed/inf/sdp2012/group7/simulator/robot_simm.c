@@ -104,7 +104,7 @@ void action(void* args) {
 			case ARC: AT_STUB("ARC\n"); break;
 			case STEER_WITH_RATIO: AT_STUB("STEER_WITH_RATIO\n"); break;
 			case BEEP: AT_SAY("bleep blop.\n"); a->cmd->instr = DO_NOTHING;  break;
-			case CELEBRATE: AT_SAY("bleep blop win!\n"); break;
+			case CELEBRATE: AT_SAY("bleep blop win!\n"); a->cmd->instr = DO_NOTHING; break;
 			case FORWARDS_WITH_DISTANCE:
 					if (!distance)
 						distance = a->cmd->arg;
@@ -113,8 +113,10 @@ void action(void* args) {
 						a->rs->x = a->rs->x - speed * cos(a->rs->angle);
 						a->rs->y = a->rs->y - speed * sin(a->rs->angle);
 					}
-					if (distance < 0)
+					if (distance < 0) {
 						distance == 0;
+						a->cmd->instr = DO_NOTHING;
+					}
 					break;
 			case START_MATCH:
 					a->cmd->arg = 80;
