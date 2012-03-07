@@ -148,7 +148,7 @@ public class Thresholding {
 		yellowRobotThresh[1][2] = 140;
 		blueRobotThresh[0][0] = 120;
 		blueRobotThresh[0][1] = 170;
-		blueRobotThresh[0][2] = 90;
+		blueRobotThresh[0][2] = 100;
 		blueRobotThresh[1][0] = 170;
 		blueRobotThresh[1][1] = 200;
 		blueRobotThresh[1][2] = 150;
