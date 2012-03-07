@@ -1,0 +1,22 @@
+** USING THE SIMULATOR **
+
+1. Compilaton
+
+The simulator is compiled automatically with ant in the default task.
+The compile-simulator.sh script is just a helper for ant, don't use it directly.
+
+2. Starting simualtor
+
+First, cd to the PC directory and run sh simulator. It is advisable to run the simulator in a separate terminal, but if, for any reason, you don't want to do that, the script will fork by itself so the shell is still usable (press Return to see your prompt).
+
+Then, use the ant task MainRunnerSimulator (so run ant MainRunnerSimulator).
+
+3. Stopping the simulator
+
+Simply close the GUI, the simulator will die by itself.
+
+4. Output from the simulator
+
+The simulator will output some information regarding what it's doing. The messages should be self-explanatory. All output is preceded by the thread that writes it.
+
+When idling (after the connection has been made), the simulator will output (on the same line): the frame counter, the current position and angle of the blue robot (bx, by, ba), the current position of the yellow robot (yx, yy, ya) and the current state of either robot's kicker (bk, yk).
