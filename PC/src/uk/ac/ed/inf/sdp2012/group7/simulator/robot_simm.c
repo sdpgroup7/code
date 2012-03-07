@@ -53,6 +53,8 @@ void robot_thread(void *args) {
 			} else {
 				RT_SAY2("received opcode of wrong size (%i)\n", recv_size);
 			}
+			buf = 0x6F;
+			send(socket, &buf, sizeof buf, 0);
 		}
 
 		cmd.instr = QUIT;
@@ -114,7 +116,10 @@ void action(void* args) {
 					if (distance < 0)
 						distance == 0;
 					break;
-			case START_MATCH: AT_STUB("START_MATCH\n"); break;
+			case START_MATCH:
+					a->cmd->arg = 80;
+					a->cmd->instr = FORWARDS_WITH_DISTANCE;
+					break;
 			case STOP_MATCH: AT_STUB("STOP_MATCH\n"); break;
 			case QUIT: AT_SAY("quitting action thread.\n"); return 0;
 		}
