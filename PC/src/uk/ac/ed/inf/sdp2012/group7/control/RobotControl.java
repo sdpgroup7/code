@@ -153,6 +153,7 @@ public class RobotControl implements ConstantsReuse, ControlCodes {
 	 * Receive an integer from the robot
 	 */
 	private int getResponse() {
+		//the below method is blocking
 		return comms.recieveFromRobot();
 	}
 	
