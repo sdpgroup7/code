@@ -53,6 +53,8 @@ void robot_thread(void *args) {
 			} else {
 				RT_SAY2("received opcode of wrong size (%i)\n", recv_size);
 			}
+			buf = 0x6F;
+			send(socket, &buf, sizeof buf, 0);
 		}
 
 		cmd.instr = QUIT;
@@ -96,16 +98,31 @@ void action(void* args) {
 					   a->rs->kicker = 1;
 					   break;
 			case ROTATE: 
-					   angle_temp = a->rs->angle + a->cmd->arg;
-					   if (angle_temp >= 360) angle_temp = angle_temp - 360;
-					   a->rs->angle = angle_temp;
+					   angle_temp = a->cmd->arg <= 360?a->cmd->arg:-(a->cmd->arg-360);
+					   a->rs->angle = angle_temp % 360;
 					   break;
 			case ARC: AT_STUB("ARC\n"); break;
 			case STEER_WITH_RATIO: AT_STUB("STEER_WITH_RATIO\n"); break;
 			case BEEP: AT_SAY("bleep blop.\n"); a->cmd->instr = DO_NOTHING;  break;
-			case CELEBRATE: AT_SAY("bleep blop win!\n"); break;
+			case CELEBRATE: AT_SAY("bleep blop win!\n"); a->cmd->instr = DO_NOTHING; break;
 			case FORWARDS_WITH_DISTANCE:
-					distance = a->cmd->arg; break;
+					if (!distance)
+						distance = a->cmd->arg;
+					else {
+						distance -= speed;
+						a->rs->x = a->rs->x - speed * cos(a->rs->angle);
+						a->rs->y = a->rs->y - speed * sin(a->rs->angle);
+					}
+					if (distance < 0) {
+						distance == 0;
+						a->cmd->instr = DO_NOTHING;
+					}
+					break;
+			case START_MATCH:
+					a->cmd->arg = 80;
+					a->cmd->instr = FORWARDS_WITH_DISTANCE;
+					break;
+			case STOP_MATCH: AT_STUB("STOP_MATCH\n"); break;
 			case QUIT: AT_SAY("quitting action thread.\n"); return 0;
 		}
 

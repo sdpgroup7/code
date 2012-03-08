@@ -16,6 +16,8 @@ enum opcodes {
         BEEP,
         CELEBRATE,
         FORWARDS_WITH_DISTANCE,
+	START_MATCH,
+	STOP_MATCH,
         QUIT
 };
 

@@ -20,6 +20,8 @@ import org.xml.sax.SAXParseException;
 
 import org.w3c.dom.NodeList;
 
+import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+
 public class VisionTesting extends Panel implements MouseListener, MouseMotionListener  {
 
 
@@ -31,11 +33,25 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
 	
     public static ArrayList<Point> blueC = new ArrayList<Point>();
     public static ArrayList<Point> yellowC = new ArrayList<Point>();
-    public static double yellowO = 0;
-    public static double blueO = 0;
     public static double blueOrientation = 0;
     public static double yellowOrientation = 0;
+    
     public static Point ball;
+    public static Point ballAuto;
+    public static Point blueCentroid;
+    public static Point yellowCentroid;
+    public static Point blueCentroidAuto;
+    public static Point yellowCentroidAuto;
+    public static Point blueBottom;
+    public static Point yellowBottom;
+    public static int left;
+    public static int right;
+    public static int leftAuto;
+    public static int rightAuto;
+    public static double blueAngleClick;
+    public static double yellowAngleClick;
+    public static double blueAngle;
+    public static double yellowAngle;
     
     public void mouseExited(MouseEvent e){}
     public void mouseEntered(MouseEvent e){}
@@ -72,24 +88,41 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     	JFileChooser fc = new JFileChooser();
     	fc.setCurrentDirectory(new File("./testData/"));
     	
-    	File file = null;
+    	File fileA = null;
+    	File fileB = null;
     	
-    	System.out.println("Please select the XML file of the image you wish to test.");
+    	System.out.println("Please select the clicked XML file of the image you wish to test.");
     	
     	fc.setFileFilter(new XMLFilter());
     	int returnVal = fc.showOpenDialog(null);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            file = fc.getSelectedFile();
+            fileA = fc.getSelectedFile();
             System.out.println("Opening file:");
-            System.out.println(file.getAbsolutePath());
+            System.out.println(fileA.getAbsolutePath());
         } else {
             System.out.println("Open command cancelled by user.");
             System.out.println("Quiting...");
             System.exit(0);
         }
         
-        readXML(file);
+    	System.out.println("Please select the auto XML file of the image you wish to test.");
+    	
+    	fc.setFileFilter(new XMLFilter());
+    	int returnValB = fc.showOpenDialog(null);
+
+        if (returnValB == JFileChooser.APPROVE_OPTION) {
+            fileB = fc.getSelectedFile();
+            System.out.println("Opening file:");
+            System.out.println(fileB.getAbsolutePath());
+        } else {
+            System.out.println("Open command cancelled by user.");
+            System.out.println("Quiting...");
+            System.exit(0);
+        }
+        
+        readXMLClick(fileA);
+        readXMLAuto(fileB);
         
         JFrame window = new JFrame("Vision Testing System");
     	window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -99,77 +132,78 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     	window.setVisible(true);
     	
 	    VisionTesting v = new VisionTesting();
-	    v.addMouseListeners(window,panel);
-    	
-    	ArrayList<Point> clickedCorners = new ArrayList<Point>();
-    	Point blueRobot = getClickPoint("Click the centre of the blue robot");
-    	Point yellowRobot = getClickPoint("Click the centre of the yellow robot");
-    	blueOrientation = getOrientation(	getClickPoint("Click the grey circle on the blue robot"),
-    										getClickPoint("Click the bottom of the T on the blue robot"));
-    	yellowOrientation = getOrientation(	getClickPoint("Click the grey circle on the yellow robot"),
-    										getClickPoint("Click the bottom of the T on the yellow robot"));
-    	
-    	Point ballPos = getClickPoint("Click the ball");
-    	clickedCorners.add(getCorner(blueRobot,1));
-    	clickedCorners.add(getCorner(blueRobot,2));
-    	clickedCorners.add(getCorner(blueRobot,3));
-    	clickedCorners.add(getCorner(blueRobot,4));
-    	clickedCorners.add(getCorner(yellowRobot,1));
-    	clickedCorners.add(getCorner(yellowRobot,2));
-    	clickedCorners.add(getCorner(yellowRobot,3));
-    	clickedCorners.add(getCorner(yellowRobot,4));
     	
     	int total = 0;
     	
-    	
-    	if(	close(clickedCorners.get(0),blueC.get(0)) &&
-    		close(clickedCorners.get(1),blueC.get(1)) &&
-    		close(clickedCorners.get(2),blueC.get(2)) &&
-    		close(clickedCorners.get(3),blueC.get(3))){
-    			System.out.println("Blue passed");
-    	} else {
-    		System.out.println("Blue failed");
+    	if (Point.distanceSq(blueCentroid.x, blueCentroid.y, blueCentroidAuto.x, blueCentroidAuto.y) < 50){
+    		System.out.println("Blue Centroid Passed");
+    		total++;
+    	}else{
+    		System.out.println("Blue Centroid Failed");
     	}
-    	if(	close(clickedCorners.get(4),yellowC.get(0)) &&
-        		close(clickedCorners.get(5),yellowC.get(1)) &&
-        		close(clickedCorners.get(6),yellowC.get(2)) &&
-        		close(clickedCorners.get(7),yellowC.get(3))){
-        			System.out.println("Yellow passed");
-        } else {
-        	System.out.println("Yellow failed");
-        }
-    	if(close(ballPos,ball)){
-    		System.out.println("Ball passed");
-    	} else {
-    		System.out.println("Ball failed");
-    	}
-    	if(Math.abs(blueO-blueOrientation) < 0.175){ //Within 10 degrees
-    		System.out.println("Blue Orientation Passed");
-    	} else {
-    		System.out.println("Blue Orientation Failed");
-    	}
-    	if(Math.abs(yellowO-yellowOrientation) < 0.175){ //Within 10 degrees
-    		System.out.println("Yellow Orientation Passed");
-    	} else {
-    		System.out.println("Yellow Orientation Failed");
+
+    	//Angle test is off!
+    	/*
+    	if (Math.abs(blueAngle-blueAngleClick) <= 2){
+    		System.out.println("Blue Direction Passed");
+    		total++;
+    	}else{
+    		System.out.println("Blue Direction Failed");
     	}
     	
+    	if (Math.abs(yellowAngle-yellowAngleClick) <= 2){
+    		System.out.println("Yellow Direction Passed");
+    		total++;
+    	}else{
+    		System.out.println("Yellow Direction Failed");
+    	}
+    	*/
     	
-    	System.out.println("Accuracy: " + (int)((100.0*((float)total)/11)+0.5) + "%");
+    	if (Point.distanceSq(yellowCentroid.x, yellowCentroid.y, yellowCentroidAuto.x, yellowCentroidAuto.y) < 50){
+    		System.out.println("Yellow Centroid Passed");
+    		total++;
+    	}else{
+    		System.out.println("Yellow Centroid Failed");
+    	}
+    	
+    	if (Point.distanceSq(ball.x, ball.y, ballAuto.x, ballAuto.y) < 50){
+    		System.out.println("Ball Centroid Passed");
+    		total++;
+    	}else{
+    		System.out.println("Ball Centroid Failed");
+    	}
+    	
+    	/*
+    	
+    	if ((cmToPixels(244f) <= (right-left+20)) && (cmToPixels(244f) >= (right-left-20))){
+    		System.out.println("cmToPixels Passed");
+    		total++;
+    	}else{
+    		System.out.println("cmToPixels Failed");
+    	}
+    	
+    	if ((pixelsToCM(right-left) <= 260f) && (pixelsToCM(right-left) >= 230f)){
+    		System.out.println("pixelsToCM Passed");
+    		total++;
+    	}else{
+    		System.out.println("pixelsToCM Failed");
+    	}
+    	*/
+    	
+    	//only want to test positions
+    	System.out.println("Tests passed: " + Integer.toString(total) + "/3");
+    	
     
     }
     
     public static double getOrientation(Point greyCircle,Point top){
     	double a = Math.atan2(top.y-greyCircle.y,top.x-greyCircle.y);
-    	System.out.println("Debug: " + a);
     	if(a < 0){
-    		a = -a;
-    	} else {
-    		a = (2.0*Math.PI) - a;
-    	}
-    	System.out.println("Debug: " + a);
-    	a = (a + (Math.PI/2.0)) % (2*Math.PI); 
-    	System.out.println("Debug: " + a);
+    		a = (2.0*Math.PI) + a;
+    	}    	
+    	a += (2*Math.PI);
+    	a = a - (3*Math.PI/2);
+    	a = a % (2*Math.PI);
     	return a;
     }
     
@@ -217,7 +251,7 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
 	}
     
     
-    public static void readXML(File xmlFile){
+    public static void readXMLClick(File xmlFile){
     	
     	try {
             DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -235,44 +269,36 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
             Node blue = data.item(0);
             Node yellow = data.item(1);
             Element ballE = (Element)data.item(2);
+            Element goalLeft = (Element)data.item(3);
+            Element goalRight = (Element)data.item(4);
+            
             
             
             ball = new Point(	Integer.parseInt(ballE.getAttribute("x")),
             						Integer.parseInt(ballE.getAttribute("y")));
             
-            Element blueE = (Element)blue;
-            Element yellowE = (Element)yellow;
+            left = Integer.parseInt(goalLeft.getAttribute("x"));
+            right = Integer.parseInt(goalRight.getAttribute("x"));
             
-            blueO = Double.parseDouble(blueE.getAttribute("orientation"));
-            yellowO = Double.parseDouble(yellowE.getAttribute("orientation"));
+            Node blueCent = blue.getFirstChild();
+            Node blueBum = blue.getLastChild();
             
-            for(int i = 0;i<blue.getChildNodes().getLength();i++){
-            	Point p;
-            	Node corner = blue.getChildNodes().item(i);
-            	Element elementCorner = (Element)corner;
-            	p = new Point(	Integer.parseInt(elementCorner.getAttribute("x")),
-            					Integer.parseInt(elementCorner.getAttribute("y")));
-            	blueC.add(p);
-            }
-            for(int i = 0;i<yellow.getChildNodes().getLength();i++){
-            	Point p;
-            	Node corner = yellow.getChildNodes().item(i);
-            	Element elementCorner = (Element)corner;
-            	p = new Point(	Integer.parseInt(elementCorner.getAttribute("x")),
-            					Integer.parseInt(elementCorner.getAttribute("y")));
-            	yellowC.add(p);
-            }
+            Node yellowCent = yellow.getFirstChild();
+            Node yellowBum = yellow.getLastChild();
             
-            System.out.println("Blue Robot:");
-            System.out.println("Orientation: " + blueO);
-            for(Point p: blueC){
-            	System.out.println(p.toString());
-            }
-            System.out.println("Yellow Robot:");
-            System.out.println("Orientation: " + yellowO);
-            for(Point p: yellowC){
-            	System.out.println(p.toString());
-            }
+            Element blueE = (Element)blueCent;
+            Element blueET = (Element)blueBum;
+            Element yellowE = (Element)yellowCent;
+            Element yellowET = (Element)yellowBum;
+            
+            blueCentroid = new Point(Integer.parseInt(blueE.getAttribute("x")), Integer.parseInt(blueE.getAttribute("y")));
+            yellowCentroid = new Point(Integer.parseInt(yellowE.getAttribute("x")), Integer.parseInt(yellowE.getAttribute("y")));
+            
+            blueBottom = new Point(Integer.parseInt(blueET.getAttribute("x")), Integer.parseInt(blueET.getAttribute("y")));
+            yellowBottom = new Point(Integer.parseInt(yellowET.getAttribute("x")), Integer.parseInt(yellowET.getAttribute("y")));
+            
+            blueAngleClick = getOrientation(blueBottom, blueCentroid);
+            yellowAngleClick = getOrientation(yellowBottom, yellowCentroid);
 
         } catch (SAXParseException err) {
         	System.out.println ("** Parsing error" + ", line " + err.getLineNumber () + ", uri " + err.getSystemId ());
@@ -285,4 +311,68 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
         }
     }
     
+    public static void readXMLAuto(File xmlFile){
+    	try {
+            DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+            Document doc = docBuilder.parse(xmlFile);
+
+            // normalize text representation
+            doc.getDocumentElement().normalize();
+            System.out.println("Root element of the doc is " + doc.getDocumentElement().getNodeName());
+            
+            Node root = doc.getDocumentElement(); 
+            NodeList data = root.getChildNodes();
+            Node blue = data.item(0);
+            Node yellow = data.item(1);
+            Element ballE = (Element)data.item(2);
+            Element goalLeft = (Element)data.item(3);
+            Element goalRight = (Element)data.item(4);
+            
+            ballAuto = new Point(	Integer.parseInt(ballE.getAttribute("x")),
+            						Integer.parseInt(ballE.getAttribute("y")));
+            
+            leftAuto = Integer.parseInt(goalLeft.getAttribute("x"));
+            rightAuto = Integer.parseInt(goalRight.getAttribute("x"));
+            
+            Node blueCent = blue.getFirstChild();
+            Node blueBum = blue.getLastChild();
+            
+            Node yellowCent = yellow.getFirstChild();
+            Node yellowBum = yellow.getLastChild();
+            
+            Element blueE = (Element)blueCent;
+            Element blueET = (Element)blueBum;
+            Element yellowE = (Element)yellowCent;
+            Element yellowET = (Element)yellowBum;
+            
+            blueCentroidAuto = new Point(Integer.parseInt(blueE.getAttribute("x")), Integer.parseInt(blueE.getAttribute("y")));
+            yellowCentroidAuto = new Point(Integer.parseInt(yellowE.getAttribute("x")), Integer.parseInt(yellowE.getAttribute("y")));
+            
+            blueAngle = Double.parseDouble(blueET.getAttribute("rads"));
+            yellowAngle = Double.parseDouble(yellowET.getAttribute("rads"));
+
+
+        } catch (SAXParseException err) {
+        	System.out.println ("** Parsing error" + ", line " + err.getLineNumber () + ", uri " + err.getSystemId ());
+        	System.out.println(" " + err.getMessage ());
+        } catch (SAXException e) {
+        	Exception x = e.getException ();
+        	((x == null) ? e : x).printStackTrace ();
+        }catch (Throwable t) {
+        	t.printStackTrace ();
+        }
+    }
+    
+	public static int cmToPixels(float cm){
+		float width = (float)(rightAuto - leftAuto);
+		float pixel = ((width/244f)*cm);
+		return (int) pixel;
+	}
+	
+	public static float pixelsToCM(double pixelValue){
+		float width = (float)(rightAuto - leftAuto);
+		float cm = (float)((244f/width)*pixelValue);
+		return cm;	
+	}
 }

@@ -227,6 +227,7 @@ public class ControlInterface implements Observer {
 	 * 
 	 * @return The goal point
 	 */
+	@SuppressWarnings("null")
 	public static Point2D findGoalPoint(ArrayList<Point> p, Point2D pos, int lookahead) throws Exception {
 		
 		Circle2D zone = new Circle2D(pos.getX(), pos.getY(), lookahead);
@@ -272,10 +273,13 @@ public class ControlInterface implements Observer {
 	public void implementAStar(Plan plan) {
 		synchronized (this){
 			ArrayList<Point> path = plan.getPath();
-			Point firstPoint = path.get(0);
+			Point firstPoint = plan.getOurRobotPosition();
 			Point secondPoint = path.get(1);
+			path.remove(0);
+			path.remove(1);
 		
-			double targetAngle = Math.atan2((secondPoint.y - firstPoint.y),(secondPoint.x - firstPoint.x));
+			double targetAngle = VisionTools.convertAngle(Math.atan2((secondPoint.y - firstPoint.y),(secondPoint.x - firstPoint.x)));
+			targetAngle = targetAngle - plan.getOurRobotAngle();
 		
 			if (Math.abs(Math.toDegrees(targetAngle)) > 5) {
 				logger.debug("We need to rotate to the point");

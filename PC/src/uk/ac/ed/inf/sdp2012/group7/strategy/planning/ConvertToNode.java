@@ -32,7 +32,7 @@ public class ConvertToNode {
 	
 	//Compacts WorldState position points into "Node" center positions
 	public static ArrayList<Point> convertToNodes(ArrayList<Point> p){
-
+		//TODO: Why isn't this a foreach loop?
 		ArrayList<Point> nodePoints = new ArrayList<Point>();
 		Iterator itr = p.iterator();
 

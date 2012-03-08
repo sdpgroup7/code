@@ -1,18 +1,10 @@
 package uk.ac.ed.inf.sdp2012.group7.simulator;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.Socket;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -187,7 +179,7 @@ public class SimulatorFeed extends WindowAdapter {
 		receiver.stop();
 
 		windowFrame.dispose();
-		Simulator.logger.info("Vision System Ending...");
+		Simulator.logger.info("Simulator Ending...");
 		System.exit(0);
 	}
 }
