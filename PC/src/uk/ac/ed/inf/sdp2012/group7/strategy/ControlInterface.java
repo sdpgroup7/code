@@ -146,37 +146,28 @@ public class ControlInterface implements Observer {
 		if (plan.getAction() == drive) {
 			
 			logger.info("Action is to drive");
-			c.clearAllCommands();
 			
 			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
 			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", (int)(path.getRadius()+0.5), path.isLeft()));
-			waitABit();
 		
 		} else if (plan.getAction() == kick) {
 			logger.info("Action is to kick");
 			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
 			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", (int)(path.getRadius()+0.5), path.isLeft()));
-			waitABit();
 			c.kick();
 			logger.info("Command sent to robot: kick");
-			waitABit();
 			
 		} else if (plan.getAction() == stop) {
 			logger.info("Action is to stop");
 			c.stop();
-			logger.info("Command sent to robot: stop");
-			waitABit();
-			
+			logger.info("Command sent to robot: stop");			
 		
 		} else if (plan.getAction() == angle) {
 			logger.info("Action is to turn");
 			c.stop();
 			logger.info("Command sent to robot: stop");
-			waitABit();
 			double turnAngle = angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
 			c.rotateBy(turnAngle);
-			waitABit();
-
 		
 		} else if (plan.getAction() == angleKick) {
 			logger.info("Action is to turn");
@@ -187,7 +178,6 @@ public class ControlInterface implements Observer {
 			} catch (InterruptedException e) {}
 			logger.info("Action is to kick");
 			c.kick();
-			waitABit();
 		} else if (plan.getAction() == euclidForward) {
 			logger.info("Action is to drive forward");
 			c.moveForward((int)plan.getDistanceInCM());
@@ -269,63 +259,19 @@ public class ControlInterface implements Observer {
 		return intersect;
 	}
 	
-	//Driving simply point to point
-	public void implementAStar(Plan plan) {
-		synchronized (this){
-			ArrayList<Point> path = plan.getPath();
-			Point firstPoint = plan.getOurRobotPosition();
-			Point secondPoint = path.get(1);
-			path.remove(0);
-			path.remove(1);
-		
-			double targetAngle = VisionTools.convertAngle(Math.atan2((secondPoint.y - firstPoint.y),(secondPoint.x - firstPoint.x)));
-			targetAngle = targetAngle - plan.getOurRobotAngle();
-		
-			if (Math.abs(Math.toDegrees(targetAngle)) > 5) {
-				logger.debug("We need to rotate to the point");
-				c.stop();
-				waitABit(10);
-				c.rotateBy(targetAngle);
-				waitABit(10);
-			} else {
-				logger.debug("Don't need to rotate");
-			}
-		
-			double distanceToDrive = firstPoint.distance(secondPoint);
-		
-			double conversion = VisionTools.pixelsToCM(distanceToDrive * plan.getNodeInPixels());
-		
-			int distance = (int) conversion;
-			c.moveForward(distance);
-			waitABit(10);
-		}
-	}
+
 		
 	
 	public void kick() {
-		c.clearAllCommands();
 		c.kick();
 	}
 	
 	public void drive() {
-		c.clearAllCommands();
 		c.changeSpeed(30);
-		c.moveForward(60);
+		c.moveForward();
 	}
 
 	
-	
-	public void waitABit() {
-		try {
-			Thread.sleep(200);
-		} catch (InterruptedException e) {}
-	}
-	
-	public void waitABit(long value) {
-		try {
-			Thread.sleep(value);
-		} catch (InterruptedException e) {}
-	}
 	
 	public double angleToTurn(double ourAngle, double angleWanted) {
 			
@@ -370,7 +316,8 @@ public class ControlInterface implements Observer {
 			
 			if(plan.getAction() == PlanTypes.ActionType.DRIVE.ordinal()){
 				
-				implementAStar(plan);
+				Arc arcToDrive = chooseArc(plan);
+				implimentArc(arcToDrive, plan);
 				
 			} else {
 				
@@ -383,17 +330,9 @@ public class ControlInterface implements Observer {
 			logger.info("Action is to stop");
 			c.stop();
 			logger.info("Command sent to robot: stop");
-			waitABit();
 			
 		} else {}
-
-		//Arc arcToDrive = chooseArc(plan);
-		//implimentArc(arcToDrive, plan);
-		
 		
 	}
-
-	
-
 
 }

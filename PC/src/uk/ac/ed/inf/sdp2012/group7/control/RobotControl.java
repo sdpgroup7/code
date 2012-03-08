@@ -14,19 +14,19 @@ import lejos.pc.comm.NXTInfo;
  * This class holds the geometric location of our robot but is also responsible
  * for communicating with it.
  */
-public class RobotControl implements ConstantsReuse {
+public class RobotControl implements ConstantsReuse, ControlCodes {
 
 	private CommunicationInterface comms;
 	private NXTComm nxtComm;
-	private NXTInfo info = new NXTInfo(NXTCommFactory.BLUETOOTH, ROBOT_NAME,
-			ROBOT_MAC);
-	private Queue<Integer> commandList = new LinkedList<Integer>();
+	private NXTInfo info = new NXTInfo(NXTCommFactory.BLUETOOTH, ROBOT_NAME,ROBOT_MAC);
+	private int command;
 
 	private boolean isConnected = false;
 	private boolean keepConnected = true;
 	public boolean askingToReset = false;
 	private volatile int currentSpeed = 0;
 	private boolean simulator = false;
+	private boolean bumped = false;
 
 	public RobotControl() {}
 
@@ -51,13 +51,7 @@ public class RobotControl implements ConstantsReuse {
 
 				// send data when necessary
 				while (keepConnected) {
-					if (commandList.isEmpty()) {
-						sendToRobot(OpCodes.DO_NOTHING.ordinal());
-					} else {
-						sendToRobot(commandList.remove());
-					}
-					receiveFromRobot();
-
+					sendToRobot(command);
 				}
 				// disconnect when we're done
 				disconnectFromRobot();
@@ -110,76 +104,56 @@ public class RobotControl implements ConstantsReuse {
 	 * Add a command to the queue to be sent to the robot
 	 */
 	private void addCommand(int command) {
-		while (commandList.size() > 3) {
-			commandList.remove();
-			System.out.print("<");
-		}
-		commandList.add(command);
+		this.command = command;
 	}
 
-	/**
-	 * Clear the queue of commands to be sent to the robot
-	 */
-	public void clearAllCommands() {
-		commandList.clear();
-	}
+
 
 	/**
 	 * Sends a command to the robot
 	 */
 	private void sendToRobot(int command) {
-		//System.out.println("SENT "+command+" TO ROBOT");
-		comms.sendToRobot(command);
+		
+		if(!bumped){
+			comms.sendToRobot(command);
+			if(getResponse() == BUMPED_OBJECT){
+				bumped = true;
+			}
+		} else {
+			while(getResponse() != COMPLETED_BUMP_PROCEDURE){}
+			//We don't need anything in the loop as getResponse is blocking anyway
+		}
+		
 	}
 
 	/**
 	 * Receive an integer from the robot
 	 */
-	private int receiveFromRobot() {
-
-		int response = comms.recieveFromRobot();
-
-		if (response == 'r') {
-			askingToReset = true;
-			// clearAllCommands();
-			// System.out.println("STACK CLEARED");
-		}
-
-		return response;
-
+	private int getResponse() {
+		return comms.recieveFromRobot();
 	}
-
-	/**
-	 * Returns the last speed we set the robot to
-	 */
-	public int getSpeed() {
-		return currentSpeed;
+	
+	public void changeSpeed(int speed) {
+		addCommand(OpCodes.CHANGE_SPEED.ordinal() | (speed << 8));
 	}
-
-	public boolean moving = true;
+	
 
 	/**
 	 * Commands the robot to move forward
 	 */
 	public void moveForward() {
-		moving = true;
 		addCommand(OpCodes.FORWARDS.ordinal());
 	}
 	
-	/**
-	 * Commands the robot to move forward
-	 */
 	public void moveForward(int distance) {
-		moving = true;
-		int command = OpCodes.FORWARDS_WITH_DISTANCE.ordinal() | (distance << 8);
-		addCommand(command);
+		addCommand(OpCodes.FORWARDS_WITH_DISTANCE.ordinal() | (distance << 8));
 	}
+	
 
 	/**
 	 * Commands the robot to move backward
 	 */
 	public void moveBackward() {
-		moving = true;
 		addCommand(OpCodes.BACKWARDS.ordinal());
 	}
 
@@ -194,18 +168,9 @@ public class RobotControl implements ConstantsReuse {
 	 * Commands the robot to stop where it is
 	 */
 	public void stop() {
-		moving = false;
 		addCommand(OpCodes.STOP.ordinal());
 	}
 
-	/**
-	 * Sets the speed of the motors to a given integer (900 is the max)
-	 */
-	public void changeSpeed(int to) {
-		int command = OpCodes.CHANGE_SPEED.ordinal() | (to << 8);
-		currentSpeed = to;
-		addCommand(command);
-	}
 
 	/**
 	 * Commands the robot to kick
@@ -223,8 +188,7 @@ public class RobotControl implements ConstantsReuse {
 		System.out.println("Rotate by " + radians + ":  "
 				+ Math.toDegrees(radians));
 
-		if (radians < 0)
-			radians = (2 * Math.PI - radians);
+		if (radians < 0) radians = (2 * Math.PI - radians);
 		if (radians != 0) {
 			int command = OpCodes.ROTATE.ordinal() | ((int) Math.toDegrees(radians) << 8);
 			addCommand(command);
@@ -238,23 +202,15 @@ public class RobotControl implements ConstantsReuse {
 	 */
 	public void circleWithRadius(int radius, boolean arcLeft) {
 
-		// interpreted on the robot as a negative
+		int command = radius << 8;
 		if (arcLeft) {
-			radius = radius*(-1);
-			radius += 1000;
+			command = command | OpCodes.ARC_LEFT.ordinal();
+		} else {
+			command = command | OpCodes.ARC_RIGHT.ordinal();
 		}
 
-		int command = OpCodes.ARC.ordinal() | (radius << 8);
 		addCommand(command);
 
-	}
-
-	/**
-	 * Commands steers the robot based on a given ratio
-	 */
-	public void steerWithRatio(float ratio) {
-		int command = OpCodes.STEER_WITH_RATIO.ordinal() | ((int) ratio << 8);
-		addCommand(command);
 	}
 
 	/**
@@ -279,12 +235,6 @@ public class RobotControl implements ConstantsReuse {
 		addCommand(OpCodes.STOP_MATCH.ordinal());
 	}
 
-	/**
-	 * Commands the robot to play a tune
-	 */
-	public void celebrate() {
-		addCommand(OpCodes.CELEBRATE.ordinal());
-	}
 
 	public void setConnected(boolean isConnected) {
 		this.isConnected = isConnected;
