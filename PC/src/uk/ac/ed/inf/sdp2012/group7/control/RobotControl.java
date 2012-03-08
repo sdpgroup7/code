@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.apache.log4j.Logger;
+
 import uk.ac.ed.inf.sdp2012.group7.MainRunner;
+import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
 
 import lejos.pc.comm.NXTComm;
 import lejos.pc.comm.NXTCommFactory;
@@ -19,6 +22,7 @@ public class RobotControl implements ConstantsReuse, ControlCodes {
 	private CommunicationInterface comms;
 	private NXTComm nxtComm;
 	private NXTInfo info = new NXTInfo(NXTCommFactory.BLUETOOTH, ROBOT_NAME,ROBOT_MAC);
+	public static final Logger logger = Logger.getLogger(RobotControl.class);
 	private int command;
 
 	private boolean isConnected = false;
@@ -116,11 +120,30 @@ public class RobotControl implements ConstantsReuse, ControlCodes {
 		
 		if(!bumped){
 			comms.sendToRobot(command);
-			if(getResponse() == BUMPED_OBJECT){
-				bumped = true;
+			switch(getResponse()){
+				case BUMPED_OBJECT:
+					bumped = true;
+					logger.debug("Robot hit object!");
+					break;
+				case MOVED_FORWARDS:
+					logger.info("Robot moved forwards");
+					break;
+				case MOVED_BACKWARDS:
+					logger.info("Robot moved forwards");
+					break;
+				case ARCED_LEFT:
+					logger.info("Robot moved forwards");
+					break;
+				case ARCED_RIGHT:
+					logger.info("Robot moved forwards");
+					break;
+				case KICKED:
+					logger.info("Robot moved forwards");
+					break;
 			}
 		} else {
 			while(getResponse() != COMPLETED_BUMP_PROCEDURE){}
+			logger.debug("Completed bump procedure");
 			//We don't need anything in the loop as getResponse is blocking anyway
 		}
 		
