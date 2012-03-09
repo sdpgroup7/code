@@ -87,7 +87,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 					
 					n = OpCodes.values()[byteBuffer[1]];
 					int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
-					LCD.drawString(Integer.toString(magnitude, 0, 4));
+					LCD.drawString(Integer.toString(magnitude), 0, 4);
 					switch (n) {
 
 						case FORWARDS:
@@ -216,8 +216,10 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 
 				// flag sensor hit as being dealt with and save the speed
 				// we were going before the collision occurred
-				os.write(OpCodes.BUMP_ON.ordinal());
-				os.flush();
+				try{
+					os.write(OpCodes.BUMP_ON.ordinal());
+					os.flush();
+				} catch (Exception ex){}
 				reacting = true;
 				tempCurSpeed = (float) pilot.getTravelSpeed();
 				pilot.stop();
@@ -230,8 +232,10 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 				pilot.stop();
 				// reset speed back to what it was before the collision
 				pilot.setTravelSpeed(tempCurSpeed);
-				os.write(OpCodes.BUMP_OFF.ordinal());
-				os.flush();
+				try{
+					os.write(OpCodes.BUMP_OFF.ordinal());
+					os.flush();
+				} catch (Exception ex){}
 
 			} else if (reacting && !(touchA.isPressed() || touchB.isPressed())) {
 				reacting = false;
