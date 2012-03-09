@@ -17,14 +17,12 @@ import lejos.robotics.navigation.Pose;
 /**
  * Code that runs on the NXT brick
  */
-public class Nxt_code implements Runnable, ControlCodes {
+public class Nxt_code implements Runnable {
 
 	// class variables
 	private static InputStream is;
 	private static OutputStream os;
 	private static DifferentialPilot pilot;
-	private static volatile boolean blocking = false;
-	private static volatile boolean kicking = false;
 
 	// constants for the pilot class 
 	private static final float TRACK_WIDTH = (float) 13.7;
@@ -38,21 +36,25 @@ public class Nxt_code implements Runnable, ControlCodes {
 		BACKWARDS_SLIGHTLY,
 		STOP,
 		CHANGE_SPEED,
-		KICK,
-		ROTATE,
+		ROTATE_LEFT,
+		ROTATE_RIGHT,
+		ROTATE_BLOCK_LEFT,
+		ROTATE_BLOCK_RIGHT,
 		ARC_LEFT,
 		ARC_RIGHT,
-		STEER_WITH_RATIO,
 		BEEP,
-		CELEBRATE,
 		FORWARDS_WITH_DISTANCE,
 		START_MATCH,
 		STOP_MATCH,
+		BUMP_ON,
+		BUMP_OFF,
 		QUIT
 	}
 	
 	private static Pose initial;
 	private static boolean fallback = false;
+	private static Nxt_code instance;
+	private static KickerThread kicker;
 
 	public static void main(String[] args) throws Exception {
 
@@ -60,9 +62,13 @@ public class Nxt_code implements Runnable, ControlCodes {
 		DifferentialPilot pilot = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, Motor.B,Motor.C, false);
 		OdometryPoseProvider odometry = new OdometryPoseProvider(pilot);
 		initial = new Pose(0, 0, 0);
-		int returnCode;
+		instance = new Nxt_code(pilot);
 		// start the sensor thread
-		new Thread(new Nxt_code(pilot)).start();
+		new Thread(instance).start();
+		kicker = instance.new KickerThread();
+		// start the kicker
+		new Thread(kicker).start();
+		
 		
 		// set initial pilot variables to produce maximum speed
 		//pilot.regulateSpeed(true);
@@ -97,144 +103,102 @@ public class Nxt_code implements Runnable, ControlCodes {
 					// get the next command from the inputstream
 					byte[] byteBuffer = new byte[4];
 					is.read(byteBuffer);
-					
-					int inp = byteArrayToInt(byteBuffer);
-					int opcode = ((inp << 24) >> 24);
-					n = OpCodes.values()[opcode];
-					LCD.drawString(String.valueOf(kicking), 0, 2);
-					// If everything is alright, LCD should read "falsected"
-					if (blocking) {
-						os.write('o');
-						os.flush();
-						continue;
+					if ((byteBuffer[0] != 0) && !kicker.kicking) {
+							kicker.kick();
 					}
-					
+						
+					n = OpCodes.values()[byteBuffer[1]];
+					int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
 					switch (n) {
 
 						case FORWARDS:
 							pilot.forward();
-							returnCode = MOVED_FORWARDS;
+							
 							break;
 	
 						case BACKWARDS:
 							pilot.backward();
-							returnCode = MOVED_BACKWARDS;
+							
 							break;
 	
 						case BACKWARDS_SLIGHTLY: // back up a little
 							pilot.travel(-10);
-							returnCode = MOVED_BACK_SLIGHTLY;
+							
 							break;
 	
 						case STOP:
 							pilot.stop();
-							returnCode = STOPPED;
+							
 							break;
 	
 						case CHANGE_SPEED:
-							pilot.setTravelSpeed((inp >> 8));
-							returnCode = CHANGED_SPEED;
+							pilot.setTravelSpeed(magnitude);
+							
 							break;
 							
 						case FORWARDS_WITH_DISTANCE:
-							pilot.travel((inp >> 8));
-							returnCode = FORWARD_WITH_DISTANCE;
-							break;
-	
-						/*case KICK:
-							Thread Kick_thread = new Thread() {
-								public void run() {
-									Motor.A.setSpeed(900);
-									
-									Motor.A.rotate(-30, true);
-									try {
-										Thread.sleep(150);
-									} catch (InterruptedException e) {
-										System.err.println("Kick: interrupted during waiting: " + e.getMessage());
-									}
-									Motor.A.setSpeed(45);
-									Motor.A.rotate(30, true);
-									
-									kicking = false;
-								}
-							};
-							if (!kicking) {
-								kicking = true;
-								Kick_thread.start();
-							}
-							break;*/
-	
-						case ROTATEBY:
-	
-							int rotateBy = inp >> 8;
-							// if n > 360 change to negative (turn left)
-							if (rotateBy > 360) {
-								rotateBy = -(rotateBy - 360);
-							}
-							//The below method is blocking
-							pilot.rotate(rotateBy, false);
-							returnCode = ROTATE_BY;
+							pilot.travel(magnitude);
+							
 							break;
 
-						case ROTATE:
+						case ROTATE_LEFT:
+							
+							pilot.rotate(magnitude,true);
+							
+							break;
+
+						case ROTATE_RIGHT:
+							
+							pilot.rotate(-magnitude,true);
+							
+							break;
+
+						case ROTATE_BLOCK_LEFT:
 	
-							int rotateBy = inp >> 8;
-							// if n > 360 change to negative (turn left)
-							if (rotateBy > 360) {
-								rotateBy = -(rotateBy - 360);
-							}
-							//The below method is NOT blocking
-							pilot.rotate(rotateBy, true);
-							returnCode = ROTATE;
+							pilot.rotate(magnitude,false);
+							
+							break;							
+							
+						case ROTATE_BLOCK_RIGHT:
+	
+							pilot.rotate(-magnitude,false);
+							
 							break;
 	
 						case ARC_LEFT:
 	
-							int arcRadius = inp >> 8;
-							pilot.arcForward(arcRadius);
-							returnCode = ARC_LEFT;
+							pilot.arcForward(magnitude);
+							
 							break;
 	
 						case ARC_RIGHT:
 	
-							int arcRadius = -(inp >> 8);
-							pilot.arcForward(arcRadius);
-							returnCode = ARC_RIGHT;
-							break;
-	
-						case STEER_WITH_RATIO:
-							pilot.steer(inp >> 8);
-							returnCode = STEER;
+							pilot.arcForward(-magnitude);
 							break;
 	
 						case BEEP:
 							Sound.beep();
-							returnCode = BEEP;
 							break;
-	
 
 						case START_MATCH:
 							pilot.reset();
 							odometry.setPose(initial);
 							fallback = true;
-							pilot.travel(80);
-							returnCode = START_MATCH;
+							pilot.forward();
 							break;
 							
 						case STOP_MATCH:
 							pilot.quickStop();
 							fallback = false;
-							returnCode = STOP_MATCH;
 							break;
 						
 						case QUIT: // close connection
 							Sound.twoBeeps();
-							returnCode = QUIT;
 							break;
 					}
 
 					// respond to say command was acted on
-					os.write(returnCode);
+					os.write(n.ordinal());
 					os.flush();
 
 				}
@@ -256,13 +220,9 @@ public class Nxt_code implements Runnable, ControlCodes {
 	/**
 	 * Returns an integer from a byte array
 	 */
-	public static int byteArrayToInt(byte[] b) {
-		int value = 0;
-		for (int i = 0; i < 4; i++) {
-			int shift = (4 - 1 - i) * 8;
-			value += (b[i] & 0x000000FF) << shift;
-		}
-		return value;
+	public static int bytesToInt(byte b1, byte b2) {
+		
+		return ((b1 & 0xFF) << 8) | (b2 & 0xFF);
 	}
 
 	/**
@@ -291,6 +251,8 @@ public class Nxt_code implements Runnable, ControlCodes {
 
 					// flag sensor hit as being dealt with and save the speed
 					// we were going before the collision occurred
+					os.write(OpCodes.BUMP_ON.ordinal());
+					os.flush();
 					reacting = true;
 					tempCurSpeed = (float) pilot.getTravelSpeed();
 					pilot.stop();
@@ -302,10 +264,12 @@ public class Nxt_code implements Runnable, ControlCodes {
 
 					// let the PC know that the sensors were hit
 					os.write('r');
-					os.flush();
+					
 
 					// reset speed back to what it was before the collision
 					pilot.setTravelSpeed(tempCurSpeed);
+					os.write(OpCodes.BUMP_OFF.ordinal());
+					os.flush();
 
 				} else if (reacting
 						&& !(touchA.isPressed() || touchB.isPressed())) {
@@ -321,4 +285,40 @@ public class Nxt_code implements Runnable, ControlCodes {
 		}
 	}
 
+	
+	/**
+	 * Kicking thread: when received a kick and not kicking
+	 */
+	private class KickerThread implements Runnable {
+	
+		private volatile boolean kicking = false;
+		
+		public synchronized void kick() {
+			kicking = true;
+		}
+		
+		public void run() {
+			while (true) {
+				try {
+					if (kicking) {
+						Motor.A.setSpeed(900);
+						
+						Motor.A.rotate(-30, true);
+						
+						Thread.sleep(150);
+						
+						Motor.A.setSpeed(45);
+						Motor.A.rotate(30, true);
+						
+						kicking = false;
+					}
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					kicking = false;
+					System.err.println("Kick: interrupted during waiting: " + e.getMessage());
+				}
+			}
+		}
+	}
+	
 }
