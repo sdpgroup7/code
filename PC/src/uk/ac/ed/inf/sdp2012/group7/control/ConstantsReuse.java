@@ -25,6 +25,7 @@ public interface ConstantsReuse {
 		STOP_MATCH,
 		BUMP_ON,
 		BUMP_OFF,
+		CONTINUE,
 		QUIT
 	}
 

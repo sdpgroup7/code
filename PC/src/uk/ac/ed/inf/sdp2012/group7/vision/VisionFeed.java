@@ -29,8 +29,6 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
  * The main class for showing the video feed and processing the video
  * data. Identifies ball and robot locations, and robot orientations.
  *
- * TODO: THIS CLASS IS A TOTAL MESS!
- *
  * @author s0840449
  */
 
