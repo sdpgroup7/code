@@ -75,12 +75,15 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 
 				// begin reading commands
 				OpCodes n = OpCodes.DO_NOTHING;
+                byte[] previousCommand = new byte[4];
 				
 				while (n != OpCodes.QUIT) {
 
 					// get the next command from the inputstream
 					byte[] byteBuffer = new byte[4];
 					is.read(byteBuffer);
+                    if (previousCommand.equals(byteBuffer)) continue;
+                    previousCommand = byteBuffer;
 					if ((byteBuffer[0] != 0) && !kicker.kicking) {
 							kicker.kick();
 					}
@@ -160,8 +163,11 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 					}
 
 					try{
-						Thread.sleep(20);
-					} catch (InterruptedException ex){}
+						Thread.sleep(100);
+					} catch (InterruptedException ex){
+                        Sound.beep();
+                    }
+
 
 					// respond to say command was acted on
 					os.write(n.ordinal());
