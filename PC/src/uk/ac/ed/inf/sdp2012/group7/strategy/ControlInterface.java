@@ -31,6 +31,8 @@ public class ControlInterface implements Observer {
 	
 	public static final Logger logger = Logger.getLogger(ControlInterface.class);
 	
+	private final int START_SPEED = 30;
+	
 	private WorldState world = WorldState.getInstance();
 	
 	private static int lookahead;
@@ -50,7 +52,7 @@ public class ControlInterface implements Observer {
 		this.lookahead = lookahead;
 		this.c = new RobotControl();
 		this.c.startCommunications();
-		this.c.changeSpeed(30);
+		this.c.changeSpeed(START_SPEED);
 		
 		
 	}
