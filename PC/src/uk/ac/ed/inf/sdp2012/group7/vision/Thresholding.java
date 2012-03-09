@@ -11,8 +11,7 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 /**
  * 
  * @author s0951580
- * 
- * TODO: clustering algorithm to get the T right 
+ *  
  * TODO: do we give a shit about the grey circles anymore can we just remove them
  * 
  */
