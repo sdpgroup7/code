@@ -41,12 +41,11 @@ public class Nxt_code implements Runnable {
 		KICK,
 		ROTATE_LEFT,
 		ROTATE_RIGHT,
-		ROTATE_BY,
+		ROTATE_BLOCK_LEFT,
+		ROTATE_BLOCK_RIGHT,
 		ARC_LEFT,
 		ARC_RIGHT,
-		STEER_WITH_RATIO,
 		BEEP,
-		CELEBRATE,
 		FORWARDS_WITH_DISTANCE,
 		START_MATCH,
 		STOP_MATCH,
@@ -133,72 +132,65 @@ public class Nxt_code implements Runnable {
 							pilot.travel(magnitude);
 							
 							break;
-	
+
 						case ROTATE_LEFT:
-	
-							pilot.rotate(magnitude);
+							
+							pilot.rotate(magnitude,true);
 							
 							break;
 
-						case ROTATE:
+						case ROTATE_RIGHT:
+							
+							pilot.rotate(-magnitude,true);
+							
+							break;
+
+						case ROTATE_BLOCK_LEFT:
 	
-							int rotateBy = inp >> 8;
-							// if n > 360 change to negative (turn left)
-							if (rotateBy > 360) {
-								rotateBy = -(rotateBy - 360);
-							}
-							//The below method is NOT blocking
-							pilot.rotate(rotateBy, true);
-							returnCode = ROTATE;
+							pilot.rotate(magnitude,false);
+							
+							break;							
+							
+						case ROTATE_BLOCK_RIGHT:
+	
+							pilot.rotate(-magnitude,false);
+							
 							break;
 	
 						case ARC_LEFT:
 	
-							int arcRadius = inp >> 8;
-							pilot.arcForward(arcRadius);
-							returnCode = ARC_LEFT;
+							pilot.arcForward(magnitude);
+							
 							break;
 	
 						case ARC_RIGHT:
 	
-							int arcRadius = -(inp >> 8);
-							pilot.arcForward(arcRadius);
-							returnCode = ARC_RIGHT;
-							break;
-	
-						case STEER_WITH_RATIO:
-							pilot.steer(inp >> 8);
-							returnCode = STEER;
+							pilot.arcForward(-magnitude);
 							break;
 	
 						case BEEP:
 							Sound.beep();
-							returnCode = BEEP;
 							break;
-	
 
 						case START_MATCH:
 							pilot.reset();
 							odometry.setPose(initial);
 							fallback = true;
-							pilot.travel(80);
-							returnCode = START_MATCH;
+							pilot.forward();
 							break;
 							
 						case STOP_MATCH:
 							pilot.quickStop();
 							fallback = false;
-							returnCode = STOP_MATCH;
 							break;
 						
 						case QUIT: // close connection
 							Sound.twoBeeps();
-							returnCode = QUIT;
 							break;
 					}
 
 					// respond to say command was acted on
-					os.write(returnCode);
+					os.write(n.ordinal());
 					os.flush();
 
 				}
