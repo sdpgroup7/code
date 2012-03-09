@@ -160,7 +160,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 
 					try{
 						Thread.sleep(20);
-					} catch (InterruptException ex){}
+					} catch (InterruptedException ex){}
 
 					// respond to say command was acted on
 					os.write(n.ordinal());

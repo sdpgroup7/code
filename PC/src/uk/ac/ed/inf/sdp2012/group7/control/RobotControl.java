@@ -141,7 +141,7 @@ public class RobotControl implements ConstantsReuse {
 		
 		if(!bumped){
 				comms.sendToRobot(command);
-
+				logResponse(getResponse());
 		} else {
 			while(getResponse() != OpCodes.BUMP_OFF.ordinal()){}
 			bumped = true;
@@ -150,6 +150,7 @@ public class RobotControl implements ConstantsReuse {
 		}
 		
 	}
+	
 
 	/**
 	 * Receive an integer from the robot
@@ -299,6 +300,73 @@ public class RobotControl implements ConstantsReuse {
 
 	public boolean isConnected() {
 		return isConnected;
+	}
+	
+	public void logResponse(int response){
+		switch(OpCodes.values()[response]){
+		case DO_NOTHING:
+			logger.info("Robot Response: DO_NOTHING");
+			break;
+		case FORWARDS:
+			logger.info("Robot Response: FORWARDS");
+			break;
+		case BACKWARDS:
+			logger.info("Robot Response: BACKWARDS");
+			break;
+		case BACKWARDS_SLIGHTLY:
+			logger.info("Robot Response: BACKWARDS_SLIGHTLY");
+			break;
+		case STOP:
+			logger.info("Robot Response: STOP");
+			break;
+		case CHANGE_SPEED:
+			logger.info("Robot Response: CHANGE_SPEED");
+			break;
+		case ROTATE_LEFT:
+			logger.info("Robot Response: ROTATE_LEFT");
+			break;
+		case ROTATE_RIGHT:
+			logger.info("Robot Response: ROTATE_RIGHT");
+			break;
+		case ROTATE_BLOCK_LEFT:
+			logger.info("Robot Response: ROTATE_BLOCK_LEFT");
+			break;
+		case ROTATE_BLOCK_RIGHT:
+			logger.info("Robot Response: ROTATE_BLOCK_RIGHT");
+			break;
+		case ARC_LEFT:
+			logger.info("Robot Response: ARC_LEFT");
+			break;
+		case ARC_RIGHT:
+			logger.info("Robot Response: ARC_RIGHT");
+			break;
+		case BEEP:
+			logger.info("Robot Response: BEEP");
+			break;
+		case FORWARDS_WITH_DISTANCE:
+			logger.info("Robot Response: FORWARDS_WITH_DISTANCE");
+			break;
+		case START_MATCH:
+			logger.info("Robot Response: START_MATCH");
+			break;
+		case STOP_MATCH:
+			logger.info("Robot Response: STOP_MATCh");
+			break;
+		case BUMP_ON:
+			logger.info("Robot Response: BUMP_ON");
+			break;
+		case BUMP_OFF:
+			logger.info("Robot Response: BUMP_OFF");
+			break;
+		case CONTINUE:
+			logger.info("Robot Response: CONTINUE");
+			break;
+		case QUIT:
+			logger.info("Robot Response: QUIT");
+			break;
+		default:
+			logger.error("Unknown response from robot");
+		}
 	}
 
 }
