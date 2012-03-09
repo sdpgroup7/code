@@ -120,11 +120,8 @@ public class RobotControl implements ConstantsReuse, ControlCodes {
 		
 		if(!bumped){
 			comms.sendToRobot(command);
-			switch(getResponse()){
-				case BUMPED_OBJECT:
-					bumped = true;
-					logger.debug("Robot hit object!");
-					break;
+			
+			switch(){
 				case MOVED_FORWARDS:
 					logger.info("Robot moved forwards");
 					break;

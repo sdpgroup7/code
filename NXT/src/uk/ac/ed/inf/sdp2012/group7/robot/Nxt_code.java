@@ -17,7 +17,7 @@ import lejos.robotics.navigation.Pose;
 /**
  * Code that runs on the NXT brick
  */
-public class Nxt_code implements Runnable, ControlCodes {
+public class Nxt_code implements Runnable {
 
 	// class variables
 	private static InputStream is;
@@ -39,7 +39,9 @@ public class Nxt_code implements Runnable, ControlCodes {
 		STOP,
 		CHANGE_SPEED,
 		KICK,
-		ROTATE,
+		ROTATE_LEFT,
+		ROTATE_RIGHT,
+		ROTATE_BY,
 		ARC_LEFT,
 		ARC_RIGHT,
 		STEER_WITH_RATIO,
@@ -98,82 +100,44 @@ public class Nxt_code implements Runnable, ControlCodes {
 					byte[] byteBuffer = new byte[4];
 					is.read(byteBuffer);
 					
-					int inp = byteArrayToInt(byteBuffer);
-					int opcode = ((inp << 24) >> 24);
-					n = OpCodes.values()[opcode];
-					LCD.drawString(String.valueOf(kicking), 0, 2);
-					// If everything is alright, LCD should read "falsected"
-					if (blocking) {
-						os.write('o');
-						os.flush();
-						continue;
-					}
-					
+					n = OpCodes.values()[byteBuffer[1]];
+					int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
 					switch (n) {
 
 						case FORWARDS:
 							pilot.forward();
-							returnCode = MOVED_FORWARDS;
+							
 							break;
 	
 						case BACKWARDS:
 							pilot.backward();
-							returnCode = MOVED_BACKWARDS;
+							
 							break;
 	
 						case BACKWARDS_SLIGHTLY: // back up a little
 							pilot.travel(-10);
-							returnCode = MOVED_BACK_SLIGHTLY;
+							
 							break;
 	
 						case STOP:
 							pilot.stop();
-							returnCode = STOPPED;
+							
 							break;
 	
 						case CHANGE_SPEED:
-							pilot.setTravelSpeed((inp >> 8));
-							returnCode = CHANGED_SPEED;
+							pilot.setTravelSpeed(magnitude);
+							
 							break;
 							
 						case FORWARDS_WITH_DISTANCE:
-							pilot.travel((inp >> 8));
-							returnCode = FORWARD_WITH_DISTANCE;
+							pilot.travel(magnitude);
+							
 							break;
 	
-						/*case KICK:
-							Thread Kick_thread = new Thread() {
-								public void run() {
-									Motor.A.setSpeed(900);
-									
-									Motor.A.rotate(-30, true);
-									try {
-										Thread.sleep(150);
-									} catch (InterruptedException e) {
-										System.err.println("Kick: interrupted during waiting: " + e.getMessage());
-									}
-									Motor.A.setSpeed(45);
-									Motor.A.rotate(30, true);
-									
-									kicking = false;
-								}
-							};
-							if (!kicking) {
-								kicking = true;
-								Kick_thread.start();
-							}
-							break;*/
+						case ROTATE_LEFT:
 	
-						case ROTATEBY:
-	
-							int rotateBy = inp >> 8;
-							// if n > 360 change to negative (turn left)
-							if (rotateBy > 360) {
-								rotateBy = -(rotateBy - 360);
-							}
-							//The below method is blocking
-							pilot.rotate(rotateBy, false);
-							returnCode = ROTATE_BY;
+							pilot.rotate(magnitude);
+							
 							break;
 
 						case ROTATE:
@@ -256,13 +220,9 @@ public class Nxt_code implements Runnable, ControlCodes {
 	/**
 	 * Returns an integer from a byte array
 	 */
-	public static int byteArrayToInt(byte[] b) {
-		int value = 0;
-		for (int i = 0; i < 4; i++) {
-			int shift = (4 - 1 - i) * 8;
-			value += (b[i] & 0x000000FF) << shift;
-		}
-		return value;
+	public static int bytesToInt(byte b1, byte b2) {
+		
+		return ((b1 & 0xFF) << 8) | (b2 & 0xFF);
 	}
 
 	/**
@@ -319,6 +279,28 @@ public class Nxt_code implements Runnable, ControlCodes {
 			}
 
 		}
+		/*case KICK:
+		Thread Kick_thread = new Thread() {
+			public void run() {
+				Motor.A.setSpeed(900);
+				
+				Motor.A.rotate(-30, true);
+				try {
+					Thread.sleep(150);
+				} catch (InterruptedException e) {
+					System.err.println("Kick: interrupted during waiting: " + e.getMessage());
+				}
+				Motor.A.setSpeed(45);
+				Motor.A.rotate(30, true);
+				
+				kicking = false;
+			}
+		};
+		if (!kicking) {
+			kicking = true;
+			Kick_thread.start();
+		}
+		break;*/
 	}
 
 }
