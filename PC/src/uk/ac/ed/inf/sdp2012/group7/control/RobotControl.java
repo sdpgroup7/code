@@ -36,7 +36,9 @@ public class RobotControl implements ConstantsReuse, ControlCodes {
 
 	/**
 	 * This method initialises the connection and starts the thread which sends
-	 * data to the robot.
+	 * data to the robot
+	 * 
+	 * @return True if the connection has been established, false otherwise
 	 */
 	public boolean startCommunications() {
 
@@ -75,7 +77,7 @@ public class RobotControl implements ConstantsReuse, ControlCodes {
 	}
 
 	/**
-	 * Connects to the NXT
+	 * Connects to the NXT. The Robot beeps when the connection has been established.
 	 */
 	private void connectToRobot() throws IOException {
 		simulator = MainRunner.simulator;
@@ -105,7 +107,7 @@ public class RobotControl implements ConstantsReuse, ControlCodes {
 	}
 
 	/**
-	 * Add a command to the queue to be sent to the robot
+	 * Add a command to be sent to the robot
 	 */
 	private void addCommand(int command) {
 		this.command = command;
@@ -120,11 +122,8 @@ public class RobotControl implements ConstantsReuse, ControlCodes {
 		
 		if(!bumped){
 			comms.sendToRobot(command);
-			switch(getResponse()){
-				case BUMPED_OBJECT:
-					bumped = true;
-					logger.debug("Robot hit object!");
-					break;
+			
+			switch(){
 				case MOVED_FORWARDS:
 					logger.info("Robot moved forwards");
 					break;
@@ -157,6 +156,10 @@ public class RobotControl implements ConstantsReuse, ControlCodes {
 		return comms.recieveFromRobot();
 	}
 	
+	/**
+	 * Changes the speed the robot is travelling at
+	 * @param speed
+	 */
 	public void changeSpeed(int speed) {
 		addCommand(OpCodes.CHANGE_SPEED.ordinal() | (speed << 8));
 	}
@@ -168,7 +171,10 @@ public class RobotControl implements ConstantsReuse, ControlCodes {
 	public void moveForward() {
 		addCommand(OpCodes.FORWARDS.ordinal());
 	}
-	
+	/**
+	 * Commands the robot to move forwards a certain distance
+	 * @param distance Measured in cm
+	 */
 	public void moveForward(int distance) {
 		addCommand(OpCodes.FORWARDS_WITH_DISTANCE.ordinal() | (distance << 8));
 	}
@@ -205,7 +211,8 @@ public class RobotControl implements ConstantsReuse, ControlCodes {
 	}
 
 	/**
-	 * Rotates the robot by a given number of radians
+	 * Rotates the robot by the given number of radians
+	 * @param radians 
 	 */
 	public void rotateBy(double radians) {
 
@@ -221,8 +228,9 @@ public class RobotControl implements ConstantsReuse, ControlCodes {
 	}
 
 	/**
-	 * This method instructs the robot to move around a circle of given radius,
-	 * the boolean is true when the robot should arc left.
+	 * Commands the robot to move forwards on an arc with a certain radius from the centre of the robot
+	 * @param radius 
+	 * @param arcLeft If true the robot will go left, otherwise will go right
 	 */
 	public void circleWithRadius(int radius, boolean arcLeft) {
 
@@ -245,7 +253,7 @@ public class RobotControl implements ConstantsReuse, ControlCodes {
 	}
 	
 	/**
-	 * Commands the robot to move 65 cm forward and start odometry from its initial position
+	 * Commands the robot to move forward indefinitely and start odometry from its initial position
 	 * (if the bluetooth connection is lost, it'll try to move back to the initial position)
 	 */
 	public void startMatch() {
@@ -253,7 +261,7 @@ public class RobotControl implements ConstantsReuse, ControlCodes {
 	}
 	
 	/**
-	 * Commands the robot to stop movement and odometry
+	 * Commands the robot to stop movement and recording odometry
 	 */
 	public void stopMatch() {
 		addCommand(OpCodes.STOP_MATCH.ordinal());
