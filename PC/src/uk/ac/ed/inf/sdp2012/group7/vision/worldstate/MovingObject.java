@@ -81,7 +81,6 @@ public class MovingObject {
 	}
 	
 	public void calculateAngle(){
-		VisionTools vt = new VisionTools();
 		if(angles.size() > 0){
 			Point a = new Point(0,0);
 			for(Point p : angles){
@@ -89,7 +88,7 @@ public class MovingObject {
 			}
 			a = new Point(a.x / angles.size(), a.y / angles.size());
 			tip = a;
-			this.angle = vt.convertAngle(Math.atan2(a.y - getPosition().getCentre().y, a.x - getPosition().getCentre().x));
+			this.angle = VisionTools.convertAngle(Math.atan2(a.y - getPosition().getCentre().y, a.x - getPosition().getCentre().x));
 		} else {
 			this.angle = 0;
 		}

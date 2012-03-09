@@ -17,7 +17,7 @@ import lejos.robotics.navigation.Pose;
 /**
  * Code that runs on the NXT brick
  */
-public class Nxt_code implements Runnable {
+public class Nxt_code implements Runnable, ControlCodes {
 
 	// class variables
 	private static InputStream is;
@@ -32,23 +32,24 @@ public class Nxt_code implements Runnable {
 
 	// NXT Opcodes
 	private static enum OpCodes {
-        DO_NOTHING,
-        FORWARDS,
-        BACKWARDS,
-        BACKWARDS_SLIGHTLY,
-        STOP,
-        CHANGE_SPEED,
-        KICK,
-        ROTATE,
-        ARC,
-        STEER_WITH_RATIO,
-        BEEP,
-        CELEBRATE,
-        FORWARDS_WITH_DISTANCE,
-        START_MATCH,
-        STOP_MATCH,
-        QUIT
-    }
+		DO_NOTHING,
+		FORWARDS,
+		BACKWARDS,
+		BACKWARDS_SLIGHTLY,
+		STOP,
+		CHANGE_SPEED,
+		KICK,
+		ROTATE,
+		ARC_LEFT,
+		ARC_RIGHT,
+		STEER_WITH_RATIO,
+		BEEP,
+		CELEBRATE,
+		FORWARDS_WITH_DISTANCE,
+		START_MATCH,
+		STOP_MATCH,
+		QUIT
+	}
 	
 	private static Pose initial;
 	private static boolean fallback = false;
@@ -59,6 +60,7 @@ public class Nxt_code implements Runnable {
 		DifferentialPilot pilot = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, Motor.B,Motor.C, false);
 		OdometryPoseProvider odometry = new OdometryPoseProvider(pilot);
 		initial = new Pose(0, 0, 0);
+		int returnCode;
 		// start the sensor thread
 		new Thread(new Nxt_code(pilot)).start();
 		
@@ -110,39 +112,36 @@ public class Nxt_code implements Runnable {
 					switch (n) {
 
 						case FORWARDS:
-							if (pilot.isMoving()) {
-								break;
-							} else {
-
-								pilot.forward();
-								break;
-							}
+							pilot.forward();
+							returnCode = MOVED_FORWARDS;
+							break;
 	
 						case BACKWARDS:
-							if (pilot.isMoving()) {
-								break;
-							} else {
-								pilot.backward();
-								break;
-							}
+							pilot.backward();
+							returnCode = MOVED_BACKWARDS;
+							break;
 	
 						case BACKWARDS_SLIGHTLY: // back up a little
 							pilot.travel(-10);
+							returnCode = MOVED_BACK_SLIGHTLY;
 							break;
 	
 						case STOP:
 							pilot.stop();
+							returnCode = STOPPED;
 							break;
 	
 						case CHANGE_SPEED:
 							pilot.setTravelSpeed((inp >> 8));
+							returnCode = CHANGED_SPEED;
 							break;
 							
 						case FORWARDS_WITH_DISTANCE:
 							pilot.travel((inp >> 8));
+							returnCode = FORWARD_WITH_DISTANCE;
 							break;
 	
-						case KICK:
+						/*case KICK:
 							Thread Kick_thread = new Thread() {
 								public void run() {
 									Motor.A.setSpeed(900);
@@ -163,68 +162,79 @@ public class Nxt_code implements Runnable {
 								kicking = true;
 								Kick_thread.start();
 							}
-							break;
+							break;*/
 	
-						case ROTATE:
+						case ROTATEBY:
 	
 							int rotateBy = inp >> 8;
-							os.write(rotateBy);
 							// if n > 360 change to negative (turn left)
 							if (rotateBy > 360) {
 								rotateBy = -(rotateBy - 360);
 							}
-							// by setting immediate return to false, this method
-							// blocks
-							// until the rotation is complete
-							blocking = true;
+							//The below method is blocking
 							pilot.rotate(rotateBy, false);
-							
-							blocking = false;
+							returnCode = ROTATE_BY;
+							break;
+
+						case ROTATE:
+	
+							int rotateBy = inp >> 8;
+							// if n > 360 change to negative (turn left)
+							if (rotateBy > 360) {
+								rotateBy = -(rotateBy - 360);
+							}
+							//The below method is NOT blocking
+							pilot.rotate(rotateBy, true);
+							returnCode = ROTATE;
 							break;
 	
-						case ARC:
+						case ARC_LEFT:
 	
 							int arcRadius = inp >> 8;
-	
-							// if n > 1000 change to negative (turn left)
-							if (arcRadius > 1000) {
-								arcRadius = (arcRadius - 1000);
-							}
 							pilot.arcForward(arcRadius);
+							returnCode = ARC_LEFT;
 							break;
 	
+						case ARC_RIGHT:
+	
+							int arcRadius = -(inp >> 8);
+							pilot.arcForward(arcRadius);
+							returnCode = ARC_RIGHT;
+							break;
 	
 						case STEER_WITH_RATIO:
 							pilot.steer(inp >> 8);
+							returnCode = STEER;
 							break;
 	
 						case BEEP:
 							Sound.beep();
+							returnCode = BEEP;
 							break;
 	
-						case CELEBRATE: // play a sound file
-							Sound.beepSequenceUp();						
-							break;
 
 						case START_MATCH:
 							pilot.reset();
 							odometry.setPose(initial);
 							fallback = true;
 							pilot.travel(80);
+							returnCode = START_MATCH;
 							break;
 							
 						case STOP_MATCH:
 							pilot.quickStop();
 							fallback = false;
+							returnCode = STOP_MATCH;
 							break;
 						
 						case QUIT: // close connection
 							Sound.twoBeeps();
+							returnCode = QUIT;
 							break;
 					}
 
 					// respond to say command was acted on
-					os.write('o');
+					os.write(returnCode);
 					os.flush();
 
 				}
