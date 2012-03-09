@@ -61,6 +61,7 @@ public class Nxt_code implements Runnable, ControlCodes {
 		OdometryPoseProvider odometry = new OdometryPoseProvider(pilot);
 		initial = new Pose(0, 0, 0);
 		int returnCode;
+		int magnitude;
 		// start the sensor thread
 		new Thread(new Nxt_code(pilot)).start();
 		
@@ -99,7 +100,8 @@ public class Nxt_code implements Runnable, ControlCodes {
 					is.read(byteBuffer);
 					
 					int inp = byteArrayToInt(byteBuffer);
-					int opcode = ((inp << 24) >> 24);
+					int opcode = byteBuffer[1];
+					magnitude = convertToInt(byteBuffer[2],byteBuffer[3]);
 					n = OpCodes.values()[opcode];
 					LCD.drawString(String.valueOf(kicking), 0, 2);
 					// If everything is alright, LCD should read "falsected"
