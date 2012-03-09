@@ -611,7 +611,7 @@ public class Thresholding {
     
     public boolean isGreen(Color c, int GB, int RG){
     	if(pitch == 0){
-    		return ( GB > 50 && RG > 50 && c.getGreen() > greenPlatesThresh[pitch][0]);
+    		return ( GB > 75 && RG > 75 && c.getGreen() > greenPlatesThresh[pitch][0]);
     	}
     	else {
     		return ( GB >= 50 && RG >= 50 && c.getGreen() > greenPlatesThresh[pitch][0]);
