@@ -56,15 +56,8 @@ public class ControlInterface implements Observer {
 		
 		
 	}
-
-	/**
-	 * Takes a small number of waypoints from Control Management. These are in
-	 * an ArrayList<Points>
-	 */
-	public void getNextMovement() {
-
-	}
-
+	
+	
 	public static Arc chooseArc(Plan plan){
 		Point2D p = new Point2D(plan.getOurRobotPositionVisual());
 		double v = plan.getOurRobotAngle();
