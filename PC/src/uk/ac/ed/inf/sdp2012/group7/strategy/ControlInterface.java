@@ -170,13 +170,13 @@ public class ControlInterface implements Observer {
 			logger.info("Action is to turn");
 			c.stop();
 			logger.info("Command sent to robot: stop");
-			double turnAngle = angleToTurn(plan.getAngleWanted(), 
+			double turnAngle = ControlInterfaceTools.angleToTurn(plan.getAngleWanted(), 
 					plan.getOurRobotAngle());
 			c.rotateBy(turnAngle);
 		
 		} else if (plan.getAction() == angleKick) {
 			logger.info("Action is to turn");
-			double turnAngle = angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
+			double turnAngle = ControlInterfaceTools.angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
 			c.rotateBy(turnAngle);
 			try {
 				Thread.sleep(250);
@@ -258,29 +258,13 @@ public class ControlInterface implements Observer {
 
 	
 	
-	public double angleToTurn(double ourAngle, double angleWanted) {
-			
-		double howMuchToTurn = ourAngle - angleWanted;
-
-		// now adjust it so that it turns in the shortest direction (clockwise
-		// or counter clockwise)
-		if (howMuchToTurn < -Math.PI) {
-			howMuchToTurn = 2 * Math.PI + howMuchToTurn;
-		} else if  (howMuchToTurn > Math.PI) {
-			howMuchToTurn = -(2 * Math.PI - howMuchToTurn);
-		}
-	
-		return howMuchToTurn;
-
-	}
-	
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		logger.debug("Got a new plan");
 		Plan plan = (Plan) arg1;
 		if(plan.getPlanType()==PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
 			logger.info("Taking a penalty - first turn required angle");
-			double turnAngle = angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
+			double turnAngle = ControlInterfaceTools.angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
 			c.rotateBy(turnAngle);
 			try {
 				Thread.sleep(250);
