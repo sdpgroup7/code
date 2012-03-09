@@ -69,6 +69,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 				
 				is = connection.openInputStream();
 				os = connection.openOutputStream();
+				Sound.beep();
 				LCD.clear();
 				LCD.drawString("Connected!", 0, 2);
 
@@ -90,69 +91,52 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 
 						case FORWARDS:
 							pilot.forward();
-							
 							break;
-	
+
 						case BACKWARDS:
 							pilot.backward();
-							
 							break;
-	
+
 						case BACKWARDS_SLIGHTLY: // back up a little
 							pilot.travel(-10);
-							
 							break;
-	
+
 						case STOP:
 							pilot.stop();
-							
 							break;
-	
+
 						case CHANGE_SPEED:
 							pilot.setTravelSpeed(magnitude);
-							
 							break;
 							
 						case FORWARDS_WITH_DISTANCE:
 							pilot.travel(magnitude);
-							
 							break;
 
 						case ROTATE_LEFT:
-							
 							pilot.rotate(magnitude,true);
-							
 							break;
 
 						case ROTATE_RIGHT:
-							
 							pilot.rotate(-magnitude,true);
-							
 							break;
 
 						case ROTATE_BLOCK_LEFT:
-	
 							pilot.rotate(magnitude,false);
-							
-							break;							
+							break;
 							
 						case ROTATE_BLOCK_RIGHT:
-	
 							pilot.rotate(-magnitude,false);
-							
 							break;
-	
+
 						case ARC_LEFT:
-	
 							pilot.arcForward(magnitude);
-							
 							break;
-	
+
 						case ARC_RIGHT:
-	
 							pilot.arcForward(-magnitude);
 							break;
-	
+
 						case BEEP:
 							Sound.beep();
 							break;
@@ -163,12 +147,12 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 							fallback = true;
 							pilot.forward();
 							break;
-							
+
 						case STOP_MATCH:
 							pilot.quickStop();
 							fallback = false;
 							break;
-						
+
 						case QUIT: // close connection
 							Sound.twoBeeps();
 							break;
