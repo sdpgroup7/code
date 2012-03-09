@@ -19,6 +19,22 @@ public class ControlInterfaceTools {
 		ControlInterface.logger.debug(String.format("Converted angle from %f to %f", angle, newAngle));
 		return newAngle;
 	}
+
+	public static double angleToTurn(double ourAngle, double angleWanted) {
+			
+		double howMuchToTurn = ourAngle - angleWanted;
+	
+		// now adjust it so that it turns in the shortest direction (clockwise
+		// or counter clockwise)
+		if (howMuchToTurn < -Math.PI) {
+			howMuchToTurn = 2 * Math.PI + howMuchToTurn;
+		} else if  (howMuchToTurn > Math.PI) {
+			howMuchToTurn = -(2 * Math.PI - howMuchToTurn);
+		}
+	
+		return howMuchToTurn;
+	
+	}
 	
 	
 
