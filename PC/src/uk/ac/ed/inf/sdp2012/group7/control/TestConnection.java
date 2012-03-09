@@ -25,9 +25,9 @@ public class TestConnection {
 
 
 	/** How many times to ping */
-	private static int count = 100;
+	private static int count = 10000;
 	/** Command to send */
-	private static byte cmd = (byte) OpCodes.BEEP.ordinal();
+	private static byte cmd = (byte) OpCodes.DO_NOTHING.ordinal();
 
 
 	public static void main(String[] args) throws NXTCommException, IOException, Exception {
@@ -66,18 +66,18 @@ public class TestConnection {
 		}
 		
 		/* Stats */
-		for (int i = 0; i < count; ++i) {
+		for (int i = 1; i < count; ++i) {
 			if (rtts[i] < rtt_min)
 				rtt_min = rtts[i];
 			if (rtts[i] > rtt_max)
 				rtt_max = rtts[i];
 			rtt_sum += rtts[i];
 		}
-		rtt_avg = rtt_sum/count;
-		for (int i = 0; i < count; ++i) {
+		rtt_avg = rtt_sum/count-1;
+		for (int i = 1; i < count; ++i) {
 			rtt_mdev += (rtts[i]-rtt_avg)*(rtts[i]-rtt_avg); /* Don't use Math.pow, it converts everything to double! */
 		}
-		rtt_mdev = (long) Math.sqrt(rtt_mdev/count);
+		rtt_mdev = (long) Math.sqrt(rtt_mdev/count-1);
 
 		System.out.printf("\n--- %s ping statistics ---\n", ConstantsReuse.ROBOT_NAME);
 		System.out.printf("%d packets transmitted, %d received, %d%% packet loss, time %dms\n", count, count, 0, rtt_sum/1000000);
