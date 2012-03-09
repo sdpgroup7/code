@@ -61,6 +61,12 @@
 			<arg value="simulator"/>
 		</java>
 	</target>
+	<target name="TestConnection">
+		<java classname="uk.ac.ed.inf.sdp2012.group7.control.TestConnection" failonerror="true" fork="yes">
+			<env key="LD_LIBRARY_PATH" value="/group/teaching/sdp/sdp7/lejos/bluez/lib:/group/teaching/sdp/sdp7/lib"/>
+			<classpath refid="PC.classpath"/>
+		</java>
+	</target>
 	<target name="PC">
 		<mkdir dir="${junit.output.dir}"/>
 		<junit fork="yes" printsummary="withOutAndErr">
