@@ -211,42 +211,33 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 		TouchSensor touchB = new TouchSensor(SensorPort.S2);
 
 		while (true) {
-			try {
-				if (!reacting && (touchA.isPressed() || touchB.isPressed())) {
+			if (!reacting && (touchA.isPressed() || touchB.isPressed())) {
 
-					// flag sensor hit as being dealt with and save the speed
-					// we were going before the collision occurred
-					os.write(OpCodes.BUMP_ON.ordinal());
-					os.flush();
-					reacting = true;
-					tempCurSpeed = (float) pilot.getTravelSpeed();
-					pilot.stop();
-					// move back a little bit away from the wall
-					pilot.setTravelSpeed(200);
-					pilot.travel(-20);
+				// flag sensor hit as being dealt with and save the speed
+				// we were going before the collision occurred
+				os.write(OpCodes.BUMP_ON.ordinal());
+				os.flush();
+				reacting = true;
+				tempCurSpeed = (float) pilot.getTravelSpeed();
+				pilot.stop();
+				// move back a little bit away from the wall
+				pilot.setTravelSpeed(200);
+				pilot.travel(-20);
+				try{
 					Thread.sleep(10);
-					pilot.stop();
+				} catch (InterruptedException ex){}
+				pilot.stop();
+				// reset speed back to what it was before the collision
+				pilot.setTravelSpeed(tempCurSpeed);
+				os.write(OpCodes.BUMP_OFF.ordinal());
+				os.flush();
 
-					// let the PC know that the sensors were hit
-					os.write('r');
-					
-
-					// reset speed back to what it was before the collision
-					pilot.setTravelSpeed(tempCurSpeed);
-					os.write(OpCodes.BUMP_OFF.ordinal());
-					os.flush();
-
-				} else if (reacting
-						&& !(touchA.isPressed() || touchB.isPressed())) {
-					reacting = false;
-				}
-
-				Thread.sleep(50);
-
-			} catch (Exception ex) {
-				System.err.println("Something went wrong in the sensor thread: " + ex.getMessage());
+			} else if (reacting && !(touchA.isPressed() || touchB.isPressed())) {
+				reacting = false;
 			}
-
+			try{
+				Thread.sleep(50);
+			} catch (Exception ex) {}
 		}
 	}
 
