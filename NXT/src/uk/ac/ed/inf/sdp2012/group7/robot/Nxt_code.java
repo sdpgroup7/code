@@ -23,8 +23,6 @@ public class Nxt_code implements Runnable {
 	private static InputStream is;
 	private static OutputStream os;
 	private static DifferentialPilot pilot;
-	private static volatile boolean blocking = false;
-	private static volatile boolean kicking = false;
 
 	// constants for the pilot class 
 	private static final float TRACK_WIDTH = (float) 13.7;
@@ -38,7 +36,6 @@ public class Nxt_code implements Runnable {
 		BACKWARDS_SLIGHTLY,
 		STOP,
 		CHANGE_SPEED,
-		KICK,
 		ROTATE_LEFT,
 		ROTATE_RIGHT,
 		ROTATE_BLOCK_LEFT,
@@ -49,11 +46,15 @@ public class Nxt_code implements Runnable {
 		FORWARDS_WITH_DISTANCE,
 		START_MATCH,
 		STOP_MATCH,
+		BUMP_ON,
+		BUMP_OFF,
 		QUIT
 	}
 	
 	private static Pose initial;
 	private static boolean fallback = false;
+	private static Nxt_code instance;
+	private static KickerThread kicker;
 
 	public static void main(String[] args) throws Exception {
 
@@ -61,9 +62,13 @@ public class Nxt_code implements Runnable {
 		DifferentialPilot pilot = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, Motor.B,Motor.C, false);
 		OdometryPoseProvider odometry = new OdometryPoseProvider(pilot);
 		initial = new Pose(0, 0, 0);
-		int returnCode;
+		instance = new Nxt_code(pilot);
 		// start the sensor thread
-		new Thread(new Nxt_code(pilot)).start();
+		new Thread(instance).start();
+		kicker = instance.new KickerThread();
+		// start the kicker
+		new Thread(kicker).start();
+		
 		
 		// set initial pilot variables to produce maximum speed
 		//pilot.regulateSpeed(true);
@@ -98,7 +103,10 @@ public class Nxt_code implements Runnable {
 					// get the next command from the inputstream
 					byte[] byteBuffer = new byte[4];
 					is.read(byteBuffer);
-					
+					if ((byteBuffer[0] != 0) && !kicker.kicking) {
+							kicker.kick();
+					}
+						
 					n = OpCodes.values()[byteBuffer[1]];
 					int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
 					switch (n) {
@@ -243,6 +251,8 @@ public class Nxt_code implements Runnable {
 
 					// flag sensor hit as being dealt with and save the speed
 					// we were going before the collision occurred
+					os.write(OpCodes.BUMP_ON.ordinal());
+					os.flush();
 					reacting = true;
 					tempCurSpeed = (float) pilot.getTravelSpeed();
 					pilot.stop();
@@ -254,10 +264,12 @@ public class Nxt_code implements Runnable {
 
 					// let the PC know that the sensors were hit
 					os.write('r');
-					os.flush();
+					
 
 					// reset speed back to what it was before the collision
 					pilot.setTravelSpeed(tempCurSpeed);
+					os.write(OpCodes.BUMP_OFF.ordinal());
+					os.flush();
 
 				} else if (reacting
 						&& !(touchA.isPressed() || touchB.isPressed())) {
@@ -271,28 +283,42 @@ public class Nxt_code implements Runnable {
 			}
 
 		}
-		/*case KICK:
-		Thread Kick_thread = new Thread() {
-			public void run() {
-				Motor.A.setSpeed(900);
-				
-				Motor.A.rotate(-30, true);
-				try {
-					Thread.sleep(150);
-				} catch (InterruptedException e) {
-					System.err.println("Kick: interrupted during waiting: " + e.getMessage());
-				}
-				Motor.A.setSpeed(45);
-				Motor.A.rotate(30, true);
-				
-				kicking = false;
-			}
-		};
-		if (!kicking) {
-			kicking = true;
-			Kick_thread.start();
-		}
-		break;*/
 	}
 
+	
+	/**
+	 * Kicking thread: when received a kick and not kicking
+	 */
+	private class KickerThread implements Runnable {
+	
+		private volatile boolean kicking = false;
+		
+		public synchronized void kick() {
+			kicking = true;
+		}
+		
+		public void run() {
+			while (true) {
+				try {
+					if (kicking) {
+						Motor.A.setSpeed(900);
+						
+						Motor.A.rotate(-30, true);
+						
+						Thread.sleep(150);
+						
+						Motor.A.setSpeed(45);
+						Motor.A.rotate(30, true);
+						
+						kicking = false;
+					}
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					kicking = false;
+					System.err.println("Kick: interrupted during waiting: " + e.getMessage());
+				}
+			}
+		}
+	}
+	
 }
