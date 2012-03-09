@@ -84,9 +84,10 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 					if ((byteBuffer[0] != 0) && !kicker.kicking) {
 							kicker.kick();
 					}
-						
+					
 					n = OpCodes.values()[byteBuffer[1]];
 					int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
+					LCD.drawString(Integer.toString(magnitude, 0, 4);
 					switch (n) {
 
 						case FORWARDS:
@@ -255,25 +256,15 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 		
 		public void run() {
 			while (true) {
-				
-					if (kicking) {
-						Motor.A.setSpeed(900);
-						
-						Motor.A.rotate(-30, true);
-						try {
-							Thread.sleep(150);
-						} catch (InterruptedException e) {
-							kicking = false;
-							System.err.println("Kick: interrupted during waiting: " + e.getMessage());
-						}
-						Motor.A.setSpeed(45);
-						Motor.A.rotate(30, true);
-						
-						kicking = false;
-					}
-					try{
-						Thread.sleep(50);
-					} catch (InterruptedException e) {}
+				if (kicking) {
+					Motor.A.setSpeed(900);
+					Motor.A.rotate(-30, false);
+
+					Motor.A.setSpeed(45);
+					Motor.A.rotate(30, false);
+
+					kicking = false;
+				}
 			}
 		}
 	}
