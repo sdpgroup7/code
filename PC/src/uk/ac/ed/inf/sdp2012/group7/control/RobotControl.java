@@ -211,7 +211,7 @@ public class RobotControl implements ConstantsReuse {
 	 * Commands the robot to kick
 	 */
 	public void kick() {
-		addCommand((byte) 1,(byte) OpCodes.DO_NOTHING.ordinal(),0);
+		addCommand((byte) 1,(byte) OpCodes.CONTINUE.ordinal(),0);
 		
 	}
 
@@ -220,21 +220,36 @@ public class RobotControl implements ConstantsReuse {
 	 * @param radians 
 	 */
 	public void rotateBy(double radians, boolean block, boolean left) {
+		int degrees = (int)Math.toDegrees(radians);
 		if (block) {
-			
 			if (left) {
-				
+				addCommand((byte) 0, (byte) OpCodes.ROTATE_BLOCK_LEFT.ordinal(), degrees);
+			} else {
+				addCommand((byte) 0, (byte) OpCodes.ROTATE_BLOCK_RIGHT.ordinal(), degrees);
 			}
-			
 		} else {
-			
 			if (left) {
-				
+				addCommand((byte) 0, (byte) OpCodes.ROTATE_LEFT.ordinal(), degrees);
+			} else {
+				addCommand((byte) 0, (byte) OpCodes.ROTATE_RIGHT.ordinal(), degrees);
 			}
-			
 		}
-
-
+	}
+	
+	public void rotateBy(double radians, boolean block){
+		if(radians < 0){
+			rotateBy(-radians,block,false);
+		} else {
+			rotateBy(radians,block,true);
+		}
+	}
+	
+	public void rotateBy(double radians){
+		if(radians < 0){
+			rotateBy(-radians,false,false);
+		} else {
+			rotateBy(radians,false,true);
+		}
 	}
 
 	/**
