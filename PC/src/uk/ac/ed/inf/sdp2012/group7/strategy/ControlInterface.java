@@ -57,7 +57,11 @@ public class ControlInterface implements Observer {
 		
 	}
 	
-	
+	/**
+	 * Generates an arc which the robot needs to travel on to get to the goal point
+	 * @param plan
+	 * @return
+	 */
 	public static Arc chooseArc(Plan plan){
 		Point2D p = new Point2D(plan.getOurRobotPositionVisual());
 		double v = plan.getOurRobotAngle();
@@ -69,14 +73,15 @@ public class ControlInterface implements Observer {
 	 * given using the pure pursuit algorithm
 	 */
 
-	public static Arc generateArc(Point2D p, ArrayList<Point> path, double v, int planAction, int lookahead, double nodeInPixels) {
+	public static Arc generateArc(Point2D p, ArrayList<Point> path, double v, 
+			int planAction, int lookahead, double nodeInPixels) {
 		// The paper where this maths comes from can be found here
 		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
 		
 		Point2D h = null;
 
 		
-		v = convertAngle(v); //TODO: Double check this. Should it be plus or minus?
+		v = ControlInterfaceTools.convertAngle(v); 
 		
         //Attempts to find a goal point. Searches along the path given by plan
         //and finds a point which is exactly a lookahead distance (euclidian)
@@ -143,12 +148,16 @@ public class ControlInterface implements Observer {
 			logger.info("Action is to drive");
 			
 			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
-			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", (int)(path.getRadius()+0.5), path.isLeft()));
+			logger.info(String.format("Command sent to robot: Drive on arc " +
+					"radius %d with turn left: %b", 
+					(int)(path.getRadius()+0.5), path.isLeft()));
 		
 		} else if (plan.getAction() == kick) {
 			logger.info("Action is to kick");
 			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
-			logger.info(String.format("Command sent to robot: Drive on arc radius %d with turn left: %b", (int)(path.getRadius()+0.5), path.isLeft()));
+			logger.info(String.format("Command sent to robot: Drive on arc " +
+					"radius %d with turn left: %b", 
+					(int)(path.getRadius()+0.5), path.isLeft()));
 			c.kick();
 			logger.info("Command sent to robot: kick");
 			
@@ -161,7 +170,8 @@ public class ControlInterface implements Observer {
 			logger.info("Action is to turn");
 			c.stop();
 			logger.info("Command sent to robot: stop");
-			double turnAngle = angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
+			double turnAngle = angleToTurn(plan.getAngleWanted(), 
+					plan.getOurRobotAngle());
 			c.rotateBy(turnAngle);
 		
 		} else if (plan.getAction() == angleKick) {
@@ -184,26 +194,6 @@ public class ControlInterface implements Observer {
 	}
 	
 		
-	
-	
-	
-	/*
-	 * Changes the angle provided by vision into one required by the calculations
-	 * @param	angle	the original angle to be converted in radians
-	 * 
-	 * @return The converted angle so it is measured off the y axis rather than the x
-	 */
-	public static double convertAngle(double angle) {
-		
-		double newAngle = angle;
-		if (angle > Math.PI) {
-			newAngle = angle - (2*Math.PI);
-		}
-		newAngle = -newAngle;
-		
-		logger.debug(String.format("Converted angle from %f to %f", angle, newAngle));
-		return newAngle;
-	}
 	
 	/*
 	 * Returns the goal point which is 1 lookahead distance away from the robot
@@ -308,19 +298,12 @@ public class ControlInterface implements Observer {
 				c.moveBackwardSlightly();
 			}
 		} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
+				
+			//This means go for it, usual case
+			Arc arcToDrive = chooseArc(plan);
+			implimentArc(arcToDrive, plan);	
 			
-			if(plan.getAction() == PlanTypes.ActionType.DRIVE.ordinal()){
-				
-				Arc arcToDrive = chooseArc(plan);
-				implimentArc(arcToDrive, plan);
-				
-			} else {
-				
-				kick();
-				
-			} 
-			
-		}else if (plan.getPlanType()==PlanTypes.PlanType.HALT.ordinal()) {
+		} else if (plan.getPlanType()==PlanTypes.PlanType.HALT.ordinal()) {
 			
 			logger.info("Action is to stop");
 			c.stop();
