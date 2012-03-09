@@ -2,7 +2,6 @@ package uk.ac.ed.inf.sdp2012.group7.robot;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import lejos.geom.Point;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
@@ -13,11 +12,12 @@ import lejos.nxt.comm.NXTConnection;
 import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Pose;
+import uk.ac.ed.inf.sdp2012.group7.control.ConstantsReuse;
 
 /**
  * Code that runs on the NXT brick
  */
-public class Nxt_code implements Runnable {
+public class Nxt_code implements Runnable, ConstantsReuse {
 
 	// class variables
 	private static InputStream is;
@@ -27,29 +27,6 @@ public class Nxt_code implements Runnable {
 	// constants for the pilot class 
 	private static final float TRACK_WIDTH = (float) 13.7;
 	private static final float WHEEL_DIAMETER = (float) 8.16;
-
-	// NXT Opcodes
-	private static enum OpCodes {
-		DO_NOTHING,
-		FORWARDS,
-		BACKWARDS,
-		BACKWARDS_SLIGHTLY,
-		STOP,
-		CHANGE_SPEED,
-		ROTATE_LEFT,
-		ROTATE_RIGHT,
-		ROTATE_BLOCK_LEFT,
-		ROTATE_BLOCK_RIGHT,
-		ARC_LEFT,
-		ARC_RIGHT,
-		BEEP,
-		FORWARDS_WITH_DISTANCE,
-		START_MATCH,
-		STOP_MATCH,
-		BUMP_ON,
-		BUMP_OFF,
-		QUIT
-	}
 	
 	private static Pose initial;
 	private static boolean fallback = false;
