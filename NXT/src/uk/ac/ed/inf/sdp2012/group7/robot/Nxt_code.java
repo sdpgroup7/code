@@ -264,24 +264,25 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 		
 		public void run() {
 			while (true) {
-				try {
+				
 					if (kicking) {
 						Motor.A.setSpeed(900);
 						
 						Motor.A.rotate(-30, true);
-						
-						Thread.sleep(150);
-						
+						try {
+							Thread.sleep(150);
+						} catch (InterruptedException e) {
+							kicking = false;
+							System.err.println("Kick: interrupted during waiting: " + e.getMessage());
+						}
 						Motor.A.setSpeed(45);
 						Motor.A.rotate(30, true);
 						
 						kicking = false;
 					}
-					Thread.sleep(50);
-				} catch (InterruptedException e) {
-					kicking = false;
-					System.err.println("Kick: interrupted during waiting: " + e.getMessage());
-				}
+					try{
+						Thread.sleep(50);
+					} catch (InterruptedException e) {}
 			}
 		}
 	}
