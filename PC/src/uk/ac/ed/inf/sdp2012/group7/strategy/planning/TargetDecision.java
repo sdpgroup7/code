@@ -463,6 +463,45 @@ public class TargetDecision {
 		
 	}
 	
+	//method to find at which Node in their goal should we shoot
+	
+	private Node whereToShoot(Node ball) {
+		ArrayList<Node> theirGoalNodes = new ArrayList<Node>(); //allStaticObjects.getTheirGoalNodes();
+		//it is faster if i check their centre first
+		Node centreGoal = allStaticObjects.getCentreOfTheirGoal();
+		if (!obstacleOnLine(ball,centreGoal)) {
+			return centreGoal;
+		}
+		//for now set the target node as the one closest to the centreGoal
+		double distanceToCentreGoal=0;
+		double minDistance = theirGoalNodes.size();
+		int indexMinDistance = theirGoalNodes.indexOf(centreGoal);
+		/*int goodNodesUp = 0;
+		int goodNodesDown = 0;
+		*/
+		
+		for (int i=0; i<theirGoalNodes.size(); i++) {
+			distanceToCentreGoal =centreGoal.distance(theirGoalNodes.get(i));
+			if (minDistance > distanceToCentreGoal) {
+				minDistance = distanceToCentreGoal;
+				indexMinDistance = i;
+			/*if (i>theirGoalNodes.indexOf(centreGoal)) {
+				goodNodesUp++;
+			} else {
+				goodNodesDown++;
+			}
+			*/	
+			}
+		}
+		return theirGoalNodes.get(indexMinDistance);
+	
+		/*if (goodNodesUp >= goodNodesDown) {
+			return theirGoalNodes.get(theirGoalNodes.size()- (int) goodNodesUp);
+		} else {
+			return theirGoalNodes.get((int) goodNodesDown/2);
+		}*/
+
+	}
 	
 	//DOES THIS WORK
 	//edit this to check if the opposition is in the way of the shot - angular or not
@@ -490,6 +529,8 @@ public class TargetDecision {
 		}				
 
 	}
+	
+	
 
 	
 	private void ballTooCloseToWall() {
@@ -521,7 +562,7 @@ public class TargetDecision {
 	
 	
 	//DOES THIS WORK?
-	public Point ballPrediction(double time){
+	public Node ballPrediction(double time){
 		//formula used  d = d0 + v0*t + 1/2*a*t^2
 		//              x = d cos(theta)
 		//			    y = d sin(theta) 
@@ -569,16 +610,51 @@ public class TargetDecision {
 		}
 		
 		
-		Point predictedPoint = new Point ((int)x,(int) y);		
-		return predictedPoint;
+		Point predictedPoint = (new Point ((int)x,(int) y));		
+		return allStaticObjects.convertToNode(predictedPoint);
+	}
+	
+	//method that returns where the robot should go to intercept the ball
+	private Node ballIntercept(){
+		Node ourPosition = allMovingObjects.getOurPosition();
+		boolean canGetThere = false;
+		double time = 0; 
+		double dt = allStaticObjects.getDt();
+		Node target = ballPrediction(time);
+
+		/*At this moment no equations are solved
+		still need to know whether we use deceleration or not.
+		If we do, equations are much harder to solve.
+		The while loop checks at each small time interval 
+		whether the robot can get to the predicted point or not
+		*/
+		while (!canGetThere) {
+			time = time + dt;
+			target = ballPrediction(time);
+			//check if we can get to the target in time using Manhattan distance
+			double timeToGetThere = dt * (Math.abs(target.x - ourPosition.x) + (Math.abs(target.y - ourPosition.y)));
+			if (timeToGetThere <= time) {
+				canGetThere = true;
+			}
+		}		
+		return target;		
 	}
 	
 	//method that checks whether there are any obstacles on the line between 2 points
 	private boolean obstacleOnLine(Node n1, Node n2) {
-		/*ArrayList<Node> obstacleNodes = allMovingObjects.getBinaryObstacles();
-		ArrayList<Point> d = new ArrayList<Point>();
-		double angle = allMovingObjects.angleBetween(Node n1, Node n2);
-		for ()*/
+
+		ArrayList<Node> obstacleNodes = new ArrayList<Node>();//AllStaticObjects.getObstaclesBinary();
+		double angle = allMovingObjects.angleBetween(n1, n2);
+		for (int i=0 ; i<obstacleNodes.size(); i++) {
+			//compare 'angle' with the angle between n1 and each of the obstacles
+			//if it is between 5 degrees then there is an obstacle on the line
+			double obstacleAngle = allMovingObjects.angleBetween(n1, obstacleNodes.get(i));
+			if (Math.abs(Math.toDegrees(angle-obstacleAngle))<5) {
+				return true;
+			}
+			
+		}
+
 		return false;
 	}
 	

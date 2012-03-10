@@ -114,8 +114,8 @@ public class AllStaticObjects {
 		//this needs to be found experimentally
 		this.dt = 0.1;
 	}
-	
-	
+
+
 	//Compacts WorldState double into "Node" double
 	public double convertDoubleToNode(double d){
 		return (d/this.nodeInPixels);
@@ -287,6 +287,12 @@ public class AllStaticObjects {
 	public double getDeceleration(){
 		return this.deceleration;
 	}
+	
+	
+	public double getDt() {
+		return dt;
+	}
+
 	
 	public int getPitchBottomBuffer() {
 		return pitchBottomBuffer;
