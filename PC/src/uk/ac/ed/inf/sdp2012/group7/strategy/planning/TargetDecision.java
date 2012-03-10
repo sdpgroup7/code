@@ -2,11 +2,13 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
+import uk.ac.ed.inf.sdp2012.group7.strategy.newastar.Node;
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
@@ -41,8 +43,8 @@ public class TargetDecision {
 	
 	
 	//navigation point
-	private Point navPoint = new Point(0,0);
-	private Point target = new Point(0,0);
+	private Node navPoint = new Node (new Point(0,0));
+	private Node target = new Node (new Point(0,0));
 	//navigation boolean
 	//possibly surplus
 	private boolean openShotPossible;
@@ -302,14 +304,14 @@ public class TargetDecision {
 		}
 	}
 
-	//DOES THIS WORK
+	//REQUIRED FOR SHOT TAKING
 	private void weHaveBall(){
 
-		Point ourPosition = allMovingObjects.getOurPosition();
-		Point ballPosition = allMovingObjects.getBallPosition();
+		Node ourPosition = allMovingObjects.getOurPosition();
+		Node ballPosition = allMovingObjects.getBallPosition();
 		double ourAngle = allMovingObjects.getOurAngle();
 
-		if(40 > (int)ourPosition.distance(ballPosition)){
+		if(ourPosition.distance(ballPosition) < allStaticObjects.getCentreToEndOfKicker()){
 
 
 			double angleBetweenUsBall = allMovingObjects.angleBetween(ourPosition, ballPosition);
@@ -324,14 +326,14 @@ public class TargetDecision {
 
 	}
 	
-	//DOES THIS WORK
+	//REQUIRED FOR DEFENCE
 	private void theyHaveBall(){
 
-		Point theirPosition = allMovingObjects.getTheirPosition();
-		Point ballPosition = allMovingObjects.getBallPosition();
+		Node theirPosition = allMovingObjects.getTheirPosition();
+		Node ballPosition = allMovingObjects.getBallPosition();
 		double theirAngle = allMovingObjects.getTheirAngle();
 
-		if(30 > (int)theirPosition.distance(ballPosition)){
+		if(theirPosition.distance(ballPosition) < allStaticObjects.getCentreToEndOfKicker()){
 
 
 			double angleBetweenThemBall = allMovingObjects.angleBetween(theirPosition, ballPosition);
@@ -347,12 +349,12 @@ public class TargetDecision {
 	}
 	
 	
-	//-----------------------------------------------------------------------------------------ALL WRITTEN IN NODES WOKRING CODE
+	//-----------------------------------------------------------------------------------------
 	//set navPoint 4 nodes behind the ball
 	private void setNavPointOpenNoOption(){
 		
-		Point ballPosition = this.allMovingObjects.getBallPosition();
-		Point centreGoal = this.allStaticObjects.getCentreOfOurGoal();
+		Node ballPosition = this.allMovingObjects.getBallPosition();
+		Node centreGoal = this.allStaticObjects.getCentreOfOurGoal();
 		
 		//double angleBetweenBallAndGoal = this.allMovingObjects.angleBetween(ballPosition,centreGoal);
 		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
@@ -361,7 +363,7 @@ public class TargetDecision {
 		int navX = ballPosition.x + (int)(Math.cos(angleBetweenBallAndGoal)*4);
 		int navY = ballPosition.y + (int)(Math.sin(angleBetweenBallAndGoal)*4);
 		
-		this.navPoint = new Point(navX,navY);
+		this.navPoint =  new Node (new Point(navX,navY));
 		
 		
 	}
@@ -381,7 +383,7 @@ public class TargetDecision {
 		int navX = ballPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*7);
 		int navY = ballPosition.y - (int)(Math.sin(angleBetweenBallAndGoal)*7);
 		
-		this.navPoint = new Point(navX,navY);
+		this.navPoint = new Node (new Point(navX,navY));
 		
 		
 	}
@@ -400,7 +402,7 @@ public class TargetDecision {
 		int navX = ballPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*3);
 		int navY = ballPosition.y - (int)(Math.sin(angleBetweenBallAndGoal)*3);
 		
-		this.target = new Point(navX,navY);
+		this.target = new Node (new Point(navX,navY));
 		
 		
 	}
@@ -430,7 +432,7 @@ public class TargetDecision {
 		//	navY = navY - distanceToTop;
 		//}
 		
-		this.navPoint = new Point(navX,navY);
+		this.navPoint = new Node (new Point(navX,navY));
 		
 	}
 	
@@ -459,7 +461,7 @@ public class TargetDecision {
 //			navY = navY - distanceToTop;
 //		}
 		
-		this.navPoint = new Point(navX,navY);
+		this.navPoint = new Node (new Point(navX,navY));
 		
 	}
 	
@@ -469,7 +471,7 @@ public class TargetDecision {
 	private void clearShot(){
 
 		//Positions
-		Point ourPosition = allMovingObjects.getOurPosition();
+		Node ourPosition = allMovingObjects.getOurPosition();
 
 
 		//Angles
@@ -497,7 +499,7 @@ public class TargetDecision {
 		Point ballPosition = this.allMovingObjects.getBallPosition();
 		int rightWall = this.allStaticObjects.getWidth();
 		int bottomWall = this.allStaticObjects.getHeight();
-		int b = this.allStaticObjects.getBoundary();
+		int b = (int)this.allStaticObjects.getBoundary();
 		
 		boolean insideLeftBoundary = ballPosition.x < b;
 		if(insideLeftBoundary){
@@ -569,9 +571,16 @@ public class TargetDecision {
 		}
 		
 		
-		Point predictedPoint = new Point ((int)x,(int) y);
-		
+		Point predictedPoint = new Point ((int)x,(int) y);		
 		return predictedPoint;
+	}
+	
+	//method that checks whether there are any obstacles on the line between 2 points
+	private boolean obstacleOnLine(Node n1, Node n2) {
+		ArrayList<Node> obstacleNodes = allMovingObjects.getBinaryObstacles();
+		ArrayList<Point> d = new ArrayList<Point>();
+		double angle = allMovingObjects.angleBetween(Node n1, Node n2);
+		for ()
 	}
 	
 	public boolean getClearShot(){
