@@ -203,6 +203,10 @@ public class RobotControl implements ConstantsReuse {
 		command[0] = (byte) 1;
 	}
 
+	public void stopKick() {
+		addCommand((byte) 1, (byte) OpCodes.STOP.ordinal(),0);
+	}
+	
 	/**
 	 * Rotates the robot by the given number of radians
 	 * @param radians 
@@ -294,5 +298,7 @@ public class RobotControl implements ConstantsReuse {
 	
 	public void logResponse(OpCodes response){
 		logger.info("Robot Response: " + response);	}
+
+
 
 }

@@ -239,6 +239,10 @@ public class ControlInterface implements Observer {
 		c.kick();
 	}
 	
+	public void stopKick() {
+		c.stopKick();
+	}
+	
 	public void drive() {
 		c.moveForward();
 	}
@@ -258,7 +262,7 @@ public class ControlInterface implements Observer {
 			logger.info("Turn angle: " + turnAngle);
 			c.rotateBy(turnAngle,true);
 			logger.info("Now kick");
-			this.kick(); //This line must be "this.kick()". It fails if you use "c.kick()"
+			this.stopKick(); //This line must be "this.kick()". It fails if you use "c.kick()"
 			//this.stop();
 		} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
 			logger.info("Defending a penalty - will repeatedly use moveForward(distance) and moveBackward(int)");
@@ -284,5 +288,6 @@ public class ControlInterface implements Observer {
 		} else {}
 		
 	}
+
 
 }
