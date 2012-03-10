@@ -53,6 +53,7 @@ public class AllStaticObjects {
 	//physics
 	private double deceleration;
 
+
 	//worldstate getInstance
 	public WorldState worldState = WorldState.getInstance();
 	
