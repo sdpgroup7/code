@@ -33,6 +33,8 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 	private static boolean fallback = false;
 	private static Nxt_code instance;
 	private static KickerThread kicker;
+	
+	public static volatile boolean bumped = false;
 
 	public static void main(String[] args) throws Exception {
 
@@ -80,23 +82,25 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 				
 				while (n != OpCodes.QUIT) {
 
-					// get the next command from the inputstream
-					byte[] byteBuffer = new byte[4];
-					is.read(byteBuffer);
-                    if (equal(previousCommand,byteBuffer)){
-						Sound.beep(); //for debugging purposes
-						continue;
-					}
-                    previousCommand = byteBuffer;
-					if ((byteBuffer[0] != 0) && !kicker.kicking) {
+					if (!bumped) {
+
+						// get the next command from the inputstream
+						byte[] byteBuffer = new byte[4];
+						is.read(byteBuffer);
+						if (equal(previousCommand,byteBuffer)){
+							Sound.beep(); //for debugging purposes
+							continue;
+						}
+						previousCommand = byteBuffer;
+						if ((byteBuffer[0] != 0) && !kicker.kicking) {
 							kicker.kick();
-					}
-					
-					n = OpCodes.values()[byteBuffer[1]];
-					int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
-					LCD.drawString(n.toString(), 0, 4);
-					LCD.drawString(Integer.toString(magnitude), 0, 5);
-					switch (n) {
+						}
+
+						n = OpCodes.values()[byteBuffer[1]];
+						int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
+						LCD.drawString(n.toString(), 0, 4);
+						LCD.drawString(Integer.toString(magnitude), 0, 5);
+						switch (n) {
 
 						case FORWARDS:
 							pilot.forward();
@@ -117,7 +121,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 						case CHANGE_SPEED:
 							pilot.setTravelSpeed(magnitude);
 							break;
-							
+
 						case FORWARDS_WITH_DISTANCE:
 							pilot.travel(magnitude);
 							break;
@@ -133,7 +137,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 						case ROTATE_BLOCK_LEFT:
 							pilot.rotate(magnitude,false);
 							break;
-							
+
 						case ROTATE_BLOCK_RIGHT:
 							pilot.rotate(-magnitude,false);
 							break;
@@ -165,18 +169,19 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 						case QUIT: // close connection
 							Sound.twoBeeps();
 							break;
+						}
+
+						try{
+							Thread.sleep(100);
+						} catch (InterruptedException ex){
+							Sound.beep();
+						}
+
+
+						// respond to say command was acted on
+						os.write(n.ordinal());
+						os.flush();
 					}
-
-					try{
-						Thread.sleep(100);
-					} catch (InterruptedException ex){
-                        Sound.beep();
-                    }
-
-
-					// respond to say command was acted on
-					os.write(n.ordinal());
-					os.flush();
 
 				}
 
@@ -227,6 +232,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 
 		while (true) {
 			if (touchA.isPressed() || touchB.isPressed()) {
+				bumped = true;
 
 				// flag sensor hit as being dealt with and save the speed
 				// we were going before the collision occurred
@@ -248,6 +254,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 				} catch (Exception ex){
 					LCD.drawString("bump off failed", 0, 2);
 				}
+				bumped = false;
 			}
 		}
 	}
