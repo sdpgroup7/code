@@ -91,6 +91,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 
 						n = OpCodes.values()[byteBuffer[1]];
 						int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
+                        LCD.clear();
 						LCD.drawString(n.toString(), 0, 4);
 						LCD.drawString(Integer.toString(magnitude), 0, 5);
 						switch (n) {
@@ -136,11 +137,11 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 							break;
 
 						case ARC_LEFT:
-							pilot.arcForward(magnitude);
+							pilot.arcForward(-magnitude);
 							break;
 
 						case ARC_RIGHT:
-							pilot.arcForward(-magnitude);
+							pilot.arcForward(magnitude);
 							break;
 
 						case BEEP:
