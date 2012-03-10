@@ -7,8 +7,8 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
-import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 
 /**
@@ -207,42 +207,93 @@ public class TargetDecision {
 			double randomDecision = Math.random();
 			double angleToTurn;
 			if (randomDecision >= 0.5) {
-				angleToTurn = allMovingObjects.getOurAngle() + Math.PI/24;
+				angleToTurn = allMovingObjects.getOurAngle() + Math.PI/18;
 			} else {
-				angleToTurn = allMovingObjects.getOurAngle() - Math.PI/24;
+				angleToTurn = allMovingObjects.getOurAngle() - Math.PI/18;
 			}
-			logger.debug("Trying to turn to angle "+angleToTurn);
+			logger.debug("Setting angle to turn to as "+angleToTurn);
 			this.bestAngle = angleToTurn;
+			logger.debug("Sending kick action");
 			this.action = PlanTypes.ActionType.ANGLE_KICK.ordinal();
-			this.target = this.allMovingObjects.getOurPosition();
-			logger.debug("The target is "+target+" it should be our position");
 		}
 			
 		// No other plan types so must be penalty defence
 		else {
-			double distanceBetween=Point.distance(	this.allMovingObjects.getOurPosition().x, 
+			// First method - using trig with their angle
+			/*double distanceBetween=Point.distance(	this.allMovingObjects.getOurPosition().x, 
 													this.allMovingObjects.getOurPosition().y, 
 													this.allMovingObjects.getTheirPosition().x, 
 													this.allMovingObjects.getTheirPosition().y);
 			double theirAngle = this.allMovingObjects.getTheirAngle();
 			// they are facing right when taking penalty
-			if(theirAngle < 110 && theirAngle > 70) {
-				double diversionFrom90 = Math.abs(theirAngle-90);
-				double pixelsToMove = Math.sin(diversionFrom90)*distanceBetween;
+			if(worldState.getShootingDirection()==-1) {
+				double diversionFrom0 = Math.abs(theirAngle);
+				double pixelsToMove = Math.sin(diversionFrom0)*distanceBetween;
 				this.targetInCM = VisionTools.pixelsToCM(pixelsToMove);
 				// they are pointing towards the top of the goal
-				if (90-theirAngle >= 0) {
+				if (theirAngle<=Math.PI/2) {
+					// facing towards bottom of goal
+					this.action = PlanTypes.ActionType.EUCLID_BACKWARDS.ordinal();
+				} else {
+					// facing towards top
+					this.action = PlanTypes.ActionType.EUCLID_FORWARDS.ordinal();
+				}
+			// they are facing left
+			} else {
+				double diversionFromPi = Math.abs(theirAngle-Math.PI);
+				double pixelsToMove = Math.sin(diversionFromPi)*distanceBetween;
+				this.targetInCM = VisionTools.pixelsToCM(pixelsToMove);
+				if (theirAngle-Math.PI <= 0) {
+					// they are pointing towards bottom of goal
+					this.action = PlanTypes.ActionType.EUCLID_BACKWARDS.ordinal();
+				} else {
+					// facing towards top
+					this.action = PlanTypes.ActionType.EUCLID_FORWARDS.ordinal();
+				}*/
+			// Second method - project a line from their robot and look for intersection on goal line
+			Point theirPosition = allMovingObjects.getTheirPosition();
+			logger.debug("Their position is "+theirPosition);
+			double theirAngle = this.allMovingObjects.getTheirAngle();
+			logger.debug("Their angle is "+theirAngle);
+			if (theirAngle==(Math.PI/2)||theirAngle==(3*Math.PI/2))
+				this.action = PlanTypes.ActionType.STOP.ordinal();
+			// they are facing right when taking a penalty
+			if(worldState.getShootingDirection()==-1) {
+				logger.debug("They are shooting to the right");
+				Point inFrontOfOurGoal = allStaticObjects.getInFrontOfOurGoal();
+				logger.debug("Point in front of our goal is"+inFrontOfOurGoal);
+				// creating an equation for the line they project onto our line
+				double c = theirPosition.getY()-(Math.tan(theirAngle)*theirPosition.getX());
+				long y = Math.round(Math.tan(theirAngle)*inFrontOfOurGoal.x + c);
+				logger.debug("Lines intersect at y node "+y);
+				Point toDriveTo = new Point(inFrontOfOurGoal.x,(int)y);
+				logger.debug("Will drive to "+toDriveTo);
+				int nodesUpOrDown = toDriveTo.y-inFrontOfOurGoal.y;
+				logger.debug("Number of nodes to drive is "+nodesUpOrDown);
+				this.targetInCM = VisionTools.pixelsToCM(allStaticObjects.getNodeInPixels()*Math.abs(nodesUpOrDown));
+				logger.debug("Number of cm to drive is "+targetInCM);
+				if (nodesUpOrDown <=0) {
+					logger.debug("Need to drive upwards");
 					this.action = PlanTypes.ActionType.EUCLID_FORWARDS.ordinal();
 				} else {
 					this.action = PlanTypes.ActionType.EUCLID_BACKWARDS.ordinal();
 				}
-			// they are facing left
 			} else {
-				double diversionFrom270 = Math.abs(theirAngle-270);
-				double pixelsToMove = Math.sin(diversionFrom270)*distanceBetween;
-				this.targetInCM = VisionTools.pixelsToCM(pixelsToMove);
-				// they are pointing towards top of the goal
-				if (theirAngle-270 >= 0) {
+				logger.debug("They are shooting to the left");
+				Point inFrontOfOurGoal = allStaticObjects.getInFrontOfOurGoal();
+				logger.debug("Point in front of our goal is"+inFrontOfOurGoal);
+				// creating an equation for the line they project onto our line
+				double c = theirPosition.getY()-(Math.tan(theirAngle)*theirPosition.getX());
+				long y = Math.round(Math.tan(theirAngle)*inFrontOfOurGoal.x + c);
+				logger.debug("Lines intersect at y node "+y);
+				Point toDriveTo = new Point(inFrontOfOurGoal.x,(int)y);
+				logger.debug("Will drive to "+toDriveTo);
+				int nodesUpOrDown = toDriveTo.y-inFrontOfOurGoal.y;
+				logger.debug("Number of nodes to drive is "+nodesUpOrDown);
+				this.targetInCM = VisionTools.pixelsToCM(allStaticObjects.getNodeInPixels()*Math.abs(nodesUpOrDown));
+				logger.debug("Number of cm to drive is "+targetInCM);
+				if (nodesUpOrDown <=0) {
+					logger.debug("Need to drive upwards");
 					this.action = PlanTypes.ActionType.EUCLID_FORWARDS.ordinal();
 				} else {
 					this.action = PlanTypes.ActionType.EUCLID_BACKWARDS.ordinal();

@@ -184,10 +184,12 @@ public class RobotControl implements ConstantsReuse {
 	}
 
 	/**
-	 * Commands the robot to move back a little bit
+	 * Commands the robot to move backward
 	 */
-	public void moveBackwardSlightly() {
-		addCommand(OpCodes.BACKWARDS_SLIGHTLY.ordinal());
+	public void moveBackward(int distance) {
+		moving = true;
+		int command = OpCodes.BACKWARDS_WITH_DISTANCE.ordinal() | (distance << 8);
+		addCommand(command);
 	}
 
 	/**
