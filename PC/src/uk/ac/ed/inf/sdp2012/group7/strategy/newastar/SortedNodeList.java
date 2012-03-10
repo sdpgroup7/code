@@ -1,39 +1,16 @@
-package uk.ac.ed.inf.sdp2012.group7.strategy.newastar;
+package astar;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 
-class SortedNodeList {
+class SortedNodeList extends ArrayList<Node>{
 	
-	private ArrayList<Node> list = new ArrayList<Node>();
-	
-	public Node getFirst() {
-		return list.get(0);
+    @Override
+	public boolean add(Node node) {
+		boolean temp = super.add(node);
+		Collections.sort(this);
+                return temp;
 	}
-	
-	public void clear() {
-		list.clear();
-	}
-	
-	public void add(Node node) {
-		list.add(node);
-		Collections.sort(list);
-	}
-	
-	public void remove(Node n) {
-		list.remove(n);
-	}
-	
-	public int size() {
-		return list.size();
-	}
-	
-	public boolean contains(Node n) {
-		return list.contains(n);
-	}
-	
-	public ArrayList<Node> getList(){
-		return this.list;
-	}
+
 }

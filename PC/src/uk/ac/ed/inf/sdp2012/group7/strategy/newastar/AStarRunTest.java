@@ -1,9 +1,8 @@
-package uk.ac.ed.inf.sdp2012.group7.strategy.newastar;
+package astar;
 
 
 import java.awt.Point;
 import java.util.ArrayList;
-import org.apache.log4j.Logger;
 
 
 public class AStarRunTest {
@@ -16,12 +15,12 @@ public class AStarRunTest {
 			
 			// set start and end points of the path
 			Node start = new Node(new Point(0,9), 0);
-			Node end = new Node(new Point(9,9), 0);
+			Node end = new Node(new Point(9,0), 0);
 			
 			// set obstacles
 			Node opposition = new Node(new Point(3,3), 1000);
 			opposition.setOpposition(true);
-			Node ball = new Node(new Point(7,7), 1000);
+			Node ball = new Node(new Point(6,6), 1000);
 			ball.setBall(true);
 			
 			//Use Lists

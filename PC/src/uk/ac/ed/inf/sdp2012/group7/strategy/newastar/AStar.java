@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.sdp2012.group7.strategy.newastar;
+package astar;
 
 
 import java.awt.Point;
@@ -14,14 +14,14 @@ public class AStar {
 	private SortedNodeList openList;
 	private Node[][] map;
 	private ClosestHeuristic heuristic;
-	private Node[] currentNode = new Node[1];
+	private Node currentNode;
 	
 	public AStar(int height, int width, Node start, Node target, ArrayList<Node> balls, ArrayList<Node> oppositions) {
 		
 		this.height = height;
 		this.width = width;
 		this.start = start;
-	    this.target = target;
+                this.target = target;
 		this.balls = balls;
 		this.oppositions = oppositions;
 		this.map = new Node[this.width][this.height];
@@ -35,17 +35,19 @@ public class AStar {
 		
 		//put in ball
 		for(Node n : balls){
-			
+                    if(!((n.x < 0) || (n.x >= this.width) || (n.y < 0) || (n.y >= this.height))){
 			this.map[n.x][n.y] = n;
-			
+                    }
 		}
 		
 		//put in opposition
 		for(Node n : oppositions){
-			
+                    if(!((n.x < 0) || (n.x >= this.width) || (n.y < 0) || (n.y >= this.height))){
 			this.map[n.x][n.y] = n;
-			
+                    }
 		}
+                
+                printMap(null);
 		
 		this.map[this.target.x][this.target.y] = this.target;
 		this.map[this.target.x][this.target.y].setTarget(true);
@@ -56,14 +58,13 @@ public class AStar {
 		
 		ArrayList<Node> nearestNeighbours = new ArrayList<Node>();
 		
-		for(int i = current.x -2; i < current.x + 2; i++){
-			for(int j = current.y -2; j < current.y +2; j++){
-				if(!((i < 0) || (i > this.width) || (j < 0) || (j > this.height))){
-					if(!(current == this.map[i][j])){
-
-						this.map[i][j] = new Node ( new Point(i,j), 0);
+		for(int i = current.x - 1; i <= current.x + 1; i++){
+			for(int j = current.y - 1; j <= current.y + 1; j++){
+				if(!((i < 0) || (i >= this.width) || (j < 0) || (j >= this.height))){
+					if(!(current.equals(this.map[i][j]))){
+						if(this.map[i][j] == null) this.map[i][j] = new Node(new Point(i,j), 0);
 						this.map[i][j].sethCost(heuristic.getEstimatedDistanceToGoal(this.map[i][j], this.target));
-						this.map[i][j].setgCost(heuristic.getEstimatedDistanceToGoal(this.map[i][j], current));
+						this.map[i][j].setgCost(heuristic.getEstimatedDistanceToGoal(this.map[i][j], current) + current.getgCost());
 						this.map[i][j].setfCost();
 						nearestNeighbours.add(this.map[i][j]);
 					}
@@ -78,65 +79,66 @@ public class AStar {
 	public ArrayList<Node> returnPath(){
 		
 		
-		
 		this.map[this.start.x][this.start.y] = this.start;
 		this.map[this.start.x][this.start.y].sethCost(
 				heuristic.getEstimatedDistanceToGoal
-				(this.map[this.start.x][this.start.y], this.target) * 100);
+				(this.map[this.start.x][this.start.y], this.target));// * 100);
 		
-		this.map[this.start.x][this.start.y].setgCost(900);
+		this.map[this.start.x][this.start.y].setgCost(0);
 		this.map[this.start.x][this.start.y].setfCost();
 		
 		this.openList.add(this.map[start.x][start.y]);
 		this.map[start.x][start.y].setStart(true);
+                this.start.setParent(start);
 		
-		currentNode[0] = this.map[start.x][start.y];
+		currentNode = this.map[start.x][start.y];
 		
 		boolean hasBeenFound = false;
 		
 		while(!hasBeenFound){
-			
-			for(Node n : this.openList.getList()){
-				System.out.println("fCost evaluation : " + n.getfCost() + " to " + currentNode[0].getfCost());
-				if(currentNode[0].getfCost() > n.getfCost()){
-					
-					currentNode[0] = n;
+                        System.out.println("\n\n");
+                        if(openList.size() > 0) currentNode = openList.get(0);
+			for(Node n : this.openList){
+                                System.out.println("gCost evaluation  @ (" + n.x + "," + n.y + ") : " + n.getgCost());
+                                System.out.println("hCost evaluation  @ (" + n.x + "," + n.y + ") : " + n.gethCost());
+				System.out.println("fCost evaluation  @ (" + n.x + "," + n.y + ") : " + n.getfCost() + " to " + currentNode.getfCost());
+				if(n.getfCost() < currentNode.getfCost()){
+					currentNode = n;
 				}
 			}
 			
-			System.out.println("Next currentNode is " + currentNode[0].x() + " " + currentNode[0].y() + " " + currentNode[0].getfCost());
+			System.out.println("Next currentNode is " + currentNode.toString());
 			
-			ArrayList<Node> nearestNeighbours = nearestNeighbours(currentNode[0]);
+			ArrayList<Node> nearestNeighbours = nearestNeighbours(currentNode);
 			
 			System.out.println("Number of neighbours : " + nearestNeighbours.size());
 			System.out.println("Number in openList @ start : " + openList.size());
-			
-			this.closedList.add(currentNode[0]);
-			this.openList.remove(currentNode[0]);
+			System.out.println("Current node (adding to closed): " + currentNode.toString());
+                        
+			this.closedList.add(currentNode);
+			this.openList.remove(currentNode);
 			
 			for(Node n : nearestNeighbours){
 				if(!(this.closedList.contains(n))){
-					System.out.println("Not in closedList : " + n.x() + " " + n.y());
+					System.out.println("Not in closedList : " + n.x + " " + n.y);
 					if(!(this.openList.contains(n))){
-						System.out.println("Not in openList : " + n.x() + " " + n.y());
-						n.setParent(currentNode[0]);
-						n.setgCost(heuristic.getEstimatedDistanceToGoal(n, currentNode[0])*100 + n.getParent().getgCost());
+						System.out.println("Not in openList : " + n.x + " " + n.y);
+						n.setParent(currentNode);
+						n.setgCost(heuristic.getEstimatedDistanceToGoal(n, currentNode) + n.getParent().getgCost());
 						n.sethCost(heuristic.getEstimatedDistanceToGoal(n, this.target));
 						n.setfCost();
 						this.openList.add(n);
-					}else {
-						if(n.getParent() == null){
-							n.setParent(currentNode[0]);
-						}
-						System.out.println("Is in openList : " + n.x() + " " + n.y());
-						double old = n.getfCost();
-						n.setgCost(heuristic.getEstimatedDistanceToGoal(n, currentNode[0])*100 + n.getParent().getgCost());
-						double test = n.getgCost();
-						if(old > test){
-							n.setParent(currentNode[0]);
+					} else {
+						System.out.println("Is in openList : " + n.x + " " + n.y);
+						double oldCost = n.getgCost();
+						n.setgCost(heuristic.getEstimatedDistanceToGoal(n, currentNode) + currentNode.getParent().getgCost());
+						double newCost = n.getgCost();
+						if(newCost < oldCost){
+                                                        System.out.println("Changed parent");
+							n.setParent(currentNode);
 							n.setfCost();
 						} else {
-							n.setgCost(heuristic.getEstimatedDistanceToGoal(n, n.getParent()));
+							n.setgCost(oldCost);
 						}
 					}
 				}
@@ -149,16 +151,71 @@ public class AStar {
 				hasBeenFound = true;
 			}
 			
-			if(openList.getList().size() < 1){
+			if(openList.size() < 1){
 				System.out.println("Too small");
 				hasBeenFound = true;
 			}
-			
+                        printMap(closedList);
 		}
 		
-		return closedList;
+                ArrayList<Node> returnPath = getPath(closedList);
+                System.out.println("Final Path:");
+                printMap(returnPath);
+		return returnPath;
 	}
 	
+        public ArrayList<Node> getPath(ArrayList<Node> closedList){
+            if(closedList.size() > 0){
+                ArrayList<Node> path = new ArrayList<Node>();
+                Node currentNode = closedList.get(closedList.size() - 1);
+                path.add(currentNode);
+                while(true){
+                    currentNode = currentNode.getParent();
+                    path.add(currentNode);
+                    if(currentNode.isStart()) break;
+                }
+                return reversePath(path);
+            } else {
+                return new ArrayList<Node>();
+            }
+        }
+        
+        public ArrayList<Node> reversePath(ArrayList<Node> list){
+            ArrayList<Node> path = new ArrayList<Node>();
+            while(list.size() > 0){
+                path.add(list.remove(list.size() - 1));
+            }
+            return path;
+        }
 	
-	
+        
+        
+        public void printMap(ArrayList<Node> path) {
+            Node node;
+            if(path == null) path = new ArrayList<Node>();
+            for(int y = 0; y < this.height; y++){
+                for(int x = 0; x < this.width; x++){
+                    Node n = map[x][y];
+                    if(n != null){
+                        if(path.contains(new Node(new Point(x,y), 0))){
+                            System.out.print("X ");
+                        }else if(n.isTarget()){
+                            System.out.append("T ");
+                        }else if(n.isBall()){
+                            System.out.print("B ");
+                        } else if (n.isOpposition()){
+                            System.out.print("O ");
+                        } else {
+                            System.out.print("  ");
+                        }
+                    } else {
+                        System.out.print("  ");
+                    }
+                }
+                System.out.println();
+            }
+            
+        }
+		
+		
 }
