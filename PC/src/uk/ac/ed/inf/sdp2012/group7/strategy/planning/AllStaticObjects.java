@@ -37,6 +37,7 @@ public class AllStaticObjects {
 	private int height;
 	private int width;
 	private int boundary;
+	private int centreToEndOfKicker;
 	private double nodeInPixels;
 	private double widthOfPitchInRobotsCM;
 	private double widthOfRobotInNodes;
@@ -102,6 +103,8 @@ public class AllStaticObjects {
 		this.widthOfRobotInNodes = this.widthOfPitchInRobotsCM / this.nodeInPixels;
 		this.boundary = (int)(this.widthOfRobotInNodes / 2);
 		
+		
+		this.centreToEndOfKicker = 6;
 		
 		//set defence position
 		this.pointInfrontOfGoal();
@@ -212,30 +215,30 @@ public class AllStaticObjects {
 		return this.boundary;
 	}
 	
-	public Point getTheirTopGoalPost() {
+	public Node getTheirTopGoalPost() {
 		return theirTopGoalPost;
 	}
 	
-	public Point getTheirBottomGoalPost() {
+	public Node getTheirBottomGoalPost() {
 		return theirBottomGoalPost;
 	}
 	
-	public Point getInFrontOfOurGoal() {
+	public Node getInFrontOfOurGoal() {
 		this.pointInfrontOfGoal();
 		return inFrontOfOurGoal;
 	}
 	
-	public Point getInFrontOfTheirGoal() {
+	public Node getInFrontOfTheirGoal() {
 		this.pointInfrontOfTheirGoal();
 		return inFrontOfTheirGoal;
 	}
 	
-	public Point getCentreOfTheirGoal() {
+	public Node getCentreOfTheirGoal() {
 		this.centreOfTheirGoal();
 		return centreOfTheirGoal;
 	}
 	
-	public Point getCentreOfOurGoal() {
+	public Node getCentreOfOurGoal() {
 		this.centreOfOurGoal();
 		return centreOfOurGoal;
 	}
@@ -288,6 +291,12 @@ public class AllStaticObjects {
 
 	public int getPitchRightBuffer() {
 		return pitchRightBuffer;
+	}
+
+
+	public double getCentreToEndOfKicker() {
+		// TODO Auto-generated method stub
+		return this.centreToEndOfKicker;
 	}
 
 }
