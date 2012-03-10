@@ -3,5 +3,8 @@
 	<classpathentry kind="src" path="NXT/src"/>
 	<classpathentry kind="src" path="PC/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/javacv.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/javaGeom-0.10.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
