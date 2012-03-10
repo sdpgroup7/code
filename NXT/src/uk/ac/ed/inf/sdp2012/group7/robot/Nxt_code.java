@@ -232,7 +232,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 				} catch (Exception ex){}
 				pilot.stop();
                 try {
-                    Thread.sleep(150);
+                    Thread.sleep(250);
                 } catch (InterruptedException ex) {}
 
 				// move back a little bit away from the wall
