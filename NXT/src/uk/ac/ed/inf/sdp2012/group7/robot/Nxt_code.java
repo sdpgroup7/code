@@ -83,10 +83,10 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 					// get the next command from the inputstream
 					byte[] byteBuffer = new byte[4];
 					is.read(byteBuffer);
-                    if (equal(previousCommand,byteBuffer)){
-						Sound.beep(); //for debugging purposes
-						continue;
-					}
+                    //if (equal(previousCommand,byteBuffer)){
+						//Sound.beep(); //for debugging purposes
+						//continue;
+					//}
                     previousCommand = byteBuffer;
 					if ((byteBuffer[0] != 0) && !kicker.kicking) {
 							kicker.kick();
@@ -94,6 +94,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 					
 					n = OpCodes.values()[byteBuffer[1]];
 					int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
+                    LCD.clear();
 					LCD.drawString(n.toString(), 0, 4);
 					LCD.drawString(Integer.toString(magnitude), 0, 5);
 					switch (n) {
