@@ -252,8 +252,8 @@ public class ControlInterface implements Observer {
 	}
 	
 	public void drive() {
-		c.changeSpeed(30);
 		c.moveForward();
+		logger.debug("Drive command sent to robot");
 	}
 
 	
