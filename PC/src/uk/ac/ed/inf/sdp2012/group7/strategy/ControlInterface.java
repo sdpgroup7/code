@@ -192,9 +192,6 @@ public class ControlInterface implements Observer {
 		} else if (plan.getAction() == euclidForward) {
 			logger.info("Action is to drive forward");
 			c.moveForward((int)plan.getDistanceInCM());
-		} else if (plan.getAction() == euclidBackWards) {
-			logger.info("Action is drive backwards"); 
-			c.moveBackwardSlightly();
 		}
 
 	}
@@ -282,9 +279,6 @@ public class ControlInterface implements Observer {
 			if (plan.getAction() == euclidForward) {
 				logger.info("Action is euclidForwards"); 
 				c.moveForward((int)plan.getDistanceInCM());
-			} else {
-				logger.info("Action is euclidBackwards"); 
-				c.moveBackwardSlightly();
 			}
 		} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
 				
