@@ -44,7 +44,7 @@ public class ControlInterface implements Observer {
 	private int backwardWithDistance = PlanTypes.ActionType.BACKWARD_WITH_DISTANCE.ordinal();
 	
 
-	public ControlInterface(int lookahead) {
+	private ControlInterface(int lookahead) {
 		ControlInterface.lookahead = lookahead;
 		this.c = new RobotControl();
 		this.c.startCommunications();
@@ -243,6 +243,9 @@ public class ControlInterface implements Observer {
 		c.moveForward();
 	}
 
+	public void stop() {
+		c.stop();
+	}
 	
 	
 	@Override
@@ -252,13 +255,11 @@ public class ControlInterface implements Observer {
 		if(plan.getPlanType()==PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
 			logger.info("Taking a penalty - first turn required angle");
 			double turnAngle = ControlInterfaceTools.angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
-			c.rotateBy(turnAngle);
-			try {
-				Thread.sleep(250);
-			} catch (InterruptedException e) {}
+			logger.info("Turn angle: " + turnAngle);
+			c.rotateBy(turnAngle,true);
 			logger.info("Now kick");
-			c.kick();
-			c.stop();
+			this.kick(); //This line must be "this.kick()". It fails if you use "c.kick()"
+			//this.stop();
 		} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
 			logger.info("Defending a penalty - will repeatedly use moveForward(distance) and moveBackward(int)");
 			if (plan.getAction() == forwardWithDistance) {

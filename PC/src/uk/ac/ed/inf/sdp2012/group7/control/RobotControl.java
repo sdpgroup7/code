@@ -193,15 +193,14 @@ public class RobotControl implements ConstantsReuse {
 	 */
 	public void stop() {
 		addCommand((byte) 0,(byte) OpCodes.STOP.ordinal(),0);
-			}
+	}
 
 
 	/**
 	 * Commands the robot to kick
 	 */
 	public void kick() {
-		addCommand((byte) 1,(byte) OpCodes.CONTINUE.ordinal(),0);
-		
+		command[0] = (byte) 1;
 	}
 
 	/**
