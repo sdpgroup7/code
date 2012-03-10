@@ -18,24 +18,17 @@ public class MovingObject {
 	volatile public ArrayList<Point> centroids = new ArrayList<Point>();
 	volatile public ArrayList<Point> movedCentroids = new ArrayList<Point>();
 	volatile public Point tip = new Point();
-	volatile private int kickerDistance = VisionTools.cmToPixels(16);
+	volatile private int kickerDistance = 16;
 	
 	
-	
-	/**
-	 * @return the kickerDistance
-	 */
-	public int getKickerDistance() {
+	public int getKickerDistanceInCM() {
 		return kickerDistance;
 	}
 
-	/**
-	 * @param kickerDistance the kickerDistance to set
-	 */
-	public void setKickerDistance(int kickerDistance) {
-		this.kickerDistance = kickerDistance;
+	public int getKickerDistanceInPixels(){
+		return VisionTools.cmToPixels(getKickerDistanceInCM());
 	}
-
+	
 	public float getHeight(){
 		return this.height;
 	}
