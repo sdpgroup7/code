@@ -215,8 +215,6 @@ public class TargetDecision {
 			}
 			logger.debug("Setting angle to turn to as "+angleToTurn);
 			this.bestAngle = angleToTurn;
-			logger.debug("Sending kick action");
-			this.action = PlanTypes.ActionType.ANGLE_KICK.ordinal();
 		}
 			
 		// No other plan types so must be penalty defence
@@ -276,9 +274,9 @@ public class TargetDecision {
 				logger.debug("Number of cm to drive is "+targetInCM);
 				if (nodesUpOrDown <=0) {
 					logger.debug("Need to drive upwards");
-					this.action = PlanTypes.ActionType.EUCLID_FORWARDS.ordinal();
+					this.action = PlanTypes.ActionType.FORWARD_WITH_DISTANCE.ordinal();
 				} else {
-					this.action = PlanTypes.ActionType.EUCLID_BACKWARDS.ordinal();
+					this.action = PlanTypes.ActionType.BACKWARD_WITH_DISTANCE.ordinal();
 				}
 			} else {
 				logger.debug("They are shooting to the left");
@@ -296,9 +294,9 @@ public class TargetDecision {
 				logger.debug("Number of cm to drive is "+targetInCM);
 				if (nodesUpOrDown <=0) {
 					logger.debug("Need to drive upwards");
-					this.action = PlanTypes.ActionType.EUCLID_FORWARDS.ordinal();
+					this.action = PlanTypes.ActionType.FORWARD_WITH_DISTANCE.ordinal();
 				} else {
-					this.action = PlanTypes.ActionType.EUCLID_BACKWARDS.ordinal();
+					this.action = PlanTypes.ActionType.BACKWARD_WITH_DISTANCE.ordinal();
 				}
 			}
 		}
