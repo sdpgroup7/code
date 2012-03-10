@@ -5,6 +5,7 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.lang.Math;
 
 import org.apache.log4j.Logger;
 
@@ -99,10 +100,11 @@ public class AllStaticObjects {
 		//pW / mW = node
 		//~How to work out number of nodes in a robot...
 		//pW / rW = width of pitch in robots
-		//widthOfPitchInRobots / widthOfPitchInNodes = number of nodes per robot...
 		this.widthOfPitchInRobotsCM = 243.84 / 20;
-		this.widthOfRobotInNodes = this.widthOfPitchInRobotsCM / this.nodeInPixels;
-		this.boundary = (int)(this.widthOfRobotInNodes / 2);
+		//this.widthOfRobotInNodes = this.widthOfPitchInRobotsCM / this.nodeInPixels;
+		this.widthOfRobotInNodes = this.width / this.widthOfPitchInRobotsCM;
+		//with 58 as width, boundary is set at 3 nodes
+		this.boundary = (int)Math.ceil(this.widthOfRobotInNodes / 2);
 		
 		
 		//set defence position
