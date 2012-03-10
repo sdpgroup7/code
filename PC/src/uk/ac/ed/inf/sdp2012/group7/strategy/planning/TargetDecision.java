@@ -290,7 +290,7 @@ public class TargetDecision {
 				logger.debug("Lines intersect at y node "+y);
 				Point toDriveTo = new Point(inFrontOfOurGoal.x,(int)y);
 				logger.debug("Will drive to "+toDriveTo);
-				int nodesUpOrDown = toDriveTo.y-inFrontOfOurGoal.bally;
+				int nodesUpOrDown = toDriveTo.y-inFrontOfOurGoal.y;
 				logger.debug("Number of nodes to drive is "+nodesUpOrDown);
 				this.targetInCM = VisionTools.pixelsToCM(allStaticObjects.getNodeInPixels()*Math.abs(nodesUpOrDown));
 				logger.debug("Number of cm to drive is "+targetInCM);
