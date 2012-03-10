@@ -220,14 +220,13 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 	 */
 	public void run() {
 
-		boolean reacting = false;
 		float tempCurSpeed;
 		
 		TouchSensor touchA = new TouchSensor(SensorPort.S1);
 		TouchSensor touchB = new TouchSensor(SensorPort.S2);
 
 		while (true) {
-			if (!reacting && (touchA.isPressed() || touchB.isPressed())) {
+			if (touchA.isPressed() || touchB.isPressed()) {
 
 				// flag sensor hit as being dealt with and save the speed
 				// we were going before the collision occurred
@@ -235,15 +234,11 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 					os.write(OpCodes.BUMP_ON.ordinal());
 					os.flush();
 				} catch (Exception ex){}
-				reacting = true;
 				tempCurSpeed = (float) pilot.getTravelSpeed();
 				pilot.stop();
 				// move back a little bit away from the wall
 				pilot.setTravelSpeed(200);
 				pilot.travel(-20);
-				try{
-					Thread.sleep(10);
-				} catch (InterruptedException ex){}
 				pilot.stop();
 				// reset speed back to what it was before the collision
 				pilot.setTravelSpeed(tempCurSpeed);
@@ -251,13 +246,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 					os.write(OpCodes.BUMP_OFF.ordinal());
 					os.flush();
 				} catch (Exception ex){}
-
-			} else if (reacting && !(touchA.isPressed() || touchB.isPressed())) {
-				reacting = false;
 			}
-			try{
-				Thread.sleep(50);
-			} catch (Exception ex) {}
 		}
 	}
 

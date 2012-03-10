@@ -147,7 +147,7 @@ public class RobotControl implements ConstantsReuse {
 	 * @param speed
 	 */
 	public void changeSpeed(int speed) {
-		addCommand((byte) 0,(byte) OpCodes.CHANGE_SPEED.ordinal(),0);
+		addCommand((byte) 0,(byte) OpCodes.CHANGE_SPEED.ordinal(),speed);
 	}
 	
 
