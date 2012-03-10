@@ -11,8 +11,6 @@ import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
 import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.control.RobotControl;
-import uk.ac.ed.inf.sdp2012.group7.control.Tools;
-import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 
 import math.geom2d.Point2D;
@@ -33,8 +31,7 @@ public class ControlInterface implements Observer {
 	
 	private final int START_SPEED = 30;
 	
-	private WorldState world = WorldState.getInstance();
-	
+	private static ControlInterface controlInterface = null;
 	private static int lookahead;
 	private RobotControl c;
 	
@@ -49,12 +46,21 @@ public class ControlInterface implements Observer {
 	
 
 	public ControlInterface(int lookahead) {
-		this.lookahead = lookahead;
+		ControlInterface.lookahead = lookahead;
 		this.c = new RobotControl();
 		this.c.startCommunications();
 		this.c.changeSpeed(START_SPEED);
-		
-		
+	}
+	
+	public static ControlInterface getInstance(int lookahead){
+		if(controlInterface == null){
+			controlInterface = new ControlInterface(lookahead);
+		}
+		return controlInterface;
+	}
+	
+	public static ControlInterface getInstance(){
+		return getInstance(5);
 	}
 	
 	/**

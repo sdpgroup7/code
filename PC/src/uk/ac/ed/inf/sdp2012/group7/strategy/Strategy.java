@@ -19,13 +19,12 @@ public class Strategy {
 	private AllStaticObjects allStaticObjects;
 	private ControlInterface control_interface;
 	private Thread thread_for_planningthread;
-	private WorldState worldState = WorldState.getInstance();
 
 
 	public Strategy() {
 				
 		//Start Control interface
-		this.control_interface = new ControlInterface(5);
+		this.control_interface = ControlInterface.getInstance(5);
 		
 		//create the observer / buffer for the plans
 		this.planning_buffer = new PlanningBuffer(control_interface);
