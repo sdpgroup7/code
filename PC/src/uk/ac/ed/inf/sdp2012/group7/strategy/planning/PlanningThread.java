@@ -62,11 +62,7 @@ public class PlanningThread extends Observable implements Runnable{
 					//and I think it might be useful for testing...
 					//I can imagine Tom finding this, and think "wtf!" - sorry Tom!
 					
-					try {
-						Thread.sleep(1500);
-					} catch (InterruptedException e) {
-						Strategy.logger.error("Thread sleeping in PlanningThread was interrupted.");
-					}
+				
 				}
 			} else {
 				while(!worldStateIsPopulated){
