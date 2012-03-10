@@ -44,10 +44,12 @@ public class AllMovingObjects {
 		//We don't want to drive into them, so we set the cost 'high'
 		this.theirPosition = allStaticObjects.convertToNode(worldState.getOpponentsRobot().getPosition().getCentre());
 		this.theirPosition.setgCost(1000);
+		this.theirPosition.setOpposition(true);
 		
 		//We don't want to nudge the ball as we drive around it, so we set the cost relatively high
 		this.ballPosition = allStaticObjects.convertToNode(worldState.getBall().getPosition().getCentre());
 		this.ballPosition.setgCost(100);
+		this.ballPosition.setBall(true);
 		
 		//Angles from Vision are in the same system as ours, so no conversion required
 		
