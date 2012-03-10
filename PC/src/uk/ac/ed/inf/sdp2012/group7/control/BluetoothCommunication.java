@@ -38,13 +38,15 @@ public class BluetoothCommunication implements CommunicationInterface {
         }
 	}
 
-	public void sendToRobot(byte[] command) {
+	public OpCodes sendToRobot(byte[] command) {
 	    try {
 	    	os.write(command);
 	        os.flush();
-	        
+	        int response = recieveFromRobot();
+	        return OpCodes.values()[response];
 	    } catch (IOException ex) {
 	        RobotControl.logger.error("Error sending to robot: " + ex);
+	        return OpCodes.CONTINUE;
 	    }
 	}
 	

@@ -113,23 +113,6 @@ public class RobotControl implements ConstantsReuse {
 		command[1] = code;
 		command[2] = (byte) ((parameter >> 8) & 0xFF);
 		command[3] = (byte) (parameter & 0xFF);
-		
-	/*	int response = getResponse();
-        
-        RobotControl.logger.info("Received : " + response + " (exp: " + command[3] + ")");
-  
-        while (response != command[3]) {
-        	if (response == OpCodes.BUMP_ON.ordinal()) {
-        		bumped = true;
-				command[0] = 0;
-				command[1] = (byte) OpCodes.DO_NOTHING.ordinal();
-				break;
-        	}
-        	
-        	response = getResponse();
-        	RobotControl.logger.info("Received : " + response + " (exp: " + command[3] + ")");
-        	
-        }*/
 	}
 
 
@@ -140,8 +123,7 @@ public class RobotControl implements ConstantsReuse {
 	private void sendToRobot(byte[] command) {
 		
 		if(!bumped){
-				comms.sendToRobot(command);
-				logResponse(getResponse());
+				logResponse(comms.sendToRobot(command));
 		} else {
 			while(getResponse() != OpCodes.BUMP_OFF.ordinal()){}
 			bumped = true;
@@ -302,8 +284,8 @@ public class RobotControl implements ConstantsReuse {
 		return isConnected;
 	}
 	
-	public void logResponse(int response){
-		switch(OpCodes.values()[response]){
+	public void logResponse(OpCodes response){
+		switch(response){
 		case DO_NOTHING:
 			logger.info("Robot Response: DO_NOTHING");
 			break;
