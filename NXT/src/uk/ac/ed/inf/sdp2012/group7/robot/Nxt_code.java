@@ -237,17 +237,14 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 					os.write(OpCodes.BUMP_ON.ordinal());
 					os.flush();
 				} catch (Exception ex){}
-				tempCurSpeed = (float) pilot.getTravelSpeed();
 				pilot.stop();
 				// move back a little bit away from the wall
-				pilot.setTravelSpeed(200);
 				pilot.travel(-20);
 				LCD.clear();
 				LCD.drawString("End travel -20", 0, 0);
 				pilot.stop();
 				LCD.drawString("End stop", 0, 1);
 				// reset speed back to what it was before the collision
-				pilot.setTravelSpeed(tempCurSpeed);
 				LCD.drawString("Restored travelSpeed", 0, 2);
 				try{
 					os.write(OpCodes.BUMP_OFF.ordinal());

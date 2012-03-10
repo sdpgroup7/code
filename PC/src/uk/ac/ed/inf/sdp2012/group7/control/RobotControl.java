@@ -123,6 +123,7 @@ public class RobotControl implements ConstantsReuse {
 	private void sendToRobot(byte[] command) {
 		
 		if(!bumped){
+				logger.info("Sent "+OpCodes.values()[command[1]]);
 				OpCodes response = comms.sendToRobot(command);
 				logResponse(response);
 				if(response == OpCodes.BUMP_ON) bumped = true;
