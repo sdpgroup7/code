@@ -11,8 +11,7 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 /**
  * 
  * @author s0951580
- * 
- * TODO: clustering algorithm to get the T right 
+ *  
  * TODO: do we give a shit about the grey circles anymore can we just remove them
  * 
  */
@@ -544,19 +543,18 @@ public class Thresholding {
     
     
     public Point fixParallax(Point p, MovingObject m){
-    	VisionTools vt = new VisionTools();
     	float x = 	(Vision.worldState.getPitch().getPitchWidth()/2.0f)*(m.getHeight()) - 
-    				(vt.pixelsToCM(p.x) * m.getHeight()) + 
-    				(Vision.worldState.getPitch().getCameraHeight() * vt.pixelsToCM(p.x));
+    				(VisionTools.pixelsToCM(p.x) * m.getHeight()) + 
+    				(Vision.worldState.getPitch().getCameraHeight() * VisionTools.pixelsToCM(p.x));
     	x = (float) (x / Vision.worldState.getPitch().getCameraHeight());
     	
     	float y = 	(Vision.worldState.getPitch().getPitchHeight()/2.0f)*(m.getHeight()) - 
-					(vt.pixelsToCM(p.y) * m.getHeight()) + 
-					(Vision.worldState.getPitch().getCameraHeight() * vt.pixelsToCM(p.y));
+					(VisionTools.pixelsToCM(p.y) * m.getHeight()) + 
+					(Vision.worldState.getPitch().getCameraHeight() * VisionTools.pixelsToCM(p.y));
     	y = (float) (y / Vision.worldState.getPitch().getCameraHeight());
     	
-    	y = vt.cmToPixels(y);
-    	x = vt.cmToPixels(x);
+    	y = VisionTools.cmToPixels(y);
+    	x = VisionTools.cmToPixels(x);
     	
     	return new Point((int)x,(int)y);
     }
@@ -611,7 +609,7 @@ public class Thresholding {
     
     public boolean isGreen(Color c, int GB, int RG){
     	if(pitch == 0){
-    		return ( GB > 50 && RG > 50 && c.getGreen() > greenPlatesThresh[pitch][0]);
+    		return ( GB > 75 && RG > 75 && c.getGreen() > greenPlatesThresh[pitch][0]);
     	}
     	else {
     		return ( GB >= 50 && RG >= 50 && c.getGreen() > greenPlatesThresh[pitch][0]);

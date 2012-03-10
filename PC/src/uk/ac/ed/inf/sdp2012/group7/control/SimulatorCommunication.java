@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
 
+import uk.ac.ed.inf.sdp2012.group7.control.ConstantsReuse.OpCodes;
+
 public class SimulatorCommunication implements CommunicationInterface {
 
 	private String simHost = "localhost";
@@ -36,16 +38,21 @@ public class SimulatorCommunication implements CommunicationInterface {
 
 
 	public void sendToRobot(int command) {
-		try {
-			System.out.println("SC: Sending command '"+command+"' to simulator at "+addr());
-			byte[] bytes = ByteBuffer.allocate(4).putInt(command).array();
-			os.write(bytes);
-			os.flush();
-		} catch (Exception e) {
-			System.out.println("SC: Sending command '"+command+"' to simulator at "+addr()+" failed: "+e.toString());
-		}
+		sendToRobot(ByteBuffer.allocate(4).putInt(command).array());
 	}
 
+	public OpCodes sendToRobot(byte[] command) {
+		try {
+			System.out.println("SC: Sending command '"+command.toString()+"' to simulator at "+addr());
+			os.write(command);
+			os.flush();
+			 int response = recieveFromRobot();
+		     return OpCodes.values()[response];
+		} catch (Exception e) {
+			System.out.println("SC: Sending command '"+command.toString()+"' to simulator at "+addr()+" failed: "+e.toString());
+			return OpCodes.CONTINUE;
+		}
+	}
 	
 	public void openConnection() throws IOException {
 		System.out.print("SC: Connecting to simulator at "+addr()+"...");
