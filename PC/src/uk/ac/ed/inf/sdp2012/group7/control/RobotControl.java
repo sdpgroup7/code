@@ -123,10 +123,12 @@ public class RobotControl implements ConstantsReuse {
 	private void sendToRobot(byte[] command) {
 		
 		if(!bumped){
-				logResponse(comms.sendToRobot(command));
+				OpCodes response = comms.sendToRobot(command);
+				logResponse(response);
+				if(response == OpCodes.BUMP_ON) bumped = true;
 		} else {
 			while(getResponse() != OpCodes.BUMP_OFF.ordinal()){}
-			bumped = true;
+			bumped = false;
 			logger.debug("Completed bump procedure");
 			//We don't need anything in the loop as getResponse is blocking anyway
 		}

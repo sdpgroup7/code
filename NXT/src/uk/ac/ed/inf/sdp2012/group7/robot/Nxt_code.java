@@ -34,7 +34,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 	private static Nxt_code instance;
 	private static KickerThread kicker;
 	
-	public static volatile boolean bumped = false;
+	public static boolean bumped = false;
 
 	public static void main(String[] args) throws Exception {
 
@@ -81,7 +81,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
                 byte[] previousCommand = new byte[4];
 				
 				while (n != OpCodes.QUIT) {
-
+					
 					if (!bumped) {
 
 						// get the next command from the inputstream
