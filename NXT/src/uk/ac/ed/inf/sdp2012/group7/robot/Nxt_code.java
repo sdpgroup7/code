@@ -34,7 +34,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 	private static Nxt_code instance;
 	private static KickerThread kicker;
 	
-	public static boolean bumped = false;
+	public volatile static boolean bumped = false;
 
 	public static void main(String[] args) throws Exception {
 
@@ -78,18 +78,13 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 
 				// begin reading commands
 				OpCodes n = OpCodes.DO_NOTHING;
-                byte[] previousCommand = new byte[4];
 				
 				while (n != OpCodes.QUIT) {
-					
+					if(!bumped){
 						// get the next command from the inputstream
 						byte[] byteBuffer = new byte[4];
 						is.read(byteBuffer);
-						if (equal(previousCommand,byteBuffer)){
-							Sound.beep(); //for debugging purposes
-							continue;
-						}
-						previousCommand = byteBuffer;
+
 						if ((byteBuffer[0] != 0) && !kicker.kicking) {
 							kicker.kick();
 						}
@@ -179,7 +174,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 						// respond to say command was acted on
 						os.write(n.ordinal());
 						os.flush();
-
+					}
 				}
 
 				// close streams and connection
@@ -221,8 +216,6 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 	 * inform the PC what has happened
 	 */
 	public void run() {
-
-		float tempCurSpeed;
 		
 		TouchSensor touchA = new TouchSensor(SensorPort.S1);
 		TouchSensor touchB = new TouchSensor(SensorPort.S2);

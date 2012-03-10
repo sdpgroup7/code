@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.sdp2012.group7.control;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import lejos.pc.comm.NXTComm;
 import lejos.pc.comm.NXTCommFactory;
@@ -123,11 +124,11 @@ public class RobotControl implements ConstantsReuse {
 	private void sendToRobot(byte[] command) {
 		
 		if(!bumped){
-				logger.info("Send "+OpCodes.values()[command[1]]);
-				OpCodes response = comms.sendToRobot(command);
-				logger.info("Sent "+OpCodes.values()[command[1]]);
-				command[0] = 0;
-				command[1] = (byte) OpCodes.DO_NOTHING.ordinal();
+				byte[] sendCommand = command.clone();
+				command = ByteBuffer.allocate(4).putInt(0).array(); //resets command to all 0
+				logger.info("Send "+OpCodes.values()[sendCommand[1]]);
+				OpCodes response = comms.sendToRobot(sendCommand);
+				logger.info("Sent "+OpCodes.values()[sendCommand[1]]);
 				logResponse(response);
 				if(response == OpCodes.BUMP_ON) bumped = true;
 		} else {
