@@ -59,7 +59,7 @@ public class TargetDecision {
 	private boolean theyHaveBall = false;
 	private boolean ballIsTooCloseToWall = false;
 
-
+	private Node shotOnGoal;
 	private double bestAngle;
 	
 	
@@ -96,6 +96,8 @@ public class TargetDecision {
 		 * set target so we sit next to the ball
 		 * 
 		 */
+		
+		this.shotOnGoal = whereToShoot(allMovingObjects.getBallPosition());
 		
 		Point ballPosition = allMovingObjects.getBallPosition();
 		
@@ -244,7 +246,7 @@ public class TargetDecision {
 			} else {
 				double diversionFromPi = Math.abs(theirAngle-Math.PI);
 				double pixelsToMove = Math.sin(diversionFromPi)*distanceBetween;
-				this.targetInCM = VisionTools.pixelsToCM(pixelsToMove);
+				this.targetInCM = VisionTools.pixelsToCM(pixelsTballoMove);
 				if (theirAngle-Math.PI <= 0) {
 					// they are pointing towards bottom of goal
 					this.action = PlanTypes.ActionType.EUCLID_BACKWARDS.ordinal();
@@ -290,7 +292,7 @@ public class TargetDecision {
 				logger.debug("Lines intersect at y node "+y);
 				Point toDriveTo = new Point(inFrontOfOurGoal.x,(int)y);
 				logger.debug("Will drive to "+toDriveTo);
-				int nodesUpOrDown = toDriveTo.y-inFrontOfOurGoal.y;
+				int nodesUpOrDown = toDriveTo.y-inFrontOfOurGoal.bally;
 				logger.debug("Number of nodes to drive is "+nodesUpOrDown);
 				this.targetInCM = VisionTools.pixelsToCM(allStaticObjects.getNodeInPixels()*Math.abs(nodesUpOrDown));
 				logger.debug("Number of cm to drive is "+targetInCM);
@@ -468,7 +470,7 @@ public class TargetDecision {
 	//method to find at which Node in their goal should we shoot
 	
 	private Node whereToShoot(Node ball) {
-		ArrayList<Node> theirGoalNodes = new ArrayList<Node>(); //allStaticObjects.getTheirGoalNodes();
+		ArrayList<Node> theirGoalNodes = allStaticObjects.getTheirGoalNodes();
 		//it is faster if i check their centre first
 		Node centreGoal = allStaticObjects.getCentreOfTheirGoal();
 		if (!obstacleOnLine(ball,centreGoal)) {
@@ -483,8 +485,9 @@ public class TargetDecision {
 		*/
 		
 		for (int i=0; i<theirGoalNodes.size(); i++) {
+			
 			distanceToCentreGoal =centreGoal.distance(theirGoalNodes.get(i));
-			if (minDistance > distanceToCentreGoal) {
+			if ((!obstacleOnLine(ball,theirGoalNodes.get(i)) && (minDistance > distanceToCentreGoal))) {
 				minDistance = distanceToCentreGoal;
 				indexMinDistance = i;
 			/*if (i>theirGoalNodes.indexOf(centreGoal)) {
@@ -498,7 +501,7 @@ public class TargetDecision {
 		return theirGoalNodes.get(indexMinDistance);
 	
 		/*if (goodNodesUp >= goodNodesDown) {
-			return theirGoalNodes.get(theirGoalNodes.size()- (int) goodNodesUp);
+			return theirGoalNodes.get(theirGoalNodes.size() -1 - (int) goodNodesUp/2);
 		} else {
 			return theirGoalNodes.get((int) goodNodesDown/2);
 		}*/
@@ -568,7 +571,7 @@ public class TargetDecision {
 		//formula used  d = d0 + v0*t + 1/2*a*t^2
 		//              x = d cos(theta)
 		//			    y = d sin(theta) 
-		Point ball = allMovingObjects.getBallPosition();
+		Node ball = allMovingObjects.getBallPosition();
 		double angle = allMovingObjects.getBallAngle();
 		double velocity = allMovingObjects.getBallVelocity();
 		double acceleration = allStaticObjects.getDeceleration();
@@ -578,15 +581,15 @@ public class TargetDecision {
 		
 		int direction;
 		//-1 if ball goes to right, 1 if ball goes to left
-		if (angle < Math.PI) {
+		if (angle < Math.PI/2 || angle > Math.PI*3/2) {
 			direction = 1;
 		} else {
 			direction = -1;
 		}
 		
-		double d = ball.distance(new Point(0,0)) + velocity * time + 1/2 * acceleration * time * time; 
-		double x = d * Math.cos(angle);
-		double y = d * Math.cos(angle);
+		double d = velocity * time;// + 1/2 * acceleration * time * time; 
+		double x = ball.x + d * Math.cos(angle);
+		double y = ball.y + d * Math.sin(angle);
 		
 		int numberBouncesX = 0;
 		int numberBouncesY = 0;
@@ -630,7 +633,7 @@ public class TargetDecision {
 		The while loop checks at each small time interval 
 		whether the robot can get to the predicted point or not
 		*/
-		while (!canGetThere) {
+		while (!canGetThere && time < 5) {
 			time = time + dt;
 			target = ballPrediction(time);
 			//check if we can get to the target in time using Manhattan distance
@@ -645,7 +648,7 @@ public class TargetDecision {
 	//method that checks whether there are any obstacles on the line between 2 points
 	private boolean obstacleOnLine(Node n1, Node n2) {
 
-		ArrayList<Node> obstacleNodes = new ArrayList<Node>();//AllStaticObjects.getObstaclesBinary();
+		ArrayList<Node> obstacleNodes = allMovingObjects.getBinaryObstacles();
 		double angle = allMovingObjects.angleBetween(n1, n2);
 		for (int i=0 ; i<obstacleNodes.size(); i++) {
 			//compare 'angle' with the angle between n1 and each of the obstacles
