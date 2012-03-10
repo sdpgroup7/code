@@ -60,6 +60,7 @@ public class TargetDecision {
 	private boolean ballIsTooCloseToWall = false;
 
 	private Node shotOnGoal;
+	private Node predictedBallPosition;
 	private double bestAngle;
 	
 	
@@ -97,7 +98,13 @@ public class TargetDecision {
 		 * 
 		 */
 		
-		this.shotOnGoal = whereToShoot(allMovingObjects.getBallPosition());
+		
+		//these are controls for the navPoint / Target setting ball and goal centre
+		//variables
+		//this.shotOnGoal = whereToShoot(allMovingObjects.getBallPosition());
+		this.predictedBallPosition = ballPrediction(3);
+		this.shotOnGoal = allStaticObjects.getCentreOfTheirGoal();
+		//this.predictedBallPosition = allMovingObjects.getBallPosition(); 
 		
 		Point ballPosition = allMovingObjects.getBallPosition();
 		
@@ -353,8 +360,8 @@ public class TargetDecision {
 	//set navPoint 4 nodes behind the ball
 	private void setNavPointOpenNoOption(){
 		
-		Node ballPosition = this.allMovingObjects.getBallPosition();
-		Node centreGoal = this.allStaticObjects.getCentreOfOurGoal();
+		Node ballPosition = this.predictedBallPosition;
+		Node centreGoal = this.shotOnGoal;
 		
 		//double angleBetweenBallAndGoal = this.allMovingObjects.angleBetween(ballPosition,centreGoal);
 		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
@@ -373,8 +380,8 @@ public class TargetDecision {
 	//set navPoint 7 nodes behind the ball
 	private void setNavPointOpen(){
 		
-		Point ballPosition = this.allMovingObjects.getBallPosition();
-		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
+		Node ballPosition = this.predictedBallPosition;
+		Node centreGoal = this.shotOnGoal;
 		
 		//double angleBetweenBallAndGoal = this.allMovingObjects.angleBetween(ballPosition,centreGoal);
 		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
@@ -392,8 +399,8 @@ public class TargetDecision {
 	//set Target 3 nodes behind the ball (our robot width)
 	private void setTargetPointOpen(){
 		
-		Point ballPosition = this.allMovingObjects.getBallPosition();
-		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
+		Node ballPosition = this.predictedBallPosition;
+		Node centreGoal = this.shotOnGoal;
 		
 		//double angleBetweenBallAndGoal = this.allMovingObjects.angleBetween(ballPosition,centreGoal);
 		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
@@ -411,8 +418,8 @@ public class TargetDecision {
 	//set navPoint 7 nodes behind the ball
 	private void setNavPointAngular(){
 		
-		Point ballPosition = this.allMovingObjects.getBallPosition();
-		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
+		Node ballPosition = this.predictedBallPosition;
+		Node centreGoal = this.shotOnGoal;
 		
 		//double angleBetweenBallAndGoal = this.allMovingObjects.angleBetween(ballPosition,centreGoal);
 		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
@@ -440,8 +447,8 @@ public class TargetDecision {
 	//set Target 3 nodes behind the ball (half our robot length)
 	private void setTargetPointAngular(){
 		
-		Point ballPosition = this.allMovingObjects.getBallPosition();
-		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
+		Node ballPosition = this.predictedBallPosition;
+		Node centreGoal = this.shotOnGoal;
 		
 		//double angleBetweenBallAndGoal = this.allMovingObjects.angleBetween(ballPosition, centreGoal);
 		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
@@ -574,16 +581,10 @@ public class TargetDecision {
 		double velocity = allMovingObjects.getBallVelocity();
 		double acceleration = allStaticObjects.getDeceleration();
 		//width and height of pitch in pixels
-		double pitchWidth = allStaticObjects.getPitchWidth();
-		double pitchHeight = allStaticObjects.getPitchHeight();
+		double pitchWidthinNodes = allStaticObjects.getWidth();
+		double pitchHeightinNodes = allStaticObjects.getHeight();
 		
-		int direction;
-		//-1 if ball goes to right, 1 if ball goes to left
-		if (angle < Math.PI/2 || angle > Math.PI*3/2) {
-			direction = 1;
-		} else {
-			direction = -1;
-		}
+		int direction = worldState.getShootingDirection();
 		
 		double d = velocity * time;// + 1/2 * acceleration * time * time; 
 		double x = ball.x + d * Math.cos(angle);
@@ -592,24 +593,24 @@ public class TargetDecision {
 		int numberBouncesX = 0;
 		int numberBouncesY = 0;
 		//dealing with bounces of the walls
-		while (x > pitchWidth) {
+		while (x > pitchWidthinNodes) {
 			numberBouncesX++;
-			x = x - pitchWidth;			
+			x = x - pitchWidthinNodes;			
 		}
 		x = x * direction * Math.pow(-1, numberBouncesX);
 		
 		if (x < 0) {
-			x = x + pitchWidth;
+			x = x + pitchWidthinNodes;
 		}
 		
-		while (y > pitchHeight) {
+		while (y > pitchHeightinNodes) {
 			numberBouncesY++;
-			y = y - pitchHeight;						
+			y = y - pitchHeightinNodes;						
 		}
 		y = y * direction * Math.pow(-1, numberBouncesY);
 		
 		if (y < 0) {
-			y = y + pitchHeight;
+			y = y + pitchHeightinNodes;
 		}
 		
 		
