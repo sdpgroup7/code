@@ -14,6 +14,8 @@ public class Strategy {
 
 	public static final Logger logger = Logger.getLogger(Strategy.class);
 	
+	private static final int LOOKAHEAD = 10;
+	
 	private PlanningBuffer planning_buffer;
 	private PlanningThread planningthread;
 	private AllStaticObjects allStaticObjects;
@@ -24,7 +26,7 @@ public class Strategy {
 	public Strategy() {
 				
 		//Start Control interface
-		this.control_interface = ControlInterface.getInstance(5);
+		this.control_interface = ControlInterface.getInstance(LOOKAHEAD);
 		
 		//create the observer / buffer for the plans
 		this.planning_buffer = new PlanningBuffer(control_interface);
