@@ -577,10 +577,11 @@ public class TargetDecision {
 	
 	//method that checks whether there are any obstacles on the line between 2 points
 	private boolean obstacleOnLine(Node n1, Node n2) {
-		ArrayList<Node> obstacleNodes = allMovingObjects.getBinaryObstacles();
+		/*ArrayList<Node> obstacleNodes = allMovingObjects.getBinaryObstacles();
 		ArrayList<Point> d = new ArrayList<Point>();
 		double angle = allMovingObjects.angleBetween(Node n1, Node n2);
-		for ()
+		for ()*/
+		return false;
 	}
 	
 	public boolean getClearShot(){
