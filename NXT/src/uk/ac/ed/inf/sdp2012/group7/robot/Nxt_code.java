@@ -13,6 +13,7 @@ import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Pose;
 import uk.ac.ed.inf.sdp2012.group7.control.ConstantsReuse;
+import java.util.Arrays;
 
 /**
  * Code that runs on the NXT brick
@@ -193,11 +194,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 	}
 
 	public static boolean equal(byte[] a, byte[] b){
-		if(a.length != b.length) return false;
-		for(int i = 0; i < a.length; i++){
-			if(a[i] != b[i]) return false;
-		}
-		return true;
+        return Arrays.equals(a,b);
 	}
 
 	/**
