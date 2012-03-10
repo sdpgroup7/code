@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
+import uk.ac.ed.inf.sdp2012.group7.strategy.newastar.Node;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
@@ -41,14 +42,14 @@ public class AllStaticObjects {
 	private double widthOfRobotInNodes;
 	
 	//In Nodes :: ONLY FOR USE IN PLANNING THREAD
-	private Point theirTopGoalPost;
-	private Point theirBottomGoalPost;
-	private Point inFrontOfOurGoal;
-	private Point inFrontOfTheirGoal;
-	private Point centreOfTheirGoal;
-	private Point centreOfOurGoal;
-	private Point ourTopGoalPost;
-	private Point ourBottomGoalPost;
+	private Node theirTopGoalPost;
+	private Node theirBottomGoalPost;
+	private Node inFrontOfOurGoal;
+	private Node inFrontOfTheirGoal;
+	private Node centreOfTheirGoal;
+	private Node centreOfOurGoal;
+	private Node ourTopGoalPost;
+	private Node ourBottomGoalPost;
 	
 	//physics
 	private double deceleration;
@@ -61,13 +62,6 @@ public class AllStaticObjects {
 
 	//controls planning thread
 	private volatile boolean runFlag;
-
-	
-
-	
-
-
-	
 	
 	public AllStaticObjects (){
 		while(worldState.getLastUpdateTime() == 0){}
@@ -81,10 +75,13 @@ public class AllStaticObjects {
 		this.pitchWidth = worldState.getPitch().getWidthInPixels();
 		
 		//NODE
-		this.theirTopGoalPost = this.convertToNode(worldState.getOpponentsGoal().getTopLeft());
-		this.theirBottomGoalPost = this.convertToNode(worldState.getOpponentsGoal().getBottomLeft());
-		this.ourTopGoalPost = this.convertToNode(worldState.getOurGoal().getTopLeft());
-		this.ourBottomGoalPost = this.convertToNode(worldState.getOurGoal().getBottomLeft());
+		//new Node(Point, cost)
+		//None of these are used in Astar, so the cost should be irrelevant
+		
+		this.theirTopGoalPost = convertToNode(worldState.getOpponentsGoal().getTopLeft());
+		this.theirBottomGoalPost = convertToNode(worldState.getOpponentsGoal().getBottomLeft());
+		this.ourTopGoalPost = convertToNode(worldState.getOurGoal().getTopLeft());
+		this.ourBottomGoalPost = convertToNode(worldState.getOurGoal().getBottomLeft());
 		
 		//A* Settings
 		this.height = 29;
@@ -112,18 +109,24 @@ public class AllStaticObjects {
 		this.deceleration = 0;
 	}
 	
+	
+	//Compacts WorldState double into "Node" double
+	public double convertDoubleToNode(double d){
+		return (d/this.nodeInPixels);
+	}
+	
+	
 	//Compacts WorldState position point into "Node" centre position
-	public Point convertToNode(Point p){
+	//So Vision gives us a Point, we convert to a Node.
+	public Node convertToNode(Point p){
 		int x = (int)((double)(p.x - (this.pitchLeftBuffer - 1))/this.nodeInPixels);
 		int y = (int)((double)(p.y - (this.pitchTopBuffer - 1))/this.nodeInPixels);
-
-		
-		return new Point(x,y);
+		return new Node(new Point(x,y));
 	}
 	
 	//Compacts WorldState position points into "Node" centre positions
-	public ArrayList<Point> convertToNodes(ArrayList<Point> l){
-		ArrayList<Point> nodePoints = new ArrayList<Point>();
+	public ArrayList<Node> convertToNodes(ArrayList<Point> l){
+		ArrayList<Node> nodePoints = new ArrayList<Node>();
 
 		for (Point p : l) {
 			nodePoints.add(convertToNode(p));
@@ -136,23 +139,22 @@ public class AllStaticObjects {
 	//Return this as a node!
 	private void pointInfrontOfGoal(){
 		if(worldState.getShootingDirection() == 1){
-			this.inFrontOfOurGoal = new Point(this.boundary,this.height/2);
+			this.inFrontOfOurGoal = new Node(new Point(this.boundary,this.height/2));
 			
 		}
 		else {
-			this.inFrontOfOurGoal = new Point((this.width - this.boundary),this.height/2);
+			this.inFrontOfOurGoal = new Node(new Point((this.width - this.boundary),this.height/2));
 		}
 	}
 	
 	//Method for finding the centre point just in front of their goal...
 	//Return this as a node!
 	private void pointInfrontOfTheirGoal(){
-		if(worldState.getShootingDirection() == -1){
-			this.inFrontOfTheirGoal = new Point(this.boundary,this.height/2);
-			
+		if(worldState.getShootingDirection() == 1){
+			this.inFrontOfTheirGoal = new Node(new Point((this.width - this.boundary),this.height/2));
 		}
 		else {
-			this.inFrontOfTheirGoal = new Point((this.width - this.boundary),this.height/2);
+			this.inFrontOfTheirGoal = new Node(new Point(this.boundary,this.height/2));
 		}
 	}
 	
@@ -160,21 +162,21 @@ public class AllStaticObjects {
 	//Return this as a node!
 	private void centreOfTheirGoal(){
 		if(worldState.getShootingDirection() == -1){
-			this.centreOfTheirGoal = new Point(1,this.height/2);
+			this.centreOfTheirGoal = new Node(new Point(1,this.height/2));
 		}
 		else {
-			this.centreOfTheirGoal = new Point(this.width - 2,this.height/2);
+			this.centreOfTheirGoal = new Node(new Point(this.width - 2,this.height/2));
 		}
 	}
 	
 	//Method for finding the centre point in their goal...
 	//Return this as a node!
 	private void centreOfOurGoal(){
-		if(worldState.getShootingDirection() == 1){
-			this.centreOfOurGoal = new Point(1,this.height/2);
+		if(worldState.getShootingDirection() == -1){
+			this.centreOfOurGoal = new Node(new Point(this.width - 2,this.height/2));
 		}
 		else {
-			this.centreOfOurGoal = new Point(this.width - 2,this.height/2);
+			this.centreOfOurGoal = new Node(new Point(1,this.height/2));
 		}
 	}
 	
