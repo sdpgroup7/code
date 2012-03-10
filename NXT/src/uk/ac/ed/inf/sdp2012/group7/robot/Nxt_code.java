@@ -245,7 +245,9 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 				try{
 					os.write(OpCodes.BUMP_OFF.ordinal());
 					os.flush();
-				} catch (Exception ex){}
+				} catch (Exception ex){
+					LCD.drawString("bump off failed", 0, 2);
+				}
 			}
 		}
 	}
