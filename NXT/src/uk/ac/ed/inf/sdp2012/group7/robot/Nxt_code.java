@@ -82,7 +82,10 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 					// get the next command from the inputstream
 					byte[] byteBuffer = new byte[4];
 					is.read(byteBuffer);
-                    if (equal(previousCommand,byteBuffer)) continue;
+                    if (equal(previousCommand,byteBuffer)){
+						Sound.beep(); //for debugging purposes
+						continue;
+					}
                     previousCommand = byteBuffer;
 					if ((byteBuffer[0] != 0) && !kicker.kicking) {
 							kicker.kick();
