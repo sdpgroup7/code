@@ -293,7 +293,6 @@ public class AllStaticObjects {
 		return pitchRightBuffer;
 	}
 
-
 	public double getCentreToEndOfKicker() {
 		// TODO Auto-generated method stub
 		return this.centreToEndOfKicker;
