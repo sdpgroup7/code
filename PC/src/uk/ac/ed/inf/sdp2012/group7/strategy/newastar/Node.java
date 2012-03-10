@@ -19,10 +19,16 @@ public class Node extends Point implements Comparable<Node> {
 	private double gCost;
 	private double hcost;
 	
+	//Use this contructor when you need to set the cost
 	public Node(Point point, int i) {
-		// TODO Auto-generated constructor stub
 		this.here = point;
 		this.obstacleCost = i;
+	}
+	
+	//This constructor is use when the cost is irrelevant
+	public Node(Point point) {
+		this.here = point;
+		this.obstacleCost = 0;
 	}
 
 	@Override
