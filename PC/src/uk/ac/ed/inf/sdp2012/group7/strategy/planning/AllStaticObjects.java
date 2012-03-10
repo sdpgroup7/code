@@ -296,10 +296,25 @@ public class AllStaticObjects {
 		return pitchRightBuffer;
 	}
 
-
 	public double getCentreToEndOfKicker() {
 		// TODO Auto-generated method stub
 		return this.centreToEndOfKicker;
+	}
+	
+	public ArrayList<Node> getTheirGoalNodes(){
+		
+		ArrayList<Node> theirGoalLine = new ArrayList<Node>();
+		
+		for(int y = theirTopGoalPost.y; y < theirBottomGoalPost.y; y++){
+			if(worldState.getShootingDirection() == 1){
+				theirGoalLine.add(new Node(new Point(this.width -1, y)));
+			}
+			else {
+				theirGoalLine.add(new Node(new Point(0,y)));
+			}
+		}
+		
+		return theirGoalLine;
 	}
 
 
