@@ -73,7 +73,7 @@ public class MovingObject {
 	
 	public void addAngle(Point p){
 		if(angles.size() > 1){
-			if(Point.distance(p.x, p.y, angles.get(1).x, angles.get(1).y) < 10){
+			if(Point.distance(p.x, p.y, angles.get(1).x, angles.get(1).y) < 20){
 				angles.add(p);
 				movedAngles.clear();
 			} else {
@@ -97,7 +97,6 @@ public class MovingObject {
 	}
 	
 	public void calculateAngle(){
-		VisionTools vt = new VisionTools();
 		if(angles.size() > 0){
 			Point a = new Point(0,0);
 			for(Point p : angles){
@@ -105,7 +104,7 @@ public class MovingObject {
 			}
 			a = new Point(a.x / angles.size(), a.y / angles.size());
 			tip = a;
-			this.angle = vt.convertAngle(Math.atan2(a.y - getPosition().getCentre().y, a.x - getPosition().getCentre().x));
+			this.angle = VisionTools.convertAngle(Math.atan2(a.y - getPosition().getCentre().y, a.x - getPosition().getCentre().x));
 		} else {
 			this.angle = 0;
 		}

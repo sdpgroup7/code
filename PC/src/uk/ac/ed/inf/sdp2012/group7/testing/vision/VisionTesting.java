@@ -143,7 +143,7 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     	}
 
     	//Angle test is off!
-    	/*
+    	
     	if (Math.abs(blueAngle-blueAngleClick) <= 2){
     		System.out.println("Blue Direction Passed");
     		total++;
@@ -151,13 +151,16 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     		System.out.println("Blue Direction Failed");
     	}
     	
+    	System.out.println(Double.toString(yellowAngle));
+    	System.out.println(Double.toString(yellowAngleClick));
+    	
     	if (Math.abs(yellowAngle-yellowAngleClick) <= 2){
     		System.out.println("Yellow Direction Passed");
     		total++;
     	}else{
     		System.out.println("Yellow Direction Failed");
     	}
-    	*/
+    	
     	
     	if (Point.distanceSq(yellowCentroid.x, yellowCentroid.y, yellowCentroidAuto.x, yellowCentroidAuto.y) < 50){
     		System.out.println("Yellow Centroid Passed");
@@ -173,7 +176,7 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     		System.out.println("Ball Centroid Failed");
     	}
     	
-    	/*
+    	
     	
     	if ((cmToPixels(244f) <= (right-left+20)) && (cmToPixels(244f) >= (right-left-20))){
     		System.out.println("cmToPixels Passed");
@@ -188,16 +191,16 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     	}else{
     		System.out.println("pixelsToCM Failed");
     	}
-    	*/
+    	
     	
     	//only want to test positions
-    	System.out.println("Tests passed: " + Integer.toString(total) + "/3");
+    	System.out.println("Tests passed: " + Integer.toString(total) + "/7");
     	
     
     }
     
-    public static double getOrientation(Point greyCircle,Point top){
-    	double a = Math.atan2(top.y-greyCircle.y,top.x-greyCircle.y);
+    public static double getOrientation(Point top,Point greyCircle){
+    	double a = Math.atan2(top.y-greyCircle.y,top.x-greyCircle.x);
     	if(a < 0){
     		a = (2.0*Math.PI) + a;
     	}    	
