@@ -119,6 +119,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 
 							case STOP:
 								pilot.stop();
+								toKick = false;
 								break;
 
 							case CHANGE_SPEED:
