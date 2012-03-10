@@ -40,9 +40,8 @@ public class ControlInterface implements Observer {
 	private int kick = PlanTypes.ActionType.KICK.ordinal();
 	private int stop = PlanTypes.ActionType.STOP.ordinal();
 	private int angle = PlanTypes.ActionType.ANGLE.ordinal();
-	private int angleKick = PlanTypes.ActionType.ANGLE_KICK.ordinal();
-	private int euclidForward = PlanTypes.ActionType.EUCLID_FORWARDS.ordinal();
-	private int euclidBackWards = PlanTypes.ActionType.EUCLID_BACKWARDS.ordinal();
+	private int forwardWithDistance = PlanTypes.ActionType.FORWARD_WITH_DISTANCE.ordinal();
+	private int backwardWithDistance = PlanTypes.ActionType.BACKWARD_WITH_DISTANCE.ordinal();
 	
 
 	public ControlInterface(int lookahead) {
@@ -179,24 +178,7 @@ public class ControlInterface implements Observer {
 			double turnAngle = ControlInterfaceTools.angleToTurn(plan.getAngleWanted(), 
 					plan.getOurRobotAngle());
 			c.rotateBy(turnAngle);
-		
-		} else if (plan.getAction() == angleKick) {
-			logger.info("Action is to turn");
-			double turnAngle = ControlInterfaceTools.angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
-			c.rotateBy(turnAngle);
-			try {
-				Thread.sleep(250);
-			} catch (InterruptedException e) {}
-			logger.info("Action is to kick");
-			c.kick();
-		} else if (plan.getAction() == euclidForward) {
-			logger.info("Action is to drive forward");
-			c.moveForward((int)plan.getDistanceInCM());
-		} else if (plan.getAction() == euclidBackWards) {
-			logger.info("Action is drive backwards"); 
-			c.moveBackward((int)plan.getDistanceInCM());
 		}
-
 	}
 	
 		
@@ -278,12 +260,12 @@ public class ControlInterface implements Observer {
 			c.kick();
 			c.stop();
 		} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
-			logger.info("Defending a penalty - will repeatedly use euclidForward and euclidBackwards");
-			if (plan.getAction() == euclidForward) {
-				logger.info("Action is euclidForwards"); 
+			logger.info("Defending a penalty - will repeatedly use moveForward(distance) and moveBackward(int)");
+			if (plan.getAction() == forwardWithDistance) {
+				logger.info("Action is moveForwards("+plan.getDistanceInCM()+")"); 
 				c.moveForward((int)plan.getDistanceInCM());
 			} else {
-				logger.info("Action is euclidBackwards"); 
+				logger.info("Action is moveBackwards("+plan.getDistanceInCM()+")");
 				c.moveBackward((int)plan.getDistanceInCM());
 			}
 		} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
