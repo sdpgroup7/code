@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.newastar.Node;
+import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
@@ -36,11 +37,10 @@ public class AllStaticObjects {
 	//Node related
 	private int height;
 	private int width;
-	private int boundary;
+	private double robotWidthInNodes;
+	private double boundary;
 	private int centreToEndOfKicker;
 	private double nodeInPixels;
-	private double widthOfPitchInRobotsCM;
-	private double widthOfRobotInNodes;
 	
 	//In Nodes :: ONLY FOR USE IN PLANNING THREAD
 	private Node theirTopGoalPost;
@@ -99,9 +99,8 @@ public class AllStaticObjects {
 		//~How to work out number of nodes in a robot...
 		//pW / rW = width of pitch in robots
 		//widthOfPitchInRobots / widthOfPitchInNodes = number of nodes per robot...
-		this.widthOfPitchInRobotsCM = 243.84 / 20;
-		this.widthOfRobotInNodes = this.widthOfPitchInRobotsCM / this.nodeInPixels;
-		this.boundary = (int)(this.widthOfRobotInNodes / 2);
+		this.robotWidthInNodes = (double)VisionTools.cmToPixels(20) / this.nodeInPixels;
+		this.boundary = (int)(this.robotWidthInNodes / 2);
 		
 		
 		this.centreToEndOfKicker = 6;
@@ -146,11 +145,11 @@ public class AllStaticObjects {
 	//Return this as a node!
 	private void pointInfrontOfGoal(){
 		if(worldState.getShootingDirection() == 1){
-			this.inFrontOfOurGoal = new Node(new Point(this.boundary,this.height/2));
+			this.inFrontOfOurGoal = new Node(new Point((int)this.boundary,this.height/2));
 			
 		}
 		else {
-			this.inFrontOfOurGoal = new Node(new Point((this.width - this.boundary),this.height/2));
+			this.inFrontOfOurGoal = new Node(new Point((this.width - (int)this.boundary),this.height/2));
 		}
 	}
 	
@@ -158,10 +157,10 @@ public class AllStaticObjects {
 	//Return this as a node!
 	private void pointInfrontOfTheirGoal(){
 		if(worldState.getShootingDirection() == 1){
-			this.inFrontOfTheirGoal = new Node(new Point((this.width - this.boundary),this.height/2));
+			this.inFrontOfTheirGoal = new Node(new Point((this.width - (int)this.boundary),this.height/2));
 		}
 		else {
-			this.inFrontOfTheirGoal = new Node(new Point(this.boundary,this.height/2));
+			this.inFrontOfTheirGoal = new Node(new Point((int)this.boundary,this.height/2));
 		}
 	}
 	
@@ -211,7 +210,11 @@ public class AllStaticObjects {
 		return this.width;
 	}
 	
-	public int getBoundary() {
+	public double getRobotWidthInNodes(){
+		return this.robotWidthInNodes;
+	}
+	
+	public double getBoundary() {
 		return this.boundary;
 	}
 	
@@ -298,5 +301,6 @@ public class AllStaticObjects {
 		// TODO Auto-generated method stub
 		return this.centreToEndOfKicker;
 	}
+
 
 }

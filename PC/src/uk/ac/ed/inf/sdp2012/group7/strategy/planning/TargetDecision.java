@@ -448,7 +448,7 @@ public class TargetDecision {
 		Point ballPosition = this.allMovingObjects.getBallPosition();
 		int rightWall = this.allStaticObjects.getWidth();
 		int bottomWall = this.allStaticObjects.getHeight();
-		int b = this.allStaticObjects.getBoundary();
+		int b = (int)this.allStaticObjects.getBoundary();
 		
 		boolean insideLeftBoundary = ballPosition.x < b;
 		if(insideLeftBoundary){
@@ -526,7 +526,7 @@ public class TargetDecision {
 	
 	//method that checks whether there are any obstacles on the line between 2 points
 	private boolean obstacleOnLine(Node n1, Node n2) {
-		ArrayList<Node> obstacleNodes = AllStaticObjects.getObstacles();
+		ArrayList<Node> obstacleNodes = allMovingObjects.getBinaryObstacles();
 		ArrayList<Point> d = new ArrayList<Point>();
 		double angle = allMovingObjects.angleBetween(Node n1, Node n2);
 		for ()
