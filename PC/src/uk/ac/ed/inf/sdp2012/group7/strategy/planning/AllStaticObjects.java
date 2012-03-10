@@ -5,7 +5,6 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.lang.Math;
 
 import org.apache.log4j.Logger;
 
@@ -53,7 +52,8 @@ public class AllStaticObjects {
 	
 	//physics
 	private double deceleration;
-
+	//time it takes robot on average to get from one node to another
+	private double dt;
 
 	//worldstate getInstance
 	public WorldState worldState = WorldState.getInstance();
@@ -100,11 +100,10 @@ public class AllStaticObjects {
 		//pW / mW = node
 		//~How to work out number of nodes in a robot...
 		//pW / rW = width of pitch in robots
+		//widthOfPitchInRobots / widthOfPitchInNodes = number of nodes per robot...
 		this.widthOfPitchInRobotsCM = 243.84 / 20;
-		//this.widthOfRobotInNodes = this.widthOfPitchInRobotsCM / this.nodeInPixels;
-		this.widthOfRobotInNodes = this.width / this.widthOfPitchInRobotsCM;
-		//with 58 as width, boundary is set at 3 nodes
-		this.boundary = (int)Math.ceil(this.widthOfRobotInNodes / 2);
+		this.widthOfRobotInNodes = this.widthOfPitchInRobotsCM / this.nodeInPixels;
+		this.boundary = (int)(this.widthOfRobotInNodes / 2);
 		
 		
 		//set defence position
@@ -113,6 +112,8 @@ public class AllStaticObjects {
 		this.centreOfTheirGoal();
 		
 		this.deceleration = 0;
+		//this needs to be found experimentally
+		this.dt = 0.1;
 	}
 	
 	//Compacts WorldState position point into "Node" centre position

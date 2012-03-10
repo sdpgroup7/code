@@ -518,9 +518,13 @@ public class TargetDecision {
 		}
 		
 		
-		Point predictedPoint = new Point ((int)x,(int) y);
-		
+		Point predictedPoint = new Point ((int)x,(int) y);		
 		return predictedPoint;
+	}
+	
+	//method that checks whether there are any obstacles on the line between 2 points
+	private boolean obstacleOnLine(Node n1, Node n2) {
+		
 	}
 	
 	public boolean getClearShot(){
