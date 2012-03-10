@@ -85,7 +85,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 						byte[] byteBuffer = new byte[4];
 						is.read(byteBuffer);
 
-						if ((byteBuffer[0] != 0) && !kicker.kicking) {
+						if (byteBuffer[0] != 0) {
 							kicker.kick();
 						}
 
@@ -262,14 +262,17 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 	private class KickerThread implements Runnable {
 	
 		private volatile boolean kicking = false;
+		private volatile boolean toKick = false;
 		
 		public synchronized void kick() {
-			kicking = true;
+			toKick = true;
 		}
 		
 		public void run() {
 			while (true) {
-				if (kicking) {
+				if (toKick && !kicking) {
+					toKick = false;
+					kicking = true;
 					Motor.A.setSpeed(900);
 					Motor.A.rotate(-30, false);
 
