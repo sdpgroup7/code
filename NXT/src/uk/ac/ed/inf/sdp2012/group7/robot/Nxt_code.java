@@ -104,8 +104,8 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 							pilot.backward();
 							break;
 
-						case BACKWARDS_SLIGHTLY: // back up a little
-							pilot.travel(-10);
+						case BACKWARDS_WITH_DISTANCE:
+							pilot.travel(-magnitude);
 							break;
 
 						case STOP:
