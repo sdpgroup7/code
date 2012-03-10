@@ -82,7 +82,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 					// get the next command from the inputstream
 					byte[] byteBuffer = new byte[4];
 					is.read(byteBuffer);
-                    if (previousCommand.equals(byteBuffer)) continue;
+                    if (equal(previousCommand,byteBuffer)) continue;
                     previousCommand = byteBuffer;
 					if ((byteBuffer[0] != 0) && !kicker.kicking) {
 							kicker.kick();
@@ -187,6 +187,14 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 			}
 		}
 
+	}
+
+	public static boolean equal(byte[] a, byte[] b){
+		if(a.length != b.length) return false;
+		for(int i = 0; i < a.length; i++){
+			if(a[i] != b[i]) return false;
+		}
+		return true;
 	}
 
 	/**
