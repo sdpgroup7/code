@@ -82,8 +82,6 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 				
 				while (n != OpCodes.QUIT) {
 					
-					if (!bumped) {
-
 						// get the next command from the inputstream
 						byte[] byteBuffer = new byte[4];
 						is.read(byteBuffer);
@@ -181,7 +179,6 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 						// respond to say command was acted on
 						os.write(n.ordinal());
 						os.flush();
-					}
 
 				}
 
