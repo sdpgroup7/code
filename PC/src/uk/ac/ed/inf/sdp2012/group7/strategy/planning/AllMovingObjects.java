@@ -67,7 +67,7 @@ public class AllMovingObjects {
 	}
 	
 	
-	public double angleBetweenBasic(Node p1, Node p2) {
+	public double angleBetween(Node p1, Node p2) {
 		double angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
 		return angle;
 	}
