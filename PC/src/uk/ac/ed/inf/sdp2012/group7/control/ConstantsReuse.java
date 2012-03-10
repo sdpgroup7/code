@@ -9,7 +9,7 @@ public interface ConstantsReuse {
         DO_NOTHING,
         FORWARDS,
         BACKWARDS,
-        BACKWARDS_SLIGHTLY,
+        BACKWARDS_WITH_DISTANCE,
         STOP,
         CHANGE_SPEED,
         KICK,
