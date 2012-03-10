@@ -59,7 +59,8 @@ public class TargetDecision {
 	private boolean theyHaveBall = false;
 	private boolean ballIsTooCloseToWall = false;
 
-
+	private Node shotOnGoal;
+	private Node predictedBallPosition;
 	private double bestAngle;
 	
 	
@@ -96,6 +97,14 @@ public class TargetDecision {
 		 * set target so we sit next to the ball
 		 * 
 		 */
+		
+		
+		//these are controls for the navPoint / Target setting ball and goal centre
+		//variables
+		//this.shotOnGoal = whereToShoot(allMovingObjects.getBallPosition());
+		this.predictedBallPosition = ballPrediction(3);
+		this.shotOnGoal = allStaticObjects.getCentreOfTheirGoal();
+		//this.predictedBallPosition = allMovingObjects.getBallPosition(); 
 		
 		Point ballPosition = allMovingObjects.getBallPosition();
 		
@@ -242,7 +251,7 @@ public class TargetDecision {
 			} else {
 				double diversionFromPi = Math.abs(theirAngle-Math.PI);
 				double pixelsToMove = Math.sin(diversionFromPi)*distanceBetween;
-				this.targetInCM = VisionTools.pixelsToCM(pixelsToMove);
+				this.targetInCM = VisionTools.pixelsToCM(pixelsTballoMove);
 				if (theirAngle-Math.PI <= 0) {
 					// they are pointing towards bottom of goal
 					this.action = PlanTypes.ActionType.EUCLID_BACKWARDS.ordinal();
@@ -351,8 +360,8 @@ public class TargetDecision {
 	//set navPoint 4 nodes behind the ball
 	private void setNavPointOpenNoOption(){
 		
-		Node ballPosition = this.allMovingObjects.getBallPosition();
-		Node centreGoal = this.allStaticObjects.getCentreOfOurGoal();
+		Node ballPosition = this.predictedBallPosition;
+		Node centreGoal = this.shotOnGoal;
 		
 		//double angleBetweenBallAndGoal = this.allMovingObjects.angleBetween(ballPosition,centreGoal);
 		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
@@ -371,8 +380,8 @@ public class TargetDecision {
 	//set navPoint 7 nodes behind the ball
 	private void setNavPointOpen(){
 		
-		Point ballPosition = this.allMovingObjects.getBallPosition();
-		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
+		Node ballPosition = this.predictedBallPosition;
+		Node centreGoal = this.shotOnGoal;
 		
 		//double angleBetweenBallAndGoal = this.allMovingObjects.angleBetween(ballPosition,centreGoal);
 		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
@@ -390,8 +399,8 @@ public class TargetDecision {
 	//set Target 3 nodes behind the ball (our robot width)
 	private void setTargetPointOpen(){
 		
-		Point ballPosition = this.allMovingObjects.getBallPosition();
-		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
+		Node ballPosition = this.predictedBallPosition;
+		Node centreGoal = this.shotOnGoal;
 		
 		//double angleBetweenBallAndGoal = this.allMovingObjects.angleBetween(ballPosition,centreGoal);
 		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
@@ -409,8 +418,8 @@ public class TargetDecision {
 	//set navPoint 7 nodes behind the ball
 	private void setNavPointAngular(){
 		
-		Point ballPosition = this.allMovingObjects.getBallPosition();
-		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
+		Node ballPosition = this.predictedBallPosition;
+		Node centreGoal = this.shotOnGoal;
 		
 		//double angleBetweenBallAndGoal = this.allMovingObjects.angleBetween(ballPosition,centreGoal);
 		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
@@ -438,8 +447,8 @@ public class TargetDecision {
 	//set Target 3 nodes behind the ball (half our robot length)
 	private void setTargetPointAngular(){
 		
-		Point ballPosition = this.allMovingObjects.getBallPosition();
-		Point centreGoal = this.allStaticObjects.getCentreOfTheirGoal();
+		Node ballPosition = this.predictedBallPosition;
+		Node centreGoal = this.shotOnGoal;
 		
 		//double angleBetweenBallAndGoal = this.allMovingObjects.angleBetween(ballPosition, centreGoal);
 		double angleBetweenBallAndGoal = Math.atan2((centreGoal.y - ballPosition.y),(centreGoal.x - ballPosition.x));
@@ -466,7 +475,7 @@ public class TargetDecision {
 	//method to find at which Node in their goal should we shoot
 	
 	private Node whereToShoot(Node ball) {
-		ArrayList<Node> theirGoalNodes = new ArrayList<Node>(); //allStaticObjects.getTheirGoalNodes();
+		ArrayList<Node> theirGoalNodes = allStaticObjects.getTheirGoalNodes();
 		//it is faster if i check their centre first
 		Node centreGoal = allStaticObjects.getCentreOfTheirGoal();
 		if (!obstacleOnLine(ball,centreGoal)) {
@@ -481,8 +490,9 @@ public class TargetDecision {
 		*/
 		
 		for (int i=0; i<theirGoalNodes.size(); i++) {
+			
 			distanceToCentreGoal =centreGoal.distance(theirGoalNodes.get(i));
-			if (minDistance > distanceToCentreGoal) {
+			if ((!obstacleOnLine(ball,theirGoalNodes.get(i)) && (minDistance > distanceToCentreGoal))) {
 				minDistance = distanceToCentreGoal;
 				indexMinDistance = i;
 			/*if (i>theirGoalNodes.indexOf(centreGoal)) {
@@ -496,7 +506,7 @@ public class TargetDecision {
 		return theirGoalNodes.get(indexMinDistance);
 	
 		/*if (goodNodesUp >= goodNodesDown) {
-			return theirGoalNodes.get(theirGoalNodes.size()- (int) goodNodesUp);
+			return theirGoalNodes.get(theirGoalNodes.size() -1 - (int) goodNodesUp/2);
 		} else {
 			return theirGoalNodes.get((int) goodNodesDown/2);
 		}*/
@@ -566,47 +576,41 @@ public class TargetDecision {
 		//formula used  d = d0 + v0*t + 1/2*a*t^2
 		//              x = d cos(theta)
 		//			    y = d sin(theta) 
-		Point ball = allMovingObjects.getBallPosition();
+		Node ball = allMovingObjects.getBallPosition();
 		double angle = allMovingObjects.getBallAngle();
 		double velocity = allMovingObjects.getBallVelocity();
 		double acceleration = allStaticObjects.getDeceleration();
 		//width and height of pitch in pixels
-		double pitchWidth = allStaticObjects.getPitchWidth();
-		double pitchHeight = allStaticObjects.getPitchHeight();
+		double pitchWidthinNodes = allStaticObjects.getWidth();
+		double pitchHeightinNodes = allStaticObjects.getHeight();
 		
-		int direction;
-		//-1 if ball goes to right, 1 if ball goes to left
-		if (angle < Math.PI) {
-			direction = 1;
-		} else {
-			direction = -1;
-		}
+		int direction = worldState.getShootingDirection();
 		
-		double d = ball.distance(new Point(0,0)) + velocity * time + 1/2 * acceleration * time * time; 
-		double x = d * Math.cos(angle);
-		double y = d * Math.cos(angle);
+		double d = velocity * time;// + 1/2 * acceleration * time * time; 
+		double x = ball.x + d * Math.cos(angle);
+		double y = ball.y + d * Math.sin(angle);
 		
 		int numberBouncesX = 0;
 		int numberBouncesY = 0;
 		//dealing with bounces of the walls
-		while (x > pitchWidth) {
+		while (x > pitchWidthinNodes) {
 			numberBouncesX++;
-			x = x - pitchWidth;			
+			x = x - pitchWidthinNodes;			
 		}
 		x = x * direction * Math.pow(-1, numberBouncesX);
 		
 		if (x < 0) {
-			x = x + pitchWidth;
+			x = x + pitchWidthinNodes;
 		}
 		
-		while (y > pitchHeight) {
+		while (y > pitchHeightinNodes) {
 			numberBouncesY++;
-			y = y - pitchHeight;						
+			y = y - pitchHeightinNodes;						
 		}
 		y = y * direction * Math.pow(-1, numberBouncesY);
 		
 		if (y < 0) {
-			y = y + pitchHeight;
+			y = y + pitchHeightinNodes;
 		}
 		
 		
@@ -628,7 +632,7 @@ public class TargetDecision {
 		The while loop checks at each small time interval 
 		whether the robot can get to the predicted point or not
 		*/
-		while (!canGetThere) {
+		while (!canGetThere && time < 5) {
 			time = time + dt;
 			target = ballPrediction(time);
 			//check if we can get to the target in time using Manhattan distance
@@ -643,7 +647,7 @@ public class TargetDecision {
 	//method that checks whether there are any obstacles on the line between 2 points
 	private boolean obstacleOnLine(Node n1, Node n2) {
 
-		ArrayList<Node> obstacleNodes = new ArrayList<Node>();//AllStaticObjects.getObstaclesBinary();
+		ArrayList<Node> obstacleNodes = allMovingObjects.getBinaryObstacles();
 		double angle = allMovingObjects.angleBetween(n1, n2);
 		for (int i=0 ; i<obstacleNodes.size(); i++) {
 			//compare 'angle' with the angle between n1 and each of the obstacles
