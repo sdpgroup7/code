@@ -231,6 +231,10 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 					os.flush();
 				} catch (Exception ex){}
 				pilot.stop();
+                try {
+                    Thread.sleep(150);
+                } catch (InterruptedException ex) {}
+
 				// move back a little bit away from the wall
 				pilot.travel(-20);
 				LCD.clear();
