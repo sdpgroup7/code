@@ -12,6 +12,7 @@ import lejos.nxt.comm.NXTConnection;
 import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Pose;
+import lejos.util.Delay;
 import uk.ac.ed.inf.sdp2012.group7.control.ConstantsReuse;
 import java.util.Arrays;
 
@@ -28,17 +29,19 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 	// constants for the pilot class 
 	private static final float TRACK_WIDTH = (float) 13.7;
 	private static final float WHEEL_DIAMETER = (float) 8.16;
-	
+
 	private static Pose initial;
 	private static boolean fallback = false;
 	private static Nxt_code instance;
 	private static KickerThread kicker;
-	
+
 	public volatile static boolean bumped = false;
+	
+	public static Object mutex = new Object();
 
 	public static void main(String[] args) throws Exception {
 
-		
+
 		DifferentialPilot pilot = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, Motor.B,Motor.C, false);
 		OdometryPoseProvider odometry = new OdometryPoseProvider(pilot);
 		initial = new Pose(0, 0, 0);
@@ -48,14 +51,14 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 		kicker = instance.new KickerThread();
 		// start the kicker
 		new Thread(kicker).start();
-		
-		
+
+
 		// set initial pilot variables to produce maximum speed
 		//pilot.regulateSpeed(true);
 		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()*0.7);
 		pilot.setRotateSpeed(pilot.getMaxRotateSpeed()*0.7);
 		pilot.setAcceleration(1000);
-		
+
 		while (true) {
 			try {
 				// wait for a connection and open streams
@@ -69,7 +72,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 					pilot.travel(odometry.getPose().distanceTo(initial.getLocation()));
 				}
 				NXTConnection connection = Bluetooth.waitForConnection();
-				
+
 				is = connection.openInputStream();
 				os = connection.openOutputStream();
 				Sound.beep();
@@ -78,106 +81,112 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 
 				// begin reading commands
 				OpCodes n = OpCodes.DO_NOTHING;
-				
+
 				while (n != OpCodes.QUIT) {
-					if(!bumped){
-						// get the next command from the inputstream
-						byte[] byteBuffer = new byte[4];
-						is.read(byteBuffer);
-
-						if (byteBuffer[0] != 0) {
-							kicker.kick();
+					synchronized(mutex) {
+						try {
+							mutex.wait(250);
+						} catch (Exception ex) {
+							// the bump sensors aren't on (didn't notify us)
 						}
+						if(!bumped){
+							// get the next command from the inputstream
+							byte[] byteBuffer = new byte[4];
+							is.read(byteBuffer);
 
-						n = OpCodes.values()[byteBuffer[1]];
-						int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
-                        LCD.clear();
-						LCD.drawString(n.toString(), 0, 4);
-						LCD.drawString(Integer.toString(magnitude), 0, 5);
-						switch (n) {
+							if (byteBuffer[0] != 0) {
+								kicker.kick();
+							}
 
-						case FORWARDS:
-							pilot.forward();
-							break;
+							n = OpCodes.values()[byteBuffer[1]];
+							int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
+							LCD.clear();
+							LCD.drawString(n.toString(), 0, 4);
+							LCD.drawString(Integer.toString(magnitude), 0, 5);
+							switch (n) {
 
-						case BACKWARDS:
-							pilot.backward();
-							break;
+							case FORWARDS:
+								pilot.forward();
+								break;
 
-						case BACKWARDS_WITH_DISTANCE:
-							pilot.travel(-magnitude);
-							break;
+							case BACKWARDS:
+								pilot.backward();
+								break;
 
-						case STOP:
-							pilot.stop();
-							break;
+							case BACKWARDS_WITH_DISTANCE:
+								pilot.travel(-magnitude);
+								break;
 
-						case CHANGE_SPEED:
-							pilot.setTravelSpeed(magnitude);
-							break;
+							case STOP:
+								pilot.stop();
+								break;
 
-						case FORWARDS_WITH_DISTANCE:
-							pilot.travel(magnitude);
-							break;
+							case CHANGE_SPEED:
+								pilot.setTravelSpeed(magnitude);
+								break;
 
-						case ROTATE_LEFT:
-							pilot.rotate(magnitude,true);
-							break;
+							case FORWARDS_WITH_DISTANCE:
+								pilot.travel(magnitude);
+								break;
 
-						case ROTATE_RIGHT:
-							pilot.rotate(-magnitude,true);
-							break;
+							case ROTATE_LEFT:
+								pilot.rotate(magnitude,true);
+								break;
 
-						case ROTATE_BLOCK_LEFT:
-							pilot.rotate(magnitude,false);
-							break;
+							case ROTATE_RIGHT:
+								pilot.rotate(-magnitude,true);
+								break;
 
-						case ROTATE_BLOCK_RIGHT:
-							pilot.rotate(-magnitude,false);
-							break;
+							case ROTATE_BLOCK_LEFT:
+								pilot.rotate(magnitude,false);
+								break;
 
-						case ARC_LEFT:
-							pilot.arcForward(-magnitude);
-							break;
+							case ROTATE_BLOCK_RIGHT:
+								pilot.rotate(-magnitude,false);
+								break;
 
-						case ARC_RIGHT:
-							pilot.arcForward(magnitude);
-							break;
+							case ARC_LEFT:
+								pilot.arcForward(-magnitude);
+								break;
 
-						case BEEP:
-							Sound.beep();
-							break;
+							case ARC_RIGHT:
+								pilot.arcForward(magnitude);
+								break;
 
-						case START_MATCH:
-							pilot.reset();
-							odometry.setPose(initial);
-							fallback = true;
-							pilot.forward();
-							break;
+							case BEEP:
+								Sound.beep();
+								break;
 
-						case STOP_MATCH:
-							pilot.quickStop();
-							fallback = false;
-							break;
+							case START_MATCH:
+								pilot.reset();
+								odometry.setPose(initial);
+								fallback = true;
+								pilot.forward();
+								break;
 
-						case QUIT: // close connection
-							Sound.twoBeeps();
-							break;
+							case STOP_MATCH:
+								pilot.quickStop();
+								fallback = false;
+								break;
+
+							case QUIT: // close connection
+								Sound.twoBeeps();
+								break;
+							}
+
+							try{
+								Thread.sleep(100);
+							} catch (InterruptedException ex){
+								Sound.beep();
+							}
+
+
+							// respond to say command was acted on
+							os.write(n.ordinal());
+							os.flush();
 						}
-
-						try{
-							Thread.sleep(100);
-						} catch (InterruptedException ex){
-							Sound.beep();
-						}
-
-
-						// respond to say command was acted on
-						os.write(n.ordinal());
-						os.flush();
 					}
 				}
-
 				// close streams and connection
 				is.close();
 				os.close();
@@ -193,14 +202,14 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 	}
 
 	public static boolean equal(byte[] a, byte[] b){
-        return Arrays.equals(a,b);
+		return Arrays.equals(a,b);
 	}
 
 	/**
 	 * Returns an integer from a byte array
 	 */
 	public static int bytesToInt(byte b1, byte b2) {
-		
+
 		return ((b1 & 0xFF) << 8) | (b2 & 0xFF);
 	}
 
@@ -217,58 +226,61 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 	 * inform the PC what has happened
 	 */
 	public void run() {
-		
+
 		TouchSensor touchA = new TouchSensor(SensorPort.S1);
 		TouchSensor touchB = new TouchSensor(SensorPort.S2);
 
 		while (true) {
-			if (touchA.isPressed() || touchB.isPressed()) {
-				bumped = true;
 
-				// flag sensor hit as being dealt with and save the speed
-				// we were going before the collision occurred
-				try{
-					os.write(OpCodes.BUMP_ON.ordinal());
-					os.flush();
-				} catch (Exception ex){}
-				pilot.stop();
-                try {
-                    Thread.sleep(250);
-                } catch (InterruptedException ex) {}
+			if (touchA.isPressed() || touchB.isPressed()) {	
+				synchronized(mutex) {
+					bumped = true;
 
-				// move back a little bit away from the wall
-				pilot.travel(-20);
-				LCD.clear();
-				LCD.drawString("End travel -20", 0, 0);
-				pilot.stop();
-				LCD.drawString("End stop", 0, 1);
-				// reset speed back to what it was before the collision
-				LCD.drawString("Restored travelSpeed", 0, 2);
-				try{
-					os.write(OpCodes.BUMP_OFF.ordinal());
-					os.flush();
-				} catch (Exception ex){
-					LCD.drawString("bump off failed", 0, 2);
+					// flag sensor hit as being dealt with and save the speed
+					// we were going before the collision occurred
+					try{
+						os.write(OpCodes.BUMP_ON.ordinal());
+						os.flush();
+					} catch (Exception ex){}
+					pilot.stop();
+					Delay.msDelay(100);
+					// move back a little bit away from the wall
+					pilot.travel(-20);
+					LCD.clear();
+					LCD.drawString("End travel -20", 0, 0);
+					pilot.stop();
+					LCD.drawString("End stop", 0, 1);
+					// reset speed back to what it was before the collision
+					LCD.drawString("Restored travelSpeed", 0, 2);
+					try{
+						os.write(OpCodes.BUMP_OFF.ordinal());
+						os.flush();
+					} catch (Exception ex){
+						LCD.drawString("bump off failed", 0, 2);
+					}
+					LCD.drawString("Sent BUMP_OFF", 0, 3);
+					bumped = false;
+					
+					mutex.notifyAll();
 				}
-				LCD.drawString("Sent BUMP_OFF", 0, 3);
-				bumped = false;
+
 			}
 		}
 	}
 
-	
+
 	/**
 	 * Kicking thread: when received a kick and not kicking
 	 */
 	private class KickerThread implements Runnable {
-	
+
 		private volatile boolean kicking = false;
 		private volatile boolean toKick = false;
-		
+
 		public synchronized void kick() {
 			toKick = true;
 		}
-		
+
 		public void run() {
 			while (true) {
 				if (toKick && !kicking) {
@@ -285,5 +297,5 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 			}
 		}
 	}
-	
+
 }
