@@ -6,11 +6,19 @@ import java.awt.Point;
 
 public class Node extends Point implements Comparable<Node> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2860136886021314030L;
+	
 	private Node parent = null;
 	private double obstacleCost;
 	private boolean opposition;
 	private boolean ball;
 	private boolean isTarget;
+	private boolean isNavPoint;
+	private boolean isTheirGoalCentre;
+	private boolean isOurGoalCentre;
 	private boolean isStart;
 	private boolean isPath;
 	private double fCost;
@@ -131,7 +139,11 @@ public class Node extends Point implements Comparable<Node> {
 	}
         
     public String toString(){
-        return this.x + " " + this.y + " | fCost " + this.getfCost() + "| hCost " + this.gethCost() + "| gCost " + this.getgCost() + "| oCost " + this.getObstacleCost() + " | is opposition : " + this.opposition + " | is ball : " + this.ball;
+        return this.x + " " + this.y + " | fCost " + this.getfCost() + "| hCost " 
+        + this.gethCost() + "| gCost " + this.getgCost() + "| oCost " 
+        + this.getObstacleCost() + " | is opposition : " 
+        + this.opposition + " | is ball : " 
+        + this.ball;
     }
     
 	public boolean isPath() {
@@ -141,5 +153,30 @@ public class Node extends Point implements Comparable<Node> {
 	public void setPath(boolean isPath) {
 		this.isPath = isPath;
 	}
+	
+	public boolean isNavPoint() {
+		return isNavPoint;
+	}
+
+	public void setNavPoint(boolean isNavPoint) {
+		this.isNavPoint = isNavPoint;
+	}
+
+	public boolean isTheirGoalCentre() {
+		return isTheirGoalCentre;
+	}
+
+	public void setTheirGoalCentre(boolean isTheirGoalCentre) {
+		this.isTheirGoalCentre = isTheirGoalCentre;
+	}
+
+	public boolean isOurGoalCentre() {
+		return isOurGoalCentre;
+	}
+
+	public void setOurGoalCentre(boolean isOurGoalCentre) {
+		this.isOurGoalCentre = isOurGoalCentre;
+	}
+
 
 }

@@ -106,7 +106,6 @@ public class PlanMonitor {
 			for(int x = 0; x < ascii[y].length; x++){
 				Node n = currentPlan.getMap()[x][y];
 				if(n != null){
-					//if(n.isGoal()) ascii[y][x] = "T";
 					if(n.isBall()) ascii[y][x] = "B";
 					if(n.isOpposition()) ascii[y][x] = "O";
 					if(n.isStart()) ascii[y][x] = "S";

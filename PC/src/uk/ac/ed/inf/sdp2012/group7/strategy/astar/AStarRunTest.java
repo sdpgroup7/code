@@ -15,11 +15,11 @@ public class AStarRunTest {
 			
 			// set start and end points of the path
 			Node start = new Node(new Point(30,16), 0);
-			Node end = new Node(new Point(11,13), 0);
+			Node end = new Node(new Point(15,15), 0);
 			
 			//cost tests
 			int a = 2;
-			int b = 50;
+			int b = 5;
 			
 			// set obstacles
 			Node opposition = new Node(new Point(26,17), b);

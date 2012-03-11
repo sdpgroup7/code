@@ -4,11 +4,9 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
 
 
 public class AStar {
@@ -40,14 +38,14 @@ public class AStar {
 		this.openList.clear();
 		
 		//put in ball
-		for(Node n : balls){
+		for(Node n : this.balls){
                     if(!((n.x < 0) || (n.x >= this.width) || (n.y < 0) || (n.y >= this.height))){
                     	this.map[n.x][n.y] = n;
                     }
 		}
 		
 		//put in opposition
-		for(Node n : oppositions){
+		for(Node n : this.oppositions){
                     if(!((n.x < 0) || (n.x >= this.width) || (n.y < 0) || (n.y >= this.height))){
                     	this.map[n.x][n.y] = n;
                     }
@@ -97,18 +95,8 @@ public class AStar {
 		
 		while(!hasBeenFound){
             
-			if(openList.size() > 0) { 
-				currentNode = openList.get(0);
-			} else {
-				currentNode = this.start;
-			}
-            
-            for(Node n : this.openList){
-            	n.setfCost();
-				if(n.getfCost() < currentNode.getfCost()){
-					currentNode = n;
-				}
-			}
+			//should not need to search through the sorted list...
+			currentNode = openList.get(0);
 			
 			ArrayList<Node> nearestNeighbours = nearestNeighbours(currentNode);
 			
@@ -149,17 +137,11 @@ public class AStar {
 			}
 			
 			count++;
-                        //printMap(closedList);
 		}
 		
                 ArrayList<Node> returnPath = getPath(closedList);
-                
-                
                 printMap(closedList);
-                
-                
                 printMap(returnPath);
-                
                 return returnPath;
 	}
 	
@@ -187,8 +169,6 @@ public class AStar {
             }
             return path;
         }
-	
-        
         
         public void printMap(ArrayList<Node> path) {
             //Node node;
@@ -218,7 +198,6 @@ public class AStar {
         }
 	
         public Node[][] getMap(){
-        	
         	return this.map;
         }
 		
