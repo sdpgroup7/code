@@ -615,7 +615,13 @@ public class TargetDecision {
 		double pitchWidthinNodes = allStaticObjects.getWidth();
 		double pitchHeightinNodes = allStaticObjects.getHeight();
 		
-		int direction = worldState.getShootingDirection();
+		int direction;
+		
+		if (angle < Math.PI/2 || angle > Math.PI*3/2 ) {
+			direction = 1;
+		} else {
+			direction = -1;
+		}
 		
 		return allStaticObjects.convertToNode(ballPredictionCalculation(ball, direction, angle, velocity, time, pitchWidthinNodes, pitchHeightinNodes));
 	}
