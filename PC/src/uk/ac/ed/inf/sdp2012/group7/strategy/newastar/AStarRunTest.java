@@ -50,8 +50,6 @@ public class AStarRunTest {
 				}
 			}
 			
-			System.out.println("going to start");
-			
 			// run the algorithm
 			AStarRun run = new AStarRun(10, 10, start, end, balls, oppositions);
 		}
