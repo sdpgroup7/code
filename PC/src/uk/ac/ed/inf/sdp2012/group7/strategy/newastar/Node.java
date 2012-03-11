@@ -6,10 +6,7 @@ import java.awt.Point;
 
 public class Node extends Point implements Comparable<Node> {
 
-	
-	private static final long serialVersionUID = -1084579547399653262L;
-	private Point here; 
-	private Node parent;
+	private Node parent = null;
 	private double obstacleCost;
 	private boolean opposition;
 	private boolean ball;
@@ -17,68 +14,48 @@ public class Node extends Point implements Comparable<Node> {
 	private boolean isStart;
 	private double fCost;
 	private double gCost;
-	private double hcost;
+	private double hCost;
 	
-	//Use this contructor when you need to set the cost
-	public Node(Point point, int i) {
-		this.here = point;
-		this.obstacleCost = i;
+	public Node(Point point, int obstacleCost) {
+		super(point.x,point.y);
+		this.obstacleCost = obstacleCost;
+		this.gCost = -1;
+		this.hCost = -1;
 	}
 	
-	//This constructor is use when the cost is irrelevant
 	public Node(Point point) {
-		this.here = point;
+		super(point.x,point.y);
 		this.obstacleCost = 0;
+		this.gCost = -1;
+		this.hCost = -1;
 	}
+        
 
 	@Override
 	public int compareTo(Node o) {
-		return (int) (this.fCost - o.getfCost());
+		if(this.fCost > o.getfCost()){
+                    return 1;
+                } else if(this.fCost < o.getfCost()){
+                    return -1;
+                } else {
+                    return 0;
+                }
 	}
 	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((here == null) ? 0 : here.hashCode());
+		result = prime * result + super.hashCode();
 		return result;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		if (!(obj instanceof Node)) {
-			return false;
-		}
-		Node other = (Node) obj;
-		if (here == null) {
-			if (other.here != null) {
-				return false;
-			}
-		} else if (!here.equals(other.here)) {
-			return false;
-		}
-		return true;
-	}
-	
-	public int x(){
-		return this.here.x; 
-	}
-	
-	public int y(){
-		return this.here.y; 
-	}
 	public double getfCost() {
 		return fCost;
 	}
 
 	public void setfCost() {
-		this.fCost = this.gCost + this.hcost + this.obstacleCost;
+		this.fCost = this.gCost + this.hCost + this.obstacleCost;
 	}
 
 	public double getgCost() {
@@ -90,11 +67,11 @@ public class Node extends Point implements Comparable<Node> {
 	}
 
 	public double gethCost() {
-		return hcost;
+		return hCost;
 	}
 
 	public void sethCost(double hcost) {
-		this.hcost = hcost;
+		this.hCost = hcost;
 	}
 	public boolean isOpposition() {
 		return opposition;
@@ -127,7 +104,7 @@ public class Node extends Point implements Comparable<Node> {
 	}
 	
 	public boolean isStart() {
-		return isTarget;
+		return isStart;
 	}
 	
 	public void setStart(boolean start) {
@@ -141,8 +118,8 @@ public class Node extends Point implements Comparable<Node> {
 	public Node getParent(){
 		return this.parent;
 	}
-	
-	public Point getHere(){
-		return this.here;
-	}
+        
+        public String toString(){
+            return this.x + " " + this.y + " " + this.getfCost();
+        }
 }

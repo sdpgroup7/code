@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
-import uk.ac.ed.inf.sdp2012.group7.strategy.newastar.Node;
+import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
 
 public class AllMovingObjects {
 	
@@ -116,7 +116,7 @@ public class AllMovingObjects {
 	}
 	
 
-	public ArrayList<Node> getVariableObstacles() {
+	public ArrayList<Node> getRobotObstacles() {
 		//TODO: Untested
 		ArrayList<Node> obstacles = new ArrayList<Node>();
 
@@ -138,7 +138,14 @@ public class AllMovingObjects {
 			}
 		}
 		
-		position = this.getBallPosition();
+		return obstacles;
+	}
+	
+	public ArrayList<Node> getBallObstacles() {
+		
+		ArrayList<Node> obstacles = new ArrayList<Node>();
+		
+		Node position = this.getBallPosition();
 		
 		for(int x = (int)(position.x - (robotWidthInNodes()/2.0f) + 0.5); x <= (position.x + (robotWidthInNodes()/2.0f) + 0.5); x++){
 			for(int y = (int)(position.y - (robotWidthInNodes()/2.0f) + 0.5); y <= (position.y + (robotWidthInNodes()/2.0f) + 0.5); y++){

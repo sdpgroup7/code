@@ -15,7 +15,7 @@ public class AStarRun {
 		this.height = height;
 		this.width = width;
 		this.start = start;
-	    this.target = target;
+                this.target = target;
 		this.balls = balls;
 		this.oppositions = oppositions;
 	
@@ -25,7 +25,7 @@ public class AStarRun {
 		ArrayList<Node> closedList = astar.returnPath();
 	
 		for(Node n : closedList){
-			System.out.println("x value : " + n.x() + " y value : " + n.y() );
+			System.out.println("x value : " + n.x + " y value : " + n.y );
 		}
 
 	}

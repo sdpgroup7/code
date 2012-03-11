@@ -15,8 +15,9 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
-import uk.ac.ed.inf.sdp2012.group7.strategy.astar.AreaMap;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
+import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldAreaMap;
+import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldNode;
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
@@ -71,16 +72,18 @@ public class PlanMonitor {
 	}
 	
 	public String[][] generateASCIIPlan(){
-		AreaMap map = currentPlan.getAStar().getAreaMap();
+		//OldAreaMap map = currentPlan.getAStar().getAreaMap();
+		int height = currentPlan.getHeightInNodes();
+		int width = currentPlan.getMapWidth();
 		ArrayList<Node> waypoints = null;
 		try{
-			waypoints = currentPlan.getAStar().getPath().getWayPoints();
+			waypoints = currentPlan.getPath();
 		} catch (Exception ex){
 			Strategy.logger.error("Waypoins in generateASCIIPlan is null");
 			return new String[0][0];
 		}
-		if(map.getNodes().length <= 0) return new String[0][0];
-		String[][] ascii = new String[map.getMapHeight()][map.getMapWidth()];
+		if(height <= 0) return new String[0][0];
+		String[][] ascii = new String[height][width];
 		for(int y = 0; y < ascii.length; y++){
 			for(int x = 0; x < ascii[y].length;x++){
 				ascii[y][x] = " ";
@@ -102,12 +105,12 @@ public class PlanMonitor {
 		for(int y = 0; y < ascii.length; y++){
 			for(int x = 0; x < ascii[y].length; x++){
 				for(Node n : waypoints){
-					if(n.nodeToPoint().equals(new Point(x,y))){
+					if(n.equals(new Point(x,y))){
 						ascii[y][x] = "#";
 						continue;
 					}
 				}
-				Node n = map.getNode(x,y);
+				OldNode n = map.getNode(x,y);
 				//if(n.isGoal()) ascii[y][x] = "T";
 				if(n.isObstical()) ascii[y][x] = "X";
 				if(n.isObstical()) ascii[y][x] = "X";
