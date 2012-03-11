@@ -65,7 +65,9 @@ public class AStar {
 					if(!(current.equals(this.map[i][j]))){
 						if(this.map[i][j] == null) this.map[i][j] = new Node(new Point(i,j), 0);
 						this.map[i][j].sethCost(heuristic.getEstimatedDistanceToGoal(this.map[i][j], this.target));
-						this.map[i][j].setgCost(heuristic.getEstimatedDistanceToGoal(this.map[i][j], current) + current.getgCost());
+						if(this.map[i][j].getgCost() == -1){
+							this.map[i][j].setgCost(heuristic.getEstimatedDistanceToGoal(this.map[i][j], current) + current.getgCost());
+						}
 						this.map[i][j].setfCost();
 						nearestNeighbours.add(this.map[i][j]);
 					}
@@ -97,72 +99,56 @@ public class AStar {
 		boolean hasBeenFound = false;
 		
 		while(!hasBeenFound){
-                        System.out.println("\n\n");
                         if(openList.size() > 0) currentNode = openList.get(0);
 			for(Node n : this.openList){
-                                System.out.println("gCost evaluation  @ (" + n.x + "," + n.y + ") : " + n.getgCost());
-                                System.out.println("hCost evaluation  @ (" + n.x + "," + n.y + ") : " + n.gethCost());
-				System.out.println("fCost evaluation  @ (" + n.x + "," + n.y + ") : " + n.getfCost() + " to " + currentNode.getfCost());
 				if(n.getfCost() < currentNode.getfCost()){
 					currentNode = n;
 				}
 			}
 			
-			System.out.println("Next currentNode is " + currentNode.toString());
 			
 			ArrayList<Node> nearestNeighbours = nearestNeighbours(currentNode);
 			
-			System.out.println("Number of neighbours : " + nearestNeighbours.size());
-			System.out.println("Number in openList @ start : " + openList.size());
-			System.out.println("Current node (adding to closed): " + currentNode.toString());
-                        
 			this.closedList.add(currentNode);
 			this.openList.remove(currentNode);
 			
 			for(Node n : nearestNeighbours){
 				if(!(this.closedList.contains(n))){
-					System.out.println("Not in closedList : " + n.x + " " + n.y);
 					if(!(this.openList.contains(n))){
-						System.out.println("Not in openList : " + n.x + " " + n.y);
 						n.setParent(currentNode);
 						n.setgCost(heuristic.getEstimatedDistanceToGoal(n, currentNode) + n.getParent().getgCost());
 						n.sethCost(heuristic.getEstimatedDistanceToGoal(n, this.target));
 						n.setfCost();
 						this.openList.add(n);
 					} else {
-						System.out.println("Is in openList : " + n.x + " " + n.y);
 						double oldCost = n.getgCost();
 						n.setgCost(heuristic.getEstimatedDistanceToGoal(n, currentNode) + currentNode.getParent().getgCost());
 						double newCost = n.getgCost();
 						if(newCost < oldCost){
-                                                        System.out.println("Changed parent");
 							n.setParent(currentNode);
 							n.setfCost();
 						} else {
 							n.setgCost(oldCost);
+							n.setfCost();
 						}
 					}
 				}
 			}
 			
-			System.out.println("Number in openList @ finish : " + openList.size());
 			
 			if(closedList.contains(this.target)){
-				System.out.println("Found");
 				hasBeenFound = true;
 			}
 			
 			if(openList.size() < 1){
-				System.out.println("Too small");
 				hasBeenFound = true;
 			}
                         printMap(closedList);
 		}
 		
                 ArrayList<Node> returnPath = getPath(closedList);
-                System.out.println("Final Path:");
                 printMap(returnPath);
-		return returnPath;
+                return returnPath;
 	}
 	
         public ArrayList<Node> getPath(ArrayList<Node> closedList){
@@ -192,7 +178,7 @@ public class AStar {
         
         
         public void printMap(ArrayList<Node> path) {
-            Node node;
+            //Node node;
             if(path == null) path = new ArrayList<Node>();
             for(int y = 0; y < this.height; y++){
                 for(int x = 0; x < this.width; x++){
