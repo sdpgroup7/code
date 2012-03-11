@@ -144,6 +144,8 @@ public class TargetDecision {
 				
 				//Fetch
 				} else {
+
+					logger.debug("DECISION MADE : FETCH");
 					
 					//create open shot nav and target
 					this.setTargetPointOpen();
@@ -158,10 +160,13 @@ public class TargetDecision {
 							(node1.y < (this.allStaticObjects.getHeight() - b)&& 
 									node1.y > (b));
 					
+					logger.debug("DECISION TEST : OPEN SHOT");
 					logger.debug("Open shot possibility is : " + this.openShotPossible);
 					
 					//And if we can't switch the target to an angular shot
 					if(!this.openShotPossible){
+						
+						logger.debug("DECISION TEST : ANGULAR SHOT");
 						
 						this.setTargetPointAngular();
 						this.setNavPointAngular();
@@ -174,6 +179,7 @@ public class TargetDecision {
 						(node2.y < (this.allStaticObjects.getHeight() - b)&& 
 								node2.y > (b));
 						
+						
 						logger.debug("navPoint from angular is : " + this.navPoint.toString());
 						
 						logger.debug("Angular shot possibility is : " + this.angularShotPossible);
@@ -184,6 +190,7 @@ public class TargetDecision {
 							
 							this.setNavPointOpenNoOption();
 							
+							logger.debug("DECISION MADE : NO SHOT");
 							
 							logger.debug("navPoint from no option is : " + this.navPoint.toString());
 							
