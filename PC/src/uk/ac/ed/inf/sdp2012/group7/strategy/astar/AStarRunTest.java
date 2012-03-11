@@ -14,13 +14,13 @@ public class AStarRunTest {
 			
 			
 			// set start and end points of the path
-			Node start = new Node(new Point(0,9), 0);
-			Node end = new Node(new Point(4,0), 0);
+			Node start = new Node(new Point(39,16), 0);
+			Node end = new Node(new Point(20,16), 0);
 			
 			// set obstacles
-			Node opposition = new Node(new Point(3,3), 10000);
+			Node opposition = new Node(new Point(26,17), 10000);
 			opposition.setOpposition(true);
-			Node ball = new Node(new Point(6,6), 100);
+			Node ball = new Node(new Point(5,16), 100);
 			ball.setBall(true);
 			
 			//Use Lists
@@ -28,7 +28,7 @@ public class AStarRunTest {
 			ArrayList<Node> oppositions = new ArrayList<Node>();
 			
 			//boundary maker
-			int boundary = 2;
+			int boundary = 4;
 			
 			//Fill Arrays
 			
@@ -43,7 +43,7 @@ public class AStarRunTest {
 			
 			for(int i = opposition.x - 2*boundary; i < opposition.x + boundary; i++){
 				for(int j = opposition.y - 2*boundary; j < opposition.y + boundary; j++){
-					Node tempOpp = new Node(new Point(i,j), 10000);
+					Node tempOpp = new Node(new Point(i,j), 100);
 					tempOpp.setOpposition(true);
 					//System.out.println(tempOpp.getX() + " " + tempOpp.getY());
 					oppositions.add(tempOpp);
@@ -51,6 +51,6 @@ public class AStarRunTest {
 			}
 			
 			// run the algorithm
-			AStarRun run = new AStarRun(10, 10, start, end, balls, oppositions);
+			AStarRun run = new AStarRun(29, 58, start, end, balls, oppositions);
 		}
 }

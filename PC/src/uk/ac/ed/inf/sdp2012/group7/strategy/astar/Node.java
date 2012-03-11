@@ -12,6 +12,7 @@ public class Node extends Point implements Comparable<Node> {
 	private boolean ball;
 	private boolean isTarget;
 	private boolean isStart;
+	private boolean isPath;
 	private double fCost;
 	private double gCost;
 	private double hCost;
@@ -21,6 +22,7 @@ public class Node extends Point implements Comparable<Node> {
 		this.obstacleCost = obstacleCost;
 		this.gCost = -1;
 		this.hCost = -1;
+		this.isPath = false;
 	}
 	
 	public Node(Point point) {
@@ -28,6 +30,7 @@ public class Node extends Point implements Comparable<Node> {
 		this.obstacleCost = 0;
 		this.gCost = -1;
 		this.hCost = -1;
+		this.isPath = false;
 	}
 	
 	public Node(int x, int y) {
@@ -35,6 +38,7 @@ public class Node extends Point implements Comparable<Node> {
 		this.obstacleCost = 0;
 		this.gCost = -1;
 		this.hCost = -1;
+		this.isPath = false;
 	}
         
 
@@ -126,7 +130,16 @@ public class Node extends Point implements Comparable<Node> {
 		return this.parent;
 	}
         
-        public String toString(){
-            return this.x + " " + this.y + " " + this.getfCost();
-        }
+    public String toString(){
+        return this.x + " " + this.y + " " + this.getfCost() + " | is opposition : " + this.opposition + " | is ball : " + this.ball;
+    }
+    
+	public boolean isPath() {
+		return isPath;
+	}
+
+	public void setPath(boolean isPath) {
+		this.isPath = isPath;
+	}
+
 }

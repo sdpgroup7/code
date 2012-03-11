@@ -9,6 +9,7 @@ public class AStarRun {
 	
 	private int height, width;
 	private Node start, target;
+	private AStar astar;
 	private ArrayList<Node> balls, oppositions, path;
 
 	public AStarRun(int height, int width, Node start, Node target, ArrayList<Node> balls, ArrayList<Node> oppositions) {
@@ -20,7 +21,7 @@ public class AStarRun {
 		this.oppositions = oppositions;
 	
 	
-		AStar astar = new AStar(this.height, this.width, this.start, this.target, this.balls, this.oppositions);
+		this.astar = new AStar(this.height, this.width, this.start, this.target, this.balls, this.oppositions);
 	
 		this.path = astar.returnPath();
 
@@ -28,5 +29,9 @@ public class AStarRun {
 	
 	public ArrayList<Node> getPath(){
 		return this.path;
+	}
+	
+	public Node[][] getMap(){
+		return this.astar.getMap();
 	}
 }
