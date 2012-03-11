@@ -152,6 +152,10 @@ public class Plan {
 		return this.navPoint;
 	}
 	
+	public Node[][] getMap(){
+		return this.aStarNav.getMap();
+	}
+	
 	public Point getCentreOfTheirGoal(){
 		return this.allStaticObjects.getCentreOfTheirGoal();
 	}

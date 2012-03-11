@@ -110,13 +110,13 @@ public class PlanMonitor {
 						continue;
 					}
 				}
-				OldNode n = map.getNode(x,y);
+				Node n = currentPlan.getMap()[x][y];
 				//if(n.isGoal()) ascii[y][x] = "T";
-				if(n.isObstical()) ascii[y][x] = "X";
-				if(n.isObstical()) ascii[y][x] = "X";
+				if(n.isBall()) ascii[y][x] = "X";
+				if(n.isOpposition()) ascii[y][x] = "X";
 				if(currentPlan.getAllStaticObjects().getCentreOfTheirGoal().equals(new Point(x,y))) ascii[y][x] = "C";
 				if(n.isStart()) ascii[y][x] = "S";
-				if(n.isVisited()) ascii[y][x] = " ";
+				if(n.isPath()) ascii[y][x] = " ";
 				if(currentPlan.getNavPoint().equals(new Point(x,y))) ascii[y][x] = "N";
 				if(currentPlan.getTarget().equals(new Point(x,y))) ascii[y][x] = "G";		
 				if(currentPlan.getBallPosition().equals(new Point(x,y))) ascii[y][x] = "B";

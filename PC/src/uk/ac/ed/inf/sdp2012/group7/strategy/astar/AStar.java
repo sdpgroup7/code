@@ -158,6 +158,7 @@ public class AStar {
                 path.add(currentNode);
                 while(true){
                     currentNode = currentNode.getParent();
+                    this.map[currentNode.x][currentNode.y].setPath(true);
                     path.add(currentNode);
                     if(currentNode.isStart()) break;
                 }
@@ -203,6 +204,9 @@ public class AStar {
             }
             
         }
-		
+	
+        public Node[][] getMap(){
+        	return this.map;
+        }
 		
 }
