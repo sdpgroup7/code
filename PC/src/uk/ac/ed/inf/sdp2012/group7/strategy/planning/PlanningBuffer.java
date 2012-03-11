@@ -14,10 +14,10 @@ import java.util.Observer;
 import org.apache.log4j.Logger;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
-import uk.ac.ed.inf.sdp2012.group7.strategy.astar.AStar;
-import uk.ac.ed.inf.sdp2012.group7.strategy.astar.AreaMap;
-import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
-import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Path;
+import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldAStar;
+import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldAreaMap;
+import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldNode;
+import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldPath;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.PlanMonitor;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 

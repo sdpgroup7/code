@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
-import uk.ac.ed.inf.sdp2012.group7.strategy.newastar.Node;
+import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
@@ -144,7 +144,7 @@ public class AllStaticObjects {
 	//Method for finding the centre point just in front of our goal...
 	//Return this as a node!
 	private void pointInfrontOfGoal(){
-		if(worldState.getShootingDirection() == 1){
+		if(WorldState.getInstance().getShootingDirection() == 1){
 			this.inFrontOfOurGoal = new Node(new Point((int)this.boundary,this.height/2));
 			
 		}
@@ -156,7 +156,7 @@ public class AllStaticObjects {
 	//Method for finding the centre point just in front of their goal...
 	//Return this as a node!
 	private void pointInfrontOfTheirGoal(){
-		if(worldState.getShootingDirection() == 1){
+		if(WorldState.getInstance().getShootingDirection() == 1){
 			this.inFrontOfTheirGoal = new Node(new Point((this.width - (int)this.boundary),this.height/2));
 		}
 		else {
@@ -167,7 +167,7 @@ public class AllStaticObjects {
 	//Method for finding the centre point in their goal...
 	//Return this as a node!
 	private void centreOfTheirGoal(){
-		if(worldState.getShootingDirection() == -1){
+		if(WorldState.getInstance().getShootingDirection() == -1){
 			this.centreOfTheirGoal = new Node(new Point(1,this.height/2));
 		}
 		else {
@@ -178,7 +178,7 @@ public class AllStaticObjects {
 	//Method for finding the centre point in their goal...
 	//Return this as a node!
 	private void centreOfOurGoal(){
-		if(worldState.getShootingDirection() == -1){
+		if(WorldState.getInstance().getShootingDirection() == -1){
 			this.centreOfOurGoal = new Node(new Point(this.width - 2,this.height/2));
 		}
 		else {

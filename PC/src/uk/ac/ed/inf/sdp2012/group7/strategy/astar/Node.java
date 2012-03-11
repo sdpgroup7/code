@@ -1,130 +1,132 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 
+
 import java.awt.Point;
 
-public class Node implements Comparable<Node> {
+
+public class Node extends Point implements Comparable<Node> {
+
+	private Node parent = null;
+	private double obstacleCost;
+	private boolean opposition;
+	private boolean ball;
+	private boolean isTarget;
+	private boolean isStart;
+	private double fCost;
+	private double gCost;
+	private double hCost;
 	
-	// properties of this node
-	AreaMap map;
-	boolean visited;
-	float distanceFromStart;
-	float heuristicDistanceFromGoal;
-	Node previousNode;
-	int x;
-	int y;
-	boolean isObstacle;
-	boolean isStart;
-	private boolean isGoal;
+	public Node(Point point, int obstacleCost) {
+		super(point.x,point.y);
+		this.obstacleCost = obstacleCost;
+		this.gCost = -1;
+		this.hCost = -1;
+	}
+	
+	public Node(Point point) {
+		super(point.x,point.y);
+		this.obstacleCost = 0;
+		this.gCost = -1;
+		this.hCost = -1;
+	}
 	
 	public Node(int x, int y) {
-		this(x,y,false,Float.MAX_VALUE,false,false,false);
+		super(x,y);
+		this.obstacleCost = 0;
+		this.gCost = -1;
+		this.hCost = -1;
+	}
+        
+
+	@Override
+	public int compareTo(Node o) {
+		if(this.fCost > o.getfCost()){
+                    return 1;
+                } else if(this.fCost < o.getfCost()){
+                    return -1;
+                } else {
+                    return 0;
+                }
 	}
 	
-	Node (int x, int y, boolean visited, float distanceFromStart, boolean isObstical, boolean isStart, boolean isGoal) {
-		this.x = x;
-		this.y = y;
-		this.visited = visited;
-		this.distanceFromStart = distanceFromStart;
-		this.isObstacle = isObstical;
-		this.isStart = isStart;
-		this.isGoal = isGoal;
-	}
-
-
-	public boolean isVisited() {
-		return visited;
-	}
-
-	public void setVisited(boolean visited) {
-		this.visited = visited;
-	}
-
-	public float getDistanceFromStart() {
-		return distanceFromStart;
-	}
-
-	public void setDistanceFromStart(float f) {
-		this.distanceFromStart = f;
-	}
-
-	public Node getPreviousNode() {
-		return previousNode;
-	}
-
-	public void setPreviousNode(Node previousNode) {
-		this.previousNode = previousNode;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + super.hashCode();
+		return result;
 	}
 	
-	public float getHeuristicDistanceFromGoal() {
-		return heuristicDistanceFromGoal;
+	public double getfCost() {
+		return fCost;
 	}
 
-	public void setHeuristicDistanceFromGoal(float heuristicDistanceFromGoal) {
-		this.heuristicDistanceFromGoal = heuristicDistanceFromGoal;
+	public void setfCost() {
+		this.fCost = this.gCost + this.hCost + this.obstacleCost;
 	}
 
-	public int getX() {
-		return x;
+	public double getgCost() {
+		return gCost;
 	}
 
-	public void setX(int x) {
-		this.x = x;
+	public void setgCost(double gCost) {
+		this.gCost = gCost;
 	}
 
-	public int getY() {
-		return y;
+	public double gethCost() {
+		return hCost;
 	}
 
-	public void setY(int y) {
-		this.y = y;
+	public void sethCost(double hcost) {
+		this.hCost = hcost;
+	}
+	public boolean isOpposition() {
+		return opposition;
+	}
+
+	public void setOpposition(boolean opposition) {
+		this.opposition = opposition;
+	}
+
+	public boolean isBall() {
+		return ball;
+	}
+
+	public void setBall(boolean ball) {
+		this.ball = ball;
+	}
+	public boolean isTarget() {
+		return isTarget;
+	}
+
+	public void setTarget(boolean isTarget) {
+		this.isTarget = isTarget;
+	}
+	public double getObstacleCost() {
+		return obstacleCost;
+	}
+
+	public void setObstacleCost(double obstacleCost) {
+		this.obstacleCost = obstacleCost;
 	}
 	
-	public boolean isObstical() {
-		return isObstacle;
-	}
-
-	public void setObstical(boolean isObstical) {
-		this.isObstacle = isObstical;
-	}
-
 	public boolean isStart() {
 		return isStart;
 	}
-
-	public void setStart(boolean isStart) {
-		this.isStart = isStart;
-	}
-
-	public boolean isGoal() {
-		return isGoal;
-	}
-
-	public void setGoal(boolean isGoal) {
-		this.isGoal = isGoal;
-	}
-
 	
-	// converts a single node into a point
-	public Point nodeToPoint(Node node) {
-		Point point = new Point(node.getX(),node.getY());
-		return point;
-	}
-	
-	public Point nodeToPoint(){
-		return nodeToPoint(this);
+	public void setStart(boolean start) {
+		this.isStart = start;
 	}
 
-
-	public boolean equals(Node node) {
-		return (node.x == x) && (node.y == y);
+	public void setParent(Node parent){
+		this.parent = parent;
 	}
 
-	@Override
-	public int compareTo(Node otherNode) {
-		float thisTotalDistanceFromGoal = heuristicDistanceFromGoal + distanceFromStart;
-		float otherTotalDistanceFromGoal = otherNode.getHeuristicDistanceFromGoal() + otherNode.getDistanceFromStart();
-		
-		// if positive, otherNode is chosen as it has a smaller total distance from goal
-		return (int) (thisTotalDistanceFromGoal - otherTotalDistanceFromGoal);
+	public Node getParent(){
+		return this.parent;
 	}
+        
+        public String toString(){
+            return this.x + " " + this.y + " " + this.getfCost();
+        }
 }

@@ -1,87 +1,32 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 
-import java.awt.Point;
+
 import java.util.ArrayList;
 
-import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
-import uk.ac.ed.inf.sdp2012.group7.strategy.astar.heuristics.ClosestHeuristic;
+
 
 public class AStarRun {
-		
-		private Path shortestPath;
-		private AreaMap map;
-		
-		public AreaMap getAreaMap() {
-			return map;
-		}
+	
+	private int height, width;
+	private Node start, target;
+	private ArrayList<Node> balls, oppositions, path;
 
-		public AStarRun(int pitch_height_in_nodes, int pitch_width_in_nodes, Point ball, Point some_robot, ArrayList<Point> obstacles) {
-			map = new AreaMap(pitch_width_in_nodes, pitch_height_in_nodes);
-			
-			// set obstacles
-			if (obstacles.size() > 0){
-				for (Point obstacle : obstacles) {
-					if(!(obstacle.x < 0 || obstacle.y < 0)){
-						try{
-							map.setObstical(obstacle.x, obstacle.y, true);
-						} catch (Exception ex){
-							//Do Nothing
-						}
-					}
-				}
-			}
-			
-			// set heuristic and run the path finder
-			AStarHeuristic heuristic = new ClosestHeuristic();
-			AStar pathFinder = new AStar(map, heuristic);
-			try{
-//				Strategy.logger.error("start x: " + some_robot.x);
-//				Strategy.logger.error("start y: " + some_robot.y);
-//				Strategy.logger.error("ball x: " + ball.x);
-//				Strategy.logger.error("ball y: " + ball.y);
-				shortestPath = pathFinder.calcShortestPath(some_robot.x, some_robot.y, ball.x, ball.y);
-			} catch (Exception ex) {
-				Strategy.logger.error("Shortest path calculation failed: " + ex.getMessage());
-				shortestPath = new Path();
-			}
-			// copied from A* for printing
-//			Node node;
-//			for(int x=0; x<map.getMapWidth(); x++) {
-//				for(int y=0; y<map.getMapHeight(); y++) {
-//					node = map.getNode(x, y);
-//					//System.out.println(node.getX());
-//					//System.out.println(node.getY());
-//					if (node.isObstacle) {
-//						System.out.print("O");
-//					} else if (node.isStart) {
-//						System.out.print("R");
-//					} else if (node.isGoal()) {
-//						System.out.print("B");
-//					} else if (shortestPath.contains(node.getX(), node.getY())) {
-//						System.out.print("X");
-//					} else {
-//						System.out.print("*");
-//					}
-//				}
-//				System.out.println();
-//			}
-		}
-		
-		public Path getPath() {
-			try{
-				return shortestPath;
-			} catch (Exception ex) {
-				Strategy.logger.error("getPath return failed: " + ex.getMessage());
-				return null;
-			}
-		}
-		
-		public ArrayList<Point> getPathInPoints() {
-			try {
-				return this.shortestPath.pathToPoints();
-			} catch (Exception ex) {
-				Strategy.logger.error("getPathInPoints return failed: " + ex.getMessage());
-				return new ArrayList<Point>();
-			}
-		}
+	public AStarRun(int height, int width, Node start, Node target, ArrayList<Node> balls, ArrayList<Node> oppositions) {
+		this.height = height;
+		this.width = width;
+		this.start = start;
+        this.target = target;
+		this.balls = balls;
+		this.oppositions = oppositions;
+	
+	
+		AStar astar = new AStar(this.height, this.width, this.start, this.target, this.balls, this.oppositions);
+	
+		this.path = astar.returnPath();
+
+	}
+	
+	public ArrayList<Node> getPath(){
+		return this.path;
+	}
 }

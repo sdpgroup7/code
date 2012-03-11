@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
-import uk.ac.ed.inf.sdp2012.group7.strategy.newastar.Node;
+import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
@@ -716,11 +716,11 @@ public class TargetDecision {
 		return this.bestAngle;
 	}
 	
-	public Point getTarget(){
+	public Node getTarget(){
 		return this.target;
 	}
 	
-	public Point getNavPoint(){
+	public Node getNavPoint(){
 		return this.navPoint;
 	}
 	
