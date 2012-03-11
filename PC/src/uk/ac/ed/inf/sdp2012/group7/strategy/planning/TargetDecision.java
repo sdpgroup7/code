@@ -24,45 +24,37 @@ public class TargetDecision {
 	public static final Logger logger = Logger.getLogger(PlanningThread.class);
 	
 	/**
-	 * 
+	 * Please keep this section as tidy and commented as possible, there are
+	 * three people working in this area now, and its tricky to know who is using what :)
 	 */
 	
-	//Setup
+	//General Setup
 	private AllMovingObjects allMovingObjects;
 	private AllStaticObjects allStaticObjects;
 	private int planType;
 	private int action;
 	private WorldState worldState = WorldState.getInstance();
 	
-	//booleans for taking the shot
-	//lets include in this test whether the opposition is in the way
-	private boolean clearShot = false;
-	
-	//boolean to test if the ball is on the pitch
-	private boolean ballOnPitch;
-	
-	
-	//navigation point
+	//navigation/target point details
 	private Node navPoint = new Node (new Point(0,0));
 	private Node target = new Node (new Point(0,0));
-	//navigation boolean
-	//possibly surplus
 	private boolean openShotPossible;
 	private boolean angularShotPossible;
-
+	private Node shotOnGoal;
+	private Node predictedBallPosition;
 	
 	//penalty defence
 	private double targetInCM;
+	private double bestAngle;
+	
 	
 	//condition tests
 	private boolean weHaveBall = false;
 	private boolean theyHaveBall = false;
 	private boolean ballIsTooCloseToWall = false;
+	private boolean clearShot = false;
+	private boolean ballOnPitch;
 
-	private Node shotOnGoal;
-	private Node predictedBallPosition;
-	private double bestAngle;
-	
 	
 	//Constructor
 	public TargetDecision(AllMovingObjects aMO, AllStaticObjects aSO) {
@@ -72,10 +64,11 @@ public class TargetDecision {
 		this.allStaticObjects = aSO;
 		this.planType = this.allStaticObjects.getPlanType();
 		
-		//conditions
+		//Set all conditions
 		this.weHaveBall();
 		this.theyHaveBall();
 		this.ballTooCloseToWall();
+		this.ballOnPitch();
 		
 		//setting nav and target
 		try {
@@ -86,71 +79,70 @@ public class TargetDecision {
 		
 
 	}
-	
-	
+
+
 	public void setTargets() {
 		
 		/*
-		 * This whole section is experimental
+		 * This whole section is experimental and UNTESTED
 		 * 
 		 * set navPoint so we can start approaching the ball from the right angle
 		 * set target so we sit next to the ball
 		 * 
-		 */
-		
-		
-		//these are controls for the navPoint / Target setting ball and goal centre
-		//variables
-		//this.shotOnGoal = whereToShoot(allMovingObjects.getBallPosition());
-		this.predictedBallPosition = ballPrediction(3);
-		this.shotOnGoal = allStaticObjects.getCentreOfTheirGoal();
-		//this.predictedBallPosition = allMovingObjects.getBallPosition(); 
-		
-		Point ballPosition = allMovingObjects.getBallPosition();
-		
-		//catch for when the ball is not on the pitch
-		this.ballOnPitch = ((ballPosition.x >= 0) && (ballPosition.x <= allStaticObjects.getWidth()) && 
-				   (ballPosition.y >= 0) && (ballPosition.y <= allStaticObjects.getHeight()));
+		 */ 
 		
 		
 		if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
+			
+			//these are controls for the navPoint / Target setting ball and goal centre
+			//variables - keep in here as Goal Def/Off doesn't care much for them :(
+			
+			//this.shotOnGoal = whereToShoot(allMovingObjects.getBallPosition());
+			//this.predictedBallPosition = ballPrediction(3);
+			
+			this.shotOnGoal = allStaticObjects.getCentreOfTheirGoal();
+			this.predictedBallPosition = allMovingObjects.getBallPosition();
 		
-			//Really need a better decision structure
+			//REQUIRED
 			if(!this.ballOnPitch){
 				
 				//sit next to our goal
 				this.action = PlanTypes.ActionType.DRIVE.ordinal();
-				logger.debug("Ball is not found on pitch, driving to our goal");
+				logger.debug("DECISION MADE : NO BALL ON PITCH - DRIVE TO OUR GOAL");
 				this.target = this.allStaticObjects.getInFrontOfOurGoal();
 				this.navPoint = this.target;
 				
 			} else {
 				
+				//Don't kill yourself
 				if(this.ballIsTooCloseToWall){
 					
-					//Need ability to dribble by next milestone
+					//to construct dribble function
 					//go sit infront of our goal
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
-					logger.debug("Ball is too close to the wall, driving to our goal");
+					logger.debug("DECISION MADE : BALL INSIDE OUR BOUNDARY - DRIVE TO OUR GOAL - coming soon : Dribbling!");
 					this.target = this.allStaticObjects.getInFrontOfOurGoal();
 					this.navPoint = this.target;
-					
+				
+				//Don't let them score
 				} else if (this.theyHaveBall){
 					
 					//go sit infront of our goal
 					this.action = PlanTypes.ActionType.DRIVE.ordinal();
 					//would be great if we could go into penalty mode here
-					logger.debug("They have the ball, driving to our goal");
+					logger.debug("DECISION MADE : THEY HAVE THE BALL - DRIVE TO OUR GOAL");
 					this.target = this.allStaticObjects.getInFrontOfOurGoal();
 					this.navPoint = this.target;
 					
+				//Try to score
 				} else if (this.weHaveBall){
 					
-					logger.debug("We have the ball, kicking WOOT!");
+					logger.debug("DECISION MADE : WE HAVE THE BALL - KICK - assumption; we are on goal line");
 					this.action = PlanTypes.ActionType.KICK.ordinal();
 					this.target = this.allMovingObjects.getBallPosition();
 					this.setNavPointOpenNoOption();
-					
+				
+				//Fetch
 				} else {
 					
 					//create open shot nav and target
@@ -310,8 +302,11 @@ public class TargetDecision {
 			}
 		}
 	}
+	
+	//BOOLEANS___________________________________________________________________________________________
 
-	//REQUIRED FOR SHOT TAKING
+	//REQUIRED
+	//Chris Williams & Darie Picu
 	private void weHaveBall(){
 
 		Node ourPosition = allMovingObjects.getOurPosition();
@@ -333,7 +328,8 @@ public class TargetDecision {
 
 	}
 	
-	//REQUIRED FOR DEFENCE
+	//REQUIRED
+	//Chris Williams & Darie Picu
 	private void theyHaveBall(){
 
 		Node theirPosition = allMovingObjects.getTheirPosition();
@@ -355,9 +351,82 @@ public class TargetDecision {
 
 	}
 	
+	//REDUNDANT
+	//but keep for possible future plans
+	//Chris Williams & Darie Picu
+	private void clearShot(){
+
+		//Positions
+		Node ourPosition = allMovingObjects.getOurPosition();
+
+
+		//Angles
+		double ourAngle = allMovingObjects.getOurAngle();
+		double angleWithTopPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirTopGoalPost()); 
+		double angleWithBottomPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirBottomGoalPost());
+
+		//Set clear shot boolean
+		if(worldState.getShootingDirection() == 1){
+			if(ourAngle > angleWithTopPost && ourAngle < angleWithBottomPost){
+				this.clearShot = true;
+			}
+		}
+		else{
+			if(ourAngle < angleWithTopPost && ourAngle > angleWithBottomPost){
+				this.clearShot = true;
+			}
+		}				
+
+	}
+	
+	//REQUIRED
+	//Chris Williams
+	private void ballTooCloseToWall() {
+		
+		Point ballPosition = this.allMovingObjects.getBallPosition();
+		int rightWall = this.allStaticObjects.getWidth();
+		int bottomWall = this.allStaticObjects.getHeight();
+		int b = (int)this.allStaticObjects.getBoundary();
+		
+		boolean insideLeftBoundary = ballPosition.x < b;
+		if(insideLeftBoundary){
+			logger.debug("inside left boundary... " + ballPosition.x + " boundary condition : " + b);
+		}
+		boolean insideRightBoundary = ballPosition.x > ((rightWall - 1) -b);
+		if(insideRightBoundary){
+			logger.debug("inside right boundary... " + ballPosition.x + " boundary condition : " + ((rightWall - 1) -b));
+		}
+		boolean insideTopBoundary = ballPosition.y < b;
+		if(insideTopBoundary){
+			logger.debug("inside top boundary... " + ballPosition.y + " bounary is : " + b);
+		}
+		boolean insideBottomBoundary = ballPosition.y > ((bottomWall -1) -b);
+		if(insideBottomBoundary){
+			logger.debug("inside bottom boundary... " + ballPosition.y + " boundary condition : " + ((bottomWall -1) -b ));
+		}
+		
+		this.ballIsTooCloseToWall = (insideLeftBoundary) || (insideRightBoundary) || (insideTopBoundary ) || (insideBottomBoundary);
+	}
+	
+	//REQUIRED
+	//Chris Williams
+	private void ballOnPitch() {
+		
+		Node ballPosition = allMovingObjects.getBallPosition();
+		
+		//catch for when the ball is not on the pitch
+		this.ballOnPitch = ((ballPosition.x >= 0) && (ballPosition.x <= allStaticObjects.getWidth()) && 
+				   (ballPosition.y >= 0) && (ballPosition.y <= allStaticObjects.getHeight()));
+		
+	}
+	
+	//POINTS/NODES____________________________________________________________________________________
+	
 	
 	//-----------------------------------------------------------------------------------------
+	//REQUIRED
 	//set navPoint 4 nodes behind the ball
+	//Chris Williams & Darie Picu
 	private void setNavPointOpenNoOption(){
 		
 		Node ballPosition = this.predictedBallPosition;
@@ -376,8 +445,10 @@ public class TargetDecision {
 	}
 	
 
-	//-----------------------------------------------------------------------------------------ALL WRITTEN IN NODES WOKRING CODE	
+	//-----------------------------------------------------------------------------------------
+	//REQUIRED
 	//set navPoint 7 nodes behind the ball
+	//Chris Williams & Darie Picu
 	private void setNavPointOpen(){
 		
 		Node ballPosition = this.predictedBallPosition;
@@ -395,8 +466,10 @@ public class TargetDecision {
 		
 	}
 
-	//-----------------------------------------------------------------------------------------ALL WRITTEN IN NODES WOKRING CODE
+	//-----------------------------------------------------------------------------------------
+	//REQUIRED
 	//set Target 3 nodes behind the ball (our robot width)
+	//Chris Williams & Darie Picu
 	private void setTargetPointOpen(){
 		
 		Node ballPosition = this.predictedBallPosition;
@@ -414,8 +487,10 @@ public class TargetDecision {
 		
 	}
 	
-	//-----------------------------------------------------------------------------------------ALL WRITTEN IN NODES WOKRING CODE
+	//-----------------------------------------------------------------------------------------
+	//REQUIRED
 	//set navPoint 7 nodes behind the ball
+	//Chris Williams & Darie Picu
 	private void setNavPointAngular(){
 		
 		Node ballPosition = this.predictedBallPosition;
@@ -427,7 +502,7 @@ public class TargetDecision {
 		int navX = ballPosition.x - (int)(Math.cos(angleBetweenBallAndGoal)*7);
 		int navY = ballPosition.y + (int)(Math.sin(angleBetweenBallAndGoal)*7);
 		
-		//How do we know which wall to bounce off?--------------------------------------------NEED FIX
+		//How do we know which wall to bounce off?--------------------------------------------
 		
 		//int distanceToTop = this.allStaticObjects.getPitchTopBuffer() - navY;
 		//int distanceToBottom = navY - this.allStaticObjects.getPitchBottomBuffer(); 
@@ -443,8 +518,10 @@ public class TargetDecision {
 		
 	}
 	
-	//-----------------------------------------------------------------------------------------ALL WRITTEN IN NODES WOKRING CODE
+	//-----------------------------------------------------------------------------------------
+	//REQUIRED
 	//set Target 3 nodes behind the ball (half our robot length)
+	//Chris Williams & Darie Picu
 	private void setTargetPointAngular(){
 		
 		Node ballPosition = this.predictedBallPosition;
@@ -472,8 +549,9 @@ public class TargetDecision {
 		
 	}
 	
-	//method to find at which Node in their goal should we shoot
-	
+	//Method to find the Best Node in their Goal Line
+	//REQUIRED
+	//Darie Picu
 	private Node whereToShoot(Node ball) {
 		ArrayList<Node> theirGoalNodes = allStaticObjects.getTheirGoalNodes();
 		//it is faster if i check their centre first
@@ -513,65 +591,10 @@ public class TargetDecision {
 
 	}
 	
-	//DOES THIS WORK
-	//edit this to check if the opposition is in the way of the shot - angular or not
-	private void clearShot(){
-
-		//Positions
-		Node ourPosition = allMovingObjects.getOurPosition();
-
-
-		//Angles
-		double ourAngle = allMovingObjects.getOurAngle();
-		double angleWithTopPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirTopGoalPost()); 
-		double angleWithBottomPost = allMovingObjects.angleBetween(ourPosition, allStaticObjects.getTheirBottomGoalPost());
-
-		//Set clear shot boolean
-		if(worldState.getShootingDirection() == 1){
-			if(ourAngle > angleWithTopPost && ourAngle < angleWithBottomPost){
-				this.clearShot = true;
-			}
-		}
-		else{
-			if(ourAngle < angleWithTopPost && ourAngle > angleWithBottomPost){
-				this.clearShot = true;
-			}
-		}				
-
-	}
-	
-	
-
-	
-	private void ballTooCloseToWall() {
-		
-		Point ballPosition = this.allMovingObjects.getBallPosition();
-		int rightWall = this.allStaticObjects.getWidth();
-		int bottomWall = this.allStaticObjects.getHeight();
-		int b = (int)this.allStaticObjects.getBoundary();
-		
-		boolean insideLeftBoundary = ballPosition.x < b;
-		if(insideLeftBoundary){
-			logger.debug("inside left boundary... " + ballPosition.x + "boundary condition : " + b);
-		}
-		boolean insideRightBoundary = ballPosition.x > ((rightWall - 1) -b);
-		if(insideRightBoundary){
-			logger.debug("inside right boundary... " + ballPosition.x + "boundary condition : " + ((rightWall - 1) -b));
-		}
-		boolean insideTopBoundary = ballPosition.y < b;
-		if(insideTopBoundary){
-			logger.debug("inside top boundary... " + ballPosition.y + "bounary is : " + b);
-		}
-		boolean insideBottomBoundary = ballPosition.y > ((bottomWall -1) -b);
-		if(insideBottomBoundary){
-			logger.debug("inside bottom boundary... " + ballPosition.y + "boundary condition : " + ((bottomWall -1) -b ));
-		}
-		
-		this.ballIsTooCloseToWall = (insideLeftBoundary) || (insideRightBoundary) || (insideTopBoundary ) || (insideBottomBoundary);
-	}
-	
 	
 	//DOES THIS WORK?
+	//REQUIRED
+	//Darie Picu
 	public Node ballPrediction(double time){
 		//formula used  d = d0 + v0*t + 1/2*a*t^2
 		//              x = d cos(theta)
@@ -618,7 +641,9 @@ public class TargetDecision {
 		return allStaticObjects.convertToNode(predictedPoint);
 	}
 	
-	//method that returns where the robot should go to intercept the ball
+	//Method returns navPoint for ball interception
+	//REQUIRED
+	//Darie Picu
 	private Node ballIntercept(){
 		Node ourPosition = allMovingObjects.getOurPosition();
 		boolean canGetThere = false;
@@ -645,6 +670,8 @@ public class TargetDecision {
 	}
 	
 	//method that checks whether there are any obstacles on the line between 2 points
+	//REQUIRED
+	//Darie Picu
 	private boolean obstacleOnLine(Node n1, Node n2) {
 
 		ArrayList<Node> obstacleNodes = allMovingObjects.getBinaryObstacles();
@@ -661,6 +688,10 @@ public class TargetDecision {
 
 		return false;
 	}
+	
+	
+	
+	//GETTERS/SETTERS____________________________________________________________________________________
 	
 	public boolean getClearShot(){
 		return clearShot;
