@@ -48,7 +48,7 @@ public class AStar {
                     }
 		}
                 
-                printMap(null);
+                //printMap(null);
 		
 		this.map[this.target.x][this.target.y] = this.target;
 		this.map[this.target.x][this.target.y].setTarget(true);
@@ -143,11 +143,11 @@ public class AStar {
 			if(openList.size() < 1){
 				hasBeenFound = true;
 			}
-                        printMap(closedList);
+                        //printMap(closedList);
 		}
 		
                 ArrayList<Node> returnPath = getPath(closedList);
-                printMap(returnPath);
+                //printMap(returnPath);
                 return returnPath;
 	}
 	
