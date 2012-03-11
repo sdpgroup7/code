@@ -1,4 +1,4 @@
-package astar;
+package uk.ac.ed.inf.sdp2012.group7.strategy.newastar;
 
 
 public interface AStarHeuristic {

@@ -1,4 +1,4 @@
-package astar;
+package uk.ac.ed.inf.sdp2012.group7.strategy.newastar;
 
 
 import java.awt.Point;
@@ -19,6 +19,11 @@ public class Node extends Point implements Comparable<Node> {
 	public Node(Point point, int obstacleCost) {
 		super(point.x,point.y);
 		this.obstacleCost = obstacleCost;
+	}
+	
+	public Node(Point point) {
+		super(point.x,point.y);
+		this.obstacleCost = 0;
 	}
         
 
