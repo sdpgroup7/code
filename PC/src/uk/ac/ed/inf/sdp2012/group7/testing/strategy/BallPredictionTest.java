@@ -7,7 +7,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import uk.ac.ed.inf.sdp2012.group7.strategy.newastar.Node;
+import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.TargetDecision;
 
 public class BallPredictionTest {
@@ -18,7 +18,7 @@ public class BallPredictionTest {
 	
 	@Test
 	public void ballPredictionCalculationTest1() {
-		Node ball = new Node(new Point (1,1));
+		Node ball = new Node (new Point (1,1));
 		double angle = 0;
 		double velocity = 0;
 		double time = 5;
