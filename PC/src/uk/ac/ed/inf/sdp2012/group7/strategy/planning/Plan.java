@@ -68,6 +68,9 @@ public class Plan {
 		this.ballObstacles = this.allMovingObjects.getBallObstacles();
 		this.robotObstacles = this.allMovingObjects.getRobotObstacles();
 		
+		logger.debug("THE BALL OBSTACLE SIZE IS :::::::::::::::::::::  " + this.ballObstacles.size());
+		logger.debug("THE ROBOT OBSTACLE SIZE IS ::::::::::::::::::::  " + this.robotObstacles.size());
+		
 		//a* for Current position to navPpoint
 		aStarNav = new AStarRun(this.allStaticObjects.getHeight(),
 								this.allStaticObjects.getWidth(),

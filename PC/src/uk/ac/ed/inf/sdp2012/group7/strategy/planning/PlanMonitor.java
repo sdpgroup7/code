@@ -104,22 +104,18 @@ public class PlanMonitor {
 				
 		for(int y = 0; y < ascii.length; y++){
 			for(int x = 0; x < ascii[y].length; x++){
-				for(Node n : waypoints){
-					if(n.equals(new Point(x,y))){
-						ascii[y][x] = "#";
-						continue;
-					}
-				}
 				Node n = currentPlan.getMap()[x][y];
-				//if(n.isGoal()) ascii[y][x] = "T";
-				if(n.isBall()) ascii[y][x] = "X";
-				if(n.isOpposition()) ascii[y][x] = "X";
+				if(n != null){
+					//if(n.isGoal()) ascii[y][x] = "T";
+					if(n.isBall()) ascii[y][x] = "B";
+					if(n.isOpposition()) ascii[y][x] = "O";
+					if(n.isStart()) ascii[y][x] = "S";
+					if(n.isPath()) ascii[y][x] = "#";
+					if(currentPlan.getNavPoint().equals(new Point(x,y))) ascii[y][x] = "N";
+					if(currentPlan.getTarget().equals(new Point(x,y))) ascii[y][x] = "G";		
+					if(currentPlan.getBallPosition().equals(new Point(x,y))) ascii[y][x] = "B";
+				}
 				if(currentPlan.getAllStaticObjects().getCentreOfTheirGoal().equals(new Point(x,y))) ascii[y][x] = "C";
-				if(n.isStart()) ascii[y][x] = "S";
-				if(n.isPath()) ascii[y][x] = " ";
-				if(currentPlan.getNavPoint().equals(new Point(x,y))) ascii[y][x] = "N";
-				if(currentPlan.getTarget().equals(new Point(x,y))) ascii[y][x] = "G";		
-				if(currentPlan.getBallPosition().equals(new Point(x,y))) ascii[y][x] = "B";
 			}
 		}
 		return ascii;

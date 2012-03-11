@@ -206,6 +206,7 @@ public class AStar {
         }
 	
         public Node[][] getMap(){
+        	
         	return this.map;
         }
 		

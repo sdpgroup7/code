@@ -131,9 +131,12 @@ public class AllMovingObjects {
 						(y < (position.y + (robotWidthInNodes()/2.0f))))){
 							
 							n.setgCost(1000);
+							
 				} else {
 					n.setgCost(100);
 				}
+				n.setOpposition(true);
+				n.setBall(false);
 				obstacles.add(n);
 			}
 		}
@@ -159,6 +162,8 @@ public class AllMovingObjects {
 				} else {
 					n.setgCost(100);
 				}
+				n.setBall(true);
+				n.setOpposition(false);
 				obstacles.add(n);
 			}
 		}
