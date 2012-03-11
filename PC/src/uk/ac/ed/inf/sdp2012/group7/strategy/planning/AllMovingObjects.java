@@ -91,10 +91,10 @@ public class AllMovingObjects {
 					   ((y > (position.y - (robotWidthInNodes()/2.0f))) &&
 						(y < (position.y + (robotWidthInNodes()/2.0f))))){
 							
-							n.setObstacleCost(100000);
+							n.setObstacleCost(10);
 							
 				} else {
-					n.setObstacleCost(10000);
+					n.setObstacleCost(5);
 				}
 				n.setOpposition(true);
 				n.setBall(false);
@@ -119,9 +119,9 @@ public class AllMovingObjects {
 					   ((y > (position.y - (robotWidthInNodes()/2.0f))) &&
 						(y < (position.y + (robotWidthInNodes()/2.0f))))){
 							
-							n.setObstacleCost(100000);
+							n.setObstacleCost(5);
 				} else {
-					n.setObstacleCost(10000);
+					n.setObstacleCost(2);
 				}
 				n.setBall(true);
 				n.setOpposition(false);
