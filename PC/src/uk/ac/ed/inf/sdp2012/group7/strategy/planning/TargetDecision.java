@@ -612,21 +612,15 @@ public class TargetDecision {
 		double velocity = allMovingObjects.getBallVelocity();
 		double acceleration = allStaticObjects.getDeceleration();
 		//width and height of pitch in nodes
-		double pitchWidthinNodes = allStaticObjects.getWidth();
-		double pitchHeightinNodes = allStaticObjects.getHeight();
+		double pitchWidthInNodes = allStaticObjects.getWidth();
+		double pitchHeightInNodes = allStaticObjects.getHeight();
 		
-		int direction;
+	
 		
-		if (angle < Math.PI/2 || angle > Math.PI*3/2 ) {
-			direction = 1;
-		} else {
-			direction = -1;
-		}
-		
-		return allStaticObjects.convertToNode(ballPredictionCalculation(ball, direction, angle, velocity, time, pitchWidthinNodes, pitchHeightinNodes));
+		return allStaticObjects.convertToNode(ballPredictionCalculation(ball, angle, velocity, time, pitchWidthInNodes, pitchHeightInNodes));
 	}
 	
-	public static Point ballPredictionCalculation(Node ball, int direction, double angle, double velocity, double time, double pitchWidthinNodes,double pitchHeightinNodes) {
+	public static Point ballPredictionCalculation(Node ball, double angle, double velocity, double time, double pitchWidthInNodes,double pitchHeightInNodes) {
 		double d = velocity * time;// + 1/2 * acceleration * time * time; 
 		double x = ball.x + d * Math.cos(angle);
 		double y = ball.y + d * Math.sin(angle);
@@ -634,25 +628,57 @@ public class TargetDecision {
 		int numberBouncesX = 0;
 		int numberBouncesY = 0;
 		//dealing with bounces of the walls
-		while (x > pitchWidthinNodes) {
-			numberBouncesX++;
-			x = x - pitchWidthinNodes;			
-		}
-		x = x * direction * Math.pow(-1, numberBouncesX);
 		
+		if (x > pitchWidthInNodes) {
+			while (x > pitchWidthInNodes) {
+				numberBouncesX++;
+				x = x - pitchWidthInNodes;			
+			}
+			if (Math.pow(-1,numberBouncesX) < 0) {
+				x = - (x-pitchWidthInNodes);
+			}
+		}
+		/*if (x > pitchWidthInNodes) {
+			while (x > pitchWidthInNodes) {
+				numberBouncesX++;
+				x = x - pitchWidthInNodes;			
+			}
+			x = x * direction * Math.pow(-1, numberBouncesX);
+			
+			if (x < 0) {
+				x = x + pitchWidthInNodes;
+			}
+		}*/
 		if (x < 0) {
-			x = x + pitchWidthinNodes;
+			while (x < 0) {
+				numberBouncesX++;
+				x = x + pitchWidthInNodes;
+			}
+			if (Math.pow(-1, numberBouncesX) < 0) {
+				x = - (x - pitchWidthInNodes);
+			}
 		}
 		
-		while (y > pitchHeightinNodes) {
-			numberBouncesY++;
-			y = y - pitchHeightinNodes;						
-		}
-		y = y * direction * Math.pow(-1, numberBouncesY);
 		
+		if (y > pitchHeightInNodes) {
+			while (y > pitchHeightInNodes) {
+				numberBouncesY++;
+				y = y - pitchHeightInNodes;			
+			}
+			if (Math.pow(-1,numberBouncesY) < 0) {
+				y = - (y-pitchHeightInNodes);
+			}
+		}
 		if (y < 0) {
-			y = y + pitchHeightinNodes;
+			while (y < 0) {
+				numberBouncesY++;
+				y = y + pitchHeightInNodes;
+			}
+			if (Math.pow(-1, numberBouncesY) < 0) {
+				y = - (y - pitchHeightInNodes);
+			}
 		}
+		
 		
 		
 		Point predictedPoint = (new Point ((int)x,(int) y));		
