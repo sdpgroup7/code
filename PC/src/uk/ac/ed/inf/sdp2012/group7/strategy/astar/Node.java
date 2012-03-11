@@ -131,7 +131,7 @@ public class Node extends Point implements Comparable<Node> {
 	}
         
     public String toString(){
-        return this.x + " " + this.y + " " + this.getfCost() + " | is opposition : " + this.opposition + " | is ball : " + this.ball;
+        return this.x + " " + this.y + " | fCost " + this.getfCost() + "| hCost " + this.gethCost() + "| gCost " + this.getgCost() + "| oCost " + this.getObstacleCost() + " | is opposition : " + this.opposition + " | is ball : " + this.ball;
     }
     
 	public boolean isPath() {

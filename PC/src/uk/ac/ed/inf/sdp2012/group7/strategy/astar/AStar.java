@@ -68,13 +68,7 @@ public class AStar {
 			for(int j = current.y - 1; j <= current.y + 1; j++){
 				if(!((i < 0) || (i >= this.width) || (j < 0) || (j >= this.height))){
 					if(!(current.equals(this.map[i][j]))){
-						if(this.map[i][j] == null) this.map[i][j] = new Node(new Point(i,j));
-						this.map[i][j].sethCost(heuristic.getEstimatedDistanceToGoal(this.map[i][j], this.target));
-						if(this.map[i][j].getgCost() == -1){
-							this.map[i][j].setgCost(heuristic.getEstimatedDistanceToGoal(this.map[i][j], current) + current.getgCost());
-							this.map[i][j].setParent(currentNode);
-						}
-						this.map[i][j].setfCost();
+						if(this.map[i][j] == null) this.map[i][j] = new Node(new Point(i,j), 0);
 						nearestNeighbours.add(this.map[i][j]);
 					}
 				}
@@ -87,22 +81,19 @@ public class AStar {
 	
 	public ArrayList<Node> returnPath(){
 		
+		this.start.setStart(true);
+		this.start.setParent(this.start);
+		this.start.sethCost(heuristic.getEstimatedDistanceToGoal(this.start, this.target));
+		this.start.setgCost(0);
+		this.start.setfCost();
 		
 		this.map[this.start.x][this.start.y] = this.start;
-		this.map[this.start.x][this.start.y].sethCost(
-				heuristic.getEstimatedDistanceToGoal
-				(this.map[this.start.x][this.start.y], this.target));// * 100);
-		
-		this.map[this.start.x][this.start.y].setgCost(0);
-		this.map[this.start.x][this.start.y].setfCost();
-		
 		this.openList.add(this.map[start.x][start.y]);
-		this.map[start.x][start.y].setStart(true);
-        this.start.setParent(start);
-		
 		currentNode = this.map[start.x][start.y];
 		
 		boolean hasBeenFound = false;
+		
+		int count = 0;
 		
 		while(!hasBeenFound){
             
@@ -113,12 +104,11 @@ public class AStar {
 			}
             
             for(Node n : this.openList){
-				//logger.debug(n.toString());
+            	n.setfCost();
 				if(n.getfCost() < currentNode.getfCost()){
 					currentNode = n;
 				}
 			}
-			
 			
 			ArrayList<Node> nearestNeighbours = nearestNeighbours(currentNode);
 			
@@ -129,20 +119,21 @@ public class AStar {
 				if(!(this.closedList.contains(n))){
 					if(!(this.openList.contains(n))){
 						n.setParent(currentNode);
-						n.setgCost(heuristic.getEstimatedDistanceToGoal(n, currentNode) + n.getParent().getgCost());
+						//add up distance travelled so far
+						n.setgCost((heuristic.getEstimatedDistanceToGoal(n, currentNode) + currentNode.getgCost())*0.5);
+						//distance "left"
 						n.sethCost(heuristic.getEstimatedDistanceToGoal(n, this.target));
+						//add together (with obstacle cost)
 						n.setfCost();
 						this.openList.add(n);
 					} else {
 						double oldCost = n.getgCost();
-						n.setgCost(heuristic.getEstimatedDistanceToGoal(n, currentNode) + currentNode.getParent().getgCost());
-						double newCost = n.getgCost();
+						double newCost = (heuristic.getEstimatedDistanceToGoal(n, currentNode) + currentNode.getgCost());
 						if(newCost < oldCost){
 							n.setParent(currentNode);
+							n.setgCost(newCost);
 							n.setfCost();
 						} else {
-							n.setgCost(oldCost);
-							n.setfCost();
 						}
 					}
 				}
@@ -156,15 +147,18 @@ public class AStar {
 			if(openList.size() < 1){
 				hasBeenFound = true;
 			}
+			
+			count++;
                         //printMap(closedList);
 		}
 		
                 ArrayList<Node> returnPath = getPath(closedList);
-                printMap(returnPath);
                 
-                for(Node n : returnPath){
-                	System.out.println(n.toString());
-                }
+                
+                printMap(closedList);
+                
+                
+                printMap(returnPath);
                 
                 return returnPath;
 	}

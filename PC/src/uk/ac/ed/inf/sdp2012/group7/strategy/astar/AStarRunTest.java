@@ -14,13 +14,17 @@ public class AStarRunTest {
 			
 			
 			// set start and end points of the path
-			Node start = new Node(new Point(39,16), 0);
-			Node end = new Node(new Point(20,16), 0);
+			Node start = new Node(new Point(30,16), 0);
+			Node end = new Node(new Point(11,13), 0);
+			
+			//cost tests
+			int a = 2;
+			int b = 50;
 			
 			// set obstacles
-			Node opposition = new Node(new Point(26,17), 10000);
+			Node opposition = new Node(new Point(26,17), b);
 			opposition.setOpposition(true);
-			Node ball = new Node(new Point(5,16), 100);
+			Node ball = new Node(new Point(15,15), a);
 			ball.setBall(true);
 			
 			//Use Lists
@@ -34,7 +38,7 @@ public class AStarRunTest {
 			
 			for(int i = ball.x - boundary; i < ball.x + boundary; i++){
 				for(int j = ball.y - boundary; j < ball.y + boundary; j++){
-					Node tempBall = new Node(new Point(i,j), 100);
+					Node tempBall = new Node(new Point(i,j), a);
 					tempBall.setBall(true);
 					//System.out.println(tempBall.getX() + " " + tempBall.getY());
 					balls.add(tempBall);
@@ -43,7 +47,7 @@ public class AStarRunTest {
 			
 			for(int i = opposition.x - 2*boundary; i < opposition.x + boundary; i++){
 				for(int j = opposition.y - 2*boundary; j < opposition.y + boundary; j++){
-					Node tempOpp = new Node(new Point(i,j), 100);
+					Node tempOpp = new Node(new Point(i,j), b);
 					tempOpp.setOpposition(true);
 					//System.out.println(tempOpp.getX() + " " + tempOpp.getY());
 					oppositions.add(tempOpp);
