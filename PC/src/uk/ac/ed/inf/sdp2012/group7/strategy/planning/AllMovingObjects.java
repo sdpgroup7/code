@@ -77,6 +77,76 @@ public class AllMovingObjects {
 		return angle;
 	}
 	
+	public ArrayList<Node> getRobotObstacles() {
+		//TODO: Untested
+		ArrayList<Node> obstacles = new ArrayList<Node>();
+
+		Node position = this.getTheirPosition();
+
+		for(int x = (int)(position.x - robotWidthInNodes() + 0.5); x <= (position.x + robotWidthInNodes() + 0.5); x++){
+			for(int y = (int)(position.y - robotWidthInNodes() + 0.5); y <= (position.y + robotWidthInNodes() + 0.5); y++){
+				Node n = new Node(new Point(x,y));
+				if(	   ((x > (position.x - (robotWidthInNodes()/2.0f))) && 
+						(x < (position.x + (robotWidthInNodes()/2.0f)))) ||
+					   ((y > (position.y - (robotWidthInNodes()/2.0f))) &&
+						(y < (position.y + (robotWidthInNodes()/2.0f))))){
+							
+							n.setObstacleCost(100000);
+							
+				} else {
+					n.setObstacleCost(10000);
+				}
+				n.setOpposition(true);
+				n.setBall(false);
+				obstacles.add(n);
+			}
+		}
+		
+		return obstacles;
+	}
+	
+	public ArrayList<Node> getBallObstacles() {
+		
+		ArrayList<Node> obstacles = new ArrayList<Node>();
+		
+		Node position = this.getBallPosition();
+		
+		for(int x = (int)(position.x - (robotWidthInNodes()/2.0f) + 0.5); x <= (position.x + (robotWidthInNodes()/2.0f) + 0.5); x++){
+			for(int y = (int)(position.y - (robotWidthInNodes()/2.0f) + 0.5); y <= (position.y + (robotWidthInNodes()/2.0f) + 0.5); y++){
+				Node n = new Node(new Point(x,y));
+				if(	   ((x > (position.x - (robotWidthInNodes()/2.0f))) && 
+						(x < (position.x + (robotWidthInNodes()/2.0f)))) ||
+					   ((y > (position.y - (robotWidthInNodes()/2.0f))) &&
+						(y < (position.y + (robotWidthInNodes()/2.0f))))){
+							
+							n.setObstacleCost(100000);
+				} else {
+					n.setObstacleCost(10000);
+				}
+				n.setBall(true);
+				n.setOpposition(false);
+				obstacles.add(n);
+			}
+		}
+		
+		return obstacles;
+	}
+	
+	public ArrayList<Node> getBinaryObstacles() {
+		ArrayList<Node> obstacles = new ArrayList<Node>();
+
+		Node position = this.getTheirPosition();
+
+		for(int x = (int)(position.x - robotWidthInNodes() + 0.5); x <= (position.x + robotWidthInNodes() + 0.5); x++){
+			for(int y = (int)(position.y - robotWidthInNodes() + 0.5); y <= (position.y + robotWidthInNodes() + 0.5); y++){
+				Node n = allStaticObjects.convertToNode(new Point(x,y));
+				obstacles.add(n);
+			}
+		}
+		
+		return obstacles;
+	}
+	
 	//ALL GETTERS SHOULD RETURN IN NODE SYSTEM
 	
 	public Node getOurPosition() {
@@ -114,81 +184,9 @@ public class AllMovingObjects {
 	public double getBallAngle() {
 		return ballAngle;
 	}
-	
-
-	public ArrayList<Node> getRobotObstacles() {
-		//TODO: Untested
-		ArrayList<Node> obstacles = new ArrayList<Node>();
-
-		Node position = this.getTheirPosition();
-
-		for(int x = (int)(position.x - robotWidthInNodes() + 0.5); x <= (position.x + robotWidthInNodes() + 0.5); x++){
-			for(int y = (int)(position.y - robotWidthInNodes() + 0.5); y <= (position.y + robotWidthInNodes() + 0.5); y++){
-				Node n = allStaticObjects.convertToNode(new Point(x,y));
-				if(	   ((x > (position.x - (robotWidthInNodes()/2.0f))) && 
-						(x < (position.x + (robotWidthInNodes()/2.0f)))) ||
-					   ((y > (position.y - (robotWidthInNodes()/2.0f))) &&
-						(y < (position.y + (robotWidthInNodes()/2.0f))))){
-							
-							n.setgCost(1000);
-							
-				} else {
-					n.setgCost(100);
-				}
-				n.setOpposition(true);
-				n.setBall(false);
-				obstacles.add(n);
-			}
-		}
-		
-		return obstacles;
-	}
-	
-	public ArrayList<Node> getBallObstacles() {
-		
-		ArrayList<Node> obstacles = new ArrayList<Node>();
-		
-		Node position = this.getBallPosition();
-		
-		for(int x = (int)(position.x - (robotWidthInNodes()/2.0f) + 0.5); x <= (position.x + (robotWidthInNodes()/2.0f) + 0.5); x++){
-			for(int y = (int)(position.y - (robotWidthInNodes()/2.0f) + 0.5); y <= (position.y + (robotWidthInNodes()/2.0f) + 0.5); y++){
-				Node n = allStaticObjects.convertToNode(new Point(x,y));
-				if(	   ((x > (position.x - (robotWidthInNodes()/2.0f))) && 
-						(x < (position.x + (robotWidthInNodes()/2.0f)))) ||
-					   ((y > (position.y - (robotWidthInNodes()/2.0f))) &&
-						(y < (position.y + (robotWidthInNodes()/2.0f))))){
-							
-							n.setgCost(1000);
-				} else {
-					n.setgCost(100);
-				}
-				n.setBall(true);
-				n.setOpposition(false);
-				obstacles.add(n);
-			}
-		}
-		
-		return obstacles;
-	}
-	
-	public ArrayList<Node> getBinaryObstacles() {
-		ArrayList<Node> obstacles = new ArrayList<Node>();
-
-		Node position = this.getTheirPosition();
-
-		for(int x = (int)(position.x - robotWidthInNodes() + 0.5); x <= (position.x + robotWidthInNodes() + 0.5); x++){
-			for(int y = (int)(position.y - robotWidthInNodes() + 0.5); y <= (position.y + robotWidthInNodes() + 0.5); y++){
-				Node n = allStaticObjects.convertToNode(new Point(x,y));
-				obstacles.add(n);
-			}
-		}
-		
-		return obstacles;
-	}
-
 
 	private double robotWidthInNodes() {
-		return allStaticObjects.getBoundary();
+		return allStaticObjects.getRobotWidthInNodes();
 	}
 
 	

@@ -6,6 +6,10 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.apache.log4j.Logger;
+
+import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
+
 
 public class AStar {
 	
@@ -16,13 +20,14 @@ public class AStar {
 	private Node[][] map;
 	private ClosestHeuristic heuristic;
 	private Node currentNode;
+	public static final Logger logger = Logger.getLogger(AStar.class);
 	
 	public AStar(int height, int width, Node start, Node target, ArrayList<Node> balls, ArrayList<Node> oppositions) {
 		
 		this.height = height;
 		this.width = width;
 		this.start = start;
-                this.target = target;
+		this.target = target;
 		this.balls = balls;
 		this.oppositions = oppositions;
 		this.map = new Node[this.width][this.height];
@@ -37,14 +42,14 @@ public class AStar {
 		//put in ball
 		for(Node n : balls){
                     if(!((n.x < 0) || (n.x >= this.width) || (n.y < 0) || (n.y >= this.height))){
-			this.map[n.x][n.y] = n;
+                    	this.map[n.x][n.y] = n;
                     }
 		}
 		
 		//put in opposition
 		for(Node n : oppositions){
                     if(!((n.x < 0) || (n.x >= this.width) || (n.y < 0) || (n.y >= this.height))){
-			this.map[n.x][n.y] = n;
+                    	this.map[n.x][n.y] = n;
                     }
 		}
                 
@@ -63,10 +68,11 @@ public class AStar {
 			for(int j = current.y - 1; j <= current.y + 1; j++){
 				if(!((i < 0) || (i >= this.width) || (j < 0) || (j >= this.height))){
 					if(!(current.equals(this.map[i][j]))){
-						if(this.map[i][j] == null) this.map[i][j] = new Node(new Point(i,j), 0);
+						if(this.map[i][j] == null) this.map[i][j] = new Node(new Point(i,j));
 						this.map[i][j].sethCost(heuristic.getEstimatedDistanceToGoal(this.map[i][j], this.target));
 						if(this.map[i][j].getgCost() == -1){
 							this.map[i][j].setgCost(heuristic.getEstimatedDistanceToGoal(this.map[i][j], current) + current.getgCost());
+							this.map[i][j].setParent(currentNode);
 						}
 						this.map[i][j].setfCost();
 						nearestNeighbours.add(this.map[i][j]);
@@ -92,15 +98,22 @@ public class AStar {
 		
 		this.openList.add(this.map[start.x][start.y]);
 		this.map[start.x][start.y].setStart(true);
-                this.start.setParent(start);
+        this.start.setParent(start);
 		
 		currentNode = this.map[start.x][start.y];
 		
 		boolean hasBeenFound = false;
 		
 		while(!hasBeenFound){
-                        if(openList.size() > 0) currentNode = openList.get(0);
-			for(Node n : this.openList){
+            
+			if(openList.size() > 0) { 
+				currentNode = openList.get(0);
+			} else {
+				currentNode = this.start;
+			}
+            
+            for(Node n : this.openList){
+				//logger.debug(n.toString());
 				if(n.getfCost() < currentNode.getfCost()){
 					currentNode = n;
 				}
@@ -147,7 +160,12 @@ public class AStar {
 		}
 		
                 ArrayList<Node> returnPath = getPath(closedList);
-                //printMap(returnPath);
+                printMap(returnPath);
+                
+                for(Node n : returnPath){
+                	System.out.println(n.toString());
+                }
+                
                 return returnPath;
 	}
 	

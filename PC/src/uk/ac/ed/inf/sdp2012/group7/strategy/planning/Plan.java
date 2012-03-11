@@ -58,18 +58,18 @@ public class Plan {
 		this.target = this.targetDecision.getTarget();
 		this.navPoint = this.targetDecision.getNavPoint();
 		
-		logger.debug("Target Decision Position: " + targetDecision.getTarget().toString());
-		logger.debug("NavPoint Decision Position: " + targetDecision.getNavPoint().toString());
-		logger.debug("Ball Position: " + this.allMovingObjects.getBallPosition());
-		logger.debug("Robot Position: " + this.allMovingObjects.getOurPosition().toString());
-		logger.debug("Their Robot Position: " + this.allMovingObjects.getTheirPosition().toString());
 		
-		//
 		this.ballObstacles = this.allMovingObjects.getBallObstacles();
 		this.robotObstacles = this.allMovingObjects.getRobotObstacles();
 		
 		logger.debug("THE BALL OBSTACLE SIZE IS :::::::::::::::::::::  " + this.ballObstacles.size());
 		logger.debug("THE ROBOT OBSTACLE SIZE IS ::::::::::::::::::::  " + this.robotObstacles.size());
+
+		logger.debug("Target Decision Position: " + targetDecision.getTarget().toString());
+		logger.debug("NavPoint Decision Position: " + targetDecision.getNavPoint().toString());
+		logger.debug("Ball Position: " + this.allMovingObjects.getBallPosition());
+		logger.debug("Robot Position: " + this.allMovingObjects.getOurPosition().toString());
+		logger.debug("Their Robot Position: " + this.allMovingObjects.getTheirPosition().toString());
 		
 		//a* for Current position to navPpoint
 		aStarNav = new AStarRun(this.allStaticObjects.getHeight(),
