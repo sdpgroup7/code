@@ -12,7 +12,7 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
  * 
  * @author s0951580
  *  
- * TODO: do we give a shit about the grey circles anymore can we just remove them
+ * 
  * 
  */
  
@@ -477,31 +477,30 @@ public class Thresholding {
 			Vision.worldState.getBlueRobot().getPosition().setCorners(blueGreenPlate4Points);
 			Vision.worldState.getYellowRobot().getPosition().setCorners(yellowGreenPlate4Points);
 
-			
+			Point fixBall = new Point(redX,redY);
 			if ((redX != 0) && (redY != 0)) {
 			    if (Vision.worldState.getBarrelFix()){
-			        Vision.worldState.setBallPosition(redX,redY);
-			    }else{
-			        Point fixBall = new Point(redX,redY);
-			        Vision.worldState.setBallPosition(fix.barrelCorrected(fixBall));
+			        Vision.worldState.setBallPosition(fixBall);
+			    }else{     
+			        Vision.worldState.setBallPosition(DistortionFix.barrelCorrected(fixBall));
 			    }
 			}
 			
+			Point fixBlue = new Point(blueX,blueY);
 			if ((blueX != 0) && (blueY != 0)) {
 			    if (Vision.worldState.getBarrelFix()){
-			        Vision.worldState.setBlueRobotPosition(blueX,blueY);
+			        Vision.worldState.setBlueRobotPosition(fixParallax(fixBlue,Vision.worldState.getBlueRobot()));
 			    }else{
-			        Point fixBlue = new Point(blueX,blueY);
-			        Vision.worldState.setBlueRobotPosition(fix.barrelCorrected(fixBlue));
+			        Vision.worldState.setBlueRobotPosition(fixParallax(DistortionFix.barrelCorrected(fixBlue),Vision.worldState.getBlueRobot()));
 			    }
 			}
 			
+			Point fixYell = new Point(yellowX,yellowY);
 			if ((yellowX != 0) && (yellowY != 0)) {
 			    if (Vision.worldState.getBarrelFix()){
-			        Vision.worldState.setYellowRobotPosition(yellowX,yellowY);
+			        Vision.worldState.setYellowRobotPosition(fixParallax(fixYell,Vision.worldState.getYellowRobot()));
 			    }else{
-			        Point fixYell = new Point(yellowX,yellowY);
-			        Vision.worldState.setYellowRobotPosition(fix.barrelCorrected(fixYell));
+			        Vision.worldState.setYellowRobotPosition(fixParallax(DistortionFix.barrelCorrected(fixYell),Vision.worldState.getYellowRobot()));
 			    }
 			}
 			
@@ -509,9 +508,9 @@ public class Thresholding {
 				
 				if( plate.isInRectangle(p,blueGreenPlate4Points)  ){
 				    if (Vision.worldState.getBarrelFix()){
-					    newBluePixels.add(p);
+					    newBluePixels.add(fixParallax(p,Vision.worldState.getBlueRobot()));
 					}else{
-					    newBluePixels.add(fix.barrelCorrected(p));
+					    newBluePixels.add(fixParallax(DistortionFix.barrelCorrected(p),Vision.worldState.getBlueRobot()));
 					}
 				}
 			}
@@ -519,9 +518,9 @@ public class Thresholding {
 				
 				if( plate.isInRectangle(p,yellowGreenPlate4Points) ){
 				    if (Vision.worldState.getBarrelFix()){
-					    newYellowPixels.add(p);
+					    newYellowPixels.add(fixParallax(p,Vision.worldState.getYellowRobot()));
 					}else{
-					    newYellowPixels.add(fix.barrelCorrected(p));
+					    newYellowPixels.add(fixParallax(DistortionFix.barrelCorrected(p),Vision.worldState.getYellowRobot()));
 					}
 				}
 			}
