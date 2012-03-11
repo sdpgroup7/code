@@ -65,7 +65,9 @@ public class AStar {
 					if(!(current.equals(this.map[i][j]))){
 						if(this.map[i][j] == null) this.map[i][j] = new Node(new Point(i,j), 0);
 						this.map[i][j].sethCost(heuristic.getEstimatedDistanceToGoal(this.map[i][j], this.target));
-						this.map[i][j].setgCost(heuristic.getEstimatedDistanceToGoal(this.map[i][j], current) + current.getgCost());
+						if(this.map[i][j].getgCost() == -1){
+							this.map[i][j].setgCost(heuristic.getEstimatedDistanceToGoal(this.map[i][j], current) + current.getgCost());
+						}
 						this.map[i][j].setfCost();
 						nearestNeighbours.add(this.map[i][j]);
 					}
@@ -102,6 +104,7 @@ public class AStar {
 			for(Node n : this.openList){
                                 System.out.println("gCost evaluation  @ (" + n.x + "," + n.y + ") : " + n.getgCost());
                                 System.out.println("hCost evaluation  @ (" + n.x + "," + n.y + ") : " + n.gethCost());
+                                System.out.println("oCost evaluation  @ (" + n.x + "," + n.y + ") : " + n.getObstacleCost());
 				System.out.println("fCost evaluation  @ (" + n.x + "," + n.y + ") : " + n.getfCost() + " to " + currentNode.getfCost());
 				if(n.getfCost() < currentNode.getfCost()){
 					currentNode = n;
@@ -135,11 +138,12 @@ public class AStar {
 						n.setgCost(heuristic.getEstimatedDistanceToGoal(n, currentNode) + currentNode.getParent().getgCost());
 						double newCost = n.getgCost();
 						if(newCost < oldCost){
-                                                        System.out.println("Changed parent");
+                            System.out.println("Changed parent");
 							n.setParent(currentNode);
 							n.setfCost();
 						} else {
 							n.setgCost(oldCost);
+							n.setfCost();
 						}
 					}
 				}
@@ -162,7 +166,7 @@ public class AStar {
                 ArrayList<Node> returnPath = getPath(closedList);
                 System.out.println("Final Path:");
                 printMap(returnPath);
-		return returnPath;
+                return returnPath;
 	}
 	
         public ArrayList<Node> getPath(ArrayList<Node> closedList){
@@ -192,7 +196,7 @@ public class AStar {
         
         
         public void printMap(ArrayList<Node> path) {
-            Node node;
+            //Node node;
             if(path == null) path = new ArrayList<Node>();
             for(int y = 0; y < this.height; y++){
                 for(int x = 0; x < this.width; x++){

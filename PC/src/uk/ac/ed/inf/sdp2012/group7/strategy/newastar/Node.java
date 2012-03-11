@@ -14,16 +14,20 @@ public class Node extends Point implements Comparable<Node> {
 	private boolean isStart;
 	private double fCost;
 	private double gCost;
-	private double hcost;
+	private double hCost;
 	
 	public Node(Point point, int obstacleCost) {
 		super(point.x,point.y);
 		this.obstacleCost = obstacleCost;
+		this.gCost = -1;
+		this.hCost = -1;
 	}
 	
 	public Node(Point point) {
 		super(point.x,point.y);
 		this.obstacleCost = 0;
+		this.gCost = -1;
+		this.hCost = -1;
 	}
         
 
@@ -51,7 +55,7 @@ public class Node extends Point implements Comparable<Node> {
 	}
 
 	public void setfCost() {
-		this.fCost = this.gCost + this.hcost + this.obstacleCost;
+		this.fCost = this.gCost + this.hCost + this.obstacleCost;
 	}
 
 	public double getgCost() {
@@ -63,11 +67,11 @@ public class Node extends Point implements Comparable<Node> {
 	}
 
 	public double gethCost() {
-		return hcost;
+		return hCost;
 	}
 
 	public void sethCost(double hcost) {
-		this.hcost = hcost;
+		this.hCost = hcost;
 	}
 	public boolean isOpposition() {
 		return opposition;
