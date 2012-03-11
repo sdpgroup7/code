@@ -552,22 +552,23 @@ public class TargetDecision {
 		
 		boolean insideLeftBoundary = ballPosition.x < b;
 		if(insideLeftBoundary){
-			logger.debug("inside left boundary... " + ballPosition.x + "boundary condition : " + b);
+			logger.debug("inside left boundary... " + ballPosition.x + " boundary condition : " + b);
 		}
 		boolean insideRightBoundary = ballPosition.x > ((rightWall - 1) -b);
 		if(insideRightBoundary){
-			logger.debug("inside right boundary... " + ballPosition.x + "boundary condition : " + ((rightWall - 1) -b));
+			logger.debug("inside right boundary... " + ballPosition.x + " boundary condition : " + ((rightWall - 1) -b));
 		}
 		boolean insideTopBoundary = ballPosition.y < b;
 		if(insideTopBoundary){
-			logger.debug("inside top boundary... " + ballPosition.y + "bounary is : " + b);
+			logger.debug("inside top boundary... " + ballPosition.y + " bounary is : " + b);
 		}
 		boolean insideBottomBoundary = ballPosition.y > ((bottomWall -1) -b);
 		if(insideBottomBoundary){
-			logger.debug("inside bottom boundary... " + ballPosition.y + "boundary condition : " + ((bottomWall -1) -b ));
+			logger.debug("inside bottom boundary... " + ballPosition.y + " boundary condition : " + ((bottomWall -1) -b ));
 		}
 		
-		this.ballIsTooCloseToWall = (insideLeftBoundary) || (insideRightBoundary) || (insideTopBoundary ) || (insideBottomBoundary);
+		//this.ballIsTooCloseToWall = (insideLeftBoundary) || (insideRightBoundary) || (insideTopBoundary ) || (insideBottomBoundary);
+		this.ballIsTooCloseToWall = false;
 	}
 	
 	
@@ -580,12 +581,16 @@ public class TargetDecision {
 		double angle = allMovingObjects.getBallAngle();
 		double velocity = allMovingObjects.getBallVelocity();
 		double acceleration = allStaticObjects.getDeceleration();
-		//width and height of pitch in pixels
+		//width and height of pitch in nodes
 		double pitchWidthinNodes = allStaticObjects.getWidth();
 		double pitchHeightinNodes = allStaticObjects.getHeight();
 		
 		int direction = worldState.getShootingDirection();
 		
+		return allStaticObjects.convertToNode(ballPredictionCalculation(ball, direction, angle, velocity, time, pitchWidthinNodes, pitchHeightinNodes));
+	}
+	
+	public static Point ballPredictionCalculation(Node ball, int direction, double angle, double velocity, double time, double pitchWidthinNodes,double pitchHeightinNodes) {
 		double d = velocity * time;// + 1/2 * acceleration * time * time; 
 		double x = ball.x + d * Math.cos(angle);
 		double y = ball.y + d * Math.sin(angle);
@@ -615,7 +620,7 @@ public class TargetDecision {
 		
 		
 		Point predictedPoint = (new Point ((int)x,(int) y));		
-		return allStaticObjects.convertToNode(predictedPoint);
+		return predictedPoint;
 	}
 	
 	//method that returns where the robot should go to intercept the ball
