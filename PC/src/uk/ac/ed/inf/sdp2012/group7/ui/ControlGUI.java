@@ -149,7 +149,7 @@ public class ControlGUI implements ChangeListener {
 		
 	}
 	/**
-	 * Sets up the Thresholding tab, where sliders for the thresholding are imployed 
+	 * Sets up the Thresholding tab, where sliders for the thresholding are employed 
 	 * to get more accurate thresholding in RGB 
 	 */
 	private void setUpThresholdingPanel() {
