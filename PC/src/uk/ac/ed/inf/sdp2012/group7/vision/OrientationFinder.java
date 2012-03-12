@@ -46,16 +46,13 @@ public class OrientationFinder{
     	return ans; 
     }
 
-    public Point findOrientation(ArrayList<Point> pixels, Point centroid){
-    	//TODO: Convert this into an orientation instead of a point
-    	
+    public Point findOrientation(ArrayList<Point> pixels, Point centroid){    	
     	if(pixels.size() > 0){
     		
 	    	Point furthest = new Point(0,0);
 	    	double dist = 0;
 	    	for(Point p : pixels){
-	    		if(	(Point.distance(p.x, p.y, centroid.x, centroid.y) > dist) &&
-	    			(Point.distance(p.x, p.y, centroid.x, centroid.y) < 25)){
+	    		if	(Point.distance(p.x, p.y, centroid.x, centroid.y) > dist){
 	    			furthest = p;
 	    			dist = Point.distance(p.x, p.y, centroid.x, centroid.y);
 	    		}

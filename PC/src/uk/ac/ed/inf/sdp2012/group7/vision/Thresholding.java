@@ -11,9 +11,8 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 /**
  * 
  * @author s0951580
+ *  
  * 
- * TODO: clustering algorithm to get the T right 
- * TODO: do we give a shit about the grey circles anymore can we just remove them
  * 
  */
  
@@ -21,6 +20,8 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 public class Thresholding {
 
+	private WorldState worldState = WorldState.getInstance();
+	
 	private ArrayList<Integer> yellowRobotX = new ArrayList<Integer>();
 	private ArrayList<Integer> blueRobotX = new ArrayList<Integer>();
 	private ArrayList<Integer> yellowRobotY = new ArrayList<Integer>();
@@ -159,13 +160,13 @@ public class Thresholding {
     		//Vision.logger.debug("Starting thresholding");
     		
     	//stops it fucking up the locations before we've given it the thresholds
-    	if (Vision.worldState.isClickingDone()){
+    	if (worldState.isClickingDone()){
     		
     		newBluePixels = new ArrayList<Point>();
 			newYellowPixels = new ArrayList<Point>();
     		ArrayList<Point> bluePixels = new ArrayList<Point>();
     		ArrayList<Point> yellowPixels = new ArrayList<Point>();
-    		pitch = Vision.worldState.getRoom();
+    		pitch = worldState.getRoom();
     		width = right-left;
     		height = top-bottom;
             
@@ -291,13 +292,13 @@ public class Thresholding {
 					}
 					else if (isGreen(c,GB,RG))  {
 						img.setRGB(i,j, Color.green.getRGB()); // GreenPlates 
-						if (Point.distance(	Vision.worldState.getBlueRobot().getPosition().getCentre().x,
-											Vision.worldState.getBlueRobot().getPosition().getCentre().y,
+						if (Point.distance(	worldState.getBlueRobot().getPosition().getCentre().x,
+											worldState.getBlueRobot().getPosition().getCentre().y,
 											i,j) < 34) {
 							blueGreenPlate.add(new Point(i,j));
 						} 
-						if (Point.distance(	Vision.worldState.getYellowRobot().getPosition().getCentre().x,
-											Vision.worldState.getYellowRobot().getPosition().getCentre().y,
+						if (Point.distance(	worldState.getYellowRobot().getPosition().getCentre().x,
+											worldState.getYellowRobot().getPosition().getCentre().y,
 											i,j) < 34){
 							yellowGreenPlate.add(new Point(i,j));
 						}
@@ -475,60 +476,59 @@ public class Thresholding {
 			blueGreenPlate4Points = plate.getCorners(blueGreenPlate);
 			yellowGreenPlate4Points = plate.getCorners(yellowGreenPlate);
 			
-			Vision.worldState.getBlueRobot().getPosition().setCorners(blueGreenPlate4Points);
-			Vision.worldState.getYellowRobot().getPosition().setCorners(yellowGreenPlate4Points);
+			worldState.getBlueRobot().getPosition().setCorners(blueGreenPlate4Points);
+			worldState.getYellowRobot().getPosition().setCorners(yellowGreenPlate4Points);
 
-			
+			Point fixBall = new Point(redX,redY);
 			if ((redX != 0) && (redY != 0)) {
-			    if (Vision.worldState.getBarrelFix()){
-			        Vision.worldState.setBallPosition(redX,redY);
-			    }else{
-			        Point fixBall = new Point(redX,redY);
-			        Vision.worldState.setBallPosition(fix.barrelCorrected(fixBall));
+			    if (worldState.getBarrelFix()){
+			        worldState.setBallPosition(fixBall);
+			    }else{     
+			        worldState.setBallPosition(DistortionFix.barrelCorrected(fixBall));
 			    }
 			}
 			
+			Point fixBlue = new Point(blueX,blueY);
 			if ((blueX != 0) && (blueY != 0)) {
-			    if (Vision.worldState.getBarrelFix()){
-			        Vision.worldState.setBlueRobotPosition(blueX,blueY);
+			    if (worldState.getBarrelFix()){
+			        worldState.setBlueRobotPosition(fixParallax(fixBlue,worldState.getBlueRobot()));
 			    }else{
-			        Point fixBlue = new Point(blueX,blueY);
-			        Vision.worldState.setBlueRobotPosition(fix.barrelCorrected(fixBlue));
+			        worldState.setBlueRobotPosition(fixParallax(DistortionFix.barrelCorrected(fixBlue),worldState.getBlueRobot()));
 			    }
 			}
 			
+			Point fixYell = new Point(yellowX,yellowY);
 			if ((yellowX != 0) && (yellowY != 0)) {
-			    if (Vision.worldState.getBarrelFix()){
-			        Vision.worldState.setYellowRobotPosition(yellowX,yellowY);
+			    if (worldState.getBarrelFix()){
+			        worldState.setYellowRobotPosition(fixParallax(fixYell,worldState.getYellowRobot()));
 			    }else{
-			        Point fixYell = new Point(yellowX,yellowY);
-			        Vision.worldState.setYellowRobotPosition(fix.barrelCorrected(fixYell));
+			        worldState.setYellowRobotPosition(fixParallax(DistortionFix.barrelCorrected(fixYell),worldState.getYellowRobot()));
 			    }
 			}
 			
 			for(Point p : bluePixels){
 				
 				if( plate.isInRectangle(p,blueGreenPlate4Points)  ){
-				    if (Vision.worldState.getBarrelFix()){
-					    newBluePixels.add(p);
+				    if (worldState.getBarrelFix()){
+					    newBluePixels.add(fixParallax(p,worldState.getBlueRobot()));
 					}else{
-					    newBluePixels.add(fix.barrelCorrected(p));
+					    newBluePixels.add(fixParallax(DistortionFix.barrelCorrected(p),worldState.getBlueRobot()));
 					}
 				}
 			}
 			for(Point p : yellowPixels){
 				
 				if( plate.isInRectangle(p,yellowGreenPlate4Points) ){
-				    if (Vision.worldState.getBarrelFix()){
-					    newYellowPixels.add(p);
+				    if (worldState.getBarrelFix()){
+					    newYellowPixels.add(fixParallax(p,worldState.getYellowRobot()));
 					}else{
-					    newYellowPixels.add(fix.barrelCorrected(p));
+					    newYellowPixels.add(fixParallax(DistortionFix.barrelCorrected(p),worldState.getYellowRobot()));
 					}
 				}
 			}
 			
-			Vision.worldState.setBluePixels(newBluePixels);
-			Vision.worldState.setYellowPixels(newYellowPixels);
+			worldState.setBluePixels(newBluePixels);
+			worldState.setYellowPixels(newYellowPixels);
 			
 			//The above is supposed to filter the pixels and pick up only the T pixels, but the orientation then is always with the (0,0) point 
 			
@@ -544,19 +544,18 @@ public class Thresholding {
     
     
     public Point fixParallax(Point p, MovingObject m){
-    	VisionTools vt = new VisionTools();
-    	float x = 	(Vision.worldState.getPitch().getPitchWidth()/2.0f)*(m.getHeight()) - 
-    				(vt.pixelsToCM(p.x) * m.getHeight()) + 
-    				(Vision.worldState.getPitch().getCameraHeight() * vt.pixelsToCM(p.x));
-    	x = (float) (x / Vision.worldState.getPitch().getCameraHeight());
+    	float x = 	(worldState.getPitch().getPitchWidth()/2.0f)*(m.getHeight()) - 
+    				(VisionTools.pixelsToCM(p.x) * m.getHeight()) + 
+    				(worldState.getPitch().getCameraHeight() * VisionTools.pixelsToCM(p.x));
+    	x = (float) (x / worldState.getPitch().getCameraHeight());
     	
-    	float y = 	(Vision.worldState.getPitch().getPitchHeight()/2.0f)*(m.getHeight()) - 
-					(vt.pixelsToCM(p.y) * m.getHeight()) + 
-					(Vision.worldState.getPitch().getCameraHeight() * vt.pixelsToCM(p.y));
-    	y = (float) (y / Vision.worldState.getPitch().getCameraHeight());
+    	float y = 	(worldState.getPitch().getPitchHeight()/2.0f)*(m.getHeight()) - 
+					(VisionTools.pixelsToCM(p.y) * m.getHeight()) + 
+					(worldState.getPitch().getCameraHeight() * VisionTools.pixelsToCM(p.y));
+    	y = (float) (y / worldState.getPitch().getCameraHeight());
     	
-    	y = vt.cmToPixels(y);
-    	x = vt.cmToPixels(x);
+    	y = VisionTools.cmToPixels(y);
+    	x = VisionTools.cmToPixels(x);
     	
     	return new Point((int)x,(int)y);
     }
@@ -610,10 +609,10 @@ public class Thresholding {
     }
     
     public boolean isGreen(Color c, int GB, int RG){
-    	
+
     		return ( GB > ts.getGreen_GB() && RG > ts.getGreen_RG() && c.getGreen() > ts.getGreen_g());
     	
-    
+
     }
 
     public boolean isYellow(Color c){

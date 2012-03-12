@@ -143,8 +143,7 @@ public class PlanMonitor {
 	}
 	
 	public BufferedImage markData(BufferedImage im){
-		//TODO: Check this. It doesn't appear to work correctly. 
-		Graphics2D graphics = im.createGraphics();
+		/*Graphics2D graphics = im.createGraphics();
 		//ControlInterface ci = new ControlInterface(5);
 		Arc arc = ControlInterface.chooseArc(currentPlan);
 		double radius = arc.getRadius();
@@ -173,7 +172,7 @@ public class PlanMonitor {
 									currentPlan.getOurRobotPositionVisual().x)-15, 
 							(int)(	currentPlan.getNodeInPixels() *
 									currentPlan.getOurRobotPositionVisual().y)-15,
-							30, 30);
+							30, 30);*/
 		return im;
 	}
 		

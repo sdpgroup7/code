@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import uk.ac.ed.inf.sdp2012.group7.testing.vision.TestSaver;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.DeviceInfo;
 import au.edu.jcu.v4l4j.FrameGrabber;
@@ -29,13 +30,13 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
  * The main class for showing the video feed and processing the video
  * data. Identifies ball and robot locations, and robot orientations.
  *
- * TODO: THIS CLASS IS A TOTAL MESS!
- *
  * @author s0840449
  */
 
 
 public class VisionFeed extends WindowAdapter {
+	
+	private WorldState worldState = WorldState.getInstance();
     private VideoDevice videoDev;
     private JLabel label;
     private JFrame windowFrame;
@@ -76,7 +77,7 @@ public class VisionFeed extends WindowAdapter {
         System.out.println("Please select what colour we are using the GUI.");
         il.getColors();
         Vision.logger.info("Vision System Calibrated");
-        Vision.worldState.setClickingDone(true);
+        worldState.setClickingDone(true);
         if(Vision.TESTING){
         	try {
 				Thread.sleep(2000);
@@ -87,10 +88,10 @@ public class VisionFeed extends WindowAdapter {
         	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         	Date date = new Date();
         	String filename = "testData/" + dateFormat.format(date);
-        	il.getTestData(fix.removeBarrelDistortion(frameImage, Vision.worldState.getPitch().getLeftBuffer(),
-	                Vision.worldState.getPitch().getRightBuffer(),
-	                Vision.worldState.getPitch().getTopBuffer(),
-	                Vision.worldState.getPitch().getBottomBuffer()
+        	il.getTestData(fix.removeBarrelDistortion(frameImage, worldState.getPitch().getLeftBuffer(),
+	                worldState.getPitch().getRightBuffer(),
+	                worldState.getPitch().getTopBuffer(),
+	                worldState.getPitch().getBottomBuffer()
 	                ),filename);
         	TestSaver ts = new TestSaver();
         	ts.writeClickPoints(il.getTestPoints(), frameImage, filename);

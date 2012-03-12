@@ -472,12 +472,12 @@ public class ControlGUI implements ChangeListener {
 		direction_panel.add(direction_label);
 		
 		ButtonGroup direction_choice = new ButtonGroup();
-		direction_right = new JButton("Right");
 		direction_left = new JButton("Left");
-		direction_choice.add(direction_right);
-		direction_panel.add(direction_right);
+		direction_right = new JButton("Right");
 		direction_choice.add(direction_left);
 		direction_panel.add(direction_left);
+		direction_choice.add(direction_right);
+		direction_panel.add(direction_right);
 		
 		direction_right.addActionListener(new ActionListener() {
 			

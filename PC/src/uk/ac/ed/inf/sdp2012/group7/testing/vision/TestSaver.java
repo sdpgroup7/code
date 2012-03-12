@@ -19,8 +19,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 public class TestSaver {
+	
+	private WorldState worldState = WorldState.getInstance();
+	
 	public void writeClickPoints(ArrayList<Point> points, BufferedImage image,String filename){
 		Vision.logger.info("Starting XML generation");
         try{
@@ -29,8 +33,8 @@ public class TestSaver {
         	points.toArray(pts);
 
         	
-        	//blueO = Vision.worldState.getBlueRobot().getAngle();
-        	//yellowO = Vision.worldState.getYellowRobot().getAngle();
+        	//blueO = worldState.getBlueRobot().getAngle();
+        	//yellowO = worldState.getYellowRobot().getAngle();
 
         	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         	DocumentBuilder docBuilder = factory.newDocumentBuilder();
@@ -101,7 +105,7 @@ public class TestSaver {
         	double blueAngle;
         	double yellAngle;
         	
-        	if (Vision.worldState.getColor() == Color.blue) {
+        	if (worldState.getColor() == Color.blue) {
         		blueCentroid = pts[1];
         		yellCentroid = pts[2];
         		blueAngle = ang[0];
@@ -114,8 +118,8 @@ public class TestSaver {
         	}
 
         	
-        	//blueO = Vision.worldState.getBlueRobot().getAngle();
-        	//yellowO = Vision.worldState.getYellowRobot().getAngle();
+        	//blueO = worldState.getBlueRobot().getAngle();
+        	//yellowO = worldState.getYellowRobot().getAngle();
 
         	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         	DocumentBuilder docBuilder = factory.newDocumentBuilder();
