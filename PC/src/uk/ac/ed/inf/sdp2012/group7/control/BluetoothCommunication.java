@@ -3,8 +3,8 @@ package uk.ac.ed.inf.sdp2012.group7.control;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
 
+import lejos.nxt.remote.NXTCommand;
 import lejos.pc.comm.NXTComm;
 import lejos.pc.comm.NXTCommException;
 import lejos.pc.comm.NXTCommFactory;
@@ -23,6 +23,7 @@ public class BluetoothCommunication implements CommunicationInterface {
     {
     	this.nxtComm = nxtComm;
     	this.info = info;
+    	
     }
     
     
@@ -32,20 +33,20 @@ public class BluetoothCommunication implements CommunicationInterface {
             int rec = is.read();
             return rec;
         } catch (IOException ex) {
-            System.out.println("Error receiving from robot");
-            System.out.println(ex.toString());
+        	RobotControl.logger.error("Error receiving to robot: " + ex);
             return -1;
         }
 	}
 
-	public void sendToRobot(int command) {
+	public OpCodes sendToRobot(byte[] command) {
 	    try {
-	    	byte[] bytes = ByteBuffer.allocate(4).putInt(command).array();
-	        os.write(bytes);
+	    	os.write(command);
 	        os.flush();
+	        int response = recieveFromRobot();
+	        return OpCodes.values()[response];
 	    } catch (IOException ex) {
-	        System.out.println("Error sending command to robot");
-	        System.out.println(ex.toString());
+	        RobotControl.logger.error("Error sending to robot: " + ex);
+	        return OpCodes.CONTINUE;
 	    }
 	}
 	

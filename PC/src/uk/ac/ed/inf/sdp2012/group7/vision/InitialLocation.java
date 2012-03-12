@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.Pitch;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 public class InitialLocation implements MouseListener, MouseMotionListener {
     
@@ -22,6 +23,7 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     private boolean mouseClick = false;
     
     private ThresholdsState thresholdsState;
+    private WorldState worldState = WorldState.getInstance();
     
     private VisionFeed visionFeed;
     //private JFrame windowFrame;
@@ -103,13 +105,13 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     	
     	
     	
-    	autoPoints.add(Vision.worldState.getBall().getPosition().getCentre());
-        autoPoints.add(Vision.worldState.getOurRobot().getPosition().getCentre());
-        angles.add(Vision.worldState.getOurRobot().getAngle());
-        autoPoints.add(Vision.worldState.getOpponentsRobot().getPosition().getCentre());
-        angles.add(Vision.worldState.getOpponentsRobot().getAngle());
-        pitch.add(Vision.worldState.getPitch().getLeftBuffer());
-        pitch.add(Vision.worldState.getPitch().getRightBuffer());
+    	autoPoints.add(worldState.getBall().getPosition().getCentre());
+        autoPoints.add(worldState.getOurRobot().getPosition().getCentre());
+        angles.add(worldState.getOurRobot().getAngle());
+        autoPoints.add(worldState.getOpponentsRobot().getPosition().getCentre());
+        angles.add(worldState.getOpponentsRobot().getAngle());
+        pitch.add(worldState.getPitch().getLeftBuffer());
+        pitch.add(worldState.getPitch().getRightBuffer());
     	
         visionFeed.paused = false;
         Vision.logger.info("Vision System unpaused.");
@@ -195,28 +197,28 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         int width = 640;
         int height = 480;
         Graphics2D graphics = image.createGraphics();
-        if(Vision.worldState.getPitch().getBuffersSet()){
+        if(worldState.getPitch().getBuffersSet()){
         	graphics.drawLine(
-        	    Vision.worldState.getPitch().getLeftBuffer(),
+        	    worldState.getPitch().getLeftBuffer(),
         	    0,
-        	    Vision.worldState.getPitch().getLeftBuffer(),
+        	    worldState.getPitch().getLeftBuffer(),
         	    height
         	);
         	graphics.drawLine(
-        	    Vision.worldState.getPitch().getRightBuffer(),
+        	    worldState.getPitch().getRightBuffer(),
         	    0,
-        	    Vision.worldState.getPitch().getRightBuffer(),
+        	    worldState.getPitch().getRightBuffer(),
         	    height
         	);
         	graphics.drawLine(
         	    0,
-        	    Vision.worldState.getPitch().getTopBuffer(),
-        	    width,Vision.worldState.getPitch().getTopBuffer()
+        	    worldState.getPitch().getTopBuffer(),
+        	    width,worldState.getPitch().getTopBuffer()
         	);
         	graphics.drawLine(
         	    0,
-        	    Vision.worldState.getPitch().getBottomBuffer(),
-        	    width,Vision.worldState.getPitch().getBottomBuffer()
+        	    worldState.getPitch().getBottomBuffer(),
+        	    width,worldState.getPitch().getBottomBuffer()
         	);
             return image;
         } else {
