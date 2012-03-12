@@ -602,20 +602,18 @@ public class Thresholding {
     }
 
     public boolean isBlue(Color c){
-        return ( (c.getRed() <= blueRobotThresh[pitch][0]) && (c.getBlue() > blueRobotThresh[pitch][2])   && (c.getGreen() <= blueRobotThresh[pitch][1]));
+        return ( (c.getRed() <= ts.getBlue_r()) && (c.getBlue() > ts.getBlue_b())   && (c.getGreen() <= ts.getBlue_g()));
     }
     
     public boolean isRed(Color c, int GB){
-        return ( (c.getRed() > redBallThresh[pitch][0]) &&  (c.getBlue() <= redBallThresh[pitch][1]) &&  (c.getGreen() <= redBallThresh[pitch][2]) && GB < 70 );
+        return ( (c.getRed() > ts.getBall_r()) &&  (c.getBlue() <= ts.getBall_b()) &&  (c.getGreen() <= ts.getBall_g()) && GB < 60 );
     }
     
     public boolean isGreen(Color c, int GB, int RG){
-    	if(pitch == 0){
-    		return ( GB > 50 && RG > 50 && c.getGreen() > greenPlatesThresh[pitch][0]);
-    	}
-    	else {
-    		return ( GB >= 50 && RG >= 50 && c.getGreen() > greenPlatesThresh[pitch][0]);
-    	}
+    	
+    		return ( GB > ts.getGreen_GB() && RG > ts.getGreen_RG() && c.getGreen() > ts.getGreen_g());
+    	
+    
     }
 
     public boolean isYellow(Color c){

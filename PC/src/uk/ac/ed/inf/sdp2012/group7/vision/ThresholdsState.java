@@ -10,22 +10,22 @@ package uk.ac.ed.inf.sdp2012.group7.vision;
 
 public class ThresholdsState {
 	
+	
+	private static ThresholdsState thresholdsState = null;
+	
 	/* Ball. */
-	private int ball_r_low;
-	private int ball_r_high;
-	private int ball_g_low;
-	private int ball_g_high;
-	private int ball_b_low;
-	private int ball_b_high;
+	private int ball_r = 130;
+	
+	private int ball_g = 90;
+	
+	private int ball_b = 90;
+	
 
 	
 	/* Blue Robot. */
-	private int blue_r_low;
-	private int blue_r_high;
-	private int blue_g_low;
-	private int blue_g_high;
-	private int blue_b_low;
-	private int blue_b_high;
+	private int blue_r = 130;
+	private int blue_g = 180;
+	private int blue_b = 100;
 
 	
 	/* Yellow Robot. */
@@ -47,13 +47,10 @@ public class ThresholdsState {
 
 	
 	/* Green plates */
-	private int green_r_low;
-	private int green_r_high;
-	private int green_g_low;
-	private int green_g_high;
-	private int green_b_low;
-	private int green_b_high;
-
+	private int green_RG = 50;
+	private int green_GB = 50;
+	private int green_g = 125;
+	
 	/* Debug flags. */
 	private boolean ball_debug;
 	private boolean blue_debug;
@@ -64,105 +61,69 @@ public class ThresholdsState {
 	/**
 	 * Default constructor.
 	 */
-	public ThresholdsState() {
+	private ThresholdsState() {
+		
+	}
+	
+	public static ThresholdsState getInstance(){
+		if(thresholdsState == null){
+			thresholdsState = new ThresholdsState();
+		}
+		return thresholdsState;
 	}
 
-	public int getBall_r_low() {
-		return ball_r_low;
-	}
-
-	public void setBall_r_low(int ballRLow) {
-		ball_r_low = ballRLow;
-	}
-
-	public int getBall_r_high() {
-		return ball_r_high;
-	}
-
-	public void setBall_r_high(int ballRHigh) {
-		ball_r_high = ballRHigh;
-	}
-
-	public int getBall_g_low() {
-		return ball_g_low;
-	}
-
-	public void setBall_g_low(int ballGLow) {
-		ball_g_low = ballGLow;
-	}
-
-	public int getBall_g_high() {
-		return ball_g_high;
-	}
-
-	public void setBall_g_high(int ballGHigh) {
-		ball_g_high = ballGHigh;
-	}
-
-	public int getBall_b_low() {
-		return ball_b_low;
-	}
-
-	public void setBall_b_low(int ballBLow) {
-		ball_b_low = ballBLow;
-	}
-
-	public int getBall_b_high() {
-		return ball_b_high;
-	}
-
-	public void setBall_b_high(int ballBHigh) {
-		ball_b_high = ballBHigh;
+	public int getBall_r() {
+		return ball_r;
 	}
 
 
-	public int getBlue_r_low() {
-		return blue_r_low;
+	public void setBall_r(int ballRHigh) {
+		ball_r = ballRHigh;
 	}
 
-	public void setBlue_r_low(int blueRLow) {
-		blue_r_low = blueRLow;
+	public int getBall_g() {
+		return ball_g;
 	}
 
-	public int getBlue_r_high() {
-		return blue_r_high;
+	public void setBall_g(int ballGLow) {
+		ball_g = ballGLow;
 	}
 
-	public void setBlue_r_high(int blueRHigh) {
-		blue_r_high = blueRHigh;
+
+	public int getBall_b() {
+		return ball_b;
 	}
 
-	public int getBlue_g_low() {
-		return blue_g_low;
+	public void setBall_b(int ballBLow) {
+		ball_b = ballBLow;
 	}
 
-	public void setBlue_g_low(int blueGLow) {
-		blue_g_low = blueGLow;
+
+
+	public int getBlue_r() {
+		return blue_r;
 	}
 
-	public int getBlue_g_high() {
-		return blue_g_high;
+	public void setBlue_r(int blueRLow) {
+		blue_r = blueRLow;
 	}
 
-	public void setBlue_g_high(int blueGHigh) {
-		blue_g_high = blueGHigh;
+	public int getBlue_g() {
+		return blue_g;
 	}
 
-	public int getBlue_b_low() {
-		return blue_b_low;
+	public void setBlue_g(int blueGLow) {
+		blue_g = blueGLow;
 	}
 
-	public void setBlue_b_low(int blueBLow) {
-		blue_b_low = blueBLow;
+	public int getBlue_b() {
+		return blue_b;
 	}
 
-	public int getBlue_b_high() {
-		return blue_b_high;
+	public void setBlue_b(int blueBLow) {
+		blue_b = blueBLow;
 	}
 
-	public void setBlue_b_high(int blueBHigh) {
-		blue_b_high = blueBHigh;
-	}
 
 	public int getYellow_r_low() {
 		return yellow_r_low;
@@ -295,53 +256,32 @@ public class ThresholdsState {
 	/**
 	 * @return the green_r_low
 	 */
-	public int getGreen_r_low() {
-		return green_r_low;
+	public int getGreen_RG() {
+		return green_RG;
 	}
 
-	public void setGreen_r_low(int greenRLow) {
-		green_r_low = greenRLow;
+	public void setGreen_RG(int greenRG) {
+		green_RG = greenRG;
 	}
 
-	public int getGreen_r_high() {
-		return green_r_high;
+	
+
+	public int getGreen_g() {
+		return green_g;
 	}
 
-	public void setGreen_r_high(int greenRHigh) {
-		green_r_high = greenRHigh;
+	public void setGreen_g(int greenGLow) {
+		green_g = greenGLow;
 	}
 
-	public int getGreen_g_low() {
-		return green_g_low;
+	public int getGreen_GB() {
+		return green_GB;
 	}
 
-	public void setGreen_g_low(int greenGLow) {
-		green_g_low = greenGLow;
+	public void setGreen_GB(int greenBLow) {
+		green_GB = greenBLow;
 	}
 
-	public int getGreen_g_high() {
-		return green_g_high;
-	}
-
-	public void setGreen_g_high(int greenGHigh) {
-		green_g_high = greenGHigh;
-	}
-
-	public int getGreen_b_low() {
-		return green_b_low;
-	}
-
-	public void setGreen_b_low(int greenBLow) {
-		green_b_low = greenBLow;
-	}
-
-	public int getGreen_b_high() {
-		return green_b_high;
-	}
-
-	public void setGreen_b_high(int greenBHigh) {
-		green_b_high = greenBHigh;
-	}
 
 	public boolean isGreen_debug() {
 		return green_debug;

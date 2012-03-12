@@ -69,7 +69,7 @@ public class VisionFeed extends WindowAdapter {
     	initGUI(); //This line and the next line MUST be this way round. 
     	initFrameGrabber(videoDevice, width, height, channel, videoStandard, compressionQuality);
         
-        ThresholdsState thresholdsState = new ThresholdsState();
+        ThresholdsState thresholdsState = ThresholdsState.getInstance();
         InitialLocation il = new InitialLocation(this, this.windowFrame, thresholdsState);
         processor = new FeedProcessor(il, height, width, this, thresholdsState);
         Vision.logger.info("VisionFeed Initialised");

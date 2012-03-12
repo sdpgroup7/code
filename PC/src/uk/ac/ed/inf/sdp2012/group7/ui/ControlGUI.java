@@ -4,6 +4,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -13,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
+import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -34,7 +36,7 @@ public class ControlGUI implements ChangeListener {
 	
 	/* The thresholds state class stores the current state 
  	 * of the thresholds. */
-	private ThresholdsState thresholdsState;
+	private ThresholdsState thresholdsState = ThresholdsState.getInstance();
 	
 	/* Stores information about the current world state, such as 
 	 * shooting direction, ball location, etc. */
@@ -68,6 +70,7 @@ public class ControlGUI implements ChangeListener {
 	/* Tabs. */
 	private JTabbedPane tabPane;
 	private JPanel defaultPanel;
+	private JPanel thresholdingPanel;
 	
 	/* Radio buttons */
 	JButton pitch_0;
@@ -115,13 +118,23 @@ public class ControlGUI implements ChangeListener {
         
         defaultPanel = new JPanel();
         defaultPanel.setLayout(new BoxLayout(defaultPanel, BoxLayout.Y_AXIS));
-          
+    
+        thresholdingPanel = new JPanel();
+        thresholdingPanel.setLayout(new BoxLayout(thresholdingPanel, BoxLayout.Y_AXIS));
+        
+        
         /* The main (default) tab */
-        setUpMainPanel();
+        setUpMainPanel(); 
+        
+        /* The Tresholding tab */
+        
+        setUpThresholdingPanel();
         
         
-        tabPane.addTab("World Information", defaultPanel);
         
+        tabPane.addTab("World Information", defaultPanel); 
+        tabPane.addTab("Thresholding", thresholdingPanel);
+    
         tabPane.addChangeListener(this);
         
         frame.add(tabPane);
@@ -129,9 +142,248 @@ public class ControlGUI implements ChangeListener {
         frame.pack();
         frame.setVisible(true);
         
+        /* Fires off an initial pass through the ChangeListener method,
+         * to initialise all of the default values. */
+        this.stateChanged(null);
+        
 		
 	}
-	
+	/**
+	 * Sets up the Thresholding tab, where sliders for the thresholding are imployed 
+	 * to get more accurate thresholding in RGB 
+	 */
+	private void setUpThresholdingPanel() {
+		
+		JPanel ball = new JPanel();
+		JLabel ball_label = new JLabel("Ball  R :");
+		
+		ball.add(ball_label);
+		
+		JSlider ball_R = new JSlider(JSlider.HORIZONTAL,
+                0, 255, 130);
+		ball_R.setMajorTickSpacing(40);
+		ball_R.setMinorTickSpacing(20);
+		ball_R.setPaintTicks(true);
+		ball_R.setPaintLabels(true);
+		ball_R.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				int value = 0;
+				if (!source.getValueIsAdjusting()) {
+					value  = (int) source.getValue();
+					thresholdsState.setBall_r(value);
+				}				
+			}
+		});
+		ball.add(ball_R);
+		
+		JLabel ball_label1 = new JLabel("  Ball  G :");
+		ball.add(ball_label1);
+		
+		JSlider ball_G = new JSlider(JSlider.HORIZONTAL,
+                0, 255, 90);
+		ball_G.setMajorTickSpacing(40);
+		ball_G.setMinorTickSpacing(20);
+		ball_G.setPaintTicks(true);
+		ball_G.setPaintLabels(true);
+		ball_G.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				int value = 0;
+				if (!source.getValueIsAdjusting()) {
+					value  = (int) source.getValue();
+					thresholdsState.setBall_g(value);
+				}				
+			}
+		});
+		ball.add(ball_G);
+		
+		JLabel ball_label2 = new JLabel("  Ball  B :");
+		ball.add(ball_label2);
+		
+		JSlider ball_B = new JSlider(JSlider.HORIZONTAL,
+                0, 255, 90);
+		ball_B.setMajorTickSpacing(40);
+		ball_B.setMinorTickSpacing(20);
+		ball_B.setPaintTicks(true);
+		ball_B.setPaintLabels(true);
+		ball_B.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				int value = 0;
+				if (!source.getValueIsAdjusting()) {
+					value  = (int) source.getValue();
+					thresholdsState.setBall_b(value);
+				}				
+			}
+		});
+		ball.add(ball_B);
+		
+		thresholdingPanel.add(ball);
+		
+		
+		JPanel blue = new JPanel();
+		JLabel blue_label = new JLabel("  Blue  R :");
+		
+		blue.add(blue_label);
+		
+		JSlider blue_R = new JSlider(JSlider.HORIZONTAL,
+                0, 255, 120);
+		blue_R.setMajorTickSpacing(40);
+		blue_R.setMinorTickSpacing(20);
+		blue_R.setPaintTicks(true);
+		blue_R.setPaintLabels(true);
+		blue_R.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				int value = 0;
+				if (!source.getValueIsAdjusting()) {
+					value  = (int) source.getValue();
+					thresholdsState.setBlue_r(value);
+				}				
+			}
+		});
+		
+		blue.add(blue_R);
+		
+		JLabel blue_label1 = new JLabel("  Blue G :");
+		
+		blue.add(blue_label1);
+		
+		JSlider blue_G = new JSlider(JSlider.HORIZONTAL,
+                0, 255, 170);
+		blue_G.setMajorTickSpacing(40);
+		blue_G.setMinorTickSpacing(20);
+		blue_G.setPaintTicks(true);
+		blue_G.setPaintLabels(true);
+		blue_G.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				int value = 0;
+				if (!source.getValueIsAdjusting()) {
+					value  = (int) source.getValue();
+					thresholdsState.setBlue_g(value);
+				}				
+			}
+		});
+		
+		blue.add(blue_G);
+		
+		JLabel blue_label2 = new JLabel("  Blue B :");
+		
+		blue.add(blue_label2);
+		
+		JSlider blue_B = new JSlider(JSlider.HORIZONTAL,
+                0, 255, 90);
+		blue_B.setMajorTickSpacing(40);
+		blue_B.setMinorTickSpacing(20);
+		blue_B.setPaintTicks(true);
+		blue_B.setPaintLabels(true);
+		blue_B.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				int value = 0;
+				if (!source.getValueIsAdjusting()) {
+					value  = (int) source.getValue();
+					thresholdsState.setBlue_b(value);
+				}				
+			}
+		});
+		
+		blue.add(blue_B);
+		
+		thresholdingPanel.add(blue);
+
+		
+		JPanel greenPlate = new JPanel();
+		JLabel greenPlate_label = new JLabel("  greenPlate G : ");
+		
+		greenPlate.add(greenPlate_label);
+		
+		
+		JSlider greenPlate_G = new JSlider(JSlider.HORIZONTAL,
+                0, 255, 120);
+		greenPlate_G.setMajorTickSpacing(40);
+		greenPlate_G.setMinorTickSpacing(20);
+		greenPlate_G.setPaintTicks(true);
+		greenPlate_G.setPaintLabels(true);
+		greenPlate_G.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				int value = 0;
+				if (!source.getValueIsAdjusting()) {
+					value  = (int) source.getValue();
+					thresholdsState.setGreen_g(value);
+				}				
+			}
+		});
+		greenPlate.add(greenPlate_G);
+		
+		JLabel greenLabel1  = new JLabel("  G-R :");
+		greenPlate.add(greenLabel1);
+		
+		JSlider greenPlate_RG = new JSlider(JSlider.HORIZONTAL,
+                0, 80, 50);
+		greenPlate_RG.setMajorTickSpacing(20);
+		greenPlate_RG.setMinorTickSpacing(5);
+		greenPlate_RG.setPaintTicks(true);
+		greenPlate_RG.setPaintLabels(true);
+		greenPlate_RG.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				int value = 0;
+				if (!source.getValueIsAdjusting()) {
+					value  = (int) source.getValue();
+					thresholdsState.setGreen_RG(value);
+				}				
+			}
+		});
+		greenPlate.add(greenPlate_RG);
+		
+		JLabel greenLabel2  = new JLabel("  G-B :");
+		greenPlate.add(greenLabel2);
+		
+		JSlider greenPlate_GB = new JSlider(JSlider.HORIZONTAL,
+                0, 80, 50);
+		greenPlate_GB.setMajorTickSpacing(20);
+		greenPlate_GB.setMinorTickSpacing(5);
+		greenPlate_GB.setPaintTicks(true);
+		greenPlate_GB.setPaintLabels(true);
+		greenPlate_GB.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				int value = 0;
+				if (!source.getValueIsAdjusting()) {
+					value  = (int) source.getValue();
+					thresholdsState.setGreen_GB(value);
+				}				
+			}
+		});
+		greenPlate.add(greenPlate_GB);
+		
+		thresholdingPanel.add(greenPlate);
+		
+		
+	}
+
 	/**
 	 * Sets up the main tab, adding in the pitch choice, the direction
 	 * choice, the robot-colour choice and save/load buttons.
