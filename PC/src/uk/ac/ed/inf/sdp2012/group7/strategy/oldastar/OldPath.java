@@ -1,17 +1,17 @@
-package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
+package uk.ac.ed.inf.sdp2012.group7.strategy.oldastar;
 
 import java.awt.Point;
 import java.util.ArrayList;
 
-public class Path {
+public class OldPath {
 	
 	// The waypoints in the path (list of coordinates making up the path)
-	private ArrayList<Node> waypoints = new ArrayList<Node>();
+	private ArrayList<OldNode> waypoints = new ArrayList<OldNode>();
 	
-	public Path() {
+	public OldPath() {
 	}
 	
-	public ArrayList<Node> getWayPoints(){
+	public ArrayList<OldNode> getWayPoints(){
 		return this.waypoints;
 	}
 	
@@ -19,7 +19,7 @@ public class Path {
 		return waypoints.size();
 	}
 
-	public Node getWayPoint(int index) {
+	public OldNode getWayPoint(int index) {
 		return waypoints.get(index);
 	}
 
@@ -49,7 +49,7 @@ public class Path {
 	 * @param x The x coordinate of the waypoint.
 	 * @param y The y coordinate of the waypoint.
 	 */
-	public void appendWayPoint(Node n) {
+	public void appendWayPoint(OldNode n) {
 		waypoints.add(n);
 	}
 
@@ -59,7 +59,7 @@ public class Path {
 	 * @param x The x coordinate of the waypoint.
 	 * @param y The y coordinate of the waypoint.
 	 */
-	public void prependWayPoint(Node n) {
+	public void prependWayPoint(OldNode n) {
 		waypoints.add(0, n);
 	}
 
@@ -71,7 +71,7 @@ public class Path {
 	 * @return True if the path contains the waypoint.
 	 */
 	public boolean contains(int x, int y) {
-		for(Node node : waypoints) {
+		for(OldNode node : waypoints) {
 			if (node.getX() == x && node.getY() == y)
 				return true;
 		}
@@ -82,7 +82,7 @@ public class Path {
 	// that's useful then! 
 	public ArrayList<Point> pathToPoints() {
 		ArrayList<Point> points = new ArrayList<Point>();
-		for (Node node : waypoints) {
+		for (OldNode node : waypoints) {
 			Point point = node.nodeToPoint(node);
 			points.add(point);
 		}
@@ -90,7 +90,7 @@ public class Path {
 	} 
 	
 	public void printWaypoints() {
-		for(Node node : waypoints) {
+		for(OldNode node : waypoints) {
 			System.out.println("("+node.getX()+","+node.getY()+") ");
 		}
 	}

@@ -8,6 +8,7 @@ import java.util.Observer;
 
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
+import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
 import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.control.RobotControl;
@@ -78,7 +79,7 @@ public class ControlInterface implements Observer {
 	 * given using the pure pursuit algorithm
 	 */
 
-	public static Arc generateArc(Point2D p, ArrayList<Point> path, double v, 
+	public static Arc generateArc(Point2D p, ArrayList<Node> path, double v, 
 			int planAction, int lookahead, double nodeInPixels) {
 		// The paper where this maths comes from can be found here
 		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
@@ -191,7 +192,7 @@ public class ControlInterface implements Observer {
 	 * @return The goal point
 	 */
 	@SuppressWarnings("null")
-	public static Point2D findGoalPoint(ArrayList<Point> p, Point2D pos, int lookahead) throws Exception {
+	public static Point2D findGoalPoint(ArrayList<Node> p, Point2D pos, int lookahead) throws Exception {
 		
 		Circle2D zone = new Circle2D(pos.getX(), pos.getY(), lookahead);
 		logger.debug(String.format("Zone centre: (%f,%f)",pos.getX(),pos.getY()));

@@ -1,5 +1,6 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
 
+
 public interface AStarHeuristic {
 
 	/**
@@ -14,5 +15,5 @@ public interface AStarHeuristic {
 	 * @param ty The y coordinate of the target location
 	 * @return The cost associated with the given tile
 	 */
-	public float getEstimatedDistanceToGoal(int startX, int startY, int goalX, int goalY);
+	public double getEstimatedDistanceToGoal(Node a, Node b);
 }

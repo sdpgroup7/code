@@ -191,6 +191,8 @@ public class FeedProcessor{
         imageGraphics.drawString("Ball Position: (" + Vision.worldState.getBall().getPosition().getCentre().x + "," + Vision.worldState.getBall().getPosition().getCentre().y + ")", 410, 20);
         imageGraphics.drawString("Ball Velocity: " + String.format("%.4g%n", Vision.worldState.getBall().getVelocity()) + "px/s", 410, 35);
         
+        imageGraphics.drawString("Strategy Update Time: " + Vision.worldState.getStrategyTime() + "ms", 220, 420);
+        
         
         frameGraphics.drawImage(image, 0, 0, width, height, null);
     }

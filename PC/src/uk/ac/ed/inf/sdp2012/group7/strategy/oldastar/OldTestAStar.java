@@ -1,10 +1,10 @@
-package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
+package uk.ac.ed.inf.sdp2012.group7.strategy.oldastar;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.heuristics.ClosestHeuristic;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.utils.StopWatch;
 
-public class TestAStar {
+public class OldTestAStar {
 	
 	private static int mapWidth = 50;
 	private static int mapHeight = 25;
@@ -20,13 +20,13 @@ public class TestAStar {
 		s.start();
 		
 		Strategy.logger.info("Map initializing...");
-		AreaMap map = new AreaMap(mapWidth, mapHeight);
+		OldAreaMap map = new OldAreaMap(mapWidth, mapHeight);
 		
 		Strategy.logger.info("Heuristic initializing...");
-		AStarHeuristic heuristic = new ClosestHeuristic();
+		OldAStarHeuristic heuristic = new ClosestHeuristic();
 		
 		Strategy.logger.info("Pathfinder initializing...");
-		AStar pathFinder = new AStar(map, heuristic);
+		OldAStar pathFinder = new OldAStar(map, heuristic);
 		
 		Strategy.logger.info("Calculating shortest path...");
 		pathFinder.calcShortestPath(startX, startY, goalX, goalY);

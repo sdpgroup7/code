@@ -1,23 +1,23 @@
-package uk.ac.ed.inf.sdp2012.group7.strategy.astar;
+package uk.ac.ed.inf.sdp2012.group7.strategy.oldastar;
 
 //import uk.ac.ed.inf.sdp2012.group7.strategy.astar.utils.Logger;
 import org.apache.log4j.Logger;
 
-public class AreaMap {
+public class OldAreaMap {
 
 	private int mapWidth;
 	private int mapHeight;
-	private Node[][] map;
+	private OldNode[][] map;
 	private int startLocationX = 0;
 	private int startLocationY = 0;
 	private int goalLocationX = 0;
 	private int goalLocationY = 0;
 
-	public static final Logger logger = Logger.getLogger(AreaMap.class);
+	public static final Logger logger = Logger.getLogger(OldAreaMap.class);
 	
 	//private Logger log = new Logger();
 	
-	AreaMap(int mapWidth, int mapHeight) {
+	OldAreaMap(int mapWidth, int mapHeight) {
 		
 		this.mapWidth = mapWidth;
 		this.mapHeight = mapHeight;
@@ -28,23 +28,23 @@ public class AreaMap {
 	}
 	private void createMap() {
 		
-		map = new Node[mapWidth][mapHeight];
+		map = new OldNode[mapWidth][mapHeight];
 		for (int x=0; x<mapWidth; x++) {
 			for (int y=0; y<mapHeight; y++) {
-				map[x][y] = new Node(x,y);
+				map[x][y] = new OldNode(x,y);
 			}
 		}
 	}
 	
 
-	public Node[][] getNodes() {
+	public OldNode[][] getNodes() {
 		return map;
 	}
 	public void setObstical(int x, int y, boolean isObstical) {
 		map[x][y].setObstical(isObstical);
 	}
 
-	public Node getNode(int x, int y) {
+	public OldNode getNode(int x, int y) {
 		if (x<0 || x>=mapWidth || y<0 || y>=mapHeight) {
 			return null;
 		}
@@ -74,7 +74,7 @@ public class AreaMap {
 		return startLocationY;
 	}
 	
-	public Node getStartNode() {
+	public OldNode getStartNode() {
 		return map[startLocationX][startLocationY];
 	}
 
@@ -86,11 +86,11 @@ public class AreaMap {
 		return goalLocationY;
 	}
 	
-	public Node getGoalLocation() {
+	public OldNode getGoalLocation() {
 		return map[goalLocationX][goalLocationY];
 	}
 	
-	public float getDistanceBetween(Node node1, Node node2) {
+	public float getDistanceBetween(OldNode node1, OldNode node2) {
 		//if the nodes are on top or next to each other, return 1
 		if (node1.getX() == node2.getX() || node1.getY() == node2.getY()){
 			// changed from 1 to 10 to stop rounding errors when casting to int in comparison
