@@ -234,56 +234,45 @@ public class TargetDecision {
 			// and drive to this intersection. Everything done in nodes.
 			Point theirPosition = allMovingObjects.getTheirPosition();
 			logger.debug("Their position is "+theirPosition);
+			Point ourPosition = allMovingObjects.getOurPosition();
+			logger.debug("Our position is "+ourPosition);
 			double visionAngle = this.allMovingObjects.getTheirAngle();
 			logger.debug("The angle from vision is "+visionAngle);
 			double theirAngle = ((this.allMovingObjects.getTheirAngle())+(3*Math.PI)/2) % (2*Math.PI);
 			logger.debug("Their angle after converstion is "+theirAngle);
 			if (theirAngle==(Math.PI/2)||theirAngle==(3*Math.PI/2))
 				this.action = PlanTypes.ActionType.STOP.ordinal();
-			// they are facing right when taking a penalty
+			// check and log their shooting direction
 			if(worldState.getShootingDirection()==-1) {
 				logger.debug("They are shooting to the right");
-				Point inFrontOfOurGoal = allStaticObjects.getInFrontOfOurGoal();
-				logger.debug("Point in front of our goal is "+inFrontOfOurGoal);
-				// creating an equation for the line they project onto our line
-				double c = theirPosition.getY()-(Math.tan(theirAngle)*theirPosition.getX());
-				long y = Math.round(Math.tan(theirAngle)*inFrontOfOurGoal.x + c);
-				logger.debug("Lines intersect at y node "+y);
-				Point toDriveTo = new Point(inFrontOfOurGoal.x,(int)y);
-				logger.debug("Will drive to "+toDriveTo);
-				int nodesUpOrDown = toDriveTo.y-inFrontOfOurGoal.y;
-				logger.debug("Number of nodes to drive is "+nodesUpOrDown);
-				this.targetInCM = VisionTools.pixelsToCM(allStaticObjects.getNodeInPixels()*Math.abs(nodesUpOrDown));
-				logger.debug("Number of cm to drive is "+targetInCM);
-				if (nodesUpOrDown <=0) {
-					logger.debug("Need to drive upwards");
-					this.action = PlanTypes.ActionType.FORWARD_WITH_DISTANCE.ordinal();
-				} else {
-					logger.debug("Need to drive downwards");
-					this.action = PlanTypes.ActionType.BACKWARD_WITH_DISTANCE.ordinal();
-				}
 			} else {
 				logger.debug("They are shooting to the left");
-				Point inFrontOfOurGoal = allStaticObjects.getInFrontOfOurGoal();
-				logger.debug("Point in front of our goal is"+inFrontOfOurGoal);
-				// creating an equation for the line they project onto our line
-				double c = theirPosition.getY()-(Math.tan(theirAngle)*theirPosition.getX());
-				long y = Math.round(Math.tan(theirAngle)*inFrontOfOurGoal.x + c);
-				logger.debug("Lines intersect at y node "+y);
-				Point toDriveTo = new Point(inFrontOfOurGoal.x,(int)y);
-				logger.debug("Will drive to "+toDriveTo);
-				int nodesUpOrDown = toDriveTo.y-inFrontOfOurGoal.y;
-				logger.debug("Number of nodes to drive is "+nodesUpOrDown);
-				this.targetInCM = VisionTools.pixelsToCM(allStaticObjects.getNodeInPixels()*Math.abs(nodesUpOrDown));
-				logger.debug("Number of cm to drive is "+targetInCM);
-				if (nodesUpOrDown <=0) {
-					logger.debug("Need to drive upwards");
-					this.action = PlanTypes.ActionType.FORWARD_WITH_DISTANCE.ordinal();
-				} else {
-					logger.debug("Need to drive downwards");
-					this.action = PlanTypes.ActionType.BACKWARD_WITH_DISTANCE.ordinal();
-				}
 			}
+			// creating an equation for the line they project onto our line
+			double c = theirPosition.getY()-(Math.tan(theirAngle)*theirPosition.getX());
+			long y = Math.round(Math.tan(theirAngle)*ourPosition.x + c);
+			logger.debug("Lines intersect at y node "+y);
+			Point toDriveTo = new Point(ourPosition.x,(int)y);
+			// make sure we are always covering the goal
+			if (toDriveTo.y <= 9)
+				toDriveTo.y=9;
+			if (toDriveTo.y >= 20)
+				toDriveTo.y=20;
+			logger.debug("Will drive to "+toDriveTo);
+			int nodesUpOrDown = toDriveTo.y-ourPosition.y;
+			logger.debug("Number of nodes to drive is "+nodesUpOrDown);
+			if (Math.abs(nodesUpOrDown)<=2) {
+				this.action = PlanTypes.ActionType.STOP.ordinal(); }
+			this.targetInCM = VisionTools.pixelsToCM(allStaticObjects.getNodeInPixels()*Math.abs(nodesUpOrDown));
+			logger.debug("Number of cm to drive is "+targetInCM);
+			if (nodesUpOrDown <=0) {
+				logger.debug("Need to drive upwards");
+				this.action = PlanTypes.ActionType.FORWARD_WITH_DISTANCE.ordinal();
+			} else {
+				logger.debug("Need to drive downwards");
+				this.action = PlanTypes.ActionType.BACKWARD_WITH_DISTANCE.ordinal();
+			}
+			
 		}
 	}
 	

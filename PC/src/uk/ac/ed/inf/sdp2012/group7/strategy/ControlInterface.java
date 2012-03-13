@@ -275,6 +275,9 @@ public class ControlInterface implements Observer {
 			} else {
 				logger.info("Action is moveBackwards("+plan.getDistanceInCM()+")");
 				c.moveBackward((int)plan.getDistanceInCM());
+			} try {
+				Thread.sleep(10000);
+			} catch (Exception e){ 
 			}
 		} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
 				
