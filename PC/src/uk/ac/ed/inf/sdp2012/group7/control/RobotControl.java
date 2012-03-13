@@ -1,14 +1,15 @@
 package uk.ac.ed.inf.sdp2012.group7.control;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
-
-import uk.ac.ed.inf.sdp2012.group7.MainRunner;
+import java.nio.ByteBuffer;
 
 import lejos.pc.comm.NXTComm;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTInfo;
+
+import org.apache.log4j.Logger;
+
+import uk.ac.ed.inf.sdp2012.group7.MainRunner;
 
 /**
  * This class holds the geometric location of our robot but is also responsible
@@ -18,21 +19,23 @@ public class RobotControl implements ConstantsReuse {
 
 	private CommunicationInterface comms;
 	private NXTComm nxtComm;
-	private NXTInfo info = new NXTInfo(NXTCommFactory.BLUETOOTH, ROBOT_NAME,
-			ROBOT_MAC);
-	private Queue<Integer> commandList = new LinkedList<Integer>();
+	private NXTInfo info = new NXTInfo(NXTCommFactory.BLUETOOTH, ROBOT_NAME,ROBOT_MAC);
+	public static final Logger logger = Logger.getLogger(RobotControl.class);
+	private volatile byte[] command = new byte[4];
 
 	private boolean isConnected = false;
 	private boolean keepConnected = true;
-	public boolean askingToReset = false;
-	private volatile int currentSpeed = 0;
+
 	private boolean simulator = false;
+	private boolean bumped = false;
 
 	public RobotControl() {}
 
 	/**
 	 * This method initialises the connection and starts the thread which sends
-	 * data to the robot.
+	 * data to the robot
+	 * 
+	 * @return True if the connection has been established, false otherwise
 	 */
 	public boolean startCommunications() {
 
@@ -51,13 +54,8 @@ public class RobotControl implements ConstantsReuse {
 
 				// send data when necessary
 				while (keepConnected) {
-					if (commandList.isEmpty()) {
-						sendToRobot(OpCodes.DO_NOTHING.ordinal());
-					} else {
-						sendToRobot(commandList.remove());
-					}
-					receiveFromRobot();
-
+					sendToRobot(command);
+					
 				}
 				// disconnect when we're done
 				disconnectFromRobot();
@@ -77,7 +75,7 @@ public class RobotControl implements ConstantsReuse {
 	}
 
 	/**
-	 * Connects to the NXT
+	 * Connects to the NXT. The Robot beeps when the connection has been established.
 	 */
 	private void connectToRobot() throws IOException {
 		simulator = MainRunner.simulator;
@@ -87,6 +85,8 @@ public class RobotControl implements ConstantsReuse {
 			comms = new BluetoothCommunication(nxtComm, info);
 
 		comms.openConnection();
+		command[0] = 0;
+		command[1] = (byte) OpCodes.DO_NOTHING.ordinal();
 		setConnected(true);
 		beep();
 	}
@@ -107,184 +107,183 @@ public class RobotControl implements ConstantsReuse {
 	}
 
 	/**
-	 * Add a command to the queue to be sent to the robot
+	 * Add a command to be sent to the robot
 	 */
-	private void addCommand(int command) {
-		while (commandList.size() > 3) {
-			commandList.remove();
-			System.out.print("<");
-		}
-		commandList.add(command);
+	private void addCommand(byte kick,byte code,int parameter) {
+		command[0] = kick;
+		command[1] = code;
+		command[2] = (byte) ((parameter >> 8) & 0xFF);
+		command[3] = (byte) (parameter & 0xFF);
 	}
 
-	/**
-	 * Clear the queue of commands to be sent to the robot
-	 */
-	public void clearAllCommands() {
-		commandList.clear();
-	}
+
 
 	/**
 	 * Sends a command to the robot
 	 */
-	private void sendToRobot(int command) {
-		//System.out.println("SENT "+command+" TO ROBOT");
-		comms.sendToRobot(command);
+	private void sendToRobot(byte[] command) {
+		
+		if(!bumped){
+				byte[] sendCommand = command.clone();
+				command = ByteBuffer.allocate(4).putInt(0).array(); //resets command to all 0
+				logger.info("Send "+OpCodes.values()[sendCommand[1]]);
+				OpCodes response = comms.sendToRobot(sendCommand);
+				logger.info("Sent "+OpCodes.values()[sendCommand[1]]);
+				logResponse(response);
+				if(response == OpCodes.BUMP_ON) bumped = true;
+		} else {
+			while(getResponse() != OpCodes.BUMP_OFF.ordinal()){}
+			bumped = false;
+			logger.debug("Completed bump procedure");
+			//We don't need anything in the loop as getResponse is blocking anyway
+		}
+		
 	}
+	
 
 	/**
 	 * Receive an integer from the robot
 	 */
-	private int receiveFromRobot() {
-
-		int response = comms.recieveFromRobot();
-
-		if (response == 'r') {
-			askingToReset = true;
-			// clearAllCommands();
-			// System.out.println("STACK CLEARED");
-		}
-
-		return response;
-
+	private int getResponse() {
+		//the below method is blocking
+		return comms.recieveFromRobot();
 	}
-
+	
 	/**
-	 * Returns the last speed we set the robot to
+	 * Changes the speed the robot is travelling at
+	 * @param speed
 	 */
-	public int getSpeed() {
-		return currentSpeed;
+	public void changeSpeed(int speed) {
+		addCommand((byte) 0,(byte) OpCodes.CHANGE_SPEED.ordinal(),speed);
 	}
-
-	public boolean moving = true;
+	
 
 	/**
 	 * Commands the robot to move forward
 	 */
 	public void moveForward() {
-		moving = true;
-		addCommand(OpCodes.FORWARDS.ordinal());
+		addCommand((byte) 0,(byte) OpCodes.FORWARDS.ordinal(),0);
 	}
 	
 	/**
-	 * Commands the robot to move forward
+	 * Commands the robot to move forwards a certain distance
+	 * @param distance Measured in cm
 	 */
 	public void moveForward(int distance) {
-		moving = true;
-		int command = OpCodes.FORWARDS_WITH_DISTANCE.ordinal() | (distance << 8);
-		addCommand(command);
+		addCommand((byte) 0,(byte) OpCodes.FORWARDS_WITH_DISTANCE.ordinal(),distance);
 	}
+	
 
 	/**
 	 * Commands the robot to move backward
 	 */
 	public void moveBackward() {
-		moving = true;
-		addCommand(OpCodes.BACKWARDS.ordinal());
+		addCommand((byte) 0,(byte) OpCodes.BACKWARDS.ordinal(),0);
 	}
 
 	/**
 	 * Commands the robot to move back a little bit
 	 */
-	public void moveBackwardSlightly() {
-		addCommand(OpCodes.BACKWARDS_SLIGHTLY.ordinal());
+	public void moveBackward(int distance) {
+		addCommand((byte) 0,(byte) OpCodes.BACKWARDS_WITH_DISTANCE.ordinal(),distance);
 	}
 
 	/**
 	 * Commands the robot to stop where it is
 	 */
 	public void stop() {
-		moving = false;
-		addCommand(OpCodes.STOP.ordinal());
-	}
+		addCommand((byte) 0,(byte) OpCodes.STOP.ordinal(),0);
+			}
 
-	/**
-	 * Sets the speed of the motors to a given integer (900 is the max)
-	 */
-	public void changeSpeed(int to) {
-		int command = OpCodes.CHANGE_SPEED.ordinal() | (to << 8);
-		currentSpeed = to;
-		addCommand(command);
-	}
 
 	/**
 	 * Commands the robot to kick
 	 */
 	public void kick() {
-		System.out.println("kick");
-		addCommand(OpCodes.KICK.ordinal());
+		addCommand((byte) 1,(byte) OpCodes.CONTINUE.ordinal(),0);
+		
 	}
 
 	/**
-	 * Rotates the robot by a given number of radians
+	 * Rotates the robot by the given number of radians
+	 * @param radians 
 	 */
-	public void rotateBy(double radians) {
-
-		System.out.println("Rotate by " + radians + ":  "
-				+ Math.toDegrees(radians));
-
-		if (radians < 0)
-			radians = (2 * Math.PI - radians);
-		if (radians != 0) {
-			int command = OpCodes.ROTATE.ordinal() | ((int) Math.toDegrees(radians) << 8);
-			addCommand(command);
+	public void rotateBy(double radians, boolean block, boolean left) {
+		int degrees = (int)Math.toDegrees(radians);
+		if (block) {
+			if (left) {
+				addCommand((byte) 0, (byte) OpCodes.ROTATE_BLOCK_LEFT.ordinal(), degrees);
+			} else {
+				addCommand((byte) 0, (byte) OpCodes.ROTATE_BLOCK_RIGHT.ordinal(), degrees);
+			}
+		} else {
+			if (left) {
+				addCommand((byte) 0, (byte) OpCodes.ROTATE_LEFT.ordinal(), degrees);
+			} else {
+				addCommand((byte) 0, (byte) OpCodes.ROTATE_RIGHT.ordinal(), degrees);
+			}
 		}
-
+	}
+	
+	public void rotateBy(double radians, boolean block){
+		if(radians < 0){
+			rotateBy(-radians,block,false);
+		} else {
+			rotateBy(radians,block,true);
+		}
+	}
+	
+	public void rotateBy(double radians){
+		if(radians < 0){
+			rotateBy(-radians,false,false);
+		} else {
+			rotateBy(radians,false,true);
+		}
 	}
 
 	/**
-	 * This method instructs the robot to move around a circle of given radius,
-	 * the boolean is true when the robot should arc left.
+	 * Commands the robot to move forwards on an arc with a certain radius from the centre of the robot
+	 * @param radius 
+	 * @param arcLeft If true the robot will go left, otherwise will go right
 	 */
 	public void circleWithRadius(int radius, boolean arcLeft) {
 
-		// interpreted on the robot as a negative
-		if (arcLeft) {
-			radius = radius*(-1);
-			radius += 1000;
+		if (radius < 50) {
+			if (arcLeft) {
+				addCommand((byte) 0,(byte) OpCodes.ARC_LEFT.ordinal(),radius);
+				
+			} else {
+				addCommand((byte) 0,(byte) OpCodes.ARC_RIGHT.ordinal(),radius);
+				
+			}
+		} else {
+			addCommand((byte) 0,(byte) OpCodes.FORWARDS.ordinal(),0);
 		}
 
-		int command = OpCodes.ARC.ordinal() | (radius << 8);
-		addCommand(command);
-
-	}
-
-	/**
-	 * Commands steers the robot based on a given ratio
-	 */
-	public void steerWithRatio(float ratio) {
-		int command = OpCodes.STEER_WITH_RATIO.ordinal() | ((int) ratio << 8);
-		addCommand(command);
 	}
 
 	/**
 	 * Commands the robot to make a noise
 	 */
 	public void beep() {
-		addCommand(OpCodes.BEEP.ordinal());
+		addCommand((byte) 0,(byte) OpCodes.BEEP.ordinal(),0);
 	}
 	
 	/**
-	 * Commands the robot to move 65 cm forward and start odometry from its initial position
+	 * Commands the robot to move forward indefinitely and start odometry from its initial position
 	 * (if the bluetooth connection is lost, it'll try to move back to the initial position)
 	 */
 	public void startMatch() {
-		addCommand(OpCodes.START_MATCH.ordinal());
+		addCommand((byte) 0,(byte) OpCodes.START_MATCH.ordinal(),0);
 	}
 	
 	/**
-	 * Commands the robot to stop movement and odometry
+	 * Commands the robot to stop movement and recording odometry
 	 */
 	public void stopMatch() {
-		addCommand(OpCodes.STOP_MATCH.ordinal());
+		addCommand((byte) 0,(byte) OpCodes.STOP_MATCH.ordinal(),0);
 	}
 
-	/**
-	 * Commands the robot to play a tune
-	 */
-	public void celebrate() {
-		addCommand(OpCodes.CELEBRATE.ordinal());
-	}
 
 	public void setConnected(boolean isConnected) {
 		this.isConnected = isConnected;
@@ -293,5 +292,8 @@ public class RobotControl implements ConstantsReuse {
 	public boolean isConnected() {
 		return isConnected;
 	}
+	
+	public void logResponse(OpCodes response){
+		logger.info("Robot Response: " + response);	}
 
 }

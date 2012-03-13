@@ -16,7 +16,7 @@ public class Node implements Comparable<Node> {
 	boolean isStart;
 	private boolean isGoal;
 	
-	Node(int x, int y) {
+	public Node(int x, int y) {
 		this(x,y,false,Float.MAX_VALUE,false,false,false);
 	}
 	
