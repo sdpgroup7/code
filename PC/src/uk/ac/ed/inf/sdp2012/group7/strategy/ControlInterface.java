@@ -258,12 +258,14 @@ public class ControlInterface implements Observer {
 		Plan plan = (Plan) arg1;
 		if(plan.getPlanType()==PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
 			logger.info("Taking a penalty - first turn required angle");
-			double turnAngle = ControlInterfaceTools.angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
+			logger.info(String.format("Angles: %f", plan.getAngleWanted()));
+			double turnAngle = plan.getAngleWanted();
 			logger.info("Turn angle: " + turnAngle);
 			c.rotateBy(turnAngle,true);
 			logger.info("Now kick");
-			this.stopKick(); //This line must be "this.kick()". It fails if you use "c.kick()"
+			this.kick(); //This line must be "this.kick()". It fails if you use "c.kick()"
 			//this.stop();
+			//this.stopKick();
 		} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
 			logger.info("Defending a penalty - will repeatedly use moveForward(distance) and moveBackward(int)");
 			if (plan.getAction() == forwardWithDistance) {

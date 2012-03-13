@@ -204,7 +204,14 @@ public class RobotControl implements ConstantsReuse {
 	}
 
 	public void stopKick() {
-		addCommand((byte) 1, (byte) OpCodes.STOP.ordinal(),0);
+		try{
+			Thread.sleep(100);
+		} catch (Exception ex) {}
+		addCommand((byte) 0, (byte) OpCodes.STOP.ordinal(),0);
+		try{
+			Thread.sleep(100);
+		} catch (Exception ex) {}
+		addCommand((byte) 1, (byte) OpCodes.CONTINUE.ordinal(),0);
 	}
 	
 	/**

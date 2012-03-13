@@ -65,7 +65,7 @@ public class TargetDecision {
 	
 	//Constructor
 	public TargetDecision(AllMovingObjects aMO, AllStaticObjects aSO) {
-		
+		logger.info("INSIDE TARGET DECISION");
 		//get all information required
 		this.allMovingObjects = aMO;
 		this.allStaticObjects = aSO;
@@ -97,17 +97,17 @@ public class TargetDecision {
 		 * 
 		 */
 		
-		this.shotOnGoal = whereToShoot(allMovingObjects.getBallPosition());
-		
+		//this.shotOnGoal = whereToShoot(allMovingObjects.getBallPosition());
+		logger.info("Checking where to shoot");
 		Point ballPosition = allMovingObjects.getBallPosition();
 		
 		//catch for when the ball is not on the pitch
 		this.ballOnPitch = ((ballPosition.x >= 0) && (ballPosition.x <= allStaticObjects.getWidth()) && 
 				   (ballPosition.y >= 0) && (ballPosition.y <= allStaticObjects.getHeight()));
 		
-		
+		logger.info("Checking plan types inside target decision");
 		if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
-		
+			logger.info("In FREE_PLAY mode");
 			//Really need a better decision structure
 			if(!this.ballOnPitch){
 				
@@ -202,18 +202,20 @@ public class TargetDecision {
 			}
 		} 
 		else if(this.planType == PlanTypes.PlanType.HALT.ordinal()){
+			logger.info("Stopping");
 			this.action = PlanTypes.ActionType.STOP.ordinal();
 		}
 		
 		// Penalty offence
-		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {				
+		else if(this.planType == PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
+			logger.debug("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 			logger.debug("In penalty offence, will try to turn then kick");
 			double randomDecision = Math.random();
 			double angleToTurn;
 			if (randomDecision >= 0.5) {
-				angleToTurn = allMovingObjects.getOurAngle() + Math.PI/18;
+				angleToTurn = Math.PI/12.0f;
 			} else {
-				angleToTurn = allMovingObjects.getOurAngle() - Math.PI/18;
+				angleToTurn = -Math.PI/12.0f;
 			}
 			logger.debug("Setting angle to turn to as "+angleToTurn);
 			this.bestAngle = angleToTurn;
@@ -221,6 +223,7 @@ public class TargetDecision {
 			
 		// No other plan types so must be penalty defence
 		else {
+			logger.info("PENALTY_DEFENCE Mode");
 			// First method - using trig with their angle
 			/*double distanceBetween=Point.distance(	this.allMovingObjects.getOurPosition().x, 
 													this.allMovingObjects.getOurPosition().y, 

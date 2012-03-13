@@ -42,7 +42,7 @@ public class Plan {
 	//Constructor
 	public Plan(AllStaticObjects allStaticObjects, AllMovingObjects allMovingObjects) {
 		
-		logger.debug("Plan being generated");
+		logger.debug("\n\n\n\n\n\n\n\nPlan being generated");
 		
 		this.allStaticObjects = allStaticObjects;
 		this.allMovingObjects = allMovingObjects;

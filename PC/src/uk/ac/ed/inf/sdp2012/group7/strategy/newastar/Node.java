@@ -27,7 +27,7 @@ public class Node extends Point implements Comparable<Node> {
 	
 	//This constructor is use when the cost is irrelevant
 	public Node(Point point) {
-		this.here = point;
+		super(point.x, point.y);
 		this.obstacleCost = 0;
 	}
 
