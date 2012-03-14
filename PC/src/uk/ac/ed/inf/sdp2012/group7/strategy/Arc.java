@@ -12,14 +12,22 @@ public class Arc {
 	
 	private double radius;
 	private boolean left;
-	private int command;
+	private boolean flip = false;
 	//This is the number of cm in a golf ball
 	
-	public Arc(double r, boolean d, int c) {
+	public boolean isFlip() {
+		return flip;
+	}
+
+	public void setFlip(boolean flip) {
+		this.flip = flip;
+	}
+
+	public Arc(double r, boolean d, boolean c) {
 		Strategy.logger.info("New arc created: (radius,left):(" + r + "," + Boolean.toString(d) + ")");
 		this.radius = r;
 		this.left = d;
-		this.command = c;
+		this.flip = c;
 	}
 	
 	public double getRadius() {
@@ -38,13 +46,7 @@ public class Arc {
 		this.left = direction;
 	}
 
-	public void setCommand(int command) {
-		this.command = command;
-	}
-
-	public int getCommand() {
-		return command;
-	}
+	
 	
 
 }
