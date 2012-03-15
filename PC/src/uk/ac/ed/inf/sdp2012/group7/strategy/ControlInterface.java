@@ -43,6 +43,8 @@ public class ControlInterface implements Observer {
 	private int angle = PlanTypes.ActionType.ANGLE.ordinal();
 	private int forwardWithDistance = PlanTypes.ActionType.FORWARD_WITH_DISTANCE.ordinal();
 	private int backwardWithDistance = PlanTypes.ActionType.BACKWARD_WITH_DISTANCE.ordinal();
+	private int forwards = PlanTypes.ActionType.FORWARDS.ordinal();
+	private int backwards = PlanTypes.ActionType.BACKWARDS.ordinal();
 	
 
 	private ControlInterface(int lookahead) {
@@ -268,13 +270,19 @@ public class ControlInterface implements Observer {
 			//this.stop();
 			//this.stopKick();
 		} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
-			logger.info("Defending a penalty - will repeatedly use moveForward(distance) and moveBackward(int)");
-			if (plan.getAction() == forwardWithDistance) {
-				logger.info("Action is moveForwards("+plan.getDistanceInCM()+")"); 
-				c.moveForward((int)plan.getDistanceInCM());
+			logger.info("Defending a penalty - will repeatedly use non-blocking forwards and backwards");
+			if (plan.getAction() == forwards) {
+				logger.info("Action is forwards (non-blocking)"); 
+				c.moveForward();
+			} else if (plan.getAction() == backwards){
+				logger.info("Action is backwards (non-blocking)"); 
+				c.moveBackward();
 			} else {
-				logger.info("Action is moveBackwards("+plan.getDistanceInCM()+")");
-				c.moveBackward((int)plan.getDistanceInCM());
+				logger.info("Action is stop, we don't need to move");
+			}
+			try {
+				Thread.sleep(500);
+			} catch (Exception e){ 
 			}
 		} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
 				

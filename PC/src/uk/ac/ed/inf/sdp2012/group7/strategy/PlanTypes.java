@@ -18,6 +18,8 @@ public class PlanTypes {
 		ANGLE,
 		FORWARD_WITH_DISTANCE,
 		BACKWARD_WITH_DISTANCE,
+		FORWARDS,
+		BACKWARDS
 	}
 
 }
