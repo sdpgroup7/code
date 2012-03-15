@@ -5,17 +5,33 @@ import java.awt.Color;
 import java.awt.Point;
 
 public class OrientationFinder{
+	
+	/**
+	 * @author Dale Myers
+	 * @author Rado
+	 */
 
     ThresholdsState thresholdsState;
-
+    
+    /**
+     * A constructor
+     * 
+     * @param thresholdsState
+     */
     public OrientationFinder(ThresholdsState thresholdsState){
         this.thresholdsState = thresholdsState;
     }
+    
+    /**
+     * A constructor
+     */
     public OrientationFinder() {
     	super();
     }
 
     /**
+     * Fins the orientation
+     * 
      * Finds the orientation of a robot, given a list of the points contained within it's
      * T-shape (in terms of a list of x coordinates and y coordinates), the mean x and
      * y coordinates, and the image from which it was taken.
@@ -45,7 +61,16 @@ public class OrientationFinder{
     	ans = (ans + (3*Math.PI/2.0)) % (2*Math.PI); */
     	return ans; 
     }
-
+    
+    /**
+     * Terribly named
+     * 
+     * Finds the farthest point on T away from centroid to use when calculating orientation
+     * 
+     * @param pixels The points on the T
+     * @param centroid The robot centroid
+     * @return The farthest point
+     */
     public Point findOrientation(ArrayList<Point> pixels, Point centroid){    	
     	if(pixels.size() > 0){
     		

@@ -29,7 +29,7 @@ public class ControlInterface implements Observer {
 	
 	public static final Logger logger = Logger.getLogger(ControlInterface.class);
 	
-	private final int START_SPEED = 10;
+	private final int START_SPEED = 30;
 	
 	private static ControlInterface controlInterface = null;
 	private static int lookahead;

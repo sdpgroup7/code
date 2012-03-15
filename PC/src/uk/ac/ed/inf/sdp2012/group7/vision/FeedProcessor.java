@@ -15,6 +15,10 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 
 public class FeedProcessor{
+	
+	/**
+	 * @author ?
+	 */
     
     //private ThresholdsState thresholdsState; //might not be needed any more
     //private OrientationFinder orientationFinder; //might not be needed anymore
@@ -32,7 +36,16 @@ public class FeedProcessor{
 
     
     double prevAngle = 0;
-
+    
+    /**
+     * Constructor
+     * 
+     * @param il
+     * @param height
+     * @param width
+     * @param visionFeed
+     * @param ts
+     */
     public FeedProcessor(InitialLocation il, int height, int width, VisionFeed visionFeed, ThresholdsState ts){
         
     	//this.thresholdsState = controlGUI.getThresholdsState();
@@ -45,7 +58,14 @@ public class FeedProcessor{
         //this.orientationFinder = new OrientationFinder(this.thresholdsState);
         Vision.logger.info("Feed Processor Initialised");
     }
-
+    
+    /**
+     * Where everything is called from
+     * 
+     * @param image Current frame
+     * @param before ?
+     * @param label ?
+     */
     public void processAndUpdateImage(BufferedImage image, long before, JLabel label) {
     	if(Vision.TESTING && visionFeed.paused){
     		Graphics frameGraphics = label.getGraphics();
@@ -83,6 +103,10 @@ public class FeedProcessor{
 
     }
     
+    /**
+     * Draw pitch onto image
+     * @param im Current frame
+     */
     public void drawOverlay(BufferedImage im){
     	if(worldState.getOverlay() == null) return;
     	BufferedImage overlay = worldState.getOverlay();
@@ -105,7 +129,11 @@ public class FeedProcessor{
     }
     
 
-    
+    /**
+     * Draw positions of objects
+     * 
+     * @param imageGraphics ?
+     */
     public void markObjects(Graphics imageGraphics){
             Point ball = worldState.getBall().getPosition().getCentre();
             Point blue = worldState.getBlueRobot().getPosition().getCentre();
@@ -153,7 +181,16 @@ public class FeedProcessor{
             imageGraphics.drawLine(doThresh.getYellowGreenPlate4Points()[1].x,doThresh.getYellowGreenPlate4Points()[1].y, doThresh.getYellowGreenPlate4Points()[2].x, doThresh.getYellowGreenPlate4Points()[2].y);
     }
     
-
+    /**
+     * Calculates and draws FPS and the HUD
+     * 
+     * @param before ?
+     * @param imageGraphics ?
+     * @param frameGraphics ?
+     * @param image The frame to draw on
+     * @param width Of image
+     * @param height Of image
+     */
     public void calculateFPS(long before, Graphics imageGraphics, Graphics frameGraphics, BufferedImage image, int width, int height){
         /* Used to calculate the FPS. */
         long after = System.currentTimeMillis();

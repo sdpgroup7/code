@@ -5,10 +5,21 @@ import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
 public class Plate{
+	
+	/**
+	 * @author Dale Myers
+	 */
 
     private DistortionFix fix = new DistortionFix();
 
-	
+	/**
+	 * Get the corners of a plate
+	 * 
+	 * Use Dale's triangle method to get the corners of a plate
+	 * 
+	 * @param points The list of points that make up a plate
+	 * @return The four corners of the plate
+	 */
 	public Point[] getCorners(ArrayList<Point> points){
 		Point centroid = getCentroid(points);
 		Point furthest = new Point(0,0);
@@ -52,6 +63,17 @@ public class Plate{
 		return new Point[]{fix.barrelCorrected(furthest),fix.barrelCorrected(opposite),fix.barrelCorrected(adjacent),fix.barrelCorrected(adjacent2)};
 	}
 	
+	/**
+	 * Dale's triangle
+	 * 
+	 * Looks slightly further than it should to ensure it finds the farthest point
+	 * 
+	 * @param a One of the corners of triangle
+	 * @param b One of the corners of triangle
+	 * @param c One of the corners of triangle
+	 * @param p The point to check if its in the triangle
+	 * @return True if the points are in the triangle
+	 */
 	public boolean isPointInTriangle(Point a, Point b, Point c, Point p){
 		Point v0 = new Point(c.x - a.x, c.y - a.y);
 		Point v1 = new Point(b.x - a.x, b.y - a.y);
@@ -72,6 +94,17 @@ public class Plate{
 
 	}
 	
+	/**
+	 * Like Dale's but doesn't look too far
+	 * 
+	 * Used for orientation finding so that we don't look off of green plate
+	 * 
+	 * @param a One of the corners of triangle
+	 * @param b One of the corners of triangle
+	 * @param c One of the corners of triangle
+	 * @param p The point to check if its in the triangle
+	 * @return True if in triangle
+	 */
 	public boolean isPointInNotShitTriangle(Point a, Point b, Point c, Point p){
 		Point v0 = new Point(c.x - a.x, c.y - a.y);
 		Point v1 = new Point(b.x - a.x, b.y - a.y);
@@ -92,10 +125,23 @@ public class Plate{
 
 	}
 	
+	/**
+	 * Dot product?
+	 * 
+	 * @param a One Point
+	 * @param b One Point
+	 * @return The value of the dot product
+	 */
 	public int dot(Point a, Point b){
 		return (a.x * b.x) + (a.y *b.y);
 	}
 	
+	/**
+	 * Get centroid of plate?
+	 * 
+	 * @param points The points that make up the plate
+	 * @return The position of the centroid (Point)
+	 */
 	public Point getCentroid(ArrayList<Point> points){
 		Point centroid = new Point(0,0);
 		try{
@@ -107,7 +153,9 @@ public class Plate{
 			return new Point(0,0);
 		}
 	}
+	
 	/**
+	 * Use the triangle stuff to generate rectangle
 	 * 
 	 * @param a point p
 	 * @param array of four points, forming a rectangle
