@@ -14,7 +14,6 @@ import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
 import uk.ac.ed.inf.sdp2012.group7.control.ConstantsReuse;
-import java.util.Arrays;
 
 /**
  * Code that runs on the NXT brick
@@ -36,8 +35,8 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 	private static KickerThread kicker;
 
 	public volatile static boolean bumped = false;
-	
-	public static Object mutex = new Object();
+
+	public static final Object mutex = new Object();
 
 	public static void main(String[] args) throws Exception {
 
@@ -54,10 +53,9 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 
 
 		// set initial pilot variables to produce maximum speed
-		//pilot.regulateSpeed(true);
 		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()*0.7);
 		pilot.setRotateSpeed(pilot.getMaxRotateSpeed()*0.7);
-		pilot.setAcceleration(1000);
+		pilot.setAcceleration(800);
 
 		while (true) {
 			try {
@@ -85,7 +83,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 				while (n != OpCodes.QUIT) {
 					synchronized(mutex) {
 						try {
-							mutex.wait(250);
+							mutex.wait();
 						} catch (Exception ex) {
 							// the bump sensors aren't on (didn't notify us)
 						}
@@ -201,10 +199,6 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 
 	}
 
-	public static boolean equal(byte[] a, byte[] b){
-		return Arrays.equals(a,b);
-	}
-
 	/**
 	 * Returns an integer from a byte array
 	 */
@@ -231,39 +225,42 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 		TouchSensor touchB = new TouchSensor(SensorPort.S2);
 
 		while (true) {
-
-			if (touchA.isPressed() || touchB.isPressed()) {	
-				synchronized(mutex) {
-					bumped = true;
-
-					// flag sensor hit as being dealt with and save the speed
-					// we were going before the collision occurred
-					try{
-						os.write(OpCodes.BUMP_ON.ordinal());
-						os.flush();
-					} catch (Exception ex){}
-					pilot.stop();
-					Delay.msDelay(100);
-					// move back a little bit away from the wall
-					pilot.travel(-20);
-					LCD.clear();
-					LCD.drawString("End travel -20", 0, 0);
-					pilot.stop();
-					LCD.drawString("End stop", 0, 1);
-					// reset speed back to what it was before the collision
-					LCD.drawString("Restored travelSpeed", 0, 2);
-					try{
-						os.write(OpCodes.BUMP_OFF.ordinal());
-						os.flush();
-					} catch (Exception ex){
-						LCD.drawString("bump off failed", 0, 2);
+			synchronized(mutex) {
+				try {
+					if (touchA.isPressed() || touchB.isPressed()) {	
+	
+						bumped = true;
+	
+						// flag sensor hit as being dealt with and save the speed
+						// we were going before the collision occurred
+						try{
+							os.write(OpCodes.BUMP_ON.ordinal());
+							os.flush();
+						} catch (Exception ex){}
+						pilot.stop();
+						Delay.msDelay(100);
+						// move back a little bit away from the wall
+						pilot.travel(-20);
+						LCD.clear();
+						LCD.drawString("End travel -20", 0, 0);
+						pilot.stop();
+						LCD.drawString("End stop", 0, 1);
+						// reset speed back to what it was before the collision
+						LCD.drawString("Restored travelSpeed", 0, 2);
+						try{
+							os.write(OpCodes.BUMP_OFF.ordinal());
+							os.flush();
+						} catch (Exception ex){
+							LCD.drawString("bump off failed", 0, 2);
+						}
+						LCD.drawString("Sent BUMP_OFF", 0, 3);
+						bumped = false;
+	
+	
 					}
-					LCD.drawString("Sent BUMP_OFF", 0, 3);
-					bumped = false;
-					
+				} finally {
 					mutex.notifyAll();
 				}
-
 			}
 		}
 	}
