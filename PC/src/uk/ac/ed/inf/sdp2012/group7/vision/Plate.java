@@ -72,6 +72,26 @@ public class Plate{
 
 	}
 	
+	public boolean isPointInNotShitTriangle(Point a, Point b, Point c, Point p){
+		Point v0 = new Point(c.x - a.x, c.y - a.y);
+		Point v1 = new Point(b.x - a.x, b.y - a.y);
+		Point v2 = new Point(p.x - a.x, p.y - a.y);
+		
+		int dot00 = dot(v0, v0);
+		int dot01 = dot(v0, v1);
+		int dot02 = dot(v0, v2);
+		int dot11 = dot(v1, v1);
+		int dot12 = dot(v1, v2);
+
+		double invDenom = 1.0 / (double)(dot00 * dot11 - dot01 * dot01);
+		double u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+		double v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+		// Check if point is in triangle
+		return (u >= 0) && (v >= 0) && (u + v < 1);
+
+	}
+	
 	public int dot(Point a, Point b){
 		return (a.x * b.x) + (a.y *b.y);
 	}
@@ -101,8 +121,8 @@ public class Plate{
 		boolean a; 
 		boolean b; 
 		
-		a = isPointInTriangle(points[0], points[2], points[3], p);
-		b = isPointInTriangle(points[1], points[2], points[3], p);
+		a = isPointInNotShitTriangle(points[0], points[2], points[3], p);
+		b = isPointInNotShitTriangle(points[1], points[2], points[3], p);
 		
 		return a || b;
 	}

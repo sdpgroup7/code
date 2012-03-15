@@ -47,7 +47,7 @@ public class ThresholdsState {
 
 	
 	/* Green plates */
-	private int green_RG = 50;
+	private int green_RG = 75;
 	private int green_GB = 50;
 	private int green_g = 125;
 	
