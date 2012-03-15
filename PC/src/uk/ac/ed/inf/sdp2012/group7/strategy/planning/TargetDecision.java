@@ -90,8 +90,14 @@ public class TargetDecision {
 		* set target so we sit next to the ball
 		*
 		*/
-
-
+		
+		
+		//This is to test ball intercept 
+		/*if(this.planType == PlanTypes.PlanType.MILESTONE_4.ordinal()) {
+			this.navPoint = this.ballIntercept();
+			this.target = this.allMovingObjects.getBallPosition();
+		}*/
+		
 		if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
 
 		//these are controls for the navPoint / Target setting ball and goal centre
@@ -607,7 +613,7 @@ public class TargetDecision {
 	//REQUIRED
 	//Darie Picu
 	public Node ballPrediction(double time){
-		//formula used  d = d0 + v0*t + 1/2*a*t^2
+		//formula used  d = d0 + v0*t 
 		//              x = d cos(theta)
 		//			    y = d sin(theta) 
 		Node ball = allMovingObjects.getBallPosition();
@@ -641,17 +647,7 @@ public class TargetDecision {
 				x = - (x-pitchWidthInNodes);
 			}
 		}
-		/*if (x > pitchWidthInNodes) {
-			while (x > pitchWidthInNodes) {
-				numberBouncesX++;
-				x = x - pitchWidthInNodes;			
-			}
-			x = x * direction * Math.pow(-1, numberBouncesX);
-			
-			if (x < 0) {
-				x = x + pitchWidthInNodes;
-			}
-		}*/
+
 		if (x < 0) {
 			while (x < 0) {
 				numberBouncesX++;
@@ -715,6 +711,7 @@ public class TargetDecision {
 		}		
 		return target;		
 	}
+
 	
 	//method that checks whether there are any obstacles on the line between 2 points
 	//REQUIRED
