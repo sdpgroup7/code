@@ -93,12 +93,12 @@ public class TargetDecision {
 		
 		
 		//This is to test ball intercept 
-		/*if(this.planType == PlanTypes.PlanType.MILESTONE_4.ordinal()) {
+		if(this.planType == PlanTypes.PlanType.MILESTONE_4.ordinal()) {
 			this.navPoint = this.ballIntercept();
 			this.target = this.allMovingObjects.getBallPosition();
-		}*/
+		}
 		
-		if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
+		else if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
 
 		//these are controls for the navPoint / Target setting ball and goal centre
 		//variables - keep in here as Goal Def/Off doesn't care much for them :(
