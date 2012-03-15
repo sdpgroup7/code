@@ -55,12 +55,13 @@ public class AllMovingObjects {
 		this.ballPosition.setBall(true);
 		
 		//Angles from Vision are in the same system as ours, so no conversion required
+		//All angles are positive(0 -> 2*PI), 0 pointing to the right, angles growing clockwise , with Y axis inverted(standard).
 		
-	    this.ourAngle = worldState.getOurRobot().getAngle();
+	    this.ourAngle = convertAngle(worldState.getOurRobot().getAngle());
 	    
-	    this.theirAngle = worldState.getOpponentsRobot().getAngle();
+	    this.theirAngle = convertAngle(worldState.getOpponentsRobot().getAngle());
 	    
-	    this.ballAngle = worldState.getBall().getAngle();
+	    this.ballAngle = convertAngle(worldState.getBall().getAngle());
 		
 	    //VELOCITY which is in Pixels per Second, hence we use conversion into node
 	    
@@ -71,6 +72,9 @@ public class AllMovingObjects {
 		this.ballVelocity = allStaticObjects.convertDoubleToNode(worldState.getBall().getVelocity());	    
 	}
 	
+	public double convertAngle(double angle) {
+		return (angle + 2*Math.PI) % (Math.PI*2); 
+	}
 	
 	public double angleBetween(Node p1, Node p2) {
 		double angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
