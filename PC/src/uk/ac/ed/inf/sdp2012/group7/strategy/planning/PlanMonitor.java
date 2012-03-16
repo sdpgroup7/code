@@ -185,6 +185,23 @@ public class PlanMonitor {
         			int yp = (int)(y*nodeInPixels + (nodeInPixels / 4) + 0.5);
         			int width = (int)((nodeInPixels/2)+0.5);
         			int height = width;
+        			if(ascii[y][x] == "B"){
+        				graphics.setColor(Color.red);
+        			} else if(ascii[y][x] == "O"){
+        				if(worldState.getColor().equals(Color.blue)){
+        					graphics.setColor(Color.yellow);
+        				} else {
+        					graphics.setColor(Color.blue);
+        				}
+        			} else if(ascii[y][x] == "S"){
+        				graphics.setColor(Color.black);
+        			} else if(ascii[y][x] == "#"){
+        				graphics.setColor(Color.white);
+        			} else if(ascii[y][x] == "G"){
+        				graphics.setColor(Color.green);
+        			} else {
+        				graphics.setColor(Color.white);
+        			}
         			graphics.fillRect(xp, yp, width, height);
         		}
         	}
