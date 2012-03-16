@@ -188,7 +188,11 @@ public class PlanMonitor {
         			if(ascii[y][x] == "B"){
         				graphics.setColor(Color.red);
         			} else if(ascii[y][x] == "O"){
-        				graphics.setColor(Color.yellow);
+        				if(worldState.getColor().equals(Color.blue)){
+        					graphics.setColor(Color.yellow);
+        				} else {
+        					graphics.setColor(Color.blue);
+        				}
         			} else if(ascii[y][x] == "S"){
         				graphics.setColor(Color.black);
         			} else if(ascii[y][x] == "#"){
