@@ -4,12 +4,15 @@ import java.awt.image.BufferedImage;
 import java.awt.Color;
 import java.awt.Point;
 
+/**
+ * Get the robot's orientation
+ * 
+ * @author Dale Myers
+ * @author Rado
+ */
+
 public class OrientationFinder{
 	
-	/**
-	 * @author Dale Myers
-	 * @author Rado
-	 */
 
     ThresholdsState thresholdsState;
     

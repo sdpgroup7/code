@@ -1,12 +1,14 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
-
+/**
+ * Contains the tools we use for converting stuff
+ * 
+ * @author Dale Myers
+ */
 public class VisionTools {
 	
-	/**
-	 * @author Dale Myers
-	 */
+
 	
 	private static WorldState worldState = WorldState.getInstance();
 	//TODO: Test ALL of these. Comment to confirm

@@ -9,6 +9,7 @@ import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.MovingObject;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
+ * Does fucking everything.  Needs to be broken up
  * 
  * @author s0951580
  *  
