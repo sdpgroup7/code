@@ -85,4 +85,13 @@
 			<report format="frames" todir="${junit.output.dir}"/>
 		</junitreport>
 	</target>
+    <target name="javadocgenerate">
+        <javadoc packagenames="uk.ac.ed.inf.sdp2012.group7.*"
+            sourcepath="src"
+            destdir="../pcdoc"
+            author="true"
+            version="false"
+            windowtitle="Group 7 PC code">
+        </javadoc>
+    </target>
 </project>
