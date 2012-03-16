@@ -29,7 +29,7 @@ public class WorldState{
 	volatile Point yellowKeyPoint = new Point();
 	
 	volatile BufferedImage overlay = null;
-	volatile boolean generateOverlay = true;
+	volatile boolean generateOverlay = false;
 	
 	volatile ArrayList<Long> strategyTimes = new ArrayList<Long>();
 	
