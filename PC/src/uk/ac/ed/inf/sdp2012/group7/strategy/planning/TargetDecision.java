@@ -94,7 +94,7 @@ public class TargetDecision {
 		
 		//This is to test ball intercept 
 		if(this.planType == PlanTypes.PlanType.MILESTONE_4.ordinal()) {
-			this.navPoint = this.ballIntercept();
+			this.navPoint = this.ballPrediction(3);
 			this.target = this.allMovingObjects.getBallPosition();
 		}
 		
@@ -107,7 +107,7 @@ public class TargetDecision {
 		//this.predictedBallPosition = ballPrediction(3);
 
 		this.shotOnGoal = allStaticObjects.getCentreOfTheirGoal();
-		this.predictedBallPosition = allMovingObjects.getBallPosition();
+		this.predictedBallPosition =this.ballPrediction(3);//allMovingObjects.getBallPosition();
 
 		//REQUIRED
 		if(!this.ballOnPitch){
@@ -655,7 +655,8 @@ public class TargetDecision {
 		
 		
 		
-		Point predictedPoint = (new Point ((int)x,(int) y));		
+		Point predictedPoint = (new Point ((int)x,(int) y));
+		System.out.println("Predicted Point: " + predictedPoint.toString());
 		return predictedPoint;
 	}
 	

@@ -18,6 +18,7 @@ import javax.swing.event.ChangeListener;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
+import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
 import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
@@ -68,6 +69,8 @@ public class ControlGUI implements ChangeListener {
 	/* Tabs. */
 	private JTabbedPane tabPane;
 	private JPanel defaultPanel;
+	
+	private JButton milestone4Button;
 	
 	/* Radio buttons */
 	JButton pitch_0;
@@ -247,15 +250,29 @@ public class ControlGUI implements ChangeListener {
 		
 		JPanel startStopPanel = new JPanel();
 		
+		milestone4Button = new JButton("Milestone 4");
+		
+		startStopPanel.add(milestone4Button);
+		
 		startButton = new JButton("Start Match");
 		
 		startStopPanel.add(startButton);
+		
+		milestone4Button.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        strat.startPlanningThread(PlanTypes.PlanType.MILESTONE_4.ordinal());
+		    }
+		});
 		
 		startButton.addActionListener(new ActionListener() {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        strat.startPlanningThread(PlanTypes.PlanType.FREE_PLAY.ordinal());
+		       
+		        
 		    }
 		});
 		
