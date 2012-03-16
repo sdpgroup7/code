@@ -140,6 +140,12 @@ public class FeedProcessor{
             		p.x,
             		p.y);
             
+            p = Vision.worldState.getBall().getPosition().getCentre();
+            Vision.worldState.getBall().addBallsAngle(p);
+            Vision.worldState.getBall().calculateBallAngle();
+            
+            
+            
             imageGraphics.drawLine(doThresh.getBlueGreenPlate4Points()[0].x,doThresh.getBlueGreenPlate4Points()[0].y, doThresh.getBlueGreenPlate4Points()[3].x, doThresh.getBlueGreenPlate4Points()[3].y);
             imageGraphics.drawLine(doThresh.getBlueGreenPlate4Points()[0].x,doThresh.getBlueGreenPlate4Points()[0].y, doThresh.getBlueGreenPlate4Points()[2].x, doThresh.getBlueGreenPlate4Points()[2].y);
             imageGraphics.drawLine(doThresh.getBlueGreenPlate4Points()[1].x,doThresh.getBlueGreenPlate4Points()[1].y, doThresh.getBlueGreenPlate4Points()[3].x, doThresh.getBlueGreenPlate4Points()[3].y);
@@ -190,6 +196,7 @@ public class FeedProcessor{
         
         imageGraphics.drawString("Ball Position: (" + Vision.worldState.getBall().getPosition().getCentre().x + "," + Vision.worldState.getBall().getPosition().getCentre().y + ")", 410, 20);
         imageGraphics.drawString("Ball Velocity: " + String.format("%.4g%n", Vision.worldState.getBall().getVelocity()) + "px/s", 410, 35);
+        imageGraphics.drawString("Ball Bearing: " + String.format("%.4g%n", Vision.worldState.getBall().getAngle()) + "rads", 410, 50);
         
         imageGraphics.drawString("Strategy Update Time: " + Vision.worldState.getStrategyTime() + "ms", 220, 420);
         

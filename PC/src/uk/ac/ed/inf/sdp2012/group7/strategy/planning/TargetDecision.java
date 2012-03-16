@@ -94,8 +94,18 @@ public class TargetDecision {
 		
 		//This is to test ball intercept 
 		if(this.planType == PlanTypes.PlanType.MILESTONE_4.ordinal()) {
-			this.navPoint = this.ballPrediction(3);
-			this.target = this.allMovingObjects.getBallPosition();
+			System.out.println("ball pos:" +allMovingObjects.getBallPosition());
+			System.out.println("ball angle:" +allMovingObjects.getBallAngle());
+			System.out.println("ball velocity:" +allMovingObjects.getBallVelocity());
+			System.out.println("width:" +allStaticObjects.getWidth());
+			System.out.println("height:" +allStaticObjects.getHeight());
+			System.out.println("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).x);
+			System.out.println("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).y);
+			
+			//System.out.println("DICK" +allStaticObjects.convertToNode(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight())));
+			this.navPoint = ballPrediction(1.5);//(Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()));
+			
+			this.target = this.allStaticObjects.getCentreOfOurGoal();
 		}
 		
 		else if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
@@ -107,8 +117,8 @@ public class TargetDecision {
 		//this.predictedBallPosition = ballPrediction(3);
 
 		this.shotOnGoal = allStaticObjects.getCentreOfTheirGoal();
-		this.predictedBallPosition =this.ballPrediction(3);//allMovingObjects.getBallPosition();
-
+		//this.predictedBallPosition =ballPrediction(0);//allMovingObjects.getBallPosition();
+		this.navPoint = this.ballPrediction(10);
 		//REQUIRED
 		if(!this.ballOnPitch){
 				
@@ -593,6 +603,7 @@ public class TargetDecision {
 		//			    y = d sin(theta) 
 		Node ball = allMovingObjects.getBallPosition();
 		double angle = allMovingObjects.getBallAngle();
+		//System.err.println(angle);
 		double velocity = allMovingObjects.getBallVelocity();
 		double acceleration = allStaticObjects.getDeceleration();
 		//width and height of pitch in nodes
@@ -601,10 +612,10 @@ public class TargetDecision {
 		
 	
 		
-		return allStaticObjects.convertToNode(ballPredictionCalculation(ball, angle, velocity, time, pitchWidthInNodes, pitchHeightInNodes));
+		return (Node)(ballPredictionCalculation(ball, angle, velocity, time, pitchWidthInNodes, pitchHeightInNodes));
 	}
 	
-	public static Point ballPredictionCalculation(Node ball, double angle, double velocity, double time, double pitchWidthInNodes,double pitchHeightInNodes) {
+	public static Node ballPredictionCalculation(Node ball, double angle, double velocity, double time, double pitchWidthInNodes,double pitchHeightInNodes) {
 		double d = velocity * time;// + 1/2 * acceleration * time * time; 
 		double x = ball.x + d * Math.cos(angle);
 		double y = ball.y + d * Math.sin(angle);
@@ -623,7 +634,7 @@ public class TargetDecision {
 			}
 		}
 
-		if (x < 0) {
+		/*if (x < 0) {
 			while (x < 0) {
 				numberBouncesX++;
 				x = x + pitchWidthInNodes;
@@ -631,8 +642,9 @@ public class TargetDecision {
 			if (Math.pow(-1, numberBouncesX) < 0) {
 				x = - (x - pitchWidthInNodes);
 			}
-		}
-		
+		}*/
+		if (x<0) x=0;
+		if (y<0) y=0;
 		
 		if (y > pitchHeightInNodes) {
 			while (y > pitchHeightInNodes) {
@@ -643,7 +655,7 @@ public class TargetDecision {
 				y = - (y-pitchHeightInNodes);
 			}
 		}
-		if (y < 0) {
+		/*if (y < 0) {
 			while (y < 0) {
 				numberBouncesY++;
 				y = y + pitchHeightInNodes;
@@ -651,11 +663,11 @@ public class TargetDecision {
 			if (Math.pow(-1, numberBouncesY) < 0) {
 				y = - (y - pitchHeightInNodes);
 			}
-		}
+		}*/
 		
 		
 		
-		Point predictedPoint = (new Point ((int)x,(int) y));
+		Node predictedPoint = (new Node ((int)x,(int) y));
 		System.out.println("Predicted Point: " + predictedPoint.toString());
 		return predictedPoint;
 	}

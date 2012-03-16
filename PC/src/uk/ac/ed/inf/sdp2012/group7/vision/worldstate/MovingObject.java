@@ -14,6 +14,7 @@ public class MovingObject {
 	volatile float height = 0.2f;
 	volatile public ArrayList<TimePoint> positions = new ArrayList<TimePoint>();
 	volatile public ArrayList<Point> angles = new ArrayList<Point>();
+	volatile public ArrayList<Point> ballAngles = new ArrayList<Point>();
 	volatile public ArrayList<Point> movedAngles = new ArrayList<Point>();
 	volatile public ArrayList<Point> centroids = new ArrayList<Point>();
 	volatile public ArrayList<Point> movedCentroids = new ArrayList<Point>();
@@ -103,6 +104,30 @@ public class MovingObject {
 		}
 	}
 	
+	
+	/*
+	 * fuck this shit 
+	 */
+	
+	public void addBallsAngle(Point P) {
+		if (ballAngles.size() > 5) {
+			ballAngles.remove(0);
+			ballAngles.add(P);
+		}
+		else {
+			ballAngles.add(P);
+		}
+		
+	}
+	public void calculateBallAngle() {
+		
+			if(ballAngles.size()>1){
+				angle = Math.atan2(ballAngles.get(ballAngles.size()-1).y -  ballAngles.get(0).y, ballAngles.get(ballAngles.size()-1).x -  ballAngles.get(0).x);
+			}
+		
+		
+		
+	}
 	public double getAngle(){
 		return this.angle;
 	}
