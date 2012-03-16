@@ -156,6 +156,22 @@ public class BallPredictionTest {
 		
 	}
 	
+	@Test
+	public void ballPredictionCalculationTest10() {
+		Node ball = new Node(2,1);
+		double angle = Math.PI/4 + Math.PI;
+		double velocity = 1*Math.sqrt(2);
+		double time = 3;
+
+		System.out.println("Running ball prediction test 10");
+		Point expected = new Point(1,2);
+		Point actual = TargetDecision.ballPredictionCalculation(ball, angle, velocity, time, pitchWidthinNodes, pitchHeightinNodes);
+		System.out.println("Expected = (" + expected.x+","+expected.y+")");
+		System.out.println("Actual = (" + actual.x+","+actual.y+")");
+		Assert.assertEquals(expected, actual);
+		
+	}
+	
 
 	
 	
