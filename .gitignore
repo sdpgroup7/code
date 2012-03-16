@@ -3,6 +3,9 @@ PC/testData/**
 PC/junit/*.xml
 PC/backGround
 
+# Javadoc hosting
+pcdoc
+
 # OS Files #
 
 .DS_Store
