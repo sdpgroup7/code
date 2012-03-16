@@ -197,8 +197,6 @@ public class PlanMonitor {
         				graphics.setColor(Color.black);
         			} else if(ascii[y][x] == "#"){
         				graphics.setColor(Color.white);
-        			} else if(ascii[y][x] == "B"){
-        				graphics.setColor(Color.blue);
         			} else if(ascii[y][x] == "G"){
         				graphics.setColor(Color.green);
         			} else {
