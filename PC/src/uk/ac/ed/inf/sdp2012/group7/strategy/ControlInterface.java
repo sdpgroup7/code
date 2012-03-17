@@ -8,6 +8,7 @@ import java.util.Observer;
 
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
+import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
 import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.control.RobotControl;
@@ -43,12 +44,13 @@ public class ControlInterface implements Observer {
 	private int kick = PlanTypes.ActionType.KICK.ordinal();
 	private int stop = PlanTypes.ActionType.STOP.ordinal();
 	private int angle = PlanTypes.ActionType.ANGLE.ordinal();
-	private int angleKick = PlanTypes.ActionType.ANGLE_KICK.ordinal();
-	private int euclidForward = PlanTypes.ActionType.EUCLID_FORWARDS.ordinal();
-	private int euclidBackWards = PlanTypes.ActionType.EUCLID_BACKWARDS.ordinal();
+	private int forwardWithDistance = PlanTypes.ActionType.FORWARD_WITH_DISTANCE.ordinal();
+	private int backwardWithDistance = PlanTypes.ActionType.BACKWARD_WITH_DISTANCE.ordinal();
+	private int forwards = PlanTypes.ActionType.FORWARDS.ordinal();
+	private int backwards = PlanTypes.ActionType.BACKWARDS.ordinal();
 	
 
-	public ControlInterface(int lookahead) {
+	private ControlInterface(int lookahead) {
 		ControlInterface.lookahead = lookahead;
 		this.c = new RobotControl();
 		this.c.startCommunications();
@@ -82,8 +84,8 @@ public class ControlInterface implements Observer {
 	 * given using the pure pursuit algorithm
 	 */
 
-	public static Arc generateArc(Point2D p, ArrayList<Point> path, double v, 
-			 int lookahead, double nodeInPixels) {
+	public static Arc generateArc(Point2D p, ArrayList<Node> path, double v, 
+			int planAction, int lookahead, double nodeInPixels) {
 		// The paper where this maths comes from can be found here
 		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
 		
@@ -199,21 +201,7 @@ public class ControlInterface implements Observer {
 			double turnAngle = ControlInterfaceTools.angleToTurn(plan.getAngleWanted(), 
 					plan.getOurRobotAngle());
 			c.rotateBy(turnAngle);
-		
-		} else if (plan.getAction() == angleKick) {
-			logger.info("Action is to turn");
-			double turnAngle = ControlInterfaceTools.angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
-			c.rotateBy(turnAngle);
-			try {
-				Thread.sleep(250);
-			} catch (InterruptedException e) {}
-			logger.info("Action is to kick");
-			c.kick();
-		} else if (plan.getAction() == euclidForward) {
-			logger.info("Action is to drive forward");
-			c.moveForward((int)plan.getDistanceInCM());
 		}
-
 	}
 	
 		
@@ -226,7 +214,7 @@ public class ControlInterface implements Observer {
 	 * @return The goal point
 	 */
 	@SuppressWarnings("null")
-	public static Point2D findGoalPoint(ArrayList<Point> p, Point2D pos, int lookahead) throws Exception {
+	public static Point2D findGoalPoint(ArrayList<Node> p, Point2D pos, int lookahead) throws Exception {
 		
 		Circle2D zone = new Circle2D(pos.getX(), pos.getY(), lookahead);
 		logger.debug(String.format("Zone centre: (%f,%f)",pos.getX(),pos.getY()));
@@ -274,10 +262,17 @@ public class ControlInterface implements Observer {
 		c.kick();
 	}
 	
+	public void stopKick() {
+		c.stopKick();
+	}
+	
 	public void drive() {
 		c.moveForward();
 	}
 
+	public void stop() {
+		c.stop();
+	}
 	
 	
 	@Override
@@ -304,7 +299,7 @@ public class ControlInterface implements Observer {
 					c.moveForward((int)plan.getDistanceInCM());
 				}
 			} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
-				
+
 				//This means go for it, usual case
 				Arc arcToDrive = chooseArc(plan);
 				implimentArc(arcToDrive, plan);	
@@ -322,5 +317,6 @@ public class ControlInterface implements Observer {
 	} else
 		logger.info("Plan aready being excuted passing through");
 	}
+
 
 }

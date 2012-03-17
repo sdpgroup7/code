@@ -29,7 +29,9 @@ public class WorldState{
 	volatile Point yellowKeyPoint = new Point();
 	
 	volatile BufferedImage overlay = null;
-	volatile boolean generateOverlay = true;
+	volatile boolean generateOverlay = false;
+	
+	volatile ArrayList<Long> strategyTimes = new ArrayList<Long>();
 	
 	volatile private long lastUpdated = 0; //The timestamp of when worldstate was last updated
 	volatile private boolean clickingDone = false; //Says whether all clicking has been done (generally used by vision)
@@ -61,6 +63,22 @@ public class WorldState{
     		pitch.setBuffers(90,580,391,43);
     	}
     	updateShootingDirection();
+    }
+    
+    public void addStrategyTime(long l){
+    	strategyTimes.add(l);
+    	if(strategyTimes.size() > 10){
+    		strategyTimes.remove(0);
+    	}
+    }
+    
+    public float getStrategyTime(){
+    	long temp = 0;
+    	for(long l : strategyTimes){
+    		temp += l;
+    	}
+    	float t = (float)temp / (float)strategyTimes.size();
+    	return t;
     }
 	
     public void setGenerateOverlay(boolean set){

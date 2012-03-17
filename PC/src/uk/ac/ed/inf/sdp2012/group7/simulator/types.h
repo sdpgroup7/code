@@ -10,8 +10,9 @@
 #define java_int int32_t
 
 struct command {
-	enum opcodes instr;
-	int arg;
+	char kicker;
+	uint16_t arg;
+	char instr;
 };
 
 struct robot_status {

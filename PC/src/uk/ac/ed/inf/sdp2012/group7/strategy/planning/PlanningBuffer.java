@@ -14,11 +14,12 @@ import java.util.Observer;
 import org.apache.log4j.Logger;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
-import uk.ac.ed.inf.sdp2012.group7.strategy.astar.AStar;
-import uk.ac.ed.inf.sdp2012.group7.strategy.astar.AreaMap;
-import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
-import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Path;
+import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldAStar;
+import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldAreaMap;
+import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldNode;
+import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldPath;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.PlanMonitor;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
  * 
@@ -35,6 +36,7 @@ public class PlanningBuffer extends Observable implements Observer {
 	public static final Logger logger = Logger.getLogger(Plan.class);
 	private long timeStamp = System.currentTimeMillis();
 	private PlanMonitor planMonitor= new PlanMonitor();
+	private WorldState worldState = WorldState.getInstance();
 	
 	public PlanningBuffer(Observer myWatcher){
 		this.addObserver(myWatcher);
@@ -48,8 +50,10 @@ public class PlanningBuffer extends Observable implements Observer {
 			this.heldPlan = (Plan)arg;
 			setChanged();
 			notifyObservers(heldPlan);
+			worldState.addStrategyTime(System.currentTimeMillis() - timeStamp);
 			planMonitor.setPlan(heldPlan);
 			planMonitor.outputPlan();
+			timeStamp = System.currentTimeMillis();
 		}
 	}
 	

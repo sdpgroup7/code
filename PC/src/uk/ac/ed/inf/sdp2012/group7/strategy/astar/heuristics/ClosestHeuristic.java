@@ -1,12 +1,12 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy.astar.heuristics;
 
-import uk.ac.ed.inf.sdp2012.group7.strategy.astar.AStarHeuristic;
+import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldAStarHeuristic;
 
 /**
  * A heuristic that uses the tile that is closest to the target
  * as the next best tile.
  */
-public class ClosestHeuristic implements AStarHeuristic {
+public class ClosestHeuristic implements OldAStarHeuristic {
 
 	public float getEstimatedDistanceToGoal(int startX, int startY, int goalX, int goalY) {		
 		float dx = goalX - startX;
