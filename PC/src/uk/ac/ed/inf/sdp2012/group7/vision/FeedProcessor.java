@@ -1,11 +1,9 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.File;
-
-import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.Thresholding;
@@ -30,7 +28,6 @@ public class FeedProcessor{
     private Thresholding doThresh; // Do Thresholding 
     private VisionFeed visionFeed;
     private OrientationFinder findAngle; // finds the angle
-    private BufferedImage previousOverlay = null;
     private DistortionFix fix= new DistortionFix();
     private WorldState worldState = WorldState.getInstance();
     
@@ -126,8 +123,7 @@ public class FeedProcessor{
     			im.setRGB(x, y, rgb);
     		}
     	}
-    	
-    	previousOverlay = overlay;
+
     	
     }
     

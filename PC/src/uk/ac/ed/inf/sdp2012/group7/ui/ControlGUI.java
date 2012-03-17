@@ -4,7 +4,6 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -12,7 +11,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
@@ -20,9 +18,7 @@ import javax.swing.event.ChangeListener;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
-import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
@@ -52,8 +48,6 @@ public class ControlGUI implements ChangeListener {
 	private JButton kickButton;
 	private JButton driveButton;
 	
-	/*Locate Button*/
-	private JButton locateButton;
 	
 	/* Start/Stop Button */
 	private JButton startButton;

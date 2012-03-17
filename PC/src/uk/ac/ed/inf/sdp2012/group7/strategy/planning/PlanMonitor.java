@@ -3,25 +3,18 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
-import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldAreaMap;
-import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldNode;
-import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
-import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
-import uk.ac.ed.inf.sdp2012.group7.strategy.ControlInterface;
 
 
 public class PlanMonitor {
@@ -75,13 +68,8 @@ public class PlanMonitor {
 		//OldAreaMap map = currentPlan.getAStar().getAreaMap();
 		int height = currentPlan.getHeightInNodes();
 		int width = currentPlan.getMapWidth();
-		ArrayList<Node> waypoints = null;
-		try{
-			waypoints = currentPlan.getPath();
-		} catch (Exception ex){
-			Strategy.logger.error("Waypoins in generateASCIIPlan is null");
-			return new String[0][0];
-		}
+
+		
 		if(height <= 0) return new String[0][0];
 		String[][] ascii = new String[height][width];
 		for(int y = 0; y < ascii.length; y++){

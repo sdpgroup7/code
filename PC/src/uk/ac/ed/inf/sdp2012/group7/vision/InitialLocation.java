@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.Pitch;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 /**
  * Get the colour value of yellow and do the manual testing stuff
