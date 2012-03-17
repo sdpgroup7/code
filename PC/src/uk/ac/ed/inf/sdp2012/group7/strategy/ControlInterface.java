@@ -36,6 +36,9 @@ public class ControlInterface implements Observer {
 	private static int lookahead;
 	private RobotControl c;
 	
+	private boolean blocking = false; 
+	//Variable which we use to set so only one plan can be fired at once
+	
 	//So planning and us are working off the same page
 	private int drive = PlanTypes.ActionType.DRIVE.ordinal();
 	private int kick = PlanTypes.ActionType.KICK.ordinal();
@@ -73,7 +76,7 @@ public class ControlInterface implements Observer {
 	public static Arc chooseArc(Plan plan){
 		Point2D p = new Point2D(plan.getOurRobotPositionVisual());
 		double v = plan.getOurRobotAngle();
-		return generateArc(p,plan.getPath(),v,plan.getAction(),lookahead, plan.getNodeInPixels());
+		return generateArc(p,plan.getPath(),v,lookahead, plan.getNodeInPixels());
 	}
 	
 	/*
@@ -81,12 +84,13 @@ public class ControlInterface implements Observer {
 	 * given using the pure pursuit algorithm
 	 */
 
-	public static Arc generateArc(Point2D p, ArrayList<Node> path, double v, 
-			int planAction, int lookahead, double nodeInPixels) {
+	public static Arc generateArc(Point2D p, ArrayList<Node> path, double v, int lookahead, double nodeInPixels) {
 		// The paper where this maths comes from can be found here
 		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
 		
 		Point2D h = null;
+		
+		boolean needToTurn= false;
 
 		
 		v = ControlInterfaceTools.convertAngle(v); 
@@ -114,6 +118,16 @@ public class ControlInterface implements Observer {
 		logger.debug(String.format("Alpha: %f", alpha));
         //alpha is the angle from a line through the axis of the robot to the
         //goal point
+		
+		//Here we need to check if this point is actually in front of the 
+		//robot. If it is behind then we need to turn the robot around
+		
+	
+		if (ControlInterfaceTools.checkIfBehind(alpha)) {
+			needToTurn = true;
+		}
+			
+		
 
 		double d = h.getDistance(p);
 		logger.debug(String.format("d: %f",d));
@@ -137,13 +151,13 @@ public class ControlInterface implements Observer {
 		// If the arc is to the left (relative to the robot) then dir is true,
 		// else if it is going to the right then it is false
 		if (xhc >= 0) {
-			dir = false;
-		} else {
 			dir = true;
+		} else {
+			dir = false;
 		}
 		
 		double conversion = (double) VisionTools.pixelsToCM(nodeInPixels);
-		Arc arc = new Arc(R*conversion, dir, planAction);
+		Arc arc = new Arc(R*conversion, dir, needToTurn);
 
 		return arc;
 
@@ -155,11 +169,16 @@ public class ControlInterface implements Observer {
 			
 			logger.info("Action is to drive");
 			
-			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
-			logger.info(String.format("Command sent to robot: Drive on arc " +
+			if (path.isFlip()) {
+				c.rotateBy(Math.PI,true);
+				logger.info("Robot needs to turn around. Preforming 180");
+			} else {
+				this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
+				logger.info(String.format("Command sent to robot: Drive on arc " +
 					"radius %d with turn left: %b", 
 					(int)(path.getRadius()+0.5), path.isLeft()));
-		
+			}
+			
 		} else if (plan.getAction() == kick) {
 			logger.info("Action is to kick");
 			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
@@ -258,46 +277,45 @@ public class ControlInterface implements Observer {
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		logger.debug("Got a new plan");
-		Plan plan = (Plan) arg1;
-		if(plan.getPlanType()==PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
-			logger.info("Taking a penalty - first turn required angle");
-			logger.info(String.format("Angles: %f", plan.getAngleWanted()));
-			double turnAngle = plan.getAngleWanted();
-			logger.info("Turn angle: " + turnAngle);
-			c.rotateBy(turnAngle,true);
-			logger.info("Now kick");
-			this.kick(); //This line must be "this.kick()". It fails if you use "c.kick()"
-			//this.stop();
-			//this.stopKick();
-		} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
-			logger.info("Defending a penalty - will repeatedly use non-blocking forwards and backwards");
-			if (plan.getAction() == forwards) {
-				logger.info("Action is forwards (non-blocking)"); 
-				c.moveForward();
-			} else if (plan.getAction() == backwards){
-				logger.info("Action is backwards (non-blocking)"); 
-				c.moveBackward();
-			} else {
-				logger.info("Action is stop, we don't need to move");
-			}
-			try {
-				Thread.sleep(500);
-			} catch (Exception e){ 
-			}
-		} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
-				
-			//This means go for it, usual case
-			Arc arcToDrive = chooseArc(plan);
-			implimentArc(arcToDrive, plan);	
-			
-		} else if (plan.getPlanType()==PlanTypes.PlanType.HALT.ordinal()) {
-			
-			logger.info("Action is to stop");
-			c.stop();
-			logger.info("Command sent to robot: stop");
-			
-		} else {}
 		
+		if (!blocking) {
+			blocking = true;
+			Plan plan = (Plan) arg1;
+			if(plan.getPlanType()==PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
+				logger.info("Taking a penalty - first turn required angle");
+				double turnAngle = ControlInterfaceTools.angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
+				c.rotateBy(turnAngle);
+				try {
+					Thread.sleep(250);
+				} catch (InterruptedException e) {}
+				logger.info("Now kick");
+				c.kick();
+				c.stop();
+			} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
+				logger.info("Defending a penalty - will repeatedly use euclidForward and euclidBackwards");
+				/*if (plan.getAction() == euclidForward) {
+					logger.info("Action is euclidForwards"); 
+					c.moveForward((int)plan.getDistanceInCM());
+				}*/
+				//TODO: Laurie check this please
+			} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
+
+				//This means go for it, usual case
+				Arc arcToDrive = chooseArc(plan);
+				implimentArc(arcToDrive, plan);	
+			
+			} else if (plan.getPlanType()==PlanTypes.PlanType.HALT.ordinal()) {
+			
+				logger.info("Action is to stop");
+				c.stop();
+				logger.info("Command sent to robot: stop");
+			
+			} else {}
+		
+			blocking = false;
+		
+	} else
+		logger.info("Plan aready being excuted passing through");
 	}
 
 

@@ -37,17 +37,13 @@ public class SimulatorCommunication implements CommunicationInterface {
 	}
 
 
-	public void sendToRobot(int command) {
-		sendToRobot(ByteBuffer.allocate(4).putInt(command).array());
-	}
-
 	public OpCodes sendToRobot(byte[] command) {
 		try {
 			System.out.println("SC: Sending command '"+command.toString()+"' to simulator at "+addr());
 			os.write(command);
 			os.flush();
-			 int response = recieveFromRobot();
-		     return OpCodes.values()[response];
+			int response = recieveFromRobot();
+			return OpCodes.values()[response];
 		} catch (Exception e) {
 			System.out.println("SC: Sending command '"+command.toString()+"' to simulator at "+addr()+" failed: "+e.toString());
 			return OpCodes.CONTINUE;

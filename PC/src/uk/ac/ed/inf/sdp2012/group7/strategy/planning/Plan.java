@@ -59,6 +59,7 @@ public class Plan {
 		this.navPoint = this.targetDecision.getNavPoint();
 		
 		
+		//TODO: Chris can you make sure the following two lines should be here
 		this.ballObstacles = this.allMovingObjects.getBallObstacles();
 		this.robotObstacles = this.allMovingObjects.getRobotObstacles();
 		

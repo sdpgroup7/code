@@ -1,11 +1,7 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
-import javax.imageio.ImageIO;
-
-import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 import au.edu.jcu.v4l4j.V4L4JConstants;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 
@@ -20,7 +16,6 @@ import org.apache.log4j.Logger;
 * @author s0840449
 */
 public class Vision {
-    public static WorldState worldState;
     public static final Logger logger = Logger.getLogger(Vision.class);
     public static boolean TESTING = false;
     public static BufferedImage backgroundImage;
@@ -50,8 +45,6 @@ public class Vision {
         } else {
          Vision.logger.info("Vision System Started");
         }
-        
-        worldState = WorldState.getInstance();
 
         /* Default to main pitch. */
         /* Default values for the main vision window. */
