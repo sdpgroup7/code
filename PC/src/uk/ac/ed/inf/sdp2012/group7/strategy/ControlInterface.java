@@ -84,8 +84,7 @@ public class ControlInterface implements Observer {
 	 * given using the pure pursuit algorithm
 	 */
 
-	public static Arc generateArc(Point2D p, ArrayList<Node> path, double v, 
-			int planAction, int lookahead, double nodeInPixels) {
+	public static Arc generateArc(Point2D p, ArrayList<Node> path, double v, int lookahead, double nodeInPixels) {
 		// The paper where this maths comes from can be found here
 		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
 		
