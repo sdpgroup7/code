@@ -128,7 +128,7 @@ public class RobotControl implements ConstantsReuse {
 	private void sendToRobot(byte[] command) {
 		
 		if(!bumped){
-			if(currentCommandID != previousCommandID){
+			//if(currentCommandID != previousCommandID){
 				byte[] sendCommand = command.clone();
 				command = ByteBuffer.allocate(4).putInt(0).array(); //resets command to all 0
 				logger.info("Send "+OpCodes.values()[sendCommand[1]]);
@@ -137,7 +137,7 @@ public class RobotControl implements ConstantsReuse {
 				logResponse(response);
 				if(response == OpCodes.BUMP_ON) bumped = true;
 				previousCommandID = currentCommandID;
-			}
+			//}
 		} else {
 			while(getResponse() != OpCodes.BUMP_OFF.ordinal()){}
 			bumped = false;
@@ -172,11 +172,16 @@ public class RobotControl implements ConstantsReuse {
 		addCommand((byte) 0,(byte) OpCodes.FORWARDS.ordinal(),0);
 	}
 	
+	
+	public void moveForward(int speed) {
+		addCommand((byte) 0,(byte) OpCodes.FORWARDS.ordinal(),speed);
+	}
+	
 	/**
 	 * Commands the robot to move forwards a certain distance
 	 * @param distance Measured in cm
 	 */
-	public void moveForward(int distance) {
+	public void moveForwardDistance(int distance) {
 		addCommand((byte) 0,(byte) OpCodes.FORWARDS_WITH_DISTANCE.ordinal(),distance);
 	}
 	
@@ -187,11 +192,18 @@ public class RobotControl implements ConstantsReuse {
 	public void moveBackward() {
 		addCommand((byte) 0,(byte) OpCodes.BACKWARDS.ordinal(),0);
 	}
+	
+	/**
+	 * Commands the robot to move backward at a speed
+	 */
+	public void moveBackward(int speed) {
+		addCommand((byte) 0,(byte) OpCodes.BACKWARDS.ordinal(),speed);
+	}
 
 	/**
 	 * Commands the robot to move backward
 	 */
-	public void moveBackward(int distance) {
+	public void moveBackwardDistance(int distance) {
 		addCommand((byte) 0,(byte) OpCodes.BACKWARDS_WITH_DISTANCE.ordinal(),distance);
 	}
 

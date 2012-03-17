@@ -251,9 +251,7 @@ public class TargetDecision {
 			logger.debug("Their position is "+theirPosition);
 			Point ourPosition = allMovingObjects.getOurPosition();
 			logger.debug("Our position is "+ourPosition);
-			double visionAngle = this.allMovingObjects.getTheirAngle();
-			logger.debug("The angle from vision is "+visionAngle);
-			double theirAngle = ((this.allMovingObjects.getTheirAngle())+(3*Math.PI)/2) % (2*Math.PI);
+			double theirAngle = this.allMovingObjects.getTheirAngle();
 			logger.debug("Their angle after conversion is "+theirAngle);
 			
 			// avoids dividing by 0 caused by cos
@@ -291,8 +289,8 @@ public class TargetDecision {
 				this.action = PlanTypes.ActionType.STOP.ordinal(); }
 			
 			// drive upwards or downwards
-			logger.debug("Number of cm to drive is "+targetInCM);
-			if (nodesUpOrDown <-1) {
+			//logger.debug("Number of cm to drive is "+targetInCM);
+			if (nodesUpOrDown <-2) {
 				logger.debug("Need to drive upwards");
 				this.action = PlanTypes.ActionType.FORWARDS.ordinal();
 			} else {

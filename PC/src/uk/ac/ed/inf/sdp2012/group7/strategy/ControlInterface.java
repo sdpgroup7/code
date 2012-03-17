@@ -43,10 +43,10 @@ public class ControlInterface implements Observer {
 	private int kick = PlanTypes.ActionType.KICK.ordinal();
 	private int stop = PlanTypes.ActionType.STOP.ordinal();
 	private int angle = PlanTypes.ActionType.ANGLE.ordinal();
-	/*private int forwardWithDistance = PlanTypes.ActionType.FORWARD_WITH_DISTANCE.ordinal();
+	private int forwardWithDistance = PlanTypes.ActionType.FORWARD_WITH_DISTANCE.ordinal();
 	private int backwardWithDistance = PlanTypes.ActionType.BACKWARD_WITH_DISTANCE.ordinal();
 	private int forwards = PlanTypes.ActionType.FORWARDS.ordinal();
-	private int backwards = PlanTypes.ActionType.BACKWARDS.ordinal();*/
+	private int backwards = PlanTypes.ActionType.BACKWARDS.ordinal();
 	
 
 	private ControlInterface(int lookahead) {
@@ -291,12 +291,16 @@ public class ControlInterface implements Observer {
 				c.kick();
 				c.stop();
 			} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
-				logger.info("Defending a penalty - will repeatedly use euclidForward and euclidBackwards");
-				/*if (plan.getAction() == euclidForward) {
-					logger.info("Action is euclidForwards"); 
-					c.moveForward((int)plan.getDistanceInCM());
-				}*/
-				//TODO: Laurie check this please
+				logger.info("Defending a penalty - will repeatedly use non-blocking forwards and backwards");
+				if (plan.getAction() == forwards) {
+					logger.info("Action is forwards (non-blocking)");
+					c.moveForward(10);
+				} else if (plan.getAction() == backwards){
+					logger.info("Action is backwards (non-blocking)");
+					c.moveBackward(10);
+				} else {
+					logger.info("Action is stop, we don't need to move");
+				}
 			} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
 
 				//This means go for it, usual case
