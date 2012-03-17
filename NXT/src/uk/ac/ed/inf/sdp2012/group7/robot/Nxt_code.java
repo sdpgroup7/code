@@ -104,10 +104,16 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 							switch (n) {
 
 							case FORWARDS:
+								if(magnitude != 0){
+									pilot.setTravelSpeed(magnitude);
+								}
 								pilot.forward();
 								break;
 
 							case BACKWARDS:
+								if(magnitude != 0){
+									pilot.setTravelSpeed(magnitude);
+								}
 								pilot.backward();
 								break;
 
