@@ -11,9 +11,6 @@ import java.util.ArrayList;
 public class Plate{
 	
 	
-
-    private DistortionFix fix = new DistortionFix();
-
 	/**
 	 * Get the corners of a plate
 	 * 
@@ -62,7 +59,12 @@ public class Plate{
 				dist = Line2D.ptLineDist(furthest.x, furthest.y, opposite.x, opposite.y, p.x, p.y);
 			}
 		}
-		return new Point[]{fix.barrelCorrected(furthest),fix.barrelCorrected(opposite),fix.barrelCorrected(adjacent),fix.barrelCorrected(adjacent2)};
+		return new Point[]	{	
+								DistortionFix.barrelCorrected(furthest),
+								DistortionFix.barrelCorrected(opposite),
+								DistortionFix.barrelCorrected(adjacent),
+								DistortionFix.barrelCorrected(adjacent2)
+							};
 	}
 	
 	/**

@@ -1,7 +1,5 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
 import java.util.ArrayList;
-import java.awt.image.BufferedImage;
-import java.awt.Color;
 import java.awt.Point;
 
 /**

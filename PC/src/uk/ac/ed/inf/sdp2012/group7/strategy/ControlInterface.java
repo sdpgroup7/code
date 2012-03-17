@@ -1,6 +1,5 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Observable;
@@ -44,10 +43,10 @@ public class ControlInterface implements Observer {
 	private int kick = PlanTypes.ActionType.KICK.ordinal();
 	private int stop = PlanTypes.ActionType.STOP.ordinal();
 	private int angle = PlanTypes.ActionType.ANGLE.ordinal();
-	private int forwardWithDistance = PlanTypes.ActionType.FORWARD_WITH_DISTANCE.ordinal();
+	/*private int forwardWithDistance = PlanTypes.ActionType.FORWARD_WITH_DISTANCE.ordinal();
 	private int backwardWithDistance = PlanTypes.ActionType.BACKWARD_WITH_DISTANCE.ordinal();
 	private int forwards = PlanTypes.ActionType.FORWARDS.ordinal();
-	private int backwards = PlanTypes.ActionType.BACKWARDS.ordinal();
+	private int backwards = PlanTypes.ActionType.BACKWARDS.ordinal();*/
 	
 
 	private ControlInterface(int lookahead) {

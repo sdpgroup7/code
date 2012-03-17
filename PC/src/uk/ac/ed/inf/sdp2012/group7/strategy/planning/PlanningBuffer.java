@@ -3,21 +3,11 @@
  */
 package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 
-import java.awt.Point;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
-import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldAStar;
-import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldAreaMap;
-import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldNode;
-import uk.ac.ed.inf.sdp2012.group7.strategy.oldastar.OldPath;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.PlanMonitor;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 

@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
-import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 
@@ -129,15 +128,9 @@ public class TargetDecision {
 				this.navPoint = this.target;
 				
 			} else {
-				if (this.weHaveBall){
-					
-					logger.debug("DECISION MADE : WE HAVE THE BALL - KICK - assumption; we are on goal line");
-					this.action = PlanTypes.ActionType.KICK.ordinal();
-					this.target = this.allMovingObjects.getBallPosition();
-					this.setNavPointOpenNoOption();
+				
 				//Don't kill yourself
-				} else {
-					if(this.ballIsTooCloseToWall){
+				if(this.ballIsTooCloseToWall){
 					
 					//to construct dribble function
 					//go sit infront of our goal
@@ -157,6 +150,14 @@ public class TargetDecision {
 					this.navPoint = this.target;
 					
 				//Try to score
+				} else if (this.weHaveBall){
+					
+					logger.debug("DECISION MADE : WE HAVE THE BALL - KICK - assumption; we are on goal line");
+					this.action = PlanTypes.ActionType.KICK.ordinal();
+					this.target = this.allMovingObjects.getBallPosition();
+					this.setNavPointOpenNoOption();
+				
+				//Fetch
 				} else {
 
 					logger.debug("DECISION MADE : FETCH");
@@ -220,8 +221,7 @@ public class TargetDecision {
 					
 				}
 			}
-			}
-			} 
+		} 
 		else if(this.planType == PlanTypes.PlanType.HALT.ordinal()){
 			logger.info("Stopping");
 			this.action = PlanTypes.ActionType.STOP.ordinal();
@@ -354,7 +354,7 @@ public class TargetDecision {
 	//REDUNDANT
 	//but keep for possible future plans
 	//Chris Williams & Darie Picu
-	private void clearShot(){
+	/*private void clearShot(){
 
 		//Positions
 		Node ourPosition = allMovingObjects.getOurPosition();
@@ -377,7 +377,7 @@ public class TargetDecision {
 			}
 		}				
 
-	}
+	}*/
 	
 	//REQUIRED
 	//Chris Williams
@@ -604,7 +604,7 @@ public class TargetDecision {
 		double angle = allMovingObjects.getBallAngle();
 		//System.err.println(angle);
 		double velocity = allMovingObjects.getBallVelocity();
-		double acceleration = allStaticObjects.getDeceleration();
+		//double acceleration = allStaticObjects.getDeceleration();
 		//width and height of pitch in nodes
 		double pitchWidthInNodes = allStaticObjects.getWidth();
 		double pitchHeightInNodes = allStaticObjects.getHeight();

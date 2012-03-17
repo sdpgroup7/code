@@ -3,7 +3,6 @@ package uk.ac.ed.inf.sdp2012.group7.strategy.planning;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
 

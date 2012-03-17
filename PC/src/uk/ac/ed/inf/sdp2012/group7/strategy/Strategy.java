@@ -3,7 +3,6 @@ package uk.ac.ed.inf.sdp2012.group7.strategy;
 
 import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.*;
-import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
  * 

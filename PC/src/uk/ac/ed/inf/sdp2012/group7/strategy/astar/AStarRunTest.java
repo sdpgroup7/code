@@ -55,6 +55,6 @@ public class AStarRunTest {
 			}
 			
 			// run the algorithm
-			AStarRun run = new AStarRun(29, 58, start, end, balls, oppositions);
+			new AStarRun(29, 58, start, end, balls, oppositions);
 		}
 }

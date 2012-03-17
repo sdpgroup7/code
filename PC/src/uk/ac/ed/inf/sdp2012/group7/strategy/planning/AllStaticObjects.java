@@ -49,8 +49,8 @@ public class AllStaticObjects {
 	private Node inFrontOfTheirGoal;
 	private Node centreOfTheirGoal;
 	private Node centreOfOurGoal;
-	private Node ourTopGoalPost;
-	private Node ourBottomGoalPost;
+	//private Node ourTopGoalPost;
+	//private Node ourBottomGoalPost;
 	
 	//physics
 	private double deceleration;
@@ -83,8 +83,8 @@ public class AllStaticObjects {
 		
 		this.theirTopGoalPost = convertToNode(worldState.getOpponentsGoal().getTopLeft());
 		this.theirBottomGoalPost = convertToNode(worldState.getOpponentsGoal().getBottomLeft());
-		this.ourTopGoalPost = convertToNode(worldState.getOurGoal().getTopLeft());
-		this.ourBottomGoalPost = convertToNode(worldState.getOurGoal().getBottomLeft());
+		//this.ourTopGoalPost = convertToNode(worldState.getOurGoal().getTopLeft());
+		//this.ourBottomGoalPost = convertToNode(worldState.getOurGoal().getBottomLeft());
 		
 		//A* Settings
 		this.height = 29;
