@@ -93,5 +93,8 @@
             version="false"
             windowtitle="Group 7 PC code">
         </javadoc>
+        <exec executable="/bin/bash">
+            <arg value="publish.sh"/>
+        </exec>
     </target>
 </project>
