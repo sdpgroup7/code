@@ -61,6 +61,7 @@ public class ControlGUI implements ChangeListener {
 	private JButton debugButton;
 	private JButton errorButton;
 	private JButton fatalButton;
+	private JButton offButton;
 
 	
 	
@@ -584,6 +585,15 @@ public class ControlGUI implements ChangeListener {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		    	Logger.getRootLogger().setLevel(Level.FATAL);
+		    }
+		});
+		
+		offButton = new JButton("Off");
+		loggerPanel.add(offButton);
+		offButton.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	Logger.getRootLogger().setLevel(Level.OFF);
 		    }
 		});
 		

@@ -93,15 +93,15 @@ public class TargetDecision {
 		
 		//This is to test ball intercept 
 		if(this.planType == PlanTypes.PlanType.MILESTONE_4.ordinal()) {
-			System.out.println("ball pos:" +allMovingObjects.getBallPosition());
-			System.out.println("ball angle:" +allMovingObjects.getBallAngle());
-			System.out.println("ball velocity:" +allMovingObjects.getBallVelocity());
-			System.out.println("width:" +allStaticObjects.getWidth());
-			System.out.println("height:" +allStaticObjects.getHeight());
-			System.out.println("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).x);
-			System.out.println("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).y);
+			logger.info("ball pos:" +allMovingObjects.getBallPosition());
+			logger.info("ball angle:" +allMovingObjects.getBallAngle());
+			logger.info("ball velocity:" +allMovingObjects.getBallVelocity());
+			logger.info("width:" +allStaticObjects.getWidth());
+			logger.info("height:" +allStaticObjects.getHeight());
+			logger.info("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).x);
+			logger.info("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).y);
 			
-			//System.out.println("DICK" +allStaticObjects.convertToNode(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight())));
+			//logger.info("DICK" +allStaticObjects.convertToNode(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight())));
 			this.navPoint = ballPrediction(1.5);//(Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()));
 			
 			this.target = this.allStaticObjects.getCentreOfOurGoal();
@@ -667,7 +667,7 @@ public class TargetDecision {
 		
 		
 		Node predictedPoint = (new Node ((int)x,(int) y));
-		System.out.println("Predicted Point: " + predictedPoint.toString());
+		logger.info("Predicted Point: " + predictedPoint.toString());
 		return predictedPoint;
 	}
 	
