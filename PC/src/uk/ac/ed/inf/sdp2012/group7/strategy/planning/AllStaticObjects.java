@@ -56,6 +56,10 @@ public class AllStaticObjects {
 	private double deceleration;
 	//time it takes robot on average to get from one node to another
 	private double dt;
+	private double angleConstant;
+	private double lineConstant;
+
+
 
 	//worldstate getInstance
 	public WorldState worldState = WorldState.getInstance();
@@ -112,7 +116,9 @@ public class AllStaticObjects {
 		
 		this.deceleration = 0;
 		//this needs to be found experimentally
-		this.dt = 0.1;
+		this.dt = 0.5;
+		this.lineConstant = 0.1;
+		this.angleConstant = 0.15;
 	}
 
 
@@ -292,7 +298,15 @@ public class AllStaticObjects {
 	public double getDt() {
 		return dt;
 	}
+	
+	public double getAngleConstant() {
+		return angleConstant;
+	}
 
+
+	public double getLineConstant() {
+		return lineConstant;
+	}
 	
 	public int getPitchBottomBuffer() {
 		return pitchBottomBuffer;

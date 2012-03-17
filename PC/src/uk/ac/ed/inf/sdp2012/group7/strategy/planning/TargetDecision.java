@@ -99,13 +99,15 @@ public class TargetDecision {
 			System.out.println("ball velocity:" +allMovingObjects.getBallVelocity());
 			System.out.println("width:" +allStaticObjects.getWidth());
 			System.out.println("height:" +allStaticObjects.getHeight());
-			System.out.println("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).x);
-			System.out.println("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).y);
+			System.out.println("x:" +ballPrediction(2).x);
+			System.out.println("x:" +ballPrediction(2).y);
+			//System.out.println("first Goal:" +allStaticObjects.getTheirGoalNodes().get(0).y);
+			//System.out.println("first Goal:" +allStaticObjects.getTheirGoalNodes().get(allStaticObjects.getTheirGoalNodes().size()-1).y);
 			
-			//System.out.println("DICK" +allStaticObjects.convertToNode(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight())));
-			this.navPoint = ballPrediction(1.5);//(Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()));
 			
-			this.target = this.allStaticObjects.getCentreOfOurGoal();
+			this.navPoint = ballPrediction(2);
+			
+			this.target = this.allStaticObjects.getCentreOfTheirGoal();
 		}
 		
 		else if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
@@ -118,7 +120,7 @@ public class TargetDecision {
 
 		this.shotOnGoal = allStaticObjects.getCentreOfTheirGoal();
 		//this.predictedBallPosition =ballPrediction(0);//allMovingObjects.getBallPosition();
-		this.navPoint = this.ballPrediction(10);
+		this.navPoint = this.ballPrediction(2);//ballIntercept();
 		//REQUIRED
 		if(!this.ballOnPitch){
 				
@@ -621,8 +623,13 @@ public class TargetDecision {
 		
 		int numberBouncesX = 0;
 		int numberBouncesY = 0;
-		//dealing with bounces of the walls
 		
+		
+		//deling with ball heading towards either goal
+		if (x<0) x=0;
+		if (y<0) y=0;
+		
+		//dealing with bounces of the walls
 		if (x > pitchWidthInNodes) {
 			while (x > pitchWidthInNodes) {
 				numberBouncesX++;
@@ -633,7 +640,7 @@ public class TargetDecision {
 			}
 		}
 
-		/*if (x < 0) {
+		if (x < 0) {
 			while (x < 0) {
 				numberBouncesX++;
 				x = x + pitchWidthInNodes;
@@ -641,9 +648,8 @@ public class TargetDecision {
 			if (Math.pow(-1, numberBouncesX) < 0) {
 				x = - (x - pitchWidthInNodes);
 			}
-		}*/
-		if (x<0) x=0;
-		if (y<0) y=0;
+		}
+	;
 		
 		if (y > pitchHeightInNodes) {
 			while (y > pitchHeightInNodes) {
@@ -654,7 +660,7 @@ public class TargetDecision {
 				y = - (y-pitchHeightInNodes);
 			}
 		}
-		/*if (y < 0) {
+		if (y < 0) {
 			while (y < 0) {
 				numberBouncesY++;
 				y = y + pitchHeightInNodes;
@@ -662,7 +668,7 @@ public class TargetDecision {
 			if (Math.pow(-1, numberBouncesY) < 0) {
 				y = - (y - pitchHeightInNodes);
 			}
-		}*/
+		}
 		
 		
 		
@@ -690,9 +696,11 @@ public class TargetDecision {
 		while (!canGetThere && time < 5) {
 			time = time + dt;
 			target = ballPrediction(time);
-			//check if we can get to the target in time using Manhattan distance
-			double timeToGetThere = dt * (Math.abs(target.x - ourPosition.x) + (Math.abs(target.y - ourPosition.y)));
+			//check if we can get to the target in time using Manhattan distance			
+			double timeToGetThere =	timeBetweenTwoPoints(ourPosition, target);			 //dt * (Math.abs(target.x - ourPosition.x) + (Math.abs(target.y - ourPosition.y)));
+			System.out.println("time =" +time + "; timeTogetThere=" + timeToGetThere + "; target=" + target);
 			if (timeToGetThere <= time) {
+				
 				canGetThere = true;
 			}
 		}		
@@ -720,7 +728,12 @@ public class TargetDecision {
 		return false;
 	}
 	
-	
+	//method that returns how long it takes the robot to get from one point to another
+	private double timeBetweenTwoPoints(Node n1, Node n2) {
+		double angle = allMovingObjects.angleBetween(n1, n2);
+		double distance = n1.distance(n2);
+		return angle*allStaticObjects.getAngleConstant() + distance*allStaticObjects.getLineConstant();
+	}
 	
 	//GETTERS/SETTERS____________________________________________________________________________________
 	
