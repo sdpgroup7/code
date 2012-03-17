@@ -27,7 +27,8 @@ public class SimulatorCommunication implements CommunicationInterface {
 
 	public int receiveFromRobot() {
 		try {
-			return is.read();
+			int r = is.read();
+			return r;
 		} catch (Exception e) {
 			System.out.println("SC: Receiving command from simulator at "+addr()+" failed: "+e.toString());
 		}
@@ -37,7 +38,6 @@ public class SimulatorCommunication implements CommunicationInterface {
 
 	public OpCodes sendToRobot(byte[] command) {
 		try {
-			System.out.printf("SC: Sending command 0x%02x%02x%02x%02x to simulator at %s\n", command[0], command[1], command[2], command[3], addr());
 			os.write(command);
 			os.flush();
 			int response = recieveFromRobot();

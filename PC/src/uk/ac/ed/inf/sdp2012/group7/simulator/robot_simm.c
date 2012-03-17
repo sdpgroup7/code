@@ -42,6 +42,7 @@ void robot_thread(void *args) {
 		action_args.cmd = &cmd;
 		action_args.rs = a->status;
 		action_args.robot = a->robot;		
+		action_args.socket = socket;
 		pthread_create(&action_thread, NULL, action, &action_args);
 		
 		while ((recv_size = recv(socket, &buf, sizeof buf, 0)) > 0) {
@@ -55,8 +56,6 @@ void robot_thread(void *args) {
 			} else {
 				RT_SAY2("received opcode of wrong size (%i)\n", recv_size);
 			}
-			buf = cmd.instr;
-			send(socket, &buf, sizeof buf, 0);
 		}
 
 		cmd.instr = QUIT;
@@ -74,6 +73,7 @@ void action(void* args) {
 	int angle_temp = 0;
 	int distance = 0;
 
+
 	TIMED_LOOP
 
 		a->rs->kicker = 0;
@@ -81,6 +81,7 @@ void action(void* args) {
 		switch (a->cmd->instr) {
 			case CONTINUE:
 			case DO_NOTHING: break;
+			case START_MATCH:
 			case FORWARDS:
 					 a->rs->x = a->rs->x - speed * cos(a->rs->angle);
 					 a->rs->y = a->rs->y - speed * sin(a->rs->angle);
@@ -103,8 +104,8 @@ void action(void* args) {
 					}
 					break;
 			case STOP: AT_STUB("STOP\n"); break; /* I don't think this really needs to do anything. */
-			case CHANGE_SPEED: AT_STUB("CHANGE_SPEED\n"); speed = a->cmd->arg; break;
-			case ROTATE_LEFT:
+			case CHANGE_SPEED: speed = a->cmd->arg / 3; break;
+			case ROTATE_LEFT: 
 			case ROTATE_BLOCK_LEFT:
 					   a->rs->angle = ((360 - a->rs->angle) + a->cmd->arg) % 360;
 					   break;
@@ -128,7 +129,6 @@ void action(void* args) {
 						a->cmd->instr = DO_NOTHING;
 					}
 					break;
-			case START_MATCH: a->cmd->instr = FORWARDS; break;
 			case STOP_MATCH: AT_STUB("STOP_MATCH\n"); break;
 			case QUIT: AT_SAY("quitting action thread.\n"); return 0;
 		}
@@ -137,6 +137,8 @@ void action(void* args) {
 			a->rs->kicker = 1;
 			a->cmd->kicker = 0;
 		}
+
+		send(a->socket, &a->cmd->instr, sizeof a->cmd->instr, 0);
 
 
 	TIMED_LOOP_END
