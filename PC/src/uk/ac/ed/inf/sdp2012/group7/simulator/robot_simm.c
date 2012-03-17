@@ -69,17 +69,13 @@ void robot_thread(void *args) {
 void action(void* args) {
 	struct robot_action_thread_args * a = args;
 	int speed = 1;
-	int just_kicked = 0;
 	int angle_temp = 0;
 	int distance = 0;
 
 	TIMED_LOOP
 
-		/* Protract kicker */
-		if (just_kicked) {
-			just_kicked = 0;
-			a->rs->kicker = 0;
-		}
+		a->ws->kicker = 0;
+
 		switch (a->cmd->instr) {
 			case CONTINUE:
 			case DO_NOTHING: break;
@@ -106,10 +102,6 @@ void action(void* args) {
 					break;
 			case STOP: AT_STUB("STOP\n"); break; /* I don't think this really needs to do anything. */
 			case CHANGE_SPEED: speed = a->cmd->arg; break;
-			case KICK:
-					   just_kicked = 1;
-					   a->rs->kicker = 1;
-					   break;
 			case ROTATE_LEFT:
 			case ROTATE_BLOCK_LEFT:
 					   a->rs->angle = ((360 - a->rs->angle) + a->cmd->arg) % 360;
@@ -138,6 +130,12 @@ void action(void* args) {
 			case STOP_MATCH: AT_STUB("STOP_MATCH\n"); break;
 			case QUIT: AT_SAY("quitting action thread.\n"); return 0;
 		}
+
+		if (a->cmd->kicker) {
+			a->ws->kicker = 1;
+			a->cmd->kicker = 0;
+		}
+
 
 	TIMED_LOOP_END
 }
