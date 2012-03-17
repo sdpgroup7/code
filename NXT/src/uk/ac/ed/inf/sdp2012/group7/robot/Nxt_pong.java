@@ -6,13 +6,15 @@ import lejos.nxt.LCD;
 import lejos.nxt.Sound;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
+import uk.ac.ed.inf.sdp2012.group7.control.ConstantsReuse;
+
 
 /**
  * Simple NXT bluetooth pong
  */
-public class Nxt_pong implements Runnable {
+public class Nxt_pong {
 
-	public static int packet_size = 4
+	public static int packet_size = 5;
 
 	public static void main(String[] args) {				
 		try {
@@ -29,10 +31,10 @@ public class Nxt_pong implements Runnable {
 				os.write(packet);
 				os.flush();
 			}
-			is.close();
+			/*is.close();
 			os.close();
 			connection.close();
-			LCD.drawString("Pong finished.", 0, 2);
+			LCD.drawString("Pong finished.", 0, 2);*/
 		} catch (Exception e) {
 			LCD.drawString("EXCEPTION!", 0, 3);
 			System.err.println(e.getMessage());
