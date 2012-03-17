@@ -294,10 +294,11 @@ public class ControlInterface implements Observer {
 				c.stop();
 			} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
 				logger.info("Defending a penalty - will repeatedly use euclidForward and euclidBackwards");
-				if (plan.getAction() == euclidForward) {
+				/*if (plan.getAction() == euclidForward) {
 					logger.info("Action is euclidForwards"); 
 					c.moveForward((int)plan.getDistanceInCM());
-				}
+				}*/
+				//TODO: Laurie check this please
 			} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
 
 				//This means go for it, usual case
