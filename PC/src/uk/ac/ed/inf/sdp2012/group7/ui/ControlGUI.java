@@ -16,6 +16,9 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
@@ -52,6 +55,14 @@ public class ControlGUI implements ChangeListener {
 	/* Start/Stop Button */
 	private JButton startButton;
 	private JButton stopButton;
+	
+	/*Logging buttons*/
+	private JButton infoButton;
+	private JButton debugButton;
+	private JButton errorButton;
+	private JButton fatalButton;
+
+	
 	
 	/*Penalty mode buttons */
 	private JButton penaltyAttackButton;
@@ -536,6 +547,49 @@ public class ControlGUI implements ChangeListener {
 		
 		
 		defaultPanel.add(startStopPanel);
+		
+		
+		JPanel loggerPanel = new JPanel();
+		
+		infoButton = new JButton("Info");
+		loggerPanel.add(infoButton);
+		infoButton.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	Logger.getRootLogger().setLevel(Level.INFO);
+		    }
+		});
+		
+		debugButton = new JButton("Debug");
+		loggerPanel.add(debugButton);
+		debugButton.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	Logger.getRootLogger().setLevel(Level.DEBUG);
+		    }
+		});
+		
+		errorButton = new JButton("Error");
+		loggerPanel.add(errorButton);
+		errorButton.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	Logger.getRootLogger().setLevel(Level.ERROR);
+		    }
+		});
+		
+		fatalButton = new JButton("Fatal");
+		loggerPanel.add(fatalButton);
+		fatalButton.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	Logger.getRootLogger().setLevel(Level.FATAL);
+		    }
+		});
+		
+		
+		
+		defaultPanel.add(loggerPanel);
 		
 		JPanel overlayPanel = new JPanel();
 		
