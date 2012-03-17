@@ -128,15 +128,9 @@ public class TargetDecision {
 				this.navPoint = this.target;
 				
 			} else {
-				if (this.weHaveBall){
-					
-					logger.debug("DECISION MADE : WE HAVE THE BALL - KICK - assumption; we are on goal line");
-					this.action = PlanTypes.ActionType.KICK.ordinal();
-					this.target = this.allMovingObjects.getBallPosition();
-					this.setNavPointOpenNoOption();
+				
 				//Don't kill yourself
-				} else {
-					if(this.ballIsTooCloseToWall){
+				if(this.ballIsTooCloseToWall){
 					
 					//to construct dribble function
 					//go sit infront of our goal
@@ -156,6 +150,14 @@ public class TargetDecision {
 					this.navPoint = this.target;
 					
 				//Try to score
+				} else if (this.weHaveBall){
+					
+					logger.debug("DECISION MADE : WE HAVE THE BALL - KICK - assumption; we are on goal line");
+					this.action = PlanTypes.ActionType.KICK.ordinal();
+					this.target = this.allMovingObjects.getBallPosition();
+					this.setNavPointOpenNoOption();
+				
+				//Fetch
 				} else {
 
 					logger.debug("DECISION MADE : FETCH");
@@ -219,8 +221,7 @@ public class TargetDecision {
 					
 				}
 			}
-			}
-			} 
+		} 
 		else if(this.planType == PlanTypes.PlanType.HALT.ordinal()){
 			logger.info("Stopping");
 			this.action = PlanTypes.ActionType.STOP.ordinal();

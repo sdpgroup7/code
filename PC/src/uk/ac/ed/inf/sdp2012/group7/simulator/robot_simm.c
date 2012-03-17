@@ -74,7 +74,7 @@ void action(void* args) {
 
 	TIMED_LOOP
 
-		a->ws->kicker = 0;
+		a->rs->kicker = 0;
 
 		switch (a->cmd->instr) {
 			case CONTINUE:
@@ -132,7 +132,7 @@ void action(void* args) {
 		}
 
 		if (a->cmd->kicker) {
-			a->ws->kicker = 1;
+			a->rs->kicker = 1;
 			a->cmd->kicker = 0;
 		}
 
