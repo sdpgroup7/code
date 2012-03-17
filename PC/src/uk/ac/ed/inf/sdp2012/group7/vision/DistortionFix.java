@@ -5,12 +5,16 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
 
+/**
+ * Class to remove barrel distortion from bufferedimages
+ * 
+ * @author Rado
+ * @author James Hulme
+ * 
+ */
+
+
 public class DistortionFix {
-	
-	/**
-	 * @author Rado
-	 * @author James Hulme
-	 */
 	
 	private static int width = 640;
 	private static int height = 480;

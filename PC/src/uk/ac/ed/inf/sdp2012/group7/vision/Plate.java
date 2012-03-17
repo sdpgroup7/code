@@ -3,12 +3,14 @@ package uk.ac.ed.inf.sdp2012.group7.vision;
 import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
-
+/**
+ * Finding rectangles around the green plate
+ * 
+ * @author Dale Myers
+ */
 public class Plate{
 	
-	/**
-	 * @author Dale Myers
-	 */
+	
 
     private DistortionFix fix = new DistortionFix();
 

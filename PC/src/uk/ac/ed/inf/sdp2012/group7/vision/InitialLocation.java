@@ -15,13 +15,15 @@ import javax.swing.JFrame;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.Pitch;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
-
+/**
+ * Get the colour value of yellow and do the manual testing stuff
+ * 
+ * @author James Hulme
+ * @author Dale Myers
+ */
 public class InitialLocation implements MouseListener, MouseMotionListener {
 	
-	/**
-	 * @author James Hulme
-	 * @author Dale Myers
-	 */
+
     
     private int count = 0;
     private Point coords = new Point();

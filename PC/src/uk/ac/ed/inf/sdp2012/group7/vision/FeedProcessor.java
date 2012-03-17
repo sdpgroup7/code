@@ -12,13 +12,16 @@ import uk.ac.ed.inf.sdp2012.group7.vision.Thresholding;
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionFeed;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
-
+/**
+ * Do our work on the frames, call the thresholding,
+ * do the marking of frames etc
+ * 
+ * @author ?
+ */
 
 public class FeedProcessor{
 	
-	/**
-	 * @author ?
-	 */
+
     
     //private ThresholdsState thresholdsState; //might not be needed any more
     //private OrientationFinder orientationFinder; //might not be needed anymore
