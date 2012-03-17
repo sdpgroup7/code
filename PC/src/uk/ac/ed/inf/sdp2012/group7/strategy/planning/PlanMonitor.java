@@ -12,7 +12,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
+import org.apache.log4j.Logger;
+
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
@@ -22,6 +23,7 @@ public class PlanMonitor {
 	private Plan currentPlan;
 	private WorldState worldState = WorldState.getInstance();
 	private double nodeInPixels;
+	public static final Logger logger = Logger.getLogger(PlanMonitor.class);
 	
 	public PlanMonitor(Plan plan){
 		currentPlan = plan;
@@ -43,13 +45,13 @@ public class PlanMonitor {
 			out = new BufferedWriter(new FileWriter("plan.txt",true));
 			out.write(generateASCIIPlan().toString());
 		} catch (IOException ex) { 
-			Strategy.logger.error("Could not write to file: " + ex.getMessage());
+			logger.error("Could not write to file: " + ex.getMessage());
 		} finally {
 			if(out != null){
 				try{
 					out.close();
 				} catch (Exception ex){
-					Strategy.logger.error("Error in closing buffered writer: " + ex.getMessage());
+					logger.error("Error in closing buffered writer: " + ex.getMessage());
 				}
 			}
 		}
@@ -58,10 +60,10 @@ public class PlanMonitor {
 	public void outputPlan(){
 		long start = System.currentTimeMillis();
 		String[][] plan = generateASCIIPlan();
-		System.out.println(plan.toString());
+		logger.info(plan.toString());
 		generateImage(plan);
 		long timed = System.currentTimeMillis() - start;
-		Strategy.logger.info("Time to generate plan render: " + timed + "ms");
+		logger.info("Time to generate plan render: " + timed + "ms");
 	}
 	
 	public String[][] generateASCIIPlan(){
@@ -114,7 +116,7 @@ public class PlanMonitor {
 		    File outputfile = new File("planoutput.png");
 		    ImageIO.write(bi, "png", outputfile);
 		} catch (IOException ex) {
-			Strategy.logger.error("Error saving image: " + ex.getMessage());
+			logger.error("Error saving image: " + ex.getMessage());
 		}
 	}
 	
@@ -123,44 +125,10 @@ public class PlanMonitor {
 		int height = worldState.getPitch().getHeightInPixels();
 		BufferedImage im = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
 		im = generateOverlay(text,im);
-		im = markData(im);
 		worldState.setOverlay(im);
 		return im;
 	}
 	
-	public BufferedImage markData(BufferedImage im){
-		/*Graphics2D graphics = im.createGraphics();
-		//ControlInterface ci = new ControlInterface(5);
-		Arc arc = ControlInterface.chooseArc(currentPlan);
-		double radius = arc.getRadius();
-		double angle = currentPlan.getOurRobotAngle();
-		if(arc.isLeft()) {
-			angle = angle + (Math.PI * 2) - (Math.PI/2);
-		} else {
-			angle = angle + Math.PI/2;
-		}
-		angle = angle % (Math.PI*2);
-		double retAngle = (Math.PI + angle) % (Math.PI * 2);
-		int x = (int)(currentPlan.getNodeInPixels()*currentPlan.getOurRobotPosition().x + (currentPlan.getNodeInPixels()*radius*Math.cos(angle)));
-		int y = (int)(currentPlan.getNodeInPixels()*currentPlan.getOurRobotPosition().y + (currentPlan.getNodeInPixels()*radius*Math.sin(angle)));
-		
-		Strategy.logger.info("Arc info: " + String.format("%d,%d,%d,%d,%d,%d",x, y, 
-				(int)radius, (int)radius, 
-				(int)Math.toDegrees(VisionTools.convertAngleBack(retAngle)), 
-				(int)Math.toDegrees(VisionTools.convertAngleBack(Math.PI))));
-		
-		graphics.drawArc(	x, y, 
-							(int)radius, (int)radius, 
-							Math.abs((int)Math.toDegrees(VisionTools.convertAngleBack(retAngle))), 
-							Math.abs((int)Math.toDegrees(VisionTools.convertAngleBack(Math.PI))));
-		
-		graphics.drawOval(	(int)(	currentPlan.getNodeInPixels() * 
-									currentPlan.getOurRobotPositionVisual().x)-15, 
-							(int)(	currentPlan.getNodeInPixels() *
-									currentPlan.getOurRobotPositionVisual().y)-15,
-							30, 30);*/
-		return im;
-	}
 		
     public BufferedImage generateOverlay(String[][] ascii, BufferedImage image){
     	Graphics graphics = image.getGraphics();
