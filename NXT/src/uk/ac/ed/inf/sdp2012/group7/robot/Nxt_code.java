@@ -99,8 +99,8 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 							n = OpCodes.values()[byteBuffer[1]];
 							int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
 							LCD.clear();
-							LCD.drawString(n.toString(), 0, 4);
-							LCD.drawString(Integer.toString(magnitude), 0, 5);
+							LCD.drawString("CMD: " + n.toString(), 0, 4);
+							LCD.drawString("MAG: " + Integer.toString(magnitude), 0, 5);
 							switch (n) {
 
 							case FORWARDS:
