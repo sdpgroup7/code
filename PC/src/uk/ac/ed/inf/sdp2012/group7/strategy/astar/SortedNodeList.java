@@ -6,7 +6,12 @@ import java.util.Collections;
 
 class SortedNodeList extends ArrayList<Node>{
 	
-    @Override
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Override
 	public boolean add(Node node) {
 		boolean temp = super.add(node);
 		Collections.sort(this);

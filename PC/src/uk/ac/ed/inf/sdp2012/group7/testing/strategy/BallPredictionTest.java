@@ -1,37 +1,33 @@
 package uk.ac.ed.inf.sdp2012.group7.testing.strategy;
-import static org.junit.Assert.assertTrue;
 
 import java.awt.Point;
-
 import junit.framework.Assert;
-
 import org.junit.Test;
-
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.TargetDecision;
 
 public class BallPredictionTest {
-	
+
 	//width and height of pitch in nodes
 	private double pitchWidthinNodes = 58;
 	private double pitchHeightinNodes = 29;
-	
+
 	@Test
 	public void ballPredictionCalculationTest1() {
 		Node ball = new Node (0,0);
 		double angle = 0;
 		double velocity = 0;
 		double time = 5;
-	
+
 		System.out.println("Running  ball prediction test 1");
 		Point expected = new Point(0,0);
 		Point actual = TargetDecision.ballPredictionCalculation(ball, angle, velocity, time, pitchWidthinNodes, pitchHeightinNodes);
 		System.out.println("Expected = (" + expected.x+","+expected.y+")");
 		System.out.println("Actual = (" + actual.x+","+actual.y+")");
 		Assert.assertEquals(expected, actual);
-		
+
 	}
-	
+
 	@Test
 	public void ballPredictionCalculationTest2() {
 		Node ball = new Node(0,0);
@@ -45,7 +41,7 @@ public class BallPredictionTest {
 		System.out.println("Expected = (" + expected.x+","+expected.y+")");
 		System.out.println("Actual = (" + actual.x+","+actual.y+")");
 		Assert.assertEquals(expected, actual);
-		
+
 	}
 	@Test
 	public void ballPredictionCalculationTest3() {
@@ -60,9 +56,9 @@ public class BallPredictionTest {
 		System.out.println("Expected = (" + expected.x+","+expected.y+")");
 		System.out.println("Actual = (" + actual.x+","+actual.y+")");
 		Assert.assertEquals(expected, actual);
-		
+
 	}
-	
+
 	@Test
 	public void ballPredictionCalculationTest4() {
 		Node ball = new Node(0,0);
@@ -76,9 +72,9 @@ public class BallPredictionTest {
 		System.out.println("Expected = (" + expected.x+","+expected.y+")");
 		System.out.println("Actual = (" + actual.x+","+actual.y+")");
 		Assert.assertEquals(expected, actual);
-		
+
 	}
-	
+
 	@Test
 	public void ballPredictionCalculationTest5() {
 		Node ball = new Node(0,0);
@@ -92,7 +88,7 @@ public class BallPredictionTest {
 		System.out.println("Expected = (" + expected.x+","+expected.y+")");
 		System.out.println("Actual = (" + actual.x+","+actual.y+")");
 		Assert.assertEquals(expected, actual);
-		
+
 	}
 	@Test
 	public void ballPredictionCalculationTest6() {
@@ -107,7 +103,7 @@ public class BallPredictionTest {
 		System.out.println("Expected = (" + expected.x+","+expected.y+")");
 		System.out.println("Actual = (" + actual.x+","+actual.y+")");
 		Assert.assertEquals(expected, actual);
-		
+
 	}
 	@Test
 	public void ballPredictionCalculationTest7() {
@@ -122,7 +118,7 @@ public class BallPredictionTest {
 		System.out.println("Expected = (" + expected.x+","+expected.y+")");
 		System.out.println("Actual = (" + actual.x+","+actual.y+")");
 		Assert.assertEquals(expected, actual);
-		
+
 	}
 	@Test
 	public void ballPredictionCalculationTest8() {
@@ -137,9 +133,9 @@ public class BallPredictionTest {
 		System.out.println("Expected = (" + expected.x+","+expected.y+")");
 		System.out.println("Actual = (" + actual.x+","+actual.y+")");
 		Assert.assertEquals(expected, actual);
-		
+
 	}
-	
+
 	@Test
 	public void ballPredictionCalculationTest9() {
 		Node ball = new Node(0,0);
@@ -153,9 +149,9 @@ public class BallPredictionTest {
 		System.out.println("Expected = (" + expected.x+","+expected.y+")");
 		System.out.println("Actual = (" + actual.x+","+actual.y+")");
 		Assert.assertEquals(expected, actual);
-		
+
 	}
-	
+
 	@Test
 	public void ballPredictionCalculationTest10() {
 		Node ball = new Node(2,1);
@@ -169,9 +165,9 @@ public class BallPredictionTest {
 		System.out.println("Expected = (" + expected.x+","+expected.y+")");
 		System.out.println("Actual = (" + actual.x+","+actual.y+")");
 		Assert.assertEquals(expected, actual);
-		
+
 	}
-	
+
 	@Test
 	public void ballPredictionCalculationTest11() {
 		Node ball = new Node(14,18);
@@ -185,13 +181,13 @@ public class BallPredictionTest {
 		System.out.println("Expected = (" + expected.x+","+expected.y+")");
 		System.out.println("Actual = (" + actual.x+","+actual.y+")");
 		Assert.assertEquals(expected, actual);
-		
+
 	}
 
-	
-	
-	
 
-	
+
+
+
+
 
 }

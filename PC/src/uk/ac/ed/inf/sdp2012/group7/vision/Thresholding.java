@@ -44,7 +44,6 @@ public class Thresholding {
 	private Point[] blueGreenPlate4Points = new Point[]{new Point(0,0),new Point(0,0),new Point(0,0),new Point(0,0)};
 	private Point[] yellowGreenPlate4Points = new Point[]{new Point(0,0),new Point(0,0),new Point(0,0),new Point(0,0)};
 
-	private DistortionFix fix = new DistortionFix();
 
 	private Color c;
 	/*The north, south, east and west immediate pixel's colors of c*/
@@ -57,17 +56,14 @@ public class Thresholding {
 
 	private int GB;// green - blue
 	private int RG; // red - green
-	private int RB; // red - blue
-	private int RGthresh;
+	//private int RB; // red - blue
+	//private int RGthresh;
 
 	private int[][] redBallThresh= new int[2][3];
 	private int[][] yellowRobotThresh= new int[2][3];
 	private int[][] blueRobotThresh= new int[2][3];
 	private int[][] greenPlatesThresh= new int[2][1];
 
-	private int pitch; 
-	private int height;
-	private int width;
 
 	private Point redCentroidA = new Point();
 	private Point redCentroidB = new Point();
@@ -84,7 +80,6 @@ public class Thresholding {
 	private Point yellowCentroidC = new Point();
 	private Point yellowCentroidD = new Point();
 	private Point yellowCentroidE = new Point();
-	private Point blueGreenPlateCentroid = new Point();
 
 	private int redCountA;
 	private int redCountB;
@@ -192,9 +187,9 @@ public class Thresholding {
 			newYellowPixels = new ArrayList<Point>();
 			ArrayList<Point> bluePixels = new ArrayList<Point>();
 			ArrayList<Point> yellowPixels = new ArrayList<Point>();
-			pitch = worldState.getRoom();
+			/*pitch = worldState.getRoom();
 			width = right-left;
-			height = top-bottom;
+			height = top-bottom;*/
 
 			/*
            Initialising to one to stop java dividing by 0 when it shouldn't
@@ -240,7 +235,7 @@ public class Thresholding {
 
 					GB = Math.abs((c.getBlue() - c.getGreen()));
 					RG = Math.abs((c.getRed() - c.getGreen()));
-					RB = Math.abs((c.getRed() - c.getBlue()));
+					//RB = Math.abs((c.getRed() - c.getBlue()));
 
 					if(isRed(c, GB)){ //  was inside  RB > 50 && RG > 50
 						img.setRGB(i, j, Color.red.getRGB()); //Red Ball

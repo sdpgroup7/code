@@ -3,15 +3,9 @@ package uk.ac.ed.inf.sdp2012.group7.vision;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.awt.Point;
-import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.awt.Color;
-
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -41,7 +35,7 @@ public class VisionFeed extends WindowAdapter {
     private JLabel label;
     private JFrame windowFrame;
     private FrameGrabber frameGrabber;
-    private int width, height;
+    //private int width, height;
     private BufferedImage frameImage;
     //private ControlGUI thresholdGUI;
     private FeedProcessor processor;
@@ -153,8 +147,8 @@ public class VisionFeed extends WindowAdapter {
         });
 
         frameGrabber.startCapture();
-        width = frameGrabber.getWidth();
-        height = frameGrabber.getHeight();
+        //width = frameGrabber.getWidth();
+        //height = frameGrabber.getHeight();
     }
     
     /**

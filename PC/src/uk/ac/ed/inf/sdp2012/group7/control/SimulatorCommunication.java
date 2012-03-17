@@ -2,9 +2,7 @@ package uk.ac.ed.inf.sdp2012.group7.control;
 
 import java.io.*;
 import java.net.*;
-import java.nio.ByteBuffer;
 
-import uk.ac.ed.inf.sdp2012.group7.control.ConstantsReuse.OpCodes;
 
 public class SimulatorCommunication implements CommunicationInterface {
 

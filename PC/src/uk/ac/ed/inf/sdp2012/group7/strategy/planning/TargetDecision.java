@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
-import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 
@@ -355,7 +354,7 @@ public class TargetDecision {
 	//REDUNDANT
 	//but keep for possible future plans
 	//Chris Williams & Darie Picu
-	private void clearShot(){
+	/*private void clearShot(){
 
 		//Positions
 		Node ourPosition = allMovingObjects.getOurPosition();
@@ -378,7 +377,7 @@ public class TargetDecision {
 			}
 		}				
 
-	}
+	}*/
 	
 	//REQUIRED
 	//Chris Williams
@@ -605,7 +604,7 @@ public class TargetDecision {
 		double angle = allMovingObjects.getBallAngle();
 		//System.err.println(angle);
 		double velocity = allMovingObjects.getBallVelocity();
-		double acceleration = allStaticObjects.getDeceleration();
+		//double acceleration = allStaticObjects.getDeceleration();
 		//width and height of pitch in nodes
 		double pitchWidthInNodes = allStaticObjects.getWidth();
 		double pitchHeightInNodes = allStaticObjects.getHeight();
