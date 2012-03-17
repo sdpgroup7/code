@@ -22,7 +22,7 @@ public class TestConnection {
 
 
 	private static int count = 15000; /* at most INT_MAX */
-	private static int packet_size = 5; /* between 1 and 8, count must fit inside	*/
+	private static int packet_size = 4; /* between 1 and 8, count must fit inside	*/
 	/* 1 -- byte
 	 * 2 -- short
 	 * 3 --
