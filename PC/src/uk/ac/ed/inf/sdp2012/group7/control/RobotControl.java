@@ -258,7 +258,7 @@ public class RobotControl implements ConstantsReuse {
 	 */
 	public void circleWithRadius(int radius, boolean arcLeft) {
 
-		if (radius < 50) {
+		if (radius < 200) {
 			if (arcLeft) {
 				addCommand((byte) 0,(byte) OpCodes.ARC_LEFT.ordinal(),radius);
 				
