@@ -1,17 +1,12 @@
 package uk.ac.ed.inf.sdp2012.group7.control;
 
-import java.io.IOException;
-
 import lejos.pc.comm.NXTComm;
-import lejos.pc.comm.NXTCommException;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTInfo;
 
 import java.io.*;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import uk.ac.ed.inf.sdp2012.group7.control.ConstantsReuse.OpCodes;
 
 
 /**
@@ -59,7 +54,7 @@ public class TestConnection {
 		byte packet[] = new byte[packet_size];
 		byte reply[] = new byte[packet_size];
 
-		long reply_l = 0L;
+		//long reply_l = 0L;
 		String mis_seq = new String();
 		int mis_seq_count = 0;
 
