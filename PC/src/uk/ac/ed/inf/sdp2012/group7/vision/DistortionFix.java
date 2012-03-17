@@ -5,6 +5,15 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
 
+/**
+ * Class to remove barrel distortion from bufferedimages
+ * 
+ * @author Rado
+ * @author James Hulme
+ * 
+ */
+
+
 public class DistortionFix {
 	
 	private static int width = 640;
@@ -13,7 +22,19 @@ public class DistortionFix {
 	private static final double barrelCorrectionY = -0.055;
 
 	private Point p = new Point();
-
+	
+	/**
+	 * Remove barrel distortion on whole image
+	 * 
+	 * Buffers used so we only correct the pitch area not the useless background area
+	 * 
+	 * @param image Frame to correct
+	 * @param left Left buffer
+	 * @param right Right buffer
+	 * @param top Top buffer
+	 * @param bottom Bottom buffer
+	 * @return A new image with no barrel distortion
+	 */
     public BufferedImage removeBarrelDistortion(BufferedImage image, int left, int right, int top, int bottom){
 
     	BufferedImage newImage = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
@@ -31,6 +52,14 @@ public class DistortionFix {
         return newImage;
     }
     
+    /**
+     * Correct for single points
+     * 
+     * Called by the above function, but also called when overlay is turned off
+     * 
+     * @param p1 Point to fix
+     * @return Fixed Point
+     */
     public static Point barrelCorrected(Point p1) {
     	// System.out.println("Pixel: (" + x + ", " + y + ")");
     	// first normalise pixel

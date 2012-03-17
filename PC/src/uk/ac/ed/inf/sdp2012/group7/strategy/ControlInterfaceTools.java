@@ -1,5 +1,7 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy;
 
+import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
+
 public class ControlInterfaceTools {
 
 	/*
@@ -35,6 +37,22 @@ public class ControlInterfaceTools {
 		return howMuchToTurn;
 	
 	}
+	
+	/**
+	 * Checks if the goal point is behind the robot
+	 * @param alpha
+	 * @return If the goal point is behind the robot or not
+	 */
+	public static boolean checkIfBehind(double alpha) {
+		alpha = VisionTools.convertAngle(alpha);
+		if ((alpha > (Math.PI/2)) && (alpha > (3*Math.PI)/2)) {
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+
 	
 	
 

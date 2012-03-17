@@ -14,14 +14,23 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.Pitch;
-
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
+/**
+ * Get the colour value of yellow and do the manual testing stuff
+ * 
+ * @author James Hulme
+ * @author Dale Myers
+ */
 public class InitialLocation implements MouseListener, MouseMotionListener {
+	
+
     
     private int count = 0;
     private Point coords = new Point();
     private boolean mouseClick = false;
     
     private ThresholdsState thresholdsState;
+    private WorldState worldState = WorldState.getInstance();
     
     private VisionFeed visionFeed;
     //private JFrame windowFrame;
@@ -32,7 +41,13 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     private ArrayList<Integer> pitch = new ArrayList<Integer>();
     public boolean testMouseClick = false;
     public Point testCoords = new Point(0,0);
-
+    
+    /**
+     * The constructor
+     * @param visionFeed 
+     * @param windowFrame
+     * @param ts
+     */
     public InitialLocation(VisionFeed visionFeed, JFrame windowFrame, ThresholdsState ts) {
         this.visionFeed = visionFeed;
         this.thresholdsState = ts;
@@ -42,6 +57,9 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         Vision.logger.info("InitialLocation Initialised");
     }
     
+    /**
+     * Constructor
+     */
     public InitialLocation(){
     }
 
@@ -52,6 +70,9 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     public void mouseMoved(MouseEvent e) {}
     public void mouseDragged(MouseEvent e) {}
     //When the mouse has been clicked get the location.
+    /**
+     * Checks when mouse is clicked
+     */
     public void mouseClicked(MouseEvent e){
     	Vision.logger.debug(e.getPoint().toString());
         coords = correctPoint(e.getPoint());
@@ -74,6 +95,12 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     	return this.pitch;
     }
     
+    /**
+     * Get the data for the test framework
+     * 
+     * @param image Frame to test
+     * @param filename What to call saved file
+     */
     public void getTestData(BufferedImage image, String filename){
     	visionFeed.paused = true;
     	Vision.logger.info("Feed paused.");
@@ -103,13 +130,13 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     	
     	
     	
-    	autoPoints.add(Vision.worldState.getBall().getPosition().getCentre());
-        autoPoints.add(Vision.worldState.getOurRobot().getPosition().getCentre());
-        angles.add(Vision.worldState.getOurRobot().getAngle());
-        autoPoints.add(Vision.worldState.getOpponentsRobot().getPosition().getCentre());
-        angles.add(Vision.worldState.getOpponentsRobot().getAngle());
-        pitch.add(Vision.worldState.getPitch().getLeftBuffer());
-        pitch.add(Vision.worldState.getPitch().getRightBuffer());
+    	autoPoints.add(worldState.getBall().getPosition().getCentre());
+        autoPoints.add(worldState.getOurRobot().getPosition().getCentre());
+        angles.add(worldState.getOurRobot().getAngle());
+        autoPoints.add(worldState.getOpponentsRobot().getPosition().getCentre());
+        angles.add(worldState.getOpponentsRobot().getAngle());
+        pitch.add(worldState.getPitch().getLeftBuffer());
+        pitch.add(worldState.getPitch().getRightBuffer());
     	
         visionFeed.paused = false;
         Vision.logger.info("Vision System unpaused.");
@@ -125,6 +152,15 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     	setYellowValues(c.getRed(),c.getGreen(),c.getBlue());
     }
     
+    /**
+     * Set the yellow values
+     * 
+     * r,g,b gained from setYellowValues with just a c
+     * 
+     * @param r red channel
+     * @param g green channel
+     * @param b blue channel
+     */
 	public void setYellowValues(int r, int g, int b){
 		int YELLOW_THRESHOLD = 25;
 		int rLower = r-YELLOW_THRESHOLD;
@@ -150,10 +186,12 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
 		thresholdsState.setYellow_b_high(bUpper);
 	}
 	
-    /*
-    Get the threshold values for the objects in the match i.e. ball.
-    Registers the mouse clicks after being asked to by getColors
-    */
+    /**
+     * Get the color where we click
+     * 
+     * @param message Asks what to click on
+     * @return The colour of pixel where we clicked
+     */
     public Color getClickColor(String message){
         System.out.println(message);
 
@@ -167,7 +205,13 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         
         return getColor(coords, this.visionFeed.getFrameImage());
     }
-
+    
+    /**
+     * Necessary for some reason
+     * 
+     * @param p Point to correct
+     * @return Corrected Point
+     */
     public Point correctPoint(Point p){
         return new Point(correctX(p.x),correctY(p.y));
     }
@@ -180,10 +224,13 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     	return y-24;
     }
 
-    /*
-    Get the color where the mouse was clicked.  Takes an average of the adjacent
-    pixels, but you should try and click centrally in the object still.
-    */
+    /**
+     * Gets the colour where clicked
+     * 
+     * @param p Point where we clicked
+     * @param image Frame to get colour from
+     * @return The colour
+     */
     public Color getColor(Point p, BufferedImage image){
     	Color c = new Color(image.getRGB(p.x,p.y));
     	System.out.println(c);
@@ -191,32 +238,38 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
     	return c;
     }
     
+    /**
+     * Draw the pitch boundaries on
+     * 
+     * @param image Frame to draw on
+     * @return The frame after being drawn on
+     */
     public BufferedImage markImage(BufferedImage image) {
         int width = 640;
         int height = 480;
         Graphics2D graphics = image.createGraphics();
-        if(Vision.worldState.getPitch().getBuffersSet()){
+        if(worldState.getPitch().getBuffersSet()){
         	graphics.drawLine(
-        	    Vision.worldState.getPitch().getLeftBuffer(),
+        	    worldState.getPitch().getLeftBuffer(),
         	    0,
-        	    Vision.worldState.getPitch().getLeftBuffer(),
+        	    worldState.getPitch().getLeftBuffer(),
         	    height
         	);
         	graphics.drawLine(
-        	    Vision.worldState.getPitch().getRightBuffer(),
+        	    worldState.getPitch().getRightBuffer(),
         	    0,
-        	    Vision.worldState.getPitch().getRightBuffer(),
+        	    worldState.getPitch().getRightBuffer(),
         	    height
         	);
         	graphics.drawLine(
         	    0,
-        	    Vision.worldState.getPitch().getTopBuffer(),
-        	    width,Vision.worldState.getPitch().getTopBuffer()
+        	    worldState.getPitch().getTopBuffer(),
+        	    width,worldState.getPitch().getTopBuffer()
         	);
         	graphics.drawLine(
         	    0,
-        	    Vision.worldState.getPitch().getBottomBuffer(),
-        	    width,Vision.worldState.getPitch().getBottomBuffer()
+        	    worldState.getPitch().getBottomBuffer(),
+        	    width,worldState.getPitch().getBottomBuffer()
         	);
             return image;
         } else {
@@ -224,6 +277,12 @@ public class InitialLocation implements MouseListener, MouseMotionListener {
         }
     }
     
+    /**
+     * Save an image
+     * 
+     * @param image What to save
+     * @param fn Where to save
+     */
     public void writeImage(BufferedImage image, String fn){
         try {
             File outputFile = new File(fn);

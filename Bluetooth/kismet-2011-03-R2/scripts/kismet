@@ -1,0 +1,19 @@
+#!/bin/sh
+
+prefix=/usr/local
+exec_prefix=${prefix}
+ETC=${prefix}/etc
+BIN=${exec_prefix}/bin
+
+oargs=$*
+
+until test -z "$1"; do
+	if test "$1" = "--help" -o "$1" = "-h"; then
+		exec ${BIN}/kismet_server --help
+	fi
+
+	shift
+done
+
+exec ${BIN}/kismet_client $client $oargs
+

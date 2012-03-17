@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gps-run SYSTEM "http://kismetwireless.net/kismet-gps-2.9.1.dtd">
+
+<gps-run gps-version="5" start-time="Fri Mar 16 12:43:35 2012">
+
+    <network-file>Kismet-20120316-12-43-35-1.netxml</network-file>
+
+</gps-run>

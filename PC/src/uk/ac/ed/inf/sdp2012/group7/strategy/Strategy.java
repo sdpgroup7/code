@@ -21,6 +21,7 @@ public class Strategy {
 	private AllStaticObjects allStaticObjects;
 	private ControlInterface control_interface;
 	private Thread thread_for_planningthread;
+	private boolean started = false;
 
 
 	public Strategy() {
@@ -45,16 +46,23 @@ public class Strategy {
 	//this function is used to send the plan_type
 	//and then start the plan type
 	public void startPlanningThread(int plan_type) {
+		if(!started){
+			started = true;
 			this.allStaticObjects.setPlanType(plan_type);
 			this.thread_for_planningthread = new Thread(planningthread);
 			this.allStaticObjects.startRun();
 			this.thread_for_planningthread.start();
+		}
 	}
 
 	public void stopPlanningThread() {
+		if(started){
+			this.control_interface.stop();
 			this.allStaticObjects.setPlanType(PlanTypes.PlanType.HALT.ordinal());
 			this.allStaticObjects.stopRun();
 			this.thread_for_planningthread = null;
+			started = false;
+		}
 	}
 	
 	public ControlInterface getControlInterface(){

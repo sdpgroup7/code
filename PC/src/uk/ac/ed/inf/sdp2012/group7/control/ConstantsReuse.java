@@ -5,6 +5,7 @@ public interface ConstantsReuse {
 	public static final String ROBOT_NAME = "Hacktar";
 	public static final String ROBOT_MAC = "00:16:53:08:9F:AF";
 
+
 	// NXT Opcodes
 	public static enum OpCodes {
 		DO_NOTHING,

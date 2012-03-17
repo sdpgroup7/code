@@ -2,6 +2,12 @@
 PC/testData/**
 PC/junit/*.xml
 PC/backGround
+*/.classpath
+Nxt_code.nxd
+Nxt_code.nxj
+
+# Javadoc hosting
+pcdoc
 
 # OS Files #
 
