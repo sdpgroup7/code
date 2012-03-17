@@ -173,13 +173,6 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 								break;
 							}
 
-							try{
-								Thread.sleep(100);
-							} catch (InterruptedException ex){
-								Sound.beep();
-							}
-
-
 							// respond to say command was acted on
 							os.write(n.ordinal());
 							os.flush();

@@ -28,6 +28,9 @@ public class RobotControl implements ConstantsReuse {
 
 	private boolean simulator = false;
 	private boolean bumped = false;
+	
+	private int currentCommandID = 0;
+	private int previousCommandID = 0;
 
 	public RobotControl() {}
 
@@ -114,6 +117,7 @@ public class RobotControl implements ConstantsReuse {
 		command[1] = code;
 		command[2] = (byte) ((parameter >> 8) & 0xFF);
 		command[3] = (byte) (parameter & 0xFF);
+		currentCommandID++;
 	}
 
 
@@ -124,6 +128,7 @@ public class RobotControl implements ConstantsReuse {
 	private void sendToRobot(byte[] command) {
 		
 		if(!bumped){
+			if(currentCommandID != previousCommandID){
 				byte[] sendCommand = command.clone();
 				command = ByteBuffer.allocate(4).putInt(0).array(); //resets command to all 0
 				logger.info("Send "+OpCodes.values()[sendCommand[1]]);
@@ -131,6 +136,8 @@ public class RobotControl implements ConstantsReuse {
 				logger.info("Sent "+OpCodes.values()[sendCommand[1]]);
 				logResponse(response);
 				if(response == OpCodes.BUMP_ON) bumped = true;
+				previousCommandID = currentCommandID;
+			}
 		} else {
 			while(getResponse() != OpCodes.BUMP_OFF.ordinal()){}
 			bumped = false;
