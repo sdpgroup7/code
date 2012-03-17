@@ -38,7 +38,7 @@ public class PlanningThread extends Observable implements Runnable{
 		//this is here so we can use the planType variable in Strategy.java, which
 		//commands which plan type we are creating
 		this.allStaticObjects = aSO;
-		this.allMovingObjects = new AllMovingObjects();
+		this.allMovingObjects = new AllMovingObjects(aSO);
 	}
 
 	@Override

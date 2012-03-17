@@ -69,19 +69,16 @@ void robot_thread(void *args) {
 void action(void* args) {
 	struct robot_action_thread_args * a = args;
 	int speed = 1;
-	int just_kicked = 0;
 	int angle_temp = 0;
 	int distance = 0;
 
 	TIMED_LOOP
 
-		/* Protract kicker */
-		if (just_kicked) {
-			just_kicked = 0;
-			a->rs->kicker = 0;
-		}
+		a->ws->kicker = 0;
+
 		switch (a->cmd->instr) {
-			case DO_NOTHING: /*AT_SAY("idling.\n");*/ break;
+			case CONTINUE:
+			case DO_NOTHING: break;
 			case FORWARDS:
 					 a->rs->x = a->rs->x - speed * cos(a->rs->angle);
 					 a->rs->y = a->rs->y - speed * sin(a->rs->angle);
@@ -90,21 +87,32 @@ void action(void* args) {
 					 a->rs->x = a->rs->x + speed * cos(a->rs->angle);
 					 a->rs->y = a->rs->y + speed * sin(a->rs->angle);
 					 break;
-			case BACKWARDS_SLIGHTLY: AT_STUB("BACKWARDS_SLIGHTLY\n"); break;
+			case BACKWARDS_WITH_DISTANCE:
+					if (!distance)
+						distance = a->cmd->arg;
+					else {
+						distance -= speed;
+						a->rs->x = a->rs->x + speed * cos(a->rs->angle);
+						a->rs->y = a->rs->y + speed * sin(a->rs->angle);
+					}
+					if (distance < 0) {
+						distance == 0;
+						a->cmd->instr = DO_NOTHING;
+					}
+					break;
 			case STOP: AT_STUB("STOP\n"); break; /* I don't think this really needs to do anything. */
 			case CHANGE_SPEED: speed = a->cmd->arg; break;
-			case KICK:
-					   just_kicked = 1;
-					   a->rs->kicker = 1;
+			case ROTATE_LEFT:
+			case ROTATE_BLOCK_LEFT:
+					   a->rs->angle = ((360 - a->rs->angle) + a->cmd->arg) % 360;
 					   break;
-			case ROTATE: 
-					   angle_temp = a->cmd->arg <= 360?a->cmd->arg:-(a->cmd->arg-360);
-					   a->rs->angle = angle_temp % 360;
+			case ROTATE_RIGHT:
+			case ROTATE_BLOCK_RIGHT:
+					   a->rs->angle = (a->rs->angle + a->cmd->arg) % 360;
 					   break;
-			case ARC: AT_STUB("ARC\n"); break;
-			case STEER_WITH_RATIO: AT_STUB("STEER_WITH_RATIO\n"); break;
+			case ARC_LEFT: AT_STUB("ARC_LEFT\n"); break;
+			case ARC_RIGHT: AT_STUB("ARC_RIGHT\n"); break;
 			case BEEP: AT_SAY("bleep blop.\n"); a->cmd->instr = DO_NOTHING;  break;
-			case CELEBRATE: AT_SAY("bleep blop win!\n"); a->cmd->instr = DO_NOTHING; break;
 			case FORWARDS_WITH_DISTANCE:
 					if (!distance)
 						distance = a->cmd->arg;
@@ -118,13 +126,16 @@ void action(void* args) {
 						a->cmd->instr = DO_NOTHING;
 					}
 					break;
-			case START_MATCH:
-					a->cmd->arg = 80;
-					a->cmd->instr = FORWARDS_WITH_DISTANCE;
-					break;
+			case START_MATCH: a->cmd->instr = FORWARDS; break;
 			case STOP_MATCH: AT_STUB("STOP_MATCH\n"); break;
 			case QUIT: AT_SAY("quitting action thread.\n"); return 0;
 		}
+
+		if (a->cmd->kicker) {
+			a->ws->kicker = 1;
+			a->cmd->kicker = 0;
+		}
+
 
 	TIMED_LOOP_END
 }

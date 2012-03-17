@@ -6,22 +6,26 @@ enum opcodes {
         DO_NOTHING,
         FORWARDS,
         BACKWARDS,
-        BACKWARDS_SLIGHTLY,
+        BACKWARDS_WITH_DISTANCE,
         STOP,
         CHANGE_SPEED,
-        KICK,
-        ROTATE,
-        ARC,
-        STEER_WITH_RATIO,
+	ROTATE_LEFT,
+	ROTATE_RIGHT,
+	ROTATE_BLOCK_LEFT,
+	ROTATE_BLOCK_RIGHT,
+	ARC_LEFT,
+	ARC_RIGHT,
         BEEP,
-        CELEBRATE,
         FORWARDS_WITH_DISTANCE,
 	START_MATCH,
 	STOP_MATCH,
+	BUMP_ON,
+	BUMP_OFF,
+	CONTINUE,
         QUIT
 };
 
-#define INSTR_MASK 0x0000FFFF
+#define INSTR_MASK 0x000000FF
 #define ARG_SHIFT  >> 8
 
 #endif
