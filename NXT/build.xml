@@ -7,7 +7,7 @@
 	<property environment="env" />
 	<property name="nxj.home" value="/group/teaching/sdp/sdp7/lejos/lejos_nxj/" />
 	<property name="src" location="." />
-	<basename property="program" file="uk.ac.ed.inf.sdp2012.group7.robot.Nxt_pong" />
+	<basename property="program" file="uk.ac.ed.inf.sdp2012.group7.robot.Nxt_code" />
 	<property name="binary" value="Nxt_code.nxj" />
 	<property name="debug" value="Nxt_code.nxd" />
 	<property name="device" value="00:16:53:08:9F:AF" />
