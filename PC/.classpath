@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry excluding="uk/ac/ed/inf/sdp2012/group7/testing/strategy/" kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/javacpp.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/javacv.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/javacv-android-arm.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/javacv-linux-x86.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/javacv-linux-x86_64.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/javacv-macosx-x86_64.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/javacv-windows-x86.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/javacv-windows-x86_64.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/javaGeom-0.10.1.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/v4l4j.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/charting.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/charting-src.zip"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/jtools.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/jtools-src.zip"/>
 	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/pccomm.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/pccomm-src.zip"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/pctools.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/pctools-src.zip"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/bcel.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/bcel-src.zip"/>
 	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/bluecove.jar"/>
 	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/bluecove-gpl.jar"/>
-	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/v4l4j.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/bluecove-gpl-src.zip"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/bluecove-src.zip"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/commons-cli.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/commons-cli-src.zip"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/jcommon.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/jcommon-src.zip"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/jfreechart.jar"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/jfreechart-src.zip"/>
+	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lejos/lejos_nxj/lib/pc/3rdparty/stax-api-1.0.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/group/teaching/sdp/sdp7/lib/log4j-1.2.16.jar"/>
-	<classpathentry kind="lib" path="/group/teaching/sdp/sdp7/lib/javacv.jar"/>
-	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/lib/javacpp.jar"/>
-	<classpathentry kind="lib" path="/group/teaching/sdp/sdp7/lib/javaGeom-0.10.1.jar"/>
-	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/phys2d/phys2d-060408.jar" sourcepath="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp7/phys2d/src/src"/>
+	<classpathentry kind="lib" path="/group/teaching/sdp/sdp7/phys2d/phys2d-060408.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
