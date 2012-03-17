@@ -14,7 +14,7 @@ import uk.ac.ed.inf.sdp2012.group7.control.ConstantsReuse;
  */
 public class Nxt_pong {
 
-	public static int packet_size = 5;
+	public static int packet_size = 4;
 
 	public static void main(String[] args) {				
 		try {

@@ -1,4 +1,4 @@
-<project name="Nxt_code" default="uploadandrun">
+<project name="Nxt_pong" default="uploadandrun">
 	<description>
 		Build file for the code on the brick
 	</description>
@@ -7,9 +7,9 @@
 	<property environment="env" />
 	<property name="nxj.home" value="/group/teaching/sdp/sdp7/lejos/lejos_nxj/" />
 	<property name="src" location="." />
-	<basename property="program" file="uk.ac.ed.inf.sdp2012.group7.robot.Nxt_code" />
-	<property name="binary" value="Nxt_code.nxj" />
-	<property name="debug" value="Nxt_code.nxd" />
+	<basename property="program" file="uk.ac.ed.inf.sdp2012.group7.robot.Nxt_pong" />
+	<property name="binary" value="Nxt_pong.nxj" />
+	<property name="debug" value="Nxt_pong.nxd" />
 	<property name="device" value="00:16:53:08:9F:AF" />
 
 	<path id="lejos.pc">

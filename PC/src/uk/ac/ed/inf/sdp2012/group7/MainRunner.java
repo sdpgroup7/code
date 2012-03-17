@@ -26,6 +26,7 @@ public class MainRunner {
         } else {
         	new Vision();
         }
+		  Simulator.logger.setLevel(Level.WARN);
         Strategy s = new Strategy();
         ControlGUI gui = new ControlGUI(s);
         gui.initGUI();
