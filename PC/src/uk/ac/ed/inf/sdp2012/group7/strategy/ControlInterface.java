@@ -1,5 +1,6 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Observable;
@@ -11,6 +12,7 @@ import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
 import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.control.RobotControl;
+import uk.ac.ed.inf.sdp2012.group7.control.Tools;
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 
 import math.geom2d.Point2D;
@@ -47,6 +49,10 @@ public class ControlInterface implements Observer {
 	private int backwardWithDistance = PlanTypes.ActionType.BACKWARD_WITH_DISTANCE.ordinal();
 	private int forwards = PlanTypes.ActionType.FORWARDS.ordinal();
 	private int backwards = PlanTypes.ActionType.BACKWARDS.ordinal();
+	
+	private boolean firstTimeRotate = true;
+	private boolean firstTime = true;
+	private ArrayList<Point> navPoints = new ArrayList<Point>();
 	
 
 	private ControlInterface(int lookahead) {
@@ -291,6 +297,7 @@ public class ControlInterface implements Observer {
 				c.stop();
 			} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
 				logger.info("Defending a penalty - will repeatedly use non-blocking forwards and backwards");
+				
 				if (plan.getAction() == forwards) {
 					logger.info("Action is forwards (non-blocking)");
 					c.moveForward(10);
@@ -309,16 +316,64 @@ public class ControlInterface implements Observer {
 			} else if (plan.getPlanType()==PlanTypes.PlanType.HALT.ordinal()) {
 			
 				logger.info("Action is to stop");
+				firstTime = true;
 				c.stop();
 				logger.info("Command sent to robot: stop");
 			
-			} else {}
-		
+			}  else if (plan.getPlanType()==PlanTypes.PlanType.MILESTONE_4.ordinal()) {
+				Point ourPosition = plan.getOurRobotPosition();
+				Point navPoint = plan.getNavPoint();
+				double x = 0;
+				double y = 0;
+				double myAngle = Tools.getAngleToFacePoint(ourPosition, plan.getOurRobotAngle(), navPoint);
+				logger.debug("BLAHHHHHHHH Angle is "+myAngle);
+				
+				//logger.debug("Angle to turn is "+myAngle);
+				if (firstTime) {
+					firstTime = false;
+					
+					
+					if (myAngle > 0) {
+						logger.debug("BLAHHHHHHHH we're gonna move right with angle "+myAngle);
+						c.rotateBy(Math.abs(myAngle), true , true);
+					} else {
+						logger.debug("BLAHHHHHHHH we're gonna move left with angle "+myAngle);
+						c.rotateBy(Math.abs(myAngle), true , false);
+					}
+					
+				} else {
+					c.moveForward();
+				}
+				/*Point target = new Point(0,0);
+				if (navPoints.size()<6) {
+					navPoints.add(navPoint);
+				} else {
+					if (firstTime) {
+						 x = 0;
+						 y = 0;
+						for (Point navP : navPoints) {
+							x += navP.x;
+							y += navP.y;
+						}
+						x = x / (double) navPoints.size();
+						y = y / (double) navPoints.size();
+						firstTime = false;
+					}
+					target = new Point((int) x, (int )y);
+					myAngle = Tools.getAngleToFacePoint(ourPosition, plan.getOurRobotAngle(), target);
+				}			
+				if (firstTimeRotate) {
+				firstTimeRotate = false;
+				myAngle = Tools.getAngleToFacePoint(ourPosition, plan.getOurRobotAngle(), plan.getNavPoint());
+				c.rotateBy(Math.PI, true , false);
+				
+				} else {
+				c.moveForward();	
+				}*/
+			}
 			blocking = false;
 		
 	} else
 		logger.info("Plan aready being excuted passing through");
 	}
-
-
 }

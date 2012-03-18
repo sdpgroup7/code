@@ -117,8 +117,8 @@ public class AllStaticObjects {
 		//this needs to be found experimentally
 		this.dt = 0.1;
 		
-		this.lineConstant = 0.1;
-		this.angleConstant = 0.15;
+		this.lineConstant = 0.135;
+		this.angleConstant = 0.34;
 	}
 
 

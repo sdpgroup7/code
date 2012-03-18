@@ -102,7 +102,7 @@ public class TargetDecision {
 			logger.info("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).y);
 			
 			//logger.info("DICK" +allStaticObjects.convertToNode(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight())));
-			this.navPoint = ballPrediction(1.5);//(Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()));
+			this.navPoint = ballIntercept();//(Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()));
 			
 			this.target = this.allStaticObjects.getCentreOfOurGoal();
 		}
