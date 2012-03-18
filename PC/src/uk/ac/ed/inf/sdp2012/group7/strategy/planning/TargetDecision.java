@@ -111,16 +111,11 @@ public class TargetDecision {
 		}
 		
 		else if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
-
-		//these are controls for the navPoint / Target setting ball and goal centre
-		//variables - keep in here as Goal Def/Off doesn't care much for them :(
-
-		//this.shotOnGoal = whereToShoot(allMovingObjects.getBallPosition());
-		//this.predictedBallPosition = ballPrediction(3);
-
-		this.shotOnGoal = allStaticObjects.getCentreOfTheirGoal();
-		//this.predictedBallPosition =ballPrediction(0);//allMovingObjects.getBallPosition();
-		this.navPoint = this.ballPrediction(2);//ballIntercept();
+			
+			//Not using prediction,FREEPLAY only...
+			this.predictedBallPosition = this.allMovingObjects.getBallPosition();
+			this.shotOnGoal = this.allStaticObjects.getCentreOfTheirGoal();
+			
 		//REQUIRED
 		if(!this.ballOnPitch){
 				
