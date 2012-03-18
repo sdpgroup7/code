@@ -68,13 +68,13 @@ public class Plate{
 		double v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
 		// Check if point is in triangle
-		return (u >= -0.1) && (v >= -0.1) && (u + v < 1.1);
+		return (u >= 0	) && (v >= 0) && (u + v < 1);
 
 	}
 	
 	public int dot(Point a, Point b){
 		return (a.x * b.x) + (a.y *b.y);
-	}
+	}	
 	
 	public Point getCentroid(ArrayList<Point> points){
 		Point centroid = new Point(0,0);
