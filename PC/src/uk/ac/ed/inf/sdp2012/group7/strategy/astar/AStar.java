@@ -22,8 +22,8 @@ public class AStar {
 	
 	public AStar(int height, int width, Node start, Node target, ArrayList<Node> balls, ArrayList<Node> oppositions) {
 		
-		this.height = height;
-		this.width = width;
+		this.height = height;// + 1;
+		this.width = width;// + 1;
 		this.start = start;
 		this.target = target;
 		this.balls = balls;

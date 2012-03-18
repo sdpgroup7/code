@@ -81,7 +81,7 @@ public class ControlInterface implements Observer {
 	public static Arc chooseArc(Plan plan){
 		Point2D p = new Point2D(plan.getOurRobotPosition());
 		double v = plan.getOurRobotAngle();
-		return generateArc(p,plan.getPath(),v,lookahead, plan.getNodeInPixels());
+		return generateArc(p,plan.getPath(),v,lookahead, plan.getNodeWidthInPixels());
 	}
 	
 	/*
@@ -98,8 +98,8 @@ public class ControlInterface implements Observer {
 		boolean needToTurn= false;
 
 		
-		v = ControlInterfaceTools.convertAngle(v); 
-		
+		//v = ControlInterfaceTools.convertAngle(v); / No need for this conversion
+		  
         //Attempts to find a goal point. Searches along the path given by plan
         //and finds a point which is exactly a lookahead distance (euclidian)
         //away from the robot. This point can be a point on a line between two
@@ -119,7 +119,7 @@ public class ControlInterface implements Observer {
 		
 		logger.debug(String.format("v: %f", v));
 		
-		double alpha = Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))	- v;
+		double alpha = ControlInterfaceTools.convertAngleAsStrategyDoes( (Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))) ) - v;
 		logger.debug(String.format("Alpha: %f", alpha));
         //alpha is the angle from a line through the axis of the robot to the
         //goal point
@@ -210,7 +210,7 @@ public class ControlInterface implements Observer {
 	
 		
 	
-	/*
+	/**
 	 * Returns the goal point which is 1 lookahead distance away from the robot
 	 * @param	points	The list of points on the path
 	 * @param	robotPosition	The current robot position
