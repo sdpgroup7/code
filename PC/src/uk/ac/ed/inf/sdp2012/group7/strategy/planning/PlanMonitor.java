@@ -22,12 +22,14 @@ public class PlanMonitor {
 	
 	private Plan currentPlan;
 	private WorldState worldState = WorldState.getInstance();
-	private double nodeInPixels;
+	private double nodeWidthInPixels;
+	private double nodeHeightInPixels;
 	public static final Logger logger = Logger.getLogger(PlanMonitor.class);
 	
 	public PlanMonitor(Plan plan){
 		currentPlan = plan;
-		nodeInPixels = plan.getNodeInPixels();
+		nodeWidthInPixels = plan.getNodeWidthInPixels();
+		nodeHeightInPixels = plan.getNodeHeightInPixels();
 	}
 	
 	public PlanMonitor(){
@@ -36,7 +38,8 @@ public class PlanMonitor {
 
 	public void setPlan(Plan plan){
 		currentPlan = plan;
-		nodeInPixels = plan.getNodeInPixels();
+		nodeWidthInPixels = plan.getNodeWidthInPixels();
+		nodeHeightInPixels = plan.getNodeHeightInPixels();
 	}
 	
 	public void savePlan(){
@@ -137,10 +140,10 @@ public class PlanMonitor {
         for(int y = 0; y < ascii.length; y++){
         	for(int x = 0; x < ascii[y].length; x++){
         		if(ascii[y][x] != " "){
-        			int xp = (int)(x*nodeInPixels + (nodeInPixels / 4) + 0.5);
-        			int yp = (int)(y*nodeInPixels + (nodeInPixels / 4) + 0.5);
-        			int width = (int)((nodeInPixels/2)+0.5);
-        			int height = width;
+        			int xp = (int)(x*nodeWidthInPixels + (nodeWidthInPixels / 4) + 0.5);
+        			int yp = (int)(y*nodeHeightInPixels + (nodeHeightInPixels / 4) + 0.5);
+        			int width = (int)((nodeWidthInPixels/2)+0.5);
+        			int height = (int)((nodeHeightInPixels/2)+0.5);
         			if(ascii[y][x] == "B"){
         				graphics.setColor(Color.red);
         			} else if(ascii[y][x] == "O"){

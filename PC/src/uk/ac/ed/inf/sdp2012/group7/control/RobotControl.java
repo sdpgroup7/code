@@ -29,8 +29,8 @@ public class RobotControl implements ConstantsReuse {
 	private boolean simulator = false;
 	private boolean bumped = false;
 	
-	private int currentCommandID = 0;
-	private int previousCommandID = 0;
+	private volatile int currentCommandID = 0;
+	private volatile int previousCommandID = 0;
 
 	public RobotControl() {}
 

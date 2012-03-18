@@ -75,7 +75,7 @@ public class ControlInterface implements Observer {
 	public static Arc chooseArc(Plan plan){
 		Point2D p = new Point2D(plan.getOurRobotPosition());
 		double v = plan.getOurRobotAngle();
-		return generateArc(p,plan.getPath(),v,lookahead, plan.getNodeInPixels());
+		return generateArc(p,plan.getPath(),v,lookahead, plan.getNodeWidthInPixels());
 	}
 	
 	/*
