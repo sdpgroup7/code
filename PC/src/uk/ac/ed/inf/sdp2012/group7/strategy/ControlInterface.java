@@ -73,7 +73,7 @@ public class ControlInterface implements Observer {
 	 * @return
 	 */
 	public static Arc chooseArc(Plan plan){
-		Point2D p = new Point2D(plan.getOurRobotPositionVisual());
+		Point2D p = new Point2D(plan.getOurRobotPosition());
 		double v = plan.getOurRobotAngle();
 		return generateArc(p,plan.getPath(),v,lookahead, plan.getNodeInPixels());
 	}
@@ -249,7 +249,6 @@ public class ControlInterface implements Observer {
 			i++;
 
 		}
-				
 		return intersect;
 	}
 	
