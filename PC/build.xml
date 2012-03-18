@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-
-I'm breaking the build file to test jenkins! -w
-
 <project basedir="." default="build" name="PC">
 	<property environment="env"/>
 	<property name="ECLIPSE_HOME" value="/usr/lib64/eclipse"/>
