@@ -682,13 +682,28 @@ public class TargetDecision {
 		while (!canGetThere && time < 5) {
 			time = time + dt;
 			target = ballPrediction(time);
-			//check if we can get to the target in time using Manhattan distance
-			double timeToGetThere = dt * (Math.abs(target.x - ourPosition.x) + (Math.abs(target.y - ourPosition.y)));
+			//check if we can get to the target in time using Manhattan distance			
+			double timeToGetThere =	timeBetweenTwoPoints(ourPosition, target);			 //dt * (Math.abs(target.x - ourPosition.x) + (Math.abs(target.y - ourPosition.y)));
+			//System.out.println("time =" +time + "; timeTogetThere=" + timeToGetThere + "; target=" + target);
 			if (timeToGetThere <= time) {
+				
 				canGetThere = true;
 			}
 		}		
 		return target;		
+	}
+	
+	//method that returns how long it takes the robot to get from one point to another
+	private double timeBetweenTwoPoints(Node n1, Node n2) {
+		double angle = allMovingObjects.angleBetween(n1, n2);
+		double ourAngle = allMovingObjects.getOurAngle();
+		double angleToTurn = ourAngle - angle;
+		//for this method i want the angle to be -Pi to Pi 
+		if (angleToTurn > Math.PI) {
+			angleToTurn = angleToTurn - 2*Math.PI;
+		}
+		double distance = n1.distance(n2);
+		return Math.abs(angleToTurn)*allStaticObjects.getAngleConstant() + distance*allStaticObjects.getLineConstant();
 	}
 
 	

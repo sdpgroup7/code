@@ -54,6 +54,9 @@ public class AllStaticObjects {
 	//private Node ourTopGoalPost;
 	//private Node ourBottomGoalPost;
 	
+	private double angleConstant;
+	private double lineConstant;
+	
 	//physics
 	private double deceleration;
 	//time it takes robot on average to get from one node to another
@@ -117,6 +120,9 @@ public class AllStaticObjects {
 		this.deceleration = 0;
 		//this needs to be found experimentally
 		this.dt = 0.1;
+		
+		this.lineConstant = 0.1;
+		this.angleConstant = 0.15;
 	}
 
 
@@ -331,5 +337,14 @@ public class AllStaticObjects {
 		return theirGoalLine;
 	}
 
+	public double getAngleConstant() {
+		return angleConstant;
+	}
+
+
+	public double getLineConstant() {
+		return lineConstant;
+	}
+	
 
 }
