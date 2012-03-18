@@ -25,7 +25,8 @@ enum opcodes {
         QUIT
 };
 
-#define INSTR_MASK 0x000000FF
-#define ARG_SHIFT  >> 8
+#define INSTR_SHIFT  >> 16
+#define ARG_MASK        0x0000FFFF
+#define KICKER_SHIFT >> 24
 
 #endif

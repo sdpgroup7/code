@@ -20,7 +20,6 @@ import org.xml.sax.SAXParseException;
 
 import org.w3c.dom.NodeList;
 
-import uk.ac.ed.inf.sdp2012.group7.vision.Vision;
 
 public class VisionTesting extends Panel implements MouseListener, MouseMotionListener  {
 
@@ -131,7 +130,6 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     	window.setSize(650,500);
     	window.setVisible(true);
     	
-	    VisionTesting v = new VisionTesting();
     	
     	int total = 0;
     	
@@ -203,7 +201,7 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     	double a = Math.atan2(top.y-greyCircle.y,top.x-greyCircle.x);
     	if(a < 0){
     		a = (2.0*Math.PI) + a;
-    	}    	
+    	}
     	a += (2*Math.PI);
     	a = a - (3*Math.PI/2);
     	a = a % (2*Math.PI);
@@ -224,35 +222,7 @@ public class VisionTesting extends Panel implements MouseListener, MouseMotionLi
     	}
     	return false;
     }
-    
-    private static Point getCorner(Point p, int i) {
-    	int deltax;
-    	int deltay;
-    	switch(i){
-	    	case 1:
-	    		deltax = 0;
-	    		deltay = -15;
-	    		break;
-	    	case 2:
-	    		deltax = 15;
-	    		deltay = 0;
-	    		break;
-	    	case 3:
-	    		deltax = 0;
-	    		deltay = 15;
-	    		break;
-	    	case 4:
-	    		deltax = -15;
-	    		deltay = 0;
-	    		break;
-	    	default:
-	    		deltax = 0;
-	    		deltay = 0;
-	    		break;
-    	}
-		return new Point(p.x + deltax, p.y + deltay);
-	}
-    
+        
     
     public static void readXMLClick(File xmlFile){
     	

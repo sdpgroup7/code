@@ -14,8 +14,9 @@
 
 
 void decode_command(opcode_t op, struct command * cmd) {
-	cmd->instr = op & INSTR_MASK;
-	cmd->arg = op ARG_SHIFT;
+	cmd->instr = op INSTR_SHIFT;
+	cmd->arg = op & ARG_MASK;
+	cmd->kicker = op KICKER_SHIFT;
 }
 
 void robot_thread(void *args) {
@@ -41,6 +42,7 @@ void robot_thread(void *args) {
 		action_args.cmd = &cmd;
 		action_args.rs = a->status;
 		action_args.robot = a->robot;		
+		action_args.socket = socket;
 		pthread_create(&action_thread, NULL, action, &action_args);
 		
 		while ((recv_size = recv(socket, &buf, sizeof buf, 0)) > 0) {
@@ -49,12 +51,11 @@ void robot_thread(void *args) {
 				RT_SAY2("received opcode %i\n", buf);
 				decode_command(buf, &cmd);
 				RT_SAY3("decoded as instr=%i arg=%i\n", cmd.instr, cmd.arg);
+				RT_SAY2("kicker=%i\n", cmd.kicker);
 				
 			} else {
 				RT_SAY2("received opcode of wrong size (%i)\n", recv_size);
 			}
-			buf = 0x6F;
-			send(socket, &buf, sizeof buf, 0);
 		}
 
 		cmd.instr = QUIT;
@@ -72,13 +73,15 @@ void action(void* args) {
 	int angle_temp = 0;
 	int distance = 0;
 
+
 	TIMED_LOOP
 
-		a->ws->kicker = 0;
+		a->rs->kicker = 0;
 
 		switch (a->cmd->instr) {
 			case CONTINUE:
 			case DO_NOTHING: break;
+			case START_MATCH:
 			case FORWARDS:
 					 a->rs->x = a->rs->x - speed * cos(a->rs->angle);
 					 a->rs->y = a->rs->y - speed * sin(a->rs->angle);
@@ -101,8 +104,8 @@ void action(void* args) {
 					}
 					break;
 			case STOP: AT_STUB("STOP\n"); break; /* I don't think this really needs to do anything. */
-			case CHANGE_SPEED: speed = a->cmd->arg; break;
-			case ROTATE_LEFT:
+			case CHANGE_SPEED: speed = a->cmd->arg / 3; break;
+			case ROTATE_LEFT: 
 			case ROTATE_BLOCK_LEFT:
 					   a->rs->angle = ((360 - a->rs->angle) + a->cmd->arg) % 360;
 					   break;
@@ -126,15 +129,16 @@ void action(void* args) {
 						a->cmd->instr = DO_NOTHING;
 					}
 					break;
-			case START_MATCH: a->cmd->instr = FORWARDS; break;
 			case STOP_MATCH: AT_STUB("STOP_MATCH\n"); break;
 			case QUIT: AT_SAY("quitting action thread.\n"); return 0;
 		}
 
 		if (a->cmd->kicker) {
-			a->ws->kicker = 1;
+			a->rs->kicker = 1;
 			a->cmd->kicker = 0;
 		}
+
+		send(a->socket, &a->cmd->instr, sizeof a->cmd->instr, 0);
 
 
 	TIMED_LOOP_END

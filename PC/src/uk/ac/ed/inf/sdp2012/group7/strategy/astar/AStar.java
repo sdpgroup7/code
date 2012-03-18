@@ -22,8 +22,8 @@ public class AStar {
 	
 	public AStar(int height, int width, Node start, Node target, ArrayList<Node> balls, ArrayList<Node> oppositions) {
 		
-		this.height = height;
-		this.width = width;
+		this.height = height;// + 1;
+		this.width = width;// + 1;
 		this.start = start;
 		this.target = target;
 		this.balls = balls;
@@ -172,29 +172,30 @@ public class AStar {
         
         public void printMap(ArrayList<Node> path) {
             //Node node;
+        	String mapStr = "\n";
             if(path == null) path = new ArrayList<Node>();
             for(int y = 0; y < this.height; y++){
                 for(int x = 0; x < this.width; x++){
                     Node n = map[x][y];
                     if(n != null){
                         if(path.contains(new Node(new Point(x,y), 0))){
-                            System.out.print("X ");
+                            mapStr += "X ";
                         }else if(n.isTarget()){
-                            System.out.append("T ");
+                        	mapStr += "T ";
                         }else if(n.isBall()){
-                            System.out.print("B ");
+                        	mapStr += "B ";
                         } else if (n.isOpposition()){
-                            System.out.print("O ");
+                        	mapStr += "O ";
                         } else {
-                            System.out.print("  ");
+                        	mapStr += "  ";
                         }
                     } else {
-                        System.out.print("  ");
+                    	mapStr += "  ";
                     }
                 }
-                System.out.println();
+                mapStr += "\n";
             }
-            
+            logger.info(mapStr);
         }
 	
         public Node[][] getMap(){

@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
-import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 
@@ -94,15 +93,15 @@ public class TargetDecision {
 		
 		//This is to test ball intercept 
 		if(this.planType == PlanTypes.PlanType.MILESTONE_4.ordinal()) {
-			System.out.println("ball pos:" +allMovingObjects.getBallPosition());
-			System.out.println("ball angle:" +allMovingObjects.getBallAngle());
-			System.out.println("ball velocity:" +allMovingObjects.getBallVelocity());
-			System.out.println("width:" +allStaticObjects.getWidth());
-			System.out.println("height:" +allStaticObjects.getHeight());
-			System.out.println("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).x);
-			System.out.println("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).y);
+			logger.info("ball pos:" +allMovingObjects.getBallPosition());
+			logger.info("ball angle:" +allMovingObjects.getBallAngle());
+			logger.info("ball velocity:" +allMovingObjects.getBallVelocity());
+			logger.info("width:" +allStaticObjects.getWidth());
+			logger.info("height:" +allStaticObjects.getHeight());
+			logger.info("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).x);
+			logger.info("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).y);
 			
-			//System.out.println("DICK" +allStaticObjects.convertToNode(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight())));
+			//logger.info("DICK" +allStaticObjects.convertToNode(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight())));
 			this.navPoint = ballPrediction(1.5);//(Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()));
 			
 			this.target = this.allStaticObjects.getCentreOfOurGoal();
@@ -110,16 +109,10 @@ public class TargetDecision {
 		
 		else if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
 
-		//these are controls for the navPoint / Target setting ball and goal centre
-		//variables - keep in here as Goal Def/Off doesn't care much for them :(
-
-		//this.shotOnGoal = whereToShoot(allMovingObjects.getBallPosition());
-		//this.predictedBallPosition = ballPrediction(3);
-
-		this.shotOnGoal = allStaticObjects.getCentreOfTheirGoal();
-		//this.predictedBallPosition =ballPrediction(0);//allMovingObjects.getBallPosition();
-		this.navPoint = this.ballPrediction(10);
-		//REQUIRED
+			//Not using prediction,FREEPLAY only...
+			this.predictedBallPosition = this.allMovingObjects.getBallPosition();
+			this.shotOnGoal = this.allStaticObjects.getCentreOfTheirGoal();
+			
 		if(!this.ballOnPitch){
 				
 				//sit next to our goal
@@ -129,15 +122,9 @@ public class TargetDecision {
 				this.navPoint = this.target;
 				
 			} else {
-				if (this.weHaveBall){
-					
-					logger.debug("DECISION MADE : WE HAVE THE BALL - KICK - assumption; we are on goal line");
-					this.action = PlanTypes.ActionType.KICK.ordinal();
-					this.target = this.allMovingObjects.getBallPosition();
-					this.setNavPointOpenNoOption();
+				
 				//Don't kill yourself
-				} else {
-					if(this.ballIsTooCloseToWall){
+				if(this.ballIsTooCloseToWall){
 					
 					//to construct dribble function
 					//go sit infront of our goal
@@ -157,6 +144,14 @@ public class TargetDecision {
 					this.navPoint = this.target;
 					
 				//Try to score
+				} else if (this.weHaveBall){
+					
+					logger.debug("DECISION MADE : WE HAVE THE BALL - KICK - assumption; we are on goal line");
+					this.action = PlanTypes.ActionType.KICK.ordinal();
+					this.target = this.allMovingObjects.getBallPosition();
+					this.setNavPointOpenNoOption();
+				
+				//Fetch
 				} else {
 
 					logger.debug("DECISION MADE : FETCH");
@@ -220,8 +215,7 @@ public class TargetDecision {
 					
 				}
 			}
-			}
-			} 
+		} 
 		else if(this.planType == PlanTypes.PlanType.HALT.ordinal()){
 			logger.info("Stopping");
 			this.action = PlanTypes.ActionType.STOP.ordinal();
@@ -251,9 +245,7 @@ public class TargetDecision {
 			logger.debug("Their position is "+theirPosition);
 			Point ourPosition = allMovingObjects.getOurPosition();
 			logger.debug("Our position is "+ourPosition);
-			double visionAngle = this.allMovingObjects.getTheirAngle();
-			logger.debug("The angle from vision is "+visionAngle);
-			double theirAngle = ((this.allMovingObjects.getTheirAngle())+(3*Math.PI)/2) % (2*Math.PI);
+			double theirAngle = this.allMovingObjects.getTheirAngle();
 			logger.debug("Their angle after conversion is "+theirAngle);
 			
 			// avoids dividing by 0 caused by cos
@@ -291,8 +283,8 @@ public class TargetDecision {
 				this.action = PlanTypes.ActionType.STOP.ordinal(); }
 			
 			// drive upwards or downwards
-			logger.debug("Number of cm to drive is "+targetInCM);
-			if (nodesUpOrDown <-1) {
+			//logger.debug("Number of cm to drive is "+targetInCM);
+			if (nodesUpOrDown <-2) {
 				logger.debug("Need to drive upwards");
 				this.action = PlanTypes.ActionType.FORWARDS.ordinal();
 			} else {
@@ -354,7 +346,7 @@ public class TargetDecision {
 	//REDUNDANT
 	//but keep for possible future plans
 	//Chris Williams & Darie Picu
-	private void clearShot(){
+	/*private void clearShot(){
 
 		//Positions
 		Node ourPosition = allMovingObjects.getOurPosition();
@@ -377,7 +369,7 @@ public class TargetDecision {
 			}
 		}				
 
-	}
+	}*/
 	
 	//REQUIRED
 	//Chris Williams
@@ -604,7 +596,7 @@ public class TargetDecision {
 		double angle = allMovingObjects.getBallAngle();
 		//System.err.println(angle);
 		double velocity = allMovingObjects.getBallVelocity();
-		double acceleration = allStaticObjects.getDeceleration();
+		//double acceleration = allStaticObjects.getDeceleration();
 		//width and height of pitch in nodes
 		double pitchWidthInNodes = allStaticObjects.getWidth();
 		double pitchHeightInNodes = allStaticObjects.getHeight();
@@ -667,7 +659,7 @@ public class TargetDecision {
 		
 		
 		Node predictedPoint = (new Node ((int)x,(int) y));
-		System.out.println("Predicted Point: " + predictedPoint.toString());
+		logger.info("Predicted Point: " + predictedPoint.toString());
 		return predictedPoint;
 	}
 	
@@ -690,13 +682,28 @@ public class TargetDecision {
 		while (!canGetThere && time < 5) {
 			time = time + dt;
 			target = ballPrediction(time);
-			//check if we can get to the target in time using Manhattan distance
-			double timeToGetThere = dt * (Math.abs(target.x - ourPosition.x) + (Math.abs(target.y - ourPosition.y)));
+			//check if we can get to the target in time using Manhattan distance			
+			double timeToGetThere =	timeBetweenTwoPoints(ourPosition, target);			 //dt * (Math.abs(target.x - ourPosition.x) + (Math.abs(target.y - ourPosition.y)));
+			//System.out.println("time =" +time + "; timeTogetThere=" + timeToGetThere + "; target=" + target);
 			if (timeToGetThere <= time) {
+				
 				canGetThere = true;
 			}
 		}		
 		return target;		
+	}
+	
+	//method that returns how long it takes the robot to get from one point to another
+	private double timeBetweenTwoPoints(Node n1, Node n2) {
+		double angle = allMovingObjects.angleBetween(n1, n2);
+		double ourAngle = allMovingObjects.getOurAngle();
+		double angleToTurn = ourAngle - angle;
+		//for this method i want the angle to be -Pi to Pi 
+		if (angleToTurn > Math.PI) {
+			angleToTurn = angleToTurn - 2*Math.PI;
+		}
+		double distance = n1.distance(n2);
+		return Math.abs(angleToTurn)*allStaticObjects.getAngleConstant() + distance*allStaticObjects.getLineConstant();
 	}
 
 	

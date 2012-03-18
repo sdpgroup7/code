@@ -2,9 +2,7 @@ package uk.ac.ed.inf.sdp2012.group7.control;
 
 import java.io.*;
 import java.net.*;
-import java.nio.ByteBuffer;
 
-import uk.ac.ed.inf.sdp2012.group7.control.ConstantsReuse.OpCodes;
 
 public class SimulatorCommunication implements CommunicationInterface {
 
@@ -29,7 +27,8 @@ public class SimulatorCommunication implements CommunicationInterface {
 
 	public int receiveFromRobot() {
 		try {
-			return is.read();
+			int r = is.read();
+			return r;
 		} catch (Exception e) {
 			System.out.println("SC: Receiving command from simulator at "+addr()+" failed: "+e.toString());
 		}
@@ -39,13 +38,12 @@ public class SimulatorCommunication implements CommunicationInterface {
 
 	public OpCodes sendToRobot(byte[] command) {
 		try {
-			System.out.println("SC: Sending command '"+command.toString()+"' to simulator at "+addr());
 			os.write(command);
 			os.flush();
 			int response = recieveFromRobot();
 			return OpCodes.values()[response];
 		} catch (Exception e) {
-			System.out.println("SC: Sending command '"+command.toString()+"' to simulator at "+addr()+" failed: "+e.toString());
+			System.out.println("SC: Sending command failed: "+e.toString());
 			return OpCodes.CONTINUE;
 		}
 	}

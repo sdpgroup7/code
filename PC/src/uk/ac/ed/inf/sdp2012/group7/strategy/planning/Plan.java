@@ -134,8 +134,12 @@ public class Plan {
 	}
 	
 	//For Control Interface
-	public double getNodeInPixels(){
-		return this.allStaticObjects.getNodeInPixels();
+	public double getNodeWidthInPixels(){
+		return this.allStaticObjects.getNodeWidthInPixels();
+	}
+	
+	public double getNodeHeightInPixels(){
+		return this.allStaticObjects.getNodeHeightInPixels();
 	}
 	
 	//For Control Interface

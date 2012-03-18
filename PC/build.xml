@@ -42,7 +42,6 @@
 			<classpath refid="PC.classpath"/>
 		</javac>
 		<exec executable="/bin/sh">
-			<arg value="-c"/>
 			<arg value="./compile-simulator.sh"/>
 		</exec>
 

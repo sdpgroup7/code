@@ -33,6 +33,7 @@ struct robot_action_thread_args {
 	struct command * cmd;
 	struct robot_status * rs;
 	int robot;
+	socket_t socket;
 };
 
 struct world_state {

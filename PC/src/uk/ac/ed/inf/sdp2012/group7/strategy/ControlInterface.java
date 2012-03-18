@@ -1,6 +1,5 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Observable;
@@ -74,9 +73,9 @@ public class ControlInterface implements Observer {
 	 * @return
 	 */
 	public static Arc chooseArc(Plan plan){
-		Point2D p = new Point2D(plan.getOurRobotPositionVisual());
+		Point2D p = new Point2D(plan.getOurRobotPosition());
 		double v = plan.getOurRobotAngle();
-		return generateArc(p,plan.getPath(),v,lookahead, plan.getNodeInPixels());
+		return generateArc(p,plan.getPath(),v,lookahead, plan.getNodeWidthInPixels());
 	}
 	
 	/*
@@ -84,8 +83,7 @@ public class ControlInterface implements Observer {
 	 * given using the pure pursuit algorithm
 	 */
 
-	public static Arc generateArc(Point2D p, ArrayList<Node> path, double v, 
-			int planAction, int lookahead, double nodeInPixels) {
+	public static Arc generateArc(Point2D p, ArrayList<Node> path, double v, int lookahead, double nodeInPixels) {
 		// The paper where this maths comes from can be found here
 		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
 		
@@ -94,8 +92,8 @@ public class ControlInterface implements Observer {
 		boolean needToTurn= false;
 
 		
-		v = ControlInterfaceTools.convertAngle(v); 
-		
+		//v = ControlInterfaceTools.convertAngle(v); / No need for this conversion
+		  
         //Attempts to find a goal point. Searches along the path given by plan
         //and finds a point which is exactly a lookahead distance (euclidian)
         //away from the robot. This point can be a point on a line between two
@@ -115,7 +113,7 @@ public class ControlInterface implements Observer {
 		
 		logger.debug(String.format("v: %f", v));
 		
-		double alpha = Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))	- v;
+		double alpha = ControlInterfaceTools.convertAngleAsStrategyDoes( (Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))) ) - v;
 		logger.debug(String.format("Alpha: %f", alpha));
         //alpha is the angle from a line through the axis of the robot to the
         //goal point
@@ -206,7 +204,7 @@ public class ControlInterface implements Observer {
 	
 		
 	
-	/*
+	/**
 	 * Returns the goal point which is 1 lookahead distance away from the robot
 	 * @param	points	The list of points on the path
 	 * @param	robotPosition	The current robot position
@@ -251,7 +249,6 @@ public class ControlInterface implements Observer {
 			i++;
 
 		}
-				
 		return intersect;
 	}
 	
@@ -293,10 +290,15 @@ public class ControlInterface implements Observer {
 				c.kick();
 				c.stop();
 			} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
-				logger.info("Defending a penalty - will repeatedly use euclidForward and euclidBackwards");
-				if (plan.getAction() == euclidForward) {
-					logger.info("Action is euclidForwards"); 
-					c.moveForward((int)plan.getDistanceInCM());
+				logger.info("Defending a penalty - will repeatedly use non-blocking forwards and backwards");
+				if (plan.getAction() == forwards) {
+					logger.info("Action is forwards (non-blocking)");
+					c.moveForward(10);
+				} else if (plan.getAction() == backwards){
+					logger.info("Action is backwards (non-blocking)");
+					c.moveBackward(10);
+				} else {
+					logger.info("Action is stop, we don't need to move");
 				}
 			} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
 

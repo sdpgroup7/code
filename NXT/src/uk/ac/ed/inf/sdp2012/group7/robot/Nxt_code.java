@@ -99,15 +99,21 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 							n = OpCodes.values()[byteBuffer[1]];
 							int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
 							LCD.clear();
-							LCD.drawString(n.toString(), 0, 4);
-							LCD.drawString(Integer.toString(magnitude), 0, 5);
+							LCD.drawString("CMD: " + n.toString(), 0, 4);
+							LCD.drawString("MAG: " + Integer.toString(magnitude), 0, 5);
 							switch (n) {
 
 							case FORWARDS:
+								if(magnitude != 0){
+									pilot.setTravelSpeed(magnitude);
+								}
 								pilot.forward();
 								break;
 
 							case BACKWARDS:
+								if(magnitude != 0){
+									pilot.setTravelSpeed(magnitude);
+								}
 								pilot.backward();
 								break;
 
@@ -172,13 +178,6 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 								Sound.twoBeeps();
 								break;
 							}
-
-							try{
-								Thread.sleep(100);
-							} catch (InterruptedException ex){
-								Sound.beep();
-							}
-
 
 							// respond to say command was acted on
 							os.write(n.ordinal());
