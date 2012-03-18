@@ -21,7 +21,10 @@ public class ControlInterfaceTools {
 		ControlInterface.logger.debug(String.format("Converted angle from %f to %f", angle, newAngle));
 		return newAngle;
 	}
-
+	public static double convertAngleAsStrategyDoes(double angle) {
+		return (angle + 2*Math.PI) % (Math.PI*2); 
+	}
+	
 	public static double angleToTurn(double ourAngle, double angleWanted) {
 			
 		double howMuchToTurn = ourAngle - angleWanted;

@@ -38,9 +38,11 @@ public class AllStaticObjects {
 	private int height;
 	private int width;
 	private double robotWidthInNodes;
+	private double robotHeightInNodes;
 	private double boundary;
 	private int centreToEndOfKicker;
-	private double nodeInPixels;
+	private double nodeWidthInPixels;
+	private double nodeHeightInPixels;
 	
 	//In Nodes :: ONLY FOR USE IN PLANNING THREAD
 	private Node theirTopGoalPost;
@@ -51,6 +53,9 @@ public class AllStaticObjects {
 	private Node centreOfOurGoal;
 	//private Node ourTopGoalPost;
 	//private Node ourBottomGoalPost;
+	
+	private double angleConstant;
+	private double lineConstant;
 	
 	//physics
 	private double deceleration;
@@ -89,7 +94,8 @@ public class AllStaticObjects {
 		//A* Settings
 		this.height = 29;
 		this.width = 58;
-		this.nodeInPixels = (double)this.pitchWidth/(double)this.width;//width in pixels!
+		this.nodeWidthInPixels = (double)this.pitchWidth/(double)this.width;//width in pixels!
+		this.nodeHeightInPixels = (double)this.pitchHeight/(double)this.height;//height in pixels!
 		
 		
 		//assume robot is 20cm^2
@@ -99,7 +105,8 @@ public class AllStaticObjects {
 		//~How to work out number of nodes in a robot...
 		//pW / rW = width of pitch in robots
 		//widthOfPitchInRobots / widthOfPitchInNodes = number of nodes per robot...
-		this.robotWidthInNodes = (double)VisionTools.cmToPixels(20) / this.nodeInPixels;
+		this.robotWidthInNodes = (double)VisionTools.cmToPixels(20) / this.nodeWidthInPixels;
+		this.robotHeightInNodes = (double)VisionTools.cmToPixels(20) / this.nodeHeightInPixels;
 		this.boundary = (int)(this.robotWidthInNodes / 2);
 		
 		
@@ -113,20 +120,23 @@ public class AllStaticObjects {
 		this.deceleration = 0;
 		//this needs to be found experimentally
 		this.dt = 0.1;
+		
+		this.lineConstant = 0.1;
+		this.angleConstant = 0.15;
 	}
 
 
 	//Compacts WorldState double into "Node" double
 	public double convertDoubleToNode(double d){
-		return (d/this.nodeInPixels);
+		return (d/this.nodeWidthInPixels);
 	}
 	
 	
 	//Compacts WorldState position point into "Node" centre position
 	//So Vision gives us a Point, we convert to a Node.
 	public Node convertToNode(Point p){
-		int x = (int)((double)(p.x - (this.pitchLeftBuffer - 1))/this.nodeInPixels);
-		int y = (int)((double)(p.y - (this.pitchTopBuffer - 1))/this.nodeInPixels);
+		int x = (int)((double)(p.x - (this.pitchLeftBuffer - 1))/this.nodeWidthInPixels);
+		int y = (int)((double)(p.y - (this.pitchTopBuffer - 1))/this.nodeHeightInPixels);
 		return new Node(new Point(x,y));
 	}
 	
@@ -190,10 +200,14 @@ public class AllStaticObjects {
 //ALL GETTERS SHOULD BE RETURNING AS NODES! NOT AS VISUAL POINTS!
 	
 	
-	public double getNodeInPixels() {
-		return this.nodeInPixels;
+	public double getNodeWidthInPixels() {
+		return this.nodeWidthInPixels;
 	}
 
+	public double getNodeHeightInPixels() {
+		return this.nodeHeightInPixels;
+	}
+	
 	public int getPitchTopBuffer() {
 		return this.pitchTopBuffer;
 	}
@@ -323,5 +337,14 @@ public class AllStaticObjects {
 		return theirGoalLine;
 	}
 
+	public double getAngleConstant() {
+		return angleConstant;
+	}
+
+
+	public double getLineConstant() {
+		return lineConstant;
+	}
+	
 
 }
