@@ -270,6 +270,12 @@ public class RobotControl implements ConstantsReuse {
 			} else {
 				addCommand((byte) 0, (byte) OpCodes.ROTATE_BLOCK_RIGHT.ordinal(), degrees);
 			}
+			try {
+				Thread.sleep(50);
+			} catch (Exception e) {
+				logger.debug(e);
+			}
+			
 		} else {
 			if (left) {
 				addCommand((byte) 0, (byte) OpCodes.ROTATE_LEFT.ordinal(), degrees);

@@ -702,7 +702,7 @@ public class TargetDecision {
 			angleToTurn = angleToTurn - 2*Math.PI;
 		}
 		double distance = n1.distance(n2);
-		return Math.abs(angleToTurn)*allStaticObjects.getAngleConstant() + distance*allStaticObjects.getLineConstant();
+		return 1 + distance*allStaticObjects.getLineConstant();//Math.abs(angleToTurn)*allStaticObjects.getAngleConstant() + distance*allStaticObjects.getLineConstant();
 	}
 
 	

@@ -50,12 +50,14 @@ public class ControlInterface implements Observer {
 	private int forwards = PlanTypes.ActionType.FORWARDS.ordinal();
 	private int backwards = PlanTypes.ActionType.BACKWARDS.ordinal();
 
-	private boolean firstTimeRotate = true;
+	private boolean firstTimeRotate = false;
 	private boolean firstTime = true;
+	private boolean firstTimeForward = false;
 	private ArrayList<Point> navPoints = new ArrayList<Point>();
 	private double time1 ;
-	private double time2;
-	private int timeIncremental=0;
+
+	private double timeIncremental=0;
+	private double timeIncremental2=1;
 
 
 	private ControlInterface(int lookahead) {
@@ -323,14 +325,21 @@ public class ControlInterface implements Observer {
 				logger.info("Command sent to robot: stop");
 
 			}  else if (plan.getPlanType()==PlanTypes.PlanType.MILESTONE_4.ordinal()) {
+				
+				
+				
 				if (firstTime) {
 					time1 = System.currentTimeMillis();
 					firstTime = false;
 				}
 
 				if (((System.currentTimeMillis()-time1) / 1000) >= timeIncremental) {
-					firstTimeRotate = true;
-					timeIncremental= timeIncremental + 2;
+					firstTimeRotate = true;					
+					timeIncremental= timeIncremental + 4;
+				}
+				if (((System.currentTimeMillis()-time1) / 1000) >= timeIncremental2) {
+					firstTimeForward = true;				
+					timeIncremental2= timeIncremental2 + 4;
 				}
 				Point ourPosition = plan.getOurRobotPosition();
 				Point navPoint = plan.getNavPoint();
@@ -338,23 +347,32 @@ public class ControlInterface implements Observer {
 				logger.debug("BLAHHHHHHHH Angle is "+myAngle);
 
 				if (firstTimeRotate) {
+					//c.stop();
 					firstTimeRotate = false;
 
 
 					if (myAngle > 0) {
 						logger.debug("We're gonna move right with angle "+myAngle);
 						c.rotateBy(Math.abs(myAngle), false , true);
+						
+						
 					} else {
 						logger.debug("We're gonna move left with angle "+myAngle);
 						c.rotateBy(Math.abs(myAngle), false , false);
+						
 					}
 
 
 
-				} //else {
-
-				//c.moveForward();
-				//}
+				} 
+					
+				
+				if (firstTimeForward) {
+						c.moveForward();
+						firstTimeForward = false;
+				}
+								
+				
 
 
 
