@@ -267,19 +267,18 @@ public class TargetDecision {
 			Point toDriveTo = new Point(ourPosition.x,(int)y);
 			
 			// make sure we are always covering the goal
-			// NEEDS TO BE DIFFERENT FOR NON-BLOCKING METHOD
-			if (toDriveTo.y <= 9)
-				toDriveTo.y=9;
+			if (toDriveTo.y <= 12)
+				toDriveTo.y=12;
 			if (toDriveTo.y >= 20)
 				toDriveTo.y=20;
 			logger.debug("Will drive towards "+toDriveTo);
 			
 			// how many nodes do we need to drive, if negative we need to drive upwards
-			int nodesUpOrDown = toDriveTo.y-ourPosition.y;
+			int nodesUpOrDown = toDriveTo.y-ourPosition.y-2; // subtracted 2 here to shift everything upwards
 			logger.debug("Number of nodes to drive is "+nodesUpOrDown);
 			
 			// we are more or less on the intersection, don't do anything
-			if (Math.abs(nodesUpOrDown)<=2) {
+			if (Math.abs(nodesUpOrDown)<=4) {
 				this.action = PlanTypes.ActionType.STOP.ordinal(); }
 			
 			// drive upwards or downwards
