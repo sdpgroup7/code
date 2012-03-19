@@ -144,7 +144,6 @@ public class RobotControl implements ConstantsReuse {
 			logger.debug("Completed bump procedure");
 			//We don't need anything in the loop as getResponse is blocking anyway
 		}
-		
 	}
 	
 
