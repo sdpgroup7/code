@@ -121,8 +121,11 @@ public class ControlInterface implements Observer {
 		}
 
 		logger.debug(String.format("v: %f", v));
-
-		double alpha = ControlInterfaceTools.convertAngleAsStrategyDoes( (Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX()))) ) - v;
+		double anglewithLpoint = (Math.atan2((h.getY() - p.getY()), (h.getX() - p.getX())));
+		logger.debug(String.format("Pre-alphaL %f: ", anglewithLpoint));
+		double convertedAngle = ControlInterfaceTools.convertAngleAsStrategyDoes( anglewithLpoint);
+		logger.debug(String.format("Converted preAngle: %f", convertedAngle));
+		double alpha = convertedAngle  - v;
 		logger.debug(String.format("Alpha: %f", alpha));
 		//alpha is the angle from a line through the axis of the robot to the
 		//goal point
@@ -165,7 +168,7 @@ public class ControlInterface implements Observer {
 		}
 
 		double conversion = (double) VisionTools.pixelsToCM(nodeInPixels);
-		Arc arc = new Arc(R*conversion, dir, needToTurn);
+		Arc arc = new Arc(R*conversion, dir);
 
 		return arc;
 
@@ -177,16 +180,11 @@ public class ControlInterface implements Observer {
 
 			logger.info("Action is to drive");
 
-			if (path.isFlip()) {
-				c.rotateBy(Math.PI,true);
-				logger.info("Robot needs to turn around. Preforming 180");
-			} else {
-				this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
-				logger.info(String.format("Command sent to robot: Drive on arc " +
-						"radius %d with turn left: %b", 
-						(int)(path.getRadius()+0.5), path.isLeft()));
-			}
-
+			
+			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
+			logger.info(String.format("Command sent to robot: Drive on arc " +
+				"radius %d with turn left: %b", 
+				(int)(path.getRadius()+0.5), path.isLeft()));
 		} else if (plan.getAction() == kick) {
 			logger.info("Action is to kick");
 			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
