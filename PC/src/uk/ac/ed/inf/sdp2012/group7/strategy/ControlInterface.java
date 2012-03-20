@@ -100,7 +100,6 @@ public class ControlInterface implements Observer {
 
 		Point2D h = null;
 
-		boolean needToTurn= false;
 
 
 		//v = ControlInterfaceTools.convertAngle(v); / No need for this conversion
@@ -136,9 +135,7 @@ public class ControlInterface implements Observer {
 		//robot. If it is behind then we need to turn the robot around
 
 
-		if (ControlInterfaceTools.checkIfBehind(alpha)) {
-			needToTurn = true;
-		}
+		
 
 
 
@@ -164,9 +161,9 @@ public class ControlInterface implements Observer {
 		// If the arc is to the left (relative to the robot) then dir is true,
 		// else if it is going to the right then it is false
 		if (xhc >= 0) {
-			dir = true;
-		} else {
 			dir = false;
+		} else {
+			dir = true;
 		}
 
 		double conversion = (double) VisionTools.pixelsToCM(nodeInPixels);
