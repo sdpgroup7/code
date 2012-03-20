@@ -328,7 +328,6 @@ public class RobotControl implements ConstantsReuse {
 		addCommand((byte) 0,(byte) OpCodes.STOP_MATCH.ordinal(),0);
 	}
 
-
 	public void setConnected(boolean isConnected) {
 		this.isConnected = isConnected;
 	}

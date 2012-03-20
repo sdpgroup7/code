@@ -9,6 +9,7 @@ import java.util.Observer;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
+import uk.ac.ed.inf.sdp2012.group7.strategy.planning.AllMovingObjects;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
 import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.control.RobotControl;
@@ -37,7 +38,7 @@ public class ControlInterface implements Observer {
 	private static int lookahead;
 	private RobotControl c;
 
-	private boolean blocking = false; 
+	volatile private boolean blocking = false; 
 	//Variable which we use to set so only one plan can be fired at once
 
 	//So planning and us are working off the same page
@@ -57,7 +58,7 @@ public class ControlInterface implements Observer {
 	private double time1 ;
 
 	private double timeIncremental=0;
-	private double timeIncremental2=1;
+	private double timeIncremental2=1.5;
 
 
 	private ControlInterface(int lookahead) {
@@ -135,7 +136,7 @@ public class ControlInterface implements Observer {
 		//robot. If it is behind then we need to turn the robot around
 
 
-		
+
 
 
 
@@ -179,11 +180,11 @@ public class ControlInterface implements Observer {
 
 			logger.info("Action is to drive");
 
-			
+
 			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
 			logger.info(String.format("Command sent to robot: Drive on arc " +
-				"radius %d with turn left: %b", 
-				(int)(path.getRadius()+0.5), path.isLeft()));
+					"radius %d with turn left: %b", 
+					(int)(path.getRadius()+0.5), path.isLeft()));
 		} else if (plan.getAction() == kick) {
 			logger.info("Action is to kick");
 			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
@@ -322,10 +323,61 @@ public class ControlInterface implements Observer {
 				logger.info("Command sent to robot: stop");
 
 			}  else if (plan.getPlanType()==PlanTypes.PlanType.MILESTONE_4.ordinal()) {
+
 				
-				
-				
-				if (firstTime) {
+				Point ourPosition = plan.getOurRobotPosition();
+				Point navPoint = plan.getNavPoint();
+				double ourAngle = plan.getOurRobotAngle();
+				double myAngle = Tools.getAngleToFacePoint(ourPosition, plan.getOurRobotAngle(), navPoint);
+
+				double distance = VisionTools.pixelsToCM(ourPosition.distance(navPoint)*plan.getNodeWidthInPixels());
+				if (distance < 15) {
+					c.stop();
+					try {
+						Thread.sleep(100);
+					} catch (Exception e) {
+
+					}				
+				} else {
+					
+						if (myAngle > 0) {
+							logger.debug("We're gonna move right with angle "+myAngle);
+							c.rotateBy(Math.abs(myAngle), true , true);
+
+
+						} else {
+							logger.debug("We're gonna move left with angle "+myAngle);
+							c.rotateBy(Math.abs(myAngle), true , false);
+
+						}
+					
+					
+					c.moveForwardDistance((int) distance);
+
+
+				}
+
+				//c.moveForwardDistance((int)VisionTools.pixelsToCM(distance/2));
+
+
+				/*if (firstTime) {
+					firstTime= false;
+					if (myAngle > 0) {
+						logger.debug("We're gonna move right with angle "+myAngle);
+						c.rotateBy(Math.abs(myAngle), false , true);
+
+
+					} else {
+						logger.debug("We're gonna move left with angle "+myAngle);
+						c.rotateBy(Math.abs(myAngle), false , false);
+
+					}
+
+				} 
+				c.moveForward();*/
+
+
+				/*if (firstTime) {
 					time1 = System.currentTimeMillis();
 					firstTime = false;
 				}
@@ -338,10 +390,7 @@ public class ControlInterface implements Observer {
 					firstTimeForward = true;				
 					timeIncremental2= timeIncremental2 + 4;
 				}
-				Point ourPosition = plan.getOurRobotPosition();
-				Point navPoint = plan.getNavPoint();
-				double myAngle = Tools.getAngleToFacePoint(ourPosition, plan.getOurRobotAngle(), navPoint);
-				logger.debug("BLAHHHHHHHH Angle is "+myAngle);
+
 
 				if (firstTimeRotate) {
 					//c.stop();
@@ -351,25 +400,25 @@ public class ControlInterface implements Observer {
 					if (myAngle > 0) {
 						logger.debug("We're gonna move right with angle "+myAngle);
 						c.rotateBy(Math.abs(myAngle), false , true);
-						
-						
+
+
 					} else {
 						logger.debug("We're gonna move left with angle "+myAngle);
 						c.rotateBy(Math.abs(myAngle), false , false);
-						
+
 					}
 
 
 
 				} 
-					
-				
+
+
 				if (firstTimeForward) {
 						c.moveForward();
 						firstTimeForward = false;
 				}
-								
-				
+
+
 
 
 
@@ -379,7 +428,7 @@ public class ControlInterface implements Observer {
 				//if (firstTime) {
 				//	firstTime = false;
 
-				/*if(Math.abs(myAngle) > 0.4){
+				
 					if (myAngle > 0) {
 						logger.debug("We're gonna move right with angle "+myAngle);
 						c.rotateBy(Math.abs(myAngle), false , true);
@@ -394,7 +443,7 @@ public class ControlInterface implements Observer {
 
 			}
 			blocking = false;
-
+			
 		} else
 			logger.info("Plan aready being excuted passing through");
 	}

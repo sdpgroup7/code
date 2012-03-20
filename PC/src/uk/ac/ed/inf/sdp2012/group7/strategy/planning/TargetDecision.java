@@ -692,6 +692,9 @@ public class TargetDecision {
 		return target;		
 	}
 	
+
+	
+	
 	//method that returns how long it takes the robot to get from one point to another
 	private double timeBetweenTwoPoints(Node n1, Node n2) {
 		double angle = allMovingObjects.angleBetween(n1, n2);
@@ -702,8 +705,10 @@ public class TargetDecision {
 			angleToTurn = angleToTurn - 2*Math.PI;
 		}
 		double distance = n1.distance(n2);
-		return 1 + distance*allStaticObjects.getLineConstant();//Math.abs(angleToTurn)*allStaticObjects.getAngleConstant() + distance*allStaticObjects.getLineConstant();
+		return Math.abs(angleToTurn)*allStaticObjects.getAngleConstant() + distance*allStaticObjects.getLineConstant();
 	}
+	
+
 
 	
 	//method that checks whether there are any obstacles on the line between 2 points
