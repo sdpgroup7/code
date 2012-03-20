@@ -320,123 +320,30 @@ public class ControlInterface implements Observer {
 
 			}  else if (plan.getPlanType()==PlanTypes.PlanType.MILESTONE_4.ordinal()) {
 
-				
 				Point ourPosition = plan.getOurRobotPosition();
 				Point navPoint = plan.getNavPoint();
-				double ourAngle = plan.getOurRobotAngle();
 				double myAngle = Tools.getAngleToFacePoint(ourPosition, plan.getOurRobotAngle(), navPoint);
 
 				double distance = VisionTools.pixelsToCM(ourPosition.distance(navPoint)*plan.getNodeWidthInPixels());
-				if (distance < 15) {
-					c.stop();
-					try {
-						Thread.sleep(100);
-					} catch (Exception e) {
-
-					}				
-				} else {
-					
-						if (myAngle > 0) {
-							logger.debug("We're gonna move right with angle "+myAngle);
-							c.rotateBy(Math.abs(myAngle), true , true);
-
-
-						} else {
-							logger.debug("We're gonna move left with angle "+myAngle);
-							c.rotateBy(Math.abs(myAngle), true , false);
-
-						}
-					
-					
-					c.moveForwardDistance((int) distance);
-
-
-				}
-
-				//c.moveForwardDistance((int)VisionTools.pixelsToCM(distance/2));
-
-
-				/*if (firstTime) {
-					firstTime= false;
-					if (myAngle > 0) {
-						logger.debug("We're gonna move right with angle "+myAngle);
-						c.rotateBy(Math.abs(myAngle), false , true);
-
-
-					} else {
-						logger.debug("We're gonna move left with angle "+myAngle);
-						c.rotateBy(Math.abs(myAngle), false , false);
-
-					}
-
-				} 
-				c.moveForward();*/
-
-
-				/*if (firstTime) {
-					time1 = System.currentTimeMillis();
-					firstTime = false;
-				}
-
-				if (((System.currentTimeMillis()-time1) / 1000) >= timeIncremental) {
-					firstTimeRotate = true;					
-					timeIncremental= timeIncremental + 4;
-				}
-				if (((System.currentTimeMillis()-time1) / 1000) >= timeIncremental2) {
-					firstTimeForward = true;				
-					timeIncremental2= timeIncremental2 + 4;
-				}
-
-
-				if (firstTimeRotate) {
-					//c.stop();
-					firstTimeRotate = false;
-
-
-					if (myAngle > 0) {
-						logger.debug("We're gonna move right with angle "+myAngle);
-						c.rotateBy(Math.abs(myAngle), false , true);
-
-
-					} else {
-						logger.debug("We're gonna move left with angle "+myAngle);
-						c.rotateBy(Math.abs(myAngle), false , false);
-
-					}
-
-
-
-				} 
-
-
-				if (firstTimeForward) {
-						c.moveForward();
-						firstTimeForward = false;
-				}
-
-
-
-
-
-
-
-				//logger.debug("Angle to turn is "+myAngle);
-				//if (firstTime) {
-				//	firstTime = false;
-
 				
-					if (myAngle > 0) {
-						logger.debug("We're gonna move right with angle "+myAngle);
-						c.rotateBy(Math.abs(myAngle), false , true);
-					} else {
-						logger.debug("We're gonna move left with angle "+myAngle);
-						c.rotateBy(Math.abs(myAngle), false , false);
-					}
+				if(Math.abs(myAngle) > (Math.PI/2.0)){
+					distance *= -1;
+				}
+				
+				if (Math.abs(distance) < 15) {
+					c.stop();	
 				} else {
-					System.exit(0);
-					c.moveForward();
-				}*/
-
+					/*if(Math.abs(myAngle) > (Math.PI / 12.0)){
+						logger.debug("Turning with angle: " + myAngle);
+						c.rotateBy(-myAngle, false , true);
+					} else {*/
+						if(distance > 0){
+							c.moveForward();
+						} else {
+							c.moveBackward();
+						}
+					//}
+				}
 			}
 			blocking = false;
 			

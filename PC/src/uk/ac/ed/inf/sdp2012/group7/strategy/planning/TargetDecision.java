@@ -665,30 +665,33 @@ public class TargetDecision {
 	//REQUIRED
 	//Darie Picu
 	private Node ballIntercept(){
+		
+		//TOUCH ON PAIN OF DEATH!
+		
 		Node ourPosition = allMovingObjects.getOurPosition();
-		boolean canGetThere = false;
-		double time = 0; 
-		double dt = allStaticObjects.getDt();
-		Node target = ballPrediction(time);
-
-		/*At this moment no equations are solved
-		still need to know whether we use deceleration or not.
-		If we do, equations are much harder to solve.
-		The while loop checks at each small time interval 
-		whether the robot can get to the predicted point or not
-		 */
-		while (!canGetThere && time < 5) {
-			time = time + dt;
-			target = ballPrediction(time);
-			//check if we can get to the target in time using Manhattan distance			
-			double timeToGetThere =	timeBetweenTwoPoints(ourPosition, target);			 //dt * (Math.abs(target.x - ourPosition.x) + (Math.abs(target.y - ourPosition.y)));
-			//System.out.println("time =" +time + "; timeTogetThere=" + timeToGetThere + "; target=" + target);
-			if (timeToGetThere <= time) {
-
-				canGetThere = true;
-			}
-		}		
-		return target;		
+		Node ballPosition = allMovingObjects.getBallPosition();
+		double x1 = ballPosition.getX();
+		double y1 = ballPosition.getY();
+		double theta1 = allMovingObjects.getBallAngle();
+		double x2 = ourPosition.getX();
+		double y2 = ourPosition.getY();
+		double theta2 = allMovingObjects.getOurAngle();
+		double m = y1 - Math.tan(theta1)*x1;
+		double n = y2 - Math.tan(theta2)*x2;
+		double a;
+		double b;
+		
+		double tantheta1 = Math.tan(theta1);
+		double tantheta2 = Math.tan(theta2);
+		
+		if(tantheta2 == 0) tantheta2 = 0.000001;
+		
+		b = (m - n*tantheta1/tantheta2);
+		b = b / (1 - tantheta1/tantheta2);
+		
+		a = (b - n)/tantheta2;
+		
+		return new Node((int)(a + 0.5),(int)(b + 0.5));
 	}
 
 
