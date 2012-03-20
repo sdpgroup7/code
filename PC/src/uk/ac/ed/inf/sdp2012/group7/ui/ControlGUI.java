@@ -57,6 +57,7 @@ public class ControlGUI implements ChangeListener {
 	private JButton stopButton;
 	
 	/*Logging buttons*/
+	private JButton traceButton;
 	private JButton infoButton;
 	private JButton debugButton;
 	private JButton errorButton;
@@ -551,6 +552,15 @@ public class ControlGUI implements ChangeListener {
 		
 		
 		JPanel loggerPanel = new JPanel();
+		
+		traceButton = new JButton("Trace");
+		loggerPanel.add(traceButton);
+		traceButton.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	Logger.getRootLogger().setLevel(Level.TRACE);
+		    }
+		});
 		
 		infoButton = new JButton("Info");
 		loggerPanel.add(infoButton);
