@@ -140,8 +140,8 @@ public class AStar {
 		}
 		
                 ArrayList<Node> returnPath = getPath(closedList);
-                printMap(closedList);
-                printMap(returnPath);
+                //printMap(closedList);
+                //printMap(returnPath);
                 return returnPath;
 	}
 	
