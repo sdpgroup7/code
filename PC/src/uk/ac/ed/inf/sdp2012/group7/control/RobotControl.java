@@ -24,6 +24,7 @@ public class RobotControl implements ConstantsReuse {
 	public static final Logger logger = Logger.getLogger(RobotControl.class);
 	
 	private BlockingQueue<byte[]> commandList = new LinkedBlockingQueue<byte[]>();
+	private byte[] previousCommand = new byte[4];
 	
 	private boolean isConnected = false;
 	private boolean keepConnected = true;
@@ -65,8 +66,10 @@ public class RobotControl implements ConstantsReuse {
 
 				// send data when necessary
 				while (keepConnected) {
-					if (!commandList.isEmpty())
-						sendToRobot(commandList.remove());	
+					if (!commandList.isEmpty()) {
+						sendToRobot(commandList.remove());
+					}
+						
 				}
 				// disconnect when we're done
 				disconnectFromRobot();
@@ -125,33 +128,45 @@ public class RobotControl implements ConstantsReuse {
 		command[1] = code;
 		command[2] = (byte) ((parameter >> 8) & 0xFF);
 		command[3] = (byte) (parameter & 0xFF);
-		while (commandList.size() > 3) {
-			try {
-				Thread.sleep(10);
-			} catch (Exception e) {
-				logger.trace(e);
+		if(!compare(command,previousCommand)){
+			while (commandList.size() > 1) {
+				try {
+					Thread.sleep(10);
+				} catch (Exception e) {
+					logger.trace(e);
+				}
 			}
+			System.arraycopy(command, 0, previousCommand, 0, 4);
+			commandList.add(command);
 		}
-		commandList.add(command);
 	}
 
-
+	private boolean compare(byte[] command, byte[] previous){
+		if(command.length != previous.length){
+			return false;
+		} else {
+			for(int i = 0; i < command.length; i++){
+				if(command[i] != previous[i]){
+					return false;
+				}
+			}
+			return true;
+		}
+	}
 
 	/**
 	 * Sends a command to the robot
 	 */
 	private void sendToRobot(byte[] command) {
-		
+
 		if(!bumped){
-			//if(currentCommandID != previousCommandID){
-				
-				logger.info("Send "+OpCodes.values()[command[1]]);
-				OpCodes response = comms.sendToRobot(command);
-				logger.info("Sent "+OpCodes.values()[command[1]]);
-				logResponse(response);
-				if(response == OpCodes.BUMP_ON) bumped = true;
-				
-			//}
+
+			logger.info("Send "+OpCodes.values()[command[1]]);
+			OpCodes response = comms.sendToRobot(command);
+			logger.info("Sent "+OpCodes.values()[command[1]]);
+			logResponse(response);
+			if(response == OpCodes.BUMP_ON) bumped = true;
+
 		} else {
 			while(getResponse() != OpCodes.BUMP_OFF.ordinal()){}
 			bumped = false;
@@ -159,7 +174,7 @@ public class RobotControl implements ConstantsReuse {
 			//We don't need anything in the loop as getResponse is blocking anyway
 		}
 	}
-	
+
 
 	/**
 	 * Receive an integer from the robot

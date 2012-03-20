@@ -444,7 +444,8 @@ public class ControlInterface implements Observer {
 			}
 			blocking = false;
 			
-		} else
+		} else {
 			logger.info("Plan aready being excuted passing through");
+		}
 	}
 }
