@@ -266,10 +266,6 @@ public class ControlInterface implements Observer {
 		c.kick();
 	}
 
-	public void stopKick() {
-		c.stopKick();
-	}
-
 	public void drive() {
 		c.moveForward();
 	}

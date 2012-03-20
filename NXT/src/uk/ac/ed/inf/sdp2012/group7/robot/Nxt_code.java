@@ -45,6 +45,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 		OdometryPoseProvider odometry = new OdometryPoseProvider(pilot);
 		initial = new Pose(0, 0, 0);
 		instance = new Nxt_code(pilot);
+		int commandCount = 0;
 		// start the sensor thread
 		new Thread(instance).start();
 		kicker = instance.new KickerThread();
@@ -91,7 +92,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 							// get the next command from the inputstream
 							byte[] byteBuffer = new byte[4];
 							is.read(byteBuffer);
-
+							commandCount++;
 							if (byteBuffer[0] != 0) {
 								kicker.kick();
 							}
@@ -101,6 +102,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 							LCD.clear();
 							LCD.drawString("CMD: " + n.toString(), 0, 4);
 							LCD.drawString("MAG: " + Integer.toString(magnitude), 0, 5);
+							LCD.drawString("ID:  " + Integer.toString(commandCount), 0,6);
 							switch (n) {
 
 							case FORWARDS:

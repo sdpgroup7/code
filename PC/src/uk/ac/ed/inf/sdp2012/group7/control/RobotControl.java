@@ -33,7 +33,6 @@ public class RobotControl implements ConstantsReuse {
 	private boolean bumped = false;
 	
 	private final byte[] nothing;
-	private byte kick = 0;
 	
 	public RobotControl() {
 		nothing = new byte[4];
@@ -189,7 +188,7 @@ public class RobotControl implements ConstantsReuse {
 	 * @param speed
 	 */
 	public void changeSpeed(int speed) {
-		addCommand(kick,(byte) OpCodes.CHANGE_SPEED.ordinal(),speed);
+		addCommand((byte) 0,(byte) OpCodes.CHANGE_SPEED.ordinal(),speed);
 	}
 	
 
@@ -197,12 +196,12 @@ public class RobotControl implements ConstantsReuse {
 	 * Commands the robot to move forward
 	 */
 	public void moveForward() {
-		addCommand(kick,(byte) OpCodes.FORWARDS.ordinal(),0);
+		addCommand((byte) 0,(byte) OpCodes.FORWARDS.ordinal(),0);
 	}
 	
 	
 	public void moveForward(int speed) {
-		addCommand(kick,(byte) OpCodes.FORWARDS.ordinal(),speed);
+		addCommand((byte) 0,(byte) OpCodes.FORWARDS.ordinal(),speed);
 	}
 	
 	/**
@@ -210,7 +209,7 @@ public class RobotControl implements ConstantsReuse {
 	 * @param distance Measured in cm
 	 */
 	public void moveForwardDistance(int distance) {
-		addCommand(kick,(byte) OpCodes.FORWARDS_WITH_DISTANCE.ordinal(),distance);
+		addCommand((byte) 0,(byte) OpCodes.FORWARDS_WITH_DISTANCE.ordinal(),distance);
 	}
 	
 
@@ -218,21 +217,21 @@ public class RobotControl implements ConstantsReuse {
 	 * Commands the robot to move backward
 	 */
 	public void moveBackward() {
-		addCommand(kick,(byte) OpCodes.BACKWARDS.ordinal(),0);
+		addCommand((byte) 0,(byte) OpCodes.BACKWARDS.ordinal(),0);
 	}
 	
 	/**
 	 * Commands the robot to move backward at a speed
 	 */
 	public void moveBackward(int speed) {
-		addCommand(kick,(byte) OpCodes.BACKWARDS.ordinal(),speed);
+		addCommand((byte) 0,(byte) OpCodes.BACKWARDS.ordinal(),speed);
 	}
 
 	/**
 	 * Commands the robot to move backward
 	 */
 	public void moveBackwardDistance(int distance) {
-		addCommand(kick,(byte) OpCodes.BACKWARDS_WITH_DISTANCE.ordinal(),distance);
+		addCommand((byte) 0,(byte) OpCodes.BACKWARDS_WITH_DISTANCE.ordinal(),distance);
 	}
 
 	/**
@@ -247,20 +246,9 @@ public class RobotControl implements ConstantsReuse {
 	 * Commands the robot to kick
 	 */
 	public void kick() {
-		kick = 1;
+		addCommand((byte) 1,(byte) OpCodes.CONTINUE.ordinal(),0);
 	}
 
-	public void stopKick() {
-		try{
-			Thread.sleep(100);
-		} catch (Exception ex) {}
-		kick = 0;
-		addCommand(kick, (byte) OpCodes.STOP.ordinal(),0);
-		try{
-			Thread.sleep(100);
-		} catch (Exception ex) {}
-		addCommand(kick, (byte) OpCodes.CONTINUE.ordinal(),0);
-	}
 	
 	/**
 	 * Rotates the robot by the given number of radians
@@ -270,16 +258,16 @@ public class RobotControl implements ConstantsReuse {
 		int degrees = (int)Math.toDegrees(radians);
 		if (block) {
 			if (left) {
-				addCommand(kick, (byte) OpCodes.ROTATE_BLOCK_LEFT.ordinal(), degrees);
+				addCommand((byte) 0, (byte) OpCodes.ROTATE_BLOCK_LEFT.ordinal(), degrees);
 			} else {
-				addCommand(kick, (byte) OpCodes.ROTATE_BLOCK_RIGHT.ordinal(), degrees);
+				addCommand((byte) 0, (byte) OpCodes.ROTATE_BLOCK_RIGHT.ordinal(), degrees);
 			}
 						
 		} else {
 			if (left) {
-				addCommand(kick, (byte) OpCodes.ROTATE_LEFT.ordinal(), degrees);
+				addCommand((byte) 0, (byte) OpCodes.ROTATE_LEFT.ordinal(), degrees);
 			} else {
-				addCommand(kick, (byte) OpCodes.ROTATE_RIGHT.ordinal(), degrees);
+				addCommand((byte) 0, (byte) OpCodes.ROTATE_RIGHT.ordinal(), degrees);
 			}
 		}
 	}
@@ -309,14 +297,14 @@ public class RobotControl implements ConstantsReuse {
 
 		if (radius < 200) {
 			if (arcLeft) {
-				addCommand(kick,(byte) OpCodes.ARC_LEFT.ordinal(),radius);
+				addCommand((byte) 0,(byte) OpCodes.ARC_LEFT.ordinal(),radius);
 				
 			} else {
-				addCommand(kick,(byte) OpCodes.ARC_RIGHT.ordinal(),radius);
+				addCommand((byte) 0,(byte) OpCodes.ARC_RIGHT.ordinal(),radius);
 				
 			}
 		} else {
-			addCommand(kick,(byte) OpCodes.FORWARDS.ordinal(),0);
+			addCommand((byte) 0,(byte) OpCodes.FORWARDS.ordinal(),0);
 		}
 
 	}
