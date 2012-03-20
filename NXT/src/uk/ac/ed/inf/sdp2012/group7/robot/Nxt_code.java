@@ -56,7 +56,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 		// set initial pilot variables to produce maximum speed
 		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()*0.7);
 		pilot.setRotateSpeed(pilot.getMaxRotateSpeed()*0.35);
-		pilot.setAcceleration(900);
+		pilot.setAcceleration(300);
 
 		while (true) {
 			try {

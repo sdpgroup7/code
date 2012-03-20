@@ -128,7 +128,7 @@ public class RobotControl implements ConstantsReuse {
 		command[2] = (byte) ((parameter >> 8) & 0xFF);
 		command[3] = (byte) (parameter & 0xFF);
 		if(!compare(command,previousCommand)){
-			while (commandList.size() > 1) {
+			while (commandList.size() > 2) {
 				try {
 					Thread.sleep(10);
 				} catch (Exception e) {
