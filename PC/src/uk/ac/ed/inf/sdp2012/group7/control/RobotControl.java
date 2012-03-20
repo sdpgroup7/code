@@ -1,7 +1,8 @@
 package uk.ac.ed.inf.sdp2012.group7.control;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import lejos.pc.comm.NXTComm;
 import lejos.pc.comm.NXTCommFactory;
@@ -21,18 +22,25 @@ public class RobotControl implements ConstantsReuse {
 	private NXTComm nxtComm;
 	private NXTInfo info = new NXTInfo(NXTCommFactory.BLUETOOTH, ROBOT_NAME,ROBOT_MAC);
 	public static final Logger logger = Logger.getLogger(RobotControl.class);
-	private volatile byte[] command = new byte[4];
-
+	
+	private BlockingQueue<byte[]> commandList = new LinkedBlockingQueue<byte[]>();
+	
 	private boolean isConnected = false;
 	private boolean keepConnected = true;
 
 	private boolean simulator = false;
 	private boolean bumped = false;
 	
-	private volatile int currentCommandID = 0;
-	private volatile int previousCommandID = 0;
-
-	public RobotControl() {}
+	private final byte[] nothing;
+	private byte kick = 0;
+	
+	public RobotControl() {
+		nothing = new byte[4];
+		nothing[0] = 0;
+		nothing[1] = (byte) OpCodes.DO_NOTHING.ordinal();
+		nothing[2] = 0;
+		nothing[3] = 0;
+	}
 
 	/**
 	 * This method initialises the connection and starts the thread which sends
@@ -57,8 +65,8 @@ public class RobotControl implements ConstantsReuse {
 
 				// send data when necessary
 				while (keepConnected) {
-					sendToRobot(command);
-					
+					if (!commandList.isEmpty())
+						sendToRobot(commandList.remove());	
 				}
 				// disconnect when we're done
 				disconnectFromRobot();
@@ -76,7 +84,7 @@ public class RobotControl implements ConstantsReuse {
 	public void stopCommunications() {
 		keepConnected = false;
 	}
-
+	
 	/**
 	 * Connects to the NXT. The Robot beeps when the connection has been established.
 	 */
@@ -88,8 +96,7 @@ public class RobotControl implements ConstantsReuse {
 			comms = new BluetoothCommunication(nxtComm, info);
 
 		comms.openConnection();
-		command[0] = 0;
-		command[1] = (byte) OpCodes.DO_NOTHING.ordinal();
+		commandList.add(nothing);
 		setConnected(true);
 		beep();
 	}
@@ -113,11 +120,19 @@ public class RobotControl implements ConstantsReuse {
 	 * Add a command to be sent to the robot
 	 */
 	private void addCommand(byte kick,byte code,int parameter) {
+		byte[] command = new byte[4];
 		command[0] = kick;
 		command[1] = code;
 		command[2] = (byte) ((parameter >> 8) & 0xFF);
 		command[3] = (byte) (parameter & 0xFF);
-		currentCommandID++;
+		while (commandList.size() > 3) {
+			try {
+				Thread.sleep(10);
+			} catch (Exception e) {
+				logger.trace(e);
+			}
+		}
+		commandList.add(command);
 	}
 
 
@@ -128,23 +143,21 @@ public class RobotControl implements ConstantsReuse {
 	private void sendToRobot(byte[] command) {
 		
 		if(!bumped){
-			if(currentCommandID != previousCommandID){
-				byte[] sendCommand = command.clone();
-				command = ByteBuffer.allocate(4).putInt(0).array(); //resets command to all 0
-				logger.info("Send "+OpCodes.values()[sendCommand[1]]);
-				OpCodes response = comms.sendToRobot(sendCommand);
-				logger.info("Sent "+OpCodes.values()[sendCommand[1]]);
+			//if(currentCommandID != previousCommandID){
+				
+				logger.info("Send "+OpCodes.values()[command[1]]);
+				OpCodes response = comms.sendToRobot(command);
+				logger.info("Sent "+OpCodes.values()[command[1]]);
 				logResponse(response);
 				if(response == OpCodes.BUMP_ON) bumped = true;
-				previousCommandID = currentCommandID;
-			}
+				
+			//}
 		} else {
 			while(getResponse() != OpCodes.BUMP_OFF.ordinal()){}
 			bumped = false;
 			logger.debug("Completed bump procedure");
 			//We don't need anything in the loop as getResponse is blocking anyway
 		}
-		
 	}
 	
 
@@ -161,7 +174,7 @@ public class RobotControl implements ConstantsReuse {
 	 * @param speed
 	 */
 	public void changeSpeed(int speed) {
-		addCommand((byte) 0,(byte) OpCodes.CHANGE_SPEED.ordinal(),speed);
+		addCommand(kick,(byte) OpCodes.CHANGE_SPEED.ordinal(),speed);
 	}
 	
 
@@ -169,12 +182,12 @@ public class RobotControl implements ConstantsReuse {
 	 * Commands the robot to move forward
 	 */
 	public void moveForward() {
-		addCommand((byte) 0,(byte) OpCodes.FORWARDS.ordinal(),0);
+		addCommand(kick,(byte) OpCodes.FORWARDS.ordinal(),0);
 	}
 	
 	
 	public void moveForward(int speed) {
-		addCommand((byte) 0,(byte) OpCodes.FORWARDS.ordinal(),speed);
+		addCommand(kick,(byte) OpCodes.FORWARDS.ordinal(),speed);
 	}
 	
 	/**
@@ -182,7 +195,7 @@ public class RobotControl implements ConstantsReuse {
 	 * @param distance Measured in cm
 	 */
 	public void moveForwardDistance(int distance) {
-		addCommand((byte) 0,(byte) OpCodes.FORWARDS_WITH_DISTANCE.ordinal(),distance);
+		addCommand(kick,(byte) OpCodes.FORWARDS_WITH_DISTANCE.ordinal(),distance);
 	}
 	
 
@@ -190,47 +203,48 @@ public class RobotControl implements ConstantsReuse {
 	 * Commands the robot to move backward
 	 */
 	public void moveBackward() {
-		addCommand((byte) 0,(byte) OpCodes.BACKWARDS.ordinal(),0);
+		addCommand(kick,(byte) OpCodes.BACKWARDS.ordinal(),0);
 	}
 	
 	/**
 	 * Commands the robot to move backward at a speed
 	 */
 	public void moveBackward(int speed) {
-		addCommand((byte) 0,(byte) OpCodes.BACKWARDS.ordinal(),speed);
+		addCommand(kick,(byte) OpCodes.BACKWARDS.ordinal(),speed);
 	}
 
 	/**
 	 * Commands the robot to move backward
 	 */
 	public void moveBackwardDistance(int distance) {
-		addCommand((byte) 0,(byte) OpCodes.BACKWARDS_WITH_DISTANCE.ordinal(),distance);
+		addCommand(kick,(byte) OpCodes.BACKWARDS_WITH_DISTANCE.ordinal(),distance);
 	}
 
 	/**
 	 * Commands the robot to stop where it is
 	 */
 	public void stop() {
+		commandList.clear();
 		addCommand((byte) 0,(byte) OpCodes.STOP.ordinal(),0);
 	}
-
-
+	
 	/**
 	 * Commands the robot to kick
 	 */
 	public void kick() {
-		command[0] = (byte) 1;
+		kick = 1;
 	}
 
 	public void stopKick() {
 		try{
 			Thread.sleep(100);
 		} catch (Exception ex) {}
-		addCommand((byte) 0, (byte) OpCodes.STOP.ordinal(),0);
+		kick = 0;
+		addCommand(kick, (byte) OpCodes.STOP.ordinal(),0);
 		try{
 			Thread.sleep(100);
 		} catch (Exception ex) {}
-		addCommand((byte) 1, (byte) OpCodes.CONTINUE.ordinal(),0);
+		addCommand(kick, (byte) OpCodes.CONTINUE.ordinal(),0);
 	}
 	
 	/**
@@ -241,15 +255,16 @@ public class RobotControl implements ConstantsReuse {
 		int degrees = (int)Math.toDegrees(radians);
 		if (block) {
 			if (left) {
-				addCommand((byte) 0, (byte) OpCodes.ROTATE_BLOCK_LEFT.ordinal(), degrees);
+				addCommand(kick, (byte) OpCodes.ROTATE_BLOCK_LEFT.ordinal(), degrees);
 			} else {
-				addCommand((byte) 0, (byte) OpCodes.ROTATE_BLOCK_RIGHT.ordinal(), degrees);
+				addCommand(kick, (byte) OpCodes.ROTATE_BLOCK_RIGHT.ordinal(), degrees);
 			}
+						
 		} else {
 			if (left) {
-				addCommand((byte) 0, (byte) OpCodes.ROTATE_LEFT.ordinal(), degrees);
+				addCommand(kick, (byte) OpCodes.ROTATE_LEFT.ordinal(), degrees);
 			} else {
-				addCommand((byte) 0, (byte) OpCodes.ROTATE_RIGHT.ordinal(), degrees);
+				addCommand(kick, (byte) OpCodes.ROTATE_RIGHT.ordinal(), degrees);
 			}
 		}
 	}
@@ -279,14 +294,14 @@ public class RobotControl implements ConstantsReuse {
 
 		if (radius < 200) {
 			if (arcLeft) {
-				addCommand((byte) 0,(byte) OpCodes.ARC_LEFT.ordinal(),radius);
+				addCommand(kick,(byte) OpCodes.ARC_LEFT.ordinal(),radius);
 				
 			} else {
-				addCommand((byte) 0,(byte) OpCodes.ARC_RIGHT.ordinal(),radius);
+				addCommand(kick,(byte) OpCodes.ARC_RIGHT.ordinal(),radius);
 				
 			}
 		} else {
-			addCommand((byte) 0,(byte) OpCodes.FORWARDS.ordinal(),0);
+			addCommand(kick,(byte) OpCodes.FORWARDS.ordinal(),0);
 		}
 
 	}
@@ -312,7 +327,6 @@ public class RobotControl implements ConstantsReuse {
 	public void stopMatch() {
 		addCommand((byte) 0,(byte) OpCodes.STOP_MATCH.ordinal(),0);
 	}
-
 
 	public void setConnected(boolean isConnected) {
 		this.isConnected = isConnected;
