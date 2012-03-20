@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import javax.swing.JLabel;
 
+import uk.ac.ed.inf.sdp2012.group7.control.Tools;
 import uk.ac.ed.inf.sdp2012.group7.vision.Thresholding;
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionFeed;
 import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
@@ -235,6 +236,7 @@ public class FeedProcessor{
         imageGraphics.drawString("Ball Position: (" + worldState.getBall().getPosition().getCentre().x + "," + worldState.getBall().getPosition().getCentre().y + ")", 410, 20);
         imageGraphics.drawString("Ball Velocity: " + String.format("%.4g%n", worldState.getBall().getVelocity()) + "px/s", 410, 35);
         imageGraphics.drawString("Ball Bearing: " + String.format("%.4g%n", worldState.getBall().getAngle()) + "rads", 410, 50);
+        imageGraphics.drawString("Jesus: " + String.format("%.4g%n", Tools.getAngleToFacePoint(worldState.getOurRobot().getPosition().getCentre(), worldState.getOurRobot().getAngle(), worldState.getBall().getPosition().getCentre())) + "rads", 410, 65);
         
         imageGraphics.drawString("Strategy Update Time: " + worldState.getStrategyTime() + "ms", 220, 420);
         

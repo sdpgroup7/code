@@ -102,7 +102,7 @@ public class TargetDecision {
 			logger.info("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).y);
 			
 			//logger.info("DICK" +allStaticObjects.convertToNode(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight())));
-			this.navPoint = ballPrediction(1.5);//(Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()));
+			this.navPoint = ballIntercept();//(Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()));
 			
 			this.target = this.allStaticObjects.getCentreOfOurGoal();
 		}
@@ -267,19 +267,18 @@ public class TargetDecision {
 			Point toDriveTo = new Point(ourPosition.x,(int)y);
 			
 			// make sure we are always covering the goal
-			// NEEDS TO BE DIFFERENT FOR NON-BLOCKING METHOD
-			if (toDriveTo.y <= 9)
-				toDriveTo.y=9;
+			if (toDriveTo.y <= 12)
+				toDriveTo.y=12;
 			if (toDriveTo.y >= 20)
 				toDriveTo.y=20;
 			logger.debug("Will drive towards "+toDriveTo);
 			
 			// how many nodes do we need to drive, if negative we need to drive upwards
-			int nodesUpOrDown = toDriveTo.y-ourPosition.y;
+			int nodesUpOrDown = toDriveTo.y-ourPosition.y-2; // subtracted 2 here to shift everything upwards
 			logger.debug("Number of nodes to drive is "+nodesUpOrDown);
 			
 			// we are more or less on the intersection, don't do anything
-			if (Math.abs(nodesUpOrDown)<=2) {
+			if (Math.abs(nodesUpOrDown)<=4) {
 				this.action = PlanTypes.ActionType.STOP.ordinal(); }
 			
 			// drive upwards or downwards
@@ -703,7 +702,7 @@ public class TargetDecision {
 			angleToTurn = angleToTurn - 2*Math.PI;
 		}
 		double distance = n1.distance(n2);
-		return Math.abs(angleToTurn)*allStaticObjects.getAngleConstant() + distance*allStaticObjects.getLineConstant();
+		return 1 + distance*allStaticObjects.getLineConstant();//Math.abs(angleToTurn)*allStaticObjects.getAngleConstant() + distance*allStaticObjects.getLineConstant();
 	}
 
 	
