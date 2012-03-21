@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy;
 
 import java.awt.Point;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Observable;
@@ -11,6 +12,8 @@ import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.AllMovingObjects;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
+import net.phys2d.raw.shapes.Line;
+
 import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.control.RobotControl;
 import uk.ac.ed.inf.sdp2012.group7.control.Tools;
@@ -32,7 +35,7 @@ public class ControlInterface implements Observer {
 
 	public static final Logger logger = Logger.getLogger(ControlInterface.class);
 
-	private final int START_SPEED = 30;
+	private final int START_SPEED = 90;
 
 	private static ControlInterface controlInterface = null;
 	private static int lookahead;
@@ -51,14 +54,8 @@ public class ControlInterface implements Observer {
 	private int forwards = PlanTypes.ActionType.FORWARDS.ordinal();
 	private int backwards = PlanTypes.ActionType.BACKWARDS.ordinal();
 
-	private boolean firstTimeRotate = false;
 	private boolean firstTime = true;
-	private boolean firstTimeForward = false;
 	private ArrayList<Point> navPoints = new ArrayList<Point>();
-	private double time1 ;
-
-	private double timeIncremental=0;
-	private double timeIncremental2=1.5;
 
 
 	private ControlInterface(int lookahead) {
@@ -322,33 +319,74 @@ public class ControlInterface implements Observer {
 
 				Point ourPosition = plan.getOurRobotPosition();
 				Point navPoint = plan.getNavPoint();
-				double myAngle = Tools.getAngleToFacePoint(ourPosition, plan.getOurRobotAngle(), navPoint);
+				Point ballPosition = plan.getBallPosition();
 
-				double distance = VisionTools.pixelsToCM(ourPosition.distance(navPoint)*plan.getNodeWidthInPixels());
+				double distance;
+
+				double x1 = ballPosition.getX();
+				double y1 = ballPosition.getY();
+				double theta1 = plan.getBallAngle();
+				double x2 = ourPosition.getX();
+				double y2 = ourPosition.getY();
+				double theta2 = (plan.getBallAngle() + (Math.PI / 2.0)) % (Math.PI * 2);
+				double m = y1 - Math.tan(theta1)*x1;
+				double n = y2 - Math.tan(theta2)*x2;
+				double a;
+				double b;
+
+				double tantheta1 = Math.tan(theta1);
+				double tantheta2 = Math.tan(theta2);
+
+
+
+				if(tantheta2 == 0) tantheta2 = 0.000001;
+
+				b = (m - n*tantheta1/tantheta2);
+				b = b / (1 - tantheta1/tantheta2);
+
+				a = (b - n)/tantheta2;
+
+				Point interceptPoint = new Point((int)(a + 0.5),(int)(b + 0.5));
+
+				double myAngle = Tools.getAngleToFacePoint(ourPosition, plan.getOurRobotAngle(), interceptPoint);
+				
+				if(Math.abs(myAngle) > (Math.PI / 3)){
+					distance = VisionTools.pixelsToCM(ourPosition.distance(interceptPoint)*plan.getNodeWidthInPixels());
+				} else {
+					distance = VisionTools.pixelsToCM(ourPosition.distance(navPoint)*plan.getNodeWidthInPixels());
+				}
 				
 				if(Math.abs(myAngle) > (Math.PI/2.0)){
 					distance *= -1;
 				}
-				
+
 				if (Math.abs(distance) < 15) {
 					c.stop();	
 				} else {
-					/*if(Math.abs(myAngle) > (Math.PI / 12.0)){
-						logger.debug("Turning with angle: " + myAngle);
-						c.rotateBy(-myAngle, false , true);
-					} else {*/
+					if(Math.abs(myAngle) > (Math.PI / 3)){
+						if(firstTime){
+							logger.debug("Turning with angle: " + myAngle);
+							c.rotateBy(myAngle, true);
+							firstTime = false;
+						} 
+					} else {
+						firstTime = false;
 						if(distance > 0){
 							c.moveForward();
 						} else {
 							c.moveBackward();
 						}
-					//}
+					}
 				}
 			}
 			blocking = false;
-			
+
 		} else {
 			logger.info("Plan aready being excuted passing through");
 		}
+	}
+
+	public double ballLine(double x, double ba, Point ballPosition){
+		return ba*x - ba*ballPosition.getX() + ballPosition.getY();
 	}
 }

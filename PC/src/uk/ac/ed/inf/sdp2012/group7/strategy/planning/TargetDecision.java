@@ -672,7 +672,12 @@ public class TargetDecision {
 		Node ballPosition = allMovingObjects.getBallPosition();
 		double x1 = ballPosition.getX();
 		double y1 = ballPosition.getY();
-		double theta1 = allMovingObjects.getBallAngle();
+		double theta1;
+		if(allMovingObjects.getBallVelocity() > 25){
+			theta1 = allMovingObjects.getBallAngle();
+		} else {
+			theta1 = allMovingObjects.getTheirAngle();
+		}
 		double x2 = ourPosition.getX();
 		double y2 = ourPosition.getY();
 		double theta2 = allMovingObjects.getOurAngle();
