@@ -81,6 +81,7 @@ public class ControlGUI implements ChangeListener {
 	private JPanel thresholdingPanel;
 	
 	private JButton milestone4Button;
+	private JButton milestone4TButton;
 	
 	/* Radio buttons */
 	JButton pitch_0;
@@ -521,6 +522,20 @@ public class ControlGUI implements ChangeListener {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
+		    	WorldState.getInstance().useTurning = false;
+		        strat.startPlanningThread(PlanTypes.PlanType.MILESTONE_4.ordinal());
+		    }
+		});
+		
+		milestone4TButton = new JButton("Milestone 4 Turning");
+		
+		startStopPanel.add(milestone4TButton);
+		
+		milestone4TButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	WorldState.getInstance().useTurning = true;
 		        strat.startPlanningThread(PlanTypes.PlanType.MILESTONE_4.ordinal());
 		    }
 		});
