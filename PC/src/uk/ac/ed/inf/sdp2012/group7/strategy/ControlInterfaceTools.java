@@ -22,7 +22,9 @@ public class ControlInterfaceTools {
 		return newAngle;
 	}
 	public static double convertAngleAsStrategyDoes(double angle) {
+		ControlInterface.logger.debug(String.format("Converted angle from %f to %f", angle,(angle + 2*Math.PI) % (Math.PI*2)));
 		return (angle + 2*Math.PI) % (Math.PI*2); 
+		
 	}
 	
 	public static double angleToTurn(double ourAngle, double angleWanted) {

@@ -92,7 +92,7 @@ public class ControlInterface implements Observer {
 		boolean needToTurn= false;
 
 		
-		//v = ControlInterfaceTools.convertAngle(v); / No need for this conversion
+		//v = ControlInterfaceTools.convertAngle(v); // No need for this conversion
 		  
         //Attempts to find a goal point. Searches along the path given by plan
         //and finds a point which is exactly a lookahead distance (euclidian)
