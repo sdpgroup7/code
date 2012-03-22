@@ -5,9 +5,11 @@ uk.ac.ed.inf.sdp2012.group7.strategy
 uk.ac.ed.inf.sdp2012.group7.strategy.astar
 uk.ac.ed.inf.sdp2012.group7.strategy.astar.heuristics
 uk.ac.ed.inf.sdp2012.group7.strategy.astar.utils
+uk.ac.ed.inf.sdp2012.group7.strategy.oldastar
 uk.ac.ed.inf.sdp2012.group7.strategy.planning
 uk.ac.ed.inf.sdp2012.group7.testing.control
 uk.ac.ed.inf.sdp2012.group7.testing.planning
+uk.ac.ed.inf.sdp2012.group7.testing.strategy
 uk.ac.ed.inf.sdp2012.group7.testing.vision
 uk.ac.ed.inf.sdp2012.group7.ui
 uk.ac.ed.inf.sdp2012.group7.vision
