@@ -57,6 +57,7 @@ public class ControlGUI implements ChangeListener {
 	private JButton stopButton;
 	
 	/*Logging buttons*/
+	private JButton traceButton;
 	private JButton infoButton;
 	private JButton debugButton;
 	private JButton errorButton;
@@ -80,6 +81,7 @@ public class ControlGUI implements ChangeListener {
 	private JPanel thresholdingPanel;
 	
 	private JButton milestone4Button;
+	private JButton milestone4TButton;
 	
 	/* Radio buttons */
 	JButton pitch_0;
@@ -520,6 +522,20 @@ public class ControlGUI implements ChangeListener {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
+		    	WorldState.getInstance().useTurning = false;
+		        strat.startPlanningThread(PlanTypes.PlanType.MILESTONE_4.ordinal());
+		    }
+		});
+		
+		milestone4TButton = new JButton("Milestone 4 Turning");
+		
+		startStopPanel.add(milestone4TButton);
+		
+		milestone4TButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	WorldState.getInstance().useTurning = true;
 		        strat.startPlanningThread(PlanTypes.PlanType.MILESTONE_4.ordinal());
 		    }
 		});
@@ -551,6 +567,15 @@ public class ControlGUI implements ChangeListener {
 		
 		
 		JPanel loggerPanel = new JPanel();
+		
+		traceButton = new JButton("Trace");
+		loggerPanel.add(traceButton);
+		traceButton.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	Logger.getRootLogger().setLevel(Level.TRACE);
+		    }
+		});
 		
 		infoButton = new JButton("Info");
 		loggerPanel.add(infoButton);

@@ -56,11 +56,11 @@ public class Strategy {
 
 	public void stopPlanningThread() {
 		if(started){
-			this.control_interface.stop();
 			this.allStaticObjects.setPlanType(PlanTypes.PlanType.HALT.ordinal());
 			this.allStaticObjects.stopRun();
 			this.thread_for_planningthread = null;
 			started = false;
+			this.control_interface.stop();
 		}
 	}
 	

@@ -53,6 +53,12 @@ public class AStar {
                 
                 //printMap(null);
 		
+		if(this.target.x >= this.width) this.target.setLocation(this.width - 1, this.target.y);
+		if(this.target.y >= this.height) this.target.setLocation(this.target.x, this.height - 1);
+		if(this.target.x < 0) this.target.setLocation(0, this.target.y);
+		if(this.target.y < 0) this.target.setLocation(this.target.x, 0);
+		
+		
 		this.map[this.target.x][this.target.y] = this.target;
 		this.map[this.target.x][this.target.y].setTarget(true);
 		this.map[this.target.x][this.target.y].sethCost(0);
@@ -84,6 +90,11 @@ public class AStar {
 		this.start.sethCost(heuristic.getEstimatedDistanceToGoal(this.start, this.target));
 		this.start.setgCost(0);
 		this.start.setfCost();
+		
+		if(this.target.x > this.width) this.target.setLocation(this.width - 1, this.target.y);
+		if(this.target.y > this.height) this.target.setLocation(this.target.x, this.height - 1);
+		if(this.target.x < 0) this.target.setLocation(0, this.target.y);
+		if(this.target.y < 0) this.target.setLocation(this.target.x, 0);
 		
 		this.map[this.start.x][this.start.y] = this.start;
 		this.openList.add(this.map[start.x][start.y]);
@@ -140,8 +151,8 @@ public class AStar {
 		}
 		
                 ArrayList<Node> returnPath = getPath(closedList);
-                printMap(closedList);
-                printMap(returnPath);
+                //printMap(closedList);
+                //printMap(returnPath);
                 return returnPath;
 	}
 	

@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.sdp2012.group7.strategy;
 
 import java.awt.Point;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Observable;
@@ -9,11 +10,15 @@ import java.util.Observer;
 
 import uk.ac.ed.inf.sdp2012.group7.strategy.Arc;
 import uk.ac.ed.inf.sdp2012.group7.strategy.astar.Node;
+import uk.ac.ed.inf.sdp2012.group7.strategy.planning.AllMovingObjects;
 import uk.ac.ed.inf.sdp2012.group7.strategy.planning.Plan;
+import net.phys2d.raw.shapes.Line;
+
 import org.apache.log4j.Logger;
 import uk.ac.ed.inf.sdp2012.group7.control.RobotControl;
 import uk.ac.ed.inf.sdp2012.group7.control.Tools;
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 import math.geom2d.Point2D;
 import math.geom2d.conic.Circle2D;
@@ -31,13 +36,13 @@ public class ControlInterface implements Observer {
 
 	public static final Logger logger = Logger.getLogger(ControlInterface.class);
 
-	private final int START_SPEED = 30;
+	private final int START_SPEED = 90;
 
 	private static ControlInterface controlInterface = null;
 	private static int lookahead;
 	private RobotControl c;
 
-	private boolean blocking = false; 
+	volatile private boolean blocking = false; 
 	//Variable which we use to set so only one plan can be fired at once
 
 	//So planning and us are working off the same page
@@ -50,14 +55,8 @@ public class ControlInterface implements Observer {
 	private int forwards = PlanTypes.ActionType.FORWARDS.ordinal();
 	private int backwards = PlanTypes.ActionType.BACKWARDS.ordinal();
 
-	private boolean firstTimeRotate = false;
 	private boolean firstTime = true;
-	private boolean firstTimeForward = false;
 	private ArrayList<Point> navPoints = new ArrayList<Point>();
-	private double time1 ;
-
-	private double timeIncremental=0;
-	private double timeIncremental2=1;
 
 
 	private ControlInterface(int lookahead) {
@@ -135,7 +134,7 @@ public class ControlInterface implements Observer {
 		//robot. If it is behind then we need to turn the robot around
 
 
-		
+
 
 
 
@@ -179,11 +178,11 @@ public class ControlInterface implements Observer {
 
 			logger.info("Action is to drive");
 
-			
+
 			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
 			logger.info(String.format("Command sent to robot: Drive on arc " +
-				"radius %d with turn left: %b", 
-				(int)(path.getRadius()+0.5), path.isLeft()));
+					"radius %d with turn left: %b", 
+					(int)(path.getRadius()+0.5), path.isLeft()));
 		} else if (plan.getAction() == kick) {
 			logger.info("Action is to kick");
 			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
@@ -265,10 +264,6 @@ public class ControlInterface implements Observer {
 		c.kick();
 	}
 
-	public void stopKick() {
-		c.stopKick();
-	}
-
 	public void drive() {
 		c.moveForward();
 	}
@@ -322,80 +317,104 @@ public class ControlInterface implements Observer {
 				logger.info("Command sent to robot: stop");
 
 			}  else if (plan.getPlanType()==PlanTypes.PlanType.MILESTONE_4.ordinal()) {
-				
-				
-				
-				if (firstTime) {
-					time1 = System.currentTimeMillis();
-					firstTime = false;
-				}
-
-				if (((System.currentTimeMillis()-time1) / 1000) >= timeIncremental) {
-					firstTimeRotate = true;					
-					timeIncremental= timeIncremental + 4;
-				}
-				if (((System.currentTimeMillis()-time1) / 1000) >= timeIncremental2) {
-					firstTimeForward = true;				
-					timeIncremental2= timeIncremental2 + 4;
-				}
+				logger.info("Inside Milestone 4");
 				Point ourPosition = plan.getOurRobotPosition();
 				Point navPoint = plan.getNavPoint();
-				double myAngle = Tools.getAngleToFacePoint(ourPosition, plan.getOurRobotAngle(), navPoint);
-				logger.debug("BLAHHHHHHHH Angle is "+myAngle);
-
-				if (firstTimeRotate) {
-					//c.stop();
-					firstTimeRotate = false;
-
-
-					if (myAngle > 0) {
-						logger.debug("We're gonna move right with angle "+myAngle);
-						c.rotateBy(Math.abs(myAngle), false , true);
-						
-						
-					} else {
-						logger.debug("We're gonna move left with angle "+myAngle);
-						c.rotateBy(Math.abs(myAngle), false , false);
-						
-					}
-
-
-
-				} 
+				Point ballPosition = plan.getBallPosition();
+				double distance;
+				double myAngle = 0;;
+				
+				if(WorldState.getInstance().useTurning){
+					logger.info("Using turning");
+					double x1 = ballPosition.getX();
+					double y1 = ballPosition.getY();
+					double theta1 = plan.getBallAngle();
+					double x2 = ourPosition.getX();
+					double y2 = ourPosition.getY();
+					double theta2 = (plan.getBallAngle() + (Math.PI / 2.0)) % Math.PI;
+					double m = y1 - Math.tan(theta1)*x1;
+					double n = y2 - Math.tan(theta2)*x2;
+					double a;
+					double b;
+	
+					double tantheta1 = Math.tan(theta1);
+					double tantheta2 = Math.tan(theta2);
+	
+	
+	
+					if(tantheta2 == 0) tantheta2 = 0.000001;
+	
+					b = (m - n*tantheta1/tantheta2);
+					b = b / (1 - tantheta1/tantheta2);
+	
+					a = (b - n)/tantheta2;
+	
+					Point interceptPoint = new Point((int)(a + 0.5),(int)(b + 0.5));
+	
+					myAngle = Tools.getAngleToFacePoint(ourPosition, plan.getOurRobotAngle(), interceptPoint);
 					
-				
-				if (firstTimeForward) {
-						c.moveForward();
-						firstTimeForward = false;
-				}
-								
-				
-
-
-
-
-
-				//logger.debug("Angle to turn is "+myAngle);
-				//if (firstTime) {
-				//	firstTime = false;
-
-				/*if(Math.abs(myAngle) > 0.4){
-					if (myAngle > 0) {
-						logger.debug("We're gonna move right with angle "+myAngle);
-						c.rotateBy(Math.abs(myAngle), false , true);
+					if(Math.abs(myAngle) > (Math.PI / 3)){
+						logger.info("Need to turn");
+						distance = VisionTools.pixelsToCM(ourPosition.distance(interceptPoint)*plan.getNodeWidthInPixels());
 					} else {
-						logger.debug("We're gonna move left with angle "+myAngle);
-						c.rotateBy(Math.abs(myAngle), false , false);
+						logger.info("Don't need to turn");
+						distance = VisionTools.pixelsToCM(ourPosition.distance(navPoint)*plan.getNodeWidthInPixels());
 					}
+					
 				} else {
-					System.exit(0);
-					c.moveForward();
-				}*/
+					logger.info("Not using turning");
+					distance = VisionTools.pixelsToCM(ourPosition.distance(navPoint)*plan.getNodeWidthInPixels());
+					myAngle = Tools.getAngleToFacePoint(ourPosition, plan.getOurRobotAngle(), navPoint);
+				}
+				
+				if(Math.abs(myAngle) > (Math.PI/2.0)){
+					distance *= -1;
+				}
 
+				if (Math.abs(distance) < 15) {
+					logger.info("In place, Stopping");
+					c.stop();	
+				} else {
+					logger.info("Have to travel");
+					if(WorldState.getInstance().useTurning){
+						logger.info("Using turning");
+						if(Math.abs(myAngle) > (Math.PI / 3)){
+							logger.info("Need to turn");
+							if(firstTime){
+								logger.debug("Turning with angle: " + myAngle);
+								c.rotateBy(myAngle, true);
+								firstTime = false;
+							} else {
+								logger.info("Wasn't first time so not turning.");
+							}
+						} else {
+							logger.info("Facing close enough");
+							firstTime = false;
+							if(distance > 0){
+								logger.info("Moving forward");
+								c.moveForward();
+							} else {
+								logger.info("Moving backwards");
+								c.moveBackward();
+							}
+						}
+					} else {
+						logger.info("Not using turning");
+						if(distance > 0){
+							logger.info("Moving forward");
+							c.moveForward();
+						} else {
+							logger.info("Moving backwards");
+							c.moveBackward();
+						}
+					}
+				}
 			}
 			blocking = false;
 
-		} else
+		} else {
 			logger.info("Plan aready being excuted passing through");
+		}
 	}
+
 }
