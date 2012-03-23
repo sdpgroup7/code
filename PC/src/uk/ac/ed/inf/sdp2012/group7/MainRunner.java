@@ -2,6 +2,7 @@ package uk.ac.ed.inf.sdp2012.group7;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import uk.ac.ed.inf.sdp2012.group7.simulator.Simulator;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
@@ -19,7 +20,7 @@ public class MainRunner {
 
     public static void main(String[] args){
         Logger.getLogger("com.intel.bluetooth").setLevel(Level.WARN);
-
+        PropertyConfigurator.configure("log4j.properties");
         if (args.length > 0) {
         	simulator = true;
         	new Simulator();
