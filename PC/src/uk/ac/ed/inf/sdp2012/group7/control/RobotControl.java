@@ -191,6 +191,10 @@ public class RobotControl implements ConstantsReuse {
 		addCommand((byte) 0,(byte) OpCodes.CHANGE_SPEED.ordinal(),speed);
 	}
 	
+	public void changeRotateSpeed(int speed) {
+		addCommand((byte) 0,(byte) OpCodes.CHANGE_ROTATE_SPEED.ordinal(),speed);
+	}
+	
 
 	/**
 	 * Commands the robot to move forward

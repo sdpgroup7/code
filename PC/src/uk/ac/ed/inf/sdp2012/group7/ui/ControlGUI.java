@@ -514,10 +514,6 @@ public class ControlGUI implements ChangeListener {
 		
 		startStopPanel.add(milestone4Button);
 		
-		startButton = new JButton("Start Match");
-		
-		startStopPanel.add(startButton);
-		
 		milestone4Button.addActionListener(new ActionListener() {
 		    
 		    @Override
@@ -539,6 +535,10 @@ public class ControlGUI implements ChangeListener {
 		        strat.startPlanningThread(PlanTypes.PlanType.MILESTONE_4.ordinal());
 		    }
 		});
+		
+		startButton = new JButton("Start Match");
+		
+		startStopPanel.add(startButton);
 		
 		startButton.addActionListener(new ActionListener() {
 		    

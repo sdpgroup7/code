@@ -129,6 +129,10 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 								break;
 
 							case CHANGE_SPEED:
+								pilot.setRotateSpeed(magnitude);
+								break;
+
+							case CHANGE_ROTATE_SPEED:
 								pilot.setTravelSpeed(magnitude);
 								break;
 
