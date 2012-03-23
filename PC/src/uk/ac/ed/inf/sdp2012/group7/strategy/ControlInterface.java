@@ -307,7 +307,16 @@ public class ControlInterface implements Observer {
 
 				//This means go for it, usual case
 				Arc arcToDrive = chooseArc(plan);
-				implimentArc(arcToDrive, plan);	
+				double checkAngle = Tools.getAngleToFacePoint(plan.getOurRobotPosition(), 
+						plan.getOurRobotAngle(), arcToDrive.getGoal());
+				
+				logger.debug(String.format("Angle to turn to get to goal point: %f", checkAngle));
+				
+				if (checkAngle > Math.PI/4 || checkAngle < -Math.PI/4) {
+					c.rotateBy(checkAngle, true);
+				} else {
+					implimentArc(arcToDrive, plan);
+				}
 
 			} else if (plan.getPlanType()==PlanTypes.PlanType.HALT.ordinal()) {
 
