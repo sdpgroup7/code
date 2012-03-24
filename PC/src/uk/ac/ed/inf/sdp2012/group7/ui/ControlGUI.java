@@ -19,6 +19,7 @@ import javax.swing.event.ChangeListener;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import uk.ac.ed.inf.sdp2012.group7.strategy.ControlInterface;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
@@ -41,6 +42,7 @@ public class ControlGUI implements ChangeListener {
 	/* Stores information about the current world state, such as 
 	 * shooting direction, ball location, etc. */
 	private WorldState worldState = WorldState.getInstance();
+	private ControlInterface ci = ControlInterface.getInstance();
 	
 	private final Strategy strat;
 	
@@ -79,6 +81,7 @@ public class ControlGUI implements ChangeListener {
 	private JTabbedPane tabPane;
 	private JPanel defaultPanel;
 	private JPanel thresholdingPanel;
+	private JPanel commandTestingPanel;
 	
 	
 	/* Radio buttons */
@@ -88,6 +91,24 @@ public class ControlGUI implements ChangeListener {
 	JButton colour_blue;
 	JButton direction_right;
 	JButton direction_left;
+	
+	/* Buttons for command testing panel */
+	private JButton forwards;
+	private JButton backwards;
+	private JButton forwardsDistance;
+	private JButton backwardsDistance;
+	private JButton forwardsFast;
+	private JButton backwardsFast;
+	private JButton forwardsSlow;
+	private JButton backwardsSlow;
+	private JButton rotateLeft;
+	private JButton rotateRight;
+	private JButton rotateLeft90;
+	private JButton rotateRight90;
+	private JButton arcLeft;
+	private JButton arcRight;
+	private JButton kick;
+	private JButton stop;
 	
     private boolean penaltyToGame = false;
 
@@ -131,18 +152,22 @@ public class ControlGUI implements ChangeListener {
         thresholdingPanel = new JPanel();
         thresholdingPanel.setLayout(new BoxLayout(thresholdingPanel, BoxLayout.Y_AXIS));
         
+        commandTestingPanel = new JPanel();
+        commandTestingPanel.setLayout(new BoxLayout(commandTestingPanel, BoxLayout.Y_AXIS));
         
         /* The main (default) tab */
         setUpMainPanel(); 
         
         /* The Tresholding tab */
-        
         setUpThresholdingPanel();
+        
+        setUpCommandTestingPanel();
         
         
         
         tabPane.addTab("World Information", defaultPanel); 
         tabPane.addTab("Thresholding", thresholdingPanel);
+        tabPane.addTab("Command Testing", commandTestingPanel);
     
         tabPane.addChangeListener(this);
         
@@ -157,6 +182,209 @@ public class ControlGUI implements ChangeListener {
         
 		
 	}
+	private void setUpCommandTestingPanel() {
+		JPanel nonBlocking = new JPanel();
+		JLabel nonBlockingLabel = new JLabel("Non-blocking:");
+		nonBlocking.add(nonBlockingLabel);
+		
+		forwards = new JButton("Forwards");
+		backwards = new JButton("Backwards");
+		forwardsFast = new JButton("Forwards fast");
+		backwardsFast = new JButton("Backwards fast");
+		forwardsSlow = new JButton("Forwards slow");
+		backwardsSlow = new JButton("Backwards slow");
+		
+		forwards.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.drive();
+		    }
+		});
+				
+		backwards.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.moveBackwards();
+		    }
+		});
+		
+		forwardsFast.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.moveForwardsSpeed(600);
+		    }
+		});
+		
+		backwardsFast.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.moveBackwardsSpeed(600);
+		    }
+		});
+		
+		forwardsSlow.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.moveForwardsSpeed(100);
+		    }
+		});
+		
+		backwardsSlow.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.moveBackwardsSpeed(100);
+		    }
+		});
+		
+		nonBlocking.add(forwards);
+		nonBlocking.add(backwards);
+		nonBlocking.add(forwardsFast);
+		nonBlocking.add(backwardsFast);
+		nonBlocking.add(forwardsSlow);
+		nonBlocking.add(backwardsSlow);
+		commandTestingPanel.add(nonBlocking);
+		
+		
+		JPanel blocking = new JPanel();
+		JLabel blockingLabel = new JLabel("Blocking:");
+		blocking.add(blockingLabel);
+		
+		forwardsDistance = new JButton("Forwards 30cm");
+		backwardsDistance = new JButton("Backwards 30cm");
+		
+		forwardsDistance.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.moveForwardsDistance(30);
+		    }
+		});
+		
+		backwardsDistance.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.moveBackwardsDistance(30);
+		    }
+		});
+		
+		blocking.add(forwardsDistance);
+		blocking.add(backwardsDistance);		
+		commandTestingPanel.add(blocking);
+		
+		JPanel rotate = new JPanel();
+		JLabel rotateLabel = new JLabel("Rotation:");
+		rotate.add(rotateLabel);
+		
+		rotateRight = new JButton("Rotate right non-blocking");
+		rotateLeft = new JButton("Rotate left non-blocking");
+		rotateRight90 = new JButton("Rotate right 90");
+		rotateLeft90 = new JButton("Rotate left 90");
+		
+		rotateRight.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.rotateRight();
+		    }
+		});
+		
+		rotateLeft.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.rotateLeft();
+		    }
+		});
+		
+		rotateRight90.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.rotateBy(Math.PI/2,true);
+		    }
+		});
+		
+		rotateLeft90.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.rotateBy(Math.PI/2,false);
+		    }
+		});
+		
+		rotate.add(rotateRight);
+		rotate.add(rotateLeft);
+		rotate.add(rotateRight90);
+		rotate.add(rotateLeft90);
+		commandTestingPanel.add(rotate);
+		
+		JPanel arcing = new JPanel();
+		JLabel arcingLabel = new JLabel("Arcing:");
+		arcing.add(arcingLabel);
+		
+		arcLeft = new JButton("Arc left");
+		arcRight = new JButton("Arc right");
+		
+		arcLeft.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.arc(20, true);
+		    }
+		});
+		
+		arcRight.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.arc(20,false);
+		    }
+		});
+		
+		
+		arcing.add(arcLeft);
+		arcing.add(arcRight);		
+		commandTestingPanel.add(arcing);
+		
+		arcing.add(arcLeft);
+		arcing.add(arcRight);		
+		commandTestingPanel.add(arcing);
+		
+		JPanel kickPanel = new JPanel();
+		kick = new JButton("Kick");
+
+		kick.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.kick();
+		    }
+		});
+		kickPanel.add(kick);
+		commandTestingPanel.add(kickPanel);
+		
+		JPanel stopPanel = new JPanel();
+		stop = new JButton("STOP");
+
+		stop.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        ci.stop();
+		    }
+		});
+		stopPanel.add(stop);
+		commandTestingPanel.add(stopPanel);
+		
+	}
+
 	/**
 	 * Sets up the Thresholding tab, where sliders for the thresholding are employed 
 	 * to get more accurate thresholding in RGB 

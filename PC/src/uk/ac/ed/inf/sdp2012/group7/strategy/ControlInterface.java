@@ -271,7 +271,43 @@ public class ControlInterface implements Observer {
 	public void stop() {
 		c.stop();
 	}
-
+	
+	/* All added for command testing */
+	public void moveBackwards() {
+		c.moveBackward();
+	}
+	
+	public void moveForwardsSpeed(int speed) {
+		c.moveForward(speed);
+	}
+	
+	public void moveBackwardsSpeed(int speed) {
+		c.moveBackward(speed);
+	}
+	
+	public void moveForwardsDistance(int distance) {
+		c.moveForwardDistance(distance);
+	}
+	
+	public void moveBackwardsDistance(int distance) {
+		c.moveBackwardDistance(distance);
+	}
+	
+	public void rotateRight() {
+		c.rotateBy(Math.PI*100, false, true);
+	}
+	
+	public void rotateLeft() {
+		c.rotateBy(Math.PI*100, false, false);
+	}
+	
+	public void rotateBy(double angle, boolean left) {
+		c.rotateBy(angle, true, left);
+	}
+	
+	public void arc(int radius, boolean left) {
+		c.circleWithRadius(radius, left);
+	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
