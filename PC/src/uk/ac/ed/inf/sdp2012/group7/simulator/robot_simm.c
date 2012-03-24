@@ -83,10 +83,14 @@ void action(void* args) {
 			case DO_NOTHING: break;
 			case START_MATCH:
 			case FORWARDS:
+					 if (a->cmd->arg)
+								speed = SPEED(a->cmd->arg);
 					 a->rs->x = a->rs->x + speed * cos(a->rs->angle);
 					 a->rs->y = a->rs->y + speed * sin(a->rs->angle);
 					 break;
-			case BACKWARDS:  
+			case BACKWARDS: 
+					 if (a->cmd->arg)
+								speed = SPEED(a->cmd->arg);
 					 a->rs->x = a->rs->x - speed * cos(a->rs->angle);
 					 a->rs->y = a->rs->y - speed * sin(a->rs->angle);
 					 break;
