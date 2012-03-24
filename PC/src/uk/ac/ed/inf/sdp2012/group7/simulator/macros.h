@@ -2,6 +2,7 @@
 #define __macros_h__
 
 #include <sys/time.h>
+#include <math.h>
 
 #define not_dummy(x) strncmp(x, "-1", 2)
 #define port_dummy(x) not_dummy(x)?x:"dummy"
@@ -28,5 +29,8 @@
 
 #define TIMED_LOOP       struct timeval t_start; struct timeval t_end; struct timeval t_left; while(1) { gettimeofday(&t_start, NULL);
 #define TIMED_LOOP_END 	 gettimeofday(&t_end, NULL); timersub(&t_end, &t_start, &t_left); usleep(USEC_PER_ACTION - t_left.tv_usec); }
+
+#define degtorad(d) (d%360)*(M_PI/180.0)
+#define radtodeg(r) (((java_int)(r*180/M_PI))%360)
 
 #endif

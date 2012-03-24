@@ -83,20 +83,20 @@ void action(void* args) {
 			case DO_NOTHING: break;
 			case START_MATCH:
 			case FORWARDS:
-					 a->rs->x = a->rs->x - speed * cos(a->rs->angle);
-					 a->rs->y = a->rs->y - speed * sin(a->rs->angle);
-					 break;
-			case BACKWARDS:  
 					 a->rs->x = a->rs->x + speed * cos(a->rs->angle);
 					 a->rs->y = a->rs->y + speed * sin(a->rs->angle);
+					 break;
+			case BACKWARDS:  
+					 a->rs->x = a->rs->x - speed * cos(a->rs->angle);
+					 a->rs->y = a->rs->y - speed * sin(a->rs->angle);
 					 break;
 			case BACKWARDS_WITH_DISTANCE:
 					if (!distance)
 						distance = a->cmd->arg;
 					else {
 						distance -= speed;
-						a->rs->x = a->rs->x + speed * cos(a->rs->angle);
-						a->rs->y = a->rs->y + speed * sin(a->rs->angle);
+						a->rs->x = a->rs->x - speed * cos(a->rs->angle);
+						a->rs->y = a->rs->y - speed * sin(a->rs->angle);
 					}
 					if (distance < 0) {
 						distance == 0;
@@ -107,11 +107,11 @@ void action(void* args) {
 			case CHANGE_SPEED: speed = a->cmd->arg / 3; break;
 			case ROTATE_LEFT: 
 			case ROTATE_BLOCK_LEFT:
-					   a->rs->angle = ((360 - a->rs->angle) + a->cmd->arg) % 360;
+					   a->rs->angle = a->rs->angle - degtorad(a->cmd->arg);
 					   break;
 			case ROTATE_RIGHT:
 			case ROTATE_BLOCK_RIGHT:
-					   a->rs->angle = (a->rs->angle + a->cmd->arg) % 360;
+					   a->rs->angle = a->rs->angle + degtorad(a->cmd->arg);
 					   break;
 			case ARC_LEFT: AT_STUB("ARC_LEFT\n"); break;
 			case ARC_RIGHT: AT_STUB("ARC_RIGHT\n"); break;
@@ -121,8 +121,8 @@ void action(void* args) {
 						distance = a->cmd->arg;
 					else {
 						distance -= speed;
-						a->rs->x = a->rs->x - speed * cos(a->rs->angle);
-						a->rs->y = a->rs->y - speed * sin(a->rs->angle);
+						a->rs->x = a->rs->x + speed * cos(a->rs->angle);
+						a->rs->y = a->rs->y + speed * sin(a->rs->angle);
 					}
 					if (distance < 0) {
 						distance == 0;

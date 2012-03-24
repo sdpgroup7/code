@@ -18,7 +18,7 @@ struct command {
 struct robot_status {
 	java_int x;
 	java_int y;
-	java_int angle;
+	double angle;
 	java_int kicker;
 };
 

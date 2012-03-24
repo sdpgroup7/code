@@ -28,16 +28,16 @@ void ws_thread(void * args) {
 
 		p.blue_x = a->ws->blue->x;
 		p.blue_y = a->ws->blue->y;
-		p.blue_a = a->ws->blue->angle;
+		p.blue_a = radtodeg(a->ws->blue->angle);
 
 		p.yellow_x = a->ws->yellow->x;
 		p.yellow_y = a->ws->yellow->y;
-		p.yellow_a = a->ws->yellow->angle;
+		p.yellow_a = radtodeg(a->ws->yellow->angle);
 
 		p.blue_kick = a->ws->blue->kicker;
 		p.yellow_kick = a->ws->yellow->kicker;
 		
-		WS_SAY_ "[%02i] bx=%u by=%u ba=%u yx=%u yy=%u ya=%u bk=%u yk=%u\r", frame, p.blue_x, p.blue_y, p.blue_a, p.yellow_x, p.yellow_y, p.yellow_a, p.blue_kick, p.yellow_kick);
+		WS_SAY_ "[%02i] bx=%i by=%i ba=%i (%f) yx=%i yy=%i ya=%i bk=%i yk=%i\r", frame, p.blue_x, p.blue_y, p.blue_a, a->ws->blue->angle, p.yellow_x, p.yellow_y, p.yellow_a, p.blue_kick, p.yellow_kick);
 
 		if (send(socket, &p, sizeof p, 0) == -1)
 			WS_SAY("send failed\n");
