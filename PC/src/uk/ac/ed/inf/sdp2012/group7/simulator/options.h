@@ -14,10 +14,12 @@
 
 #define BLUE_START_X 180
 #define BLUE_START_Y 240
-#define BLUE_START_A 270     // In degrees, NOT negative (so -90 = 270) kthxbai
+#define BLUE_START_A 52       // In degrees, NOT negative (so -90 = 270) kthxbai
 #define YELLOW_START_X 440
 #define YELLOW_START_Y 240
-#define YELLOW_START_A 0     // Same as above
+#define YELLOW_START_A 180   // Same as above
+
+#define ROBOT_SIZE 46
 
 #define USEC_PER_ACTION 40000 // 25 fps = action every 0.04 s
 

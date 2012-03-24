@@ -138,8 +138,28 @@ void action(void* args) {
 			a->cmd->kicker = 0;
 		}
 
-		send(a->socket, &a->cmd->instr, sizeof a->cmd->instr, 0);
+		send(a->socket, &a->cmd->instr, sizeof a->cmd->instr, 0);		
 
+		if (a->rs->x < PITCH_X1+ROBOT_SIZE/2) {
+			send(a->socket, BUMP_ON, sizeof a->cmd->instr, 0);
+			a->rs->x = PITCH_X1+ROBOT_SIZE/2+ROBOT_SIZE;
+			send(a->socket, BUMP_OFF, sizeof a->cmd->instr, 0);
+		}
+		if (a->rs->y < PITCH_Y1+ROBOT_SIZE/2) {
+			send(a->socket, BUMP_ON, sizeof a->cmd->instr, 0);
+			a->rs->y = PITCH_Y1+ROBOT_SIZE/2+ROBOT_SIZE;
+			send(a->socket, BUMP_OFF, sizeof a->cmd->instr, 0);
+		}
+		if (a->rs->x > PITCH_X2-ROBOT_SIZE/2) {
+			send(a->socket, BUMP_ON, sizeof a->cmd->instr, 0);
+			a->rs->x = PITCH_X2-ROBOT_SIZE/2-ROBOT_SIZE;
+			send(a->socket, BUMP_OFF, sizeof a->cmd->instr, 0);
+		}
+		if (a->rs->y > PITCH_Y2-ROBOT_SIZE/2) {
+			send(a->socket, BUMP_ON, sizeof a->cmd->instr, 0);
+			a->rs->y = PITCH_Y2-ROBOT_SIZE/2-ROBOT_SIZE;
+			send(a->socket, BUMP_OFF, sizeof a->cmd->instr, 0);
+		}
 
 	TIMED_LOOP_END
 }
