@@ -37,7 +37,7 @@ void ws_thread(void * args) {
 		p.blue_kick = a->ws->blue->kicker;
 		p.yellow_kick = a->ws->yellow->kicker;
 		
-		WS_SAY_ "[%02i] bx=%i by=%i ba=%i (%f) yx=%i yy=%i ya=%i bk=%i yk=%i\r", frame, p.blue_x, p.blue_y, p.blue_a, a->ws->blue->angle, p.yellow_x, p.yellow_y, p.yellow_a, p.blue_kick, p.yellow_kick);
+		WS_SAY_ "[%02i] bx=%i by=%i ba=%i yx=%i yy=%i ya=%i bk=%i yk=%i\r", frame, p.blue_x, p.blue_y, p.blue_a, p.yellow_x, p.yellow_y, p.yellow_a, p.blue_kick, p.yellow_kick);
 
 		if (send(socket, &p, sizeof p, 0) == -1)
 			WS_SAY("send failed\n");
