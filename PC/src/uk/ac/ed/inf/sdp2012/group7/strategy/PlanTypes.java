@@ -8,7 +8,6 @@ public class PlanTypes {
 		PENALTY_OFFENCE,
 		FREE_PLAY,
 		HALT,
-		MILESTONE_4,
 	}
 	
 	public static enum ActionType {

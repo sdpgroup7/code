@@ -316,8 +316,6 @@ public class ControlInterface implements Observer {
 				c.stop();
 				logger.info("Command sent to robot: stop");
 
-			}  else if (plan.getPlanType()==PlanTypes.PlanType.MILESTONE_4.ordinal()) {
-				milestone4(plan);
 			}
 			blocking = false;
 
@@ -326,7 +324,7 @@ public class ControlInterface implements Observer {
 		}
 	}
 	
-	public void milestone4(Plan plan){
+	/*public void milestone4(Plan plan){
 		logger.info("Inside Milestone 4");
 		Point ourPosition = plan.getOurRobotPosition();
 		Point navPoint = plan.getNavPoint();
@@ -419,6 +417,6 @@ public class ControlInterface implements Observer {
 				}
 			}
 		}
-	}
+	}*/
 
 }
