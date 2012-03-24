@@ -50,20 +50,7 @@ public class WorldState{
 	
 	
     private WorldState() {
-    	if(room == 0){
-    		pitch = new Pitch(	new Point(40,104),
-    							new Point(600,98),
-    							new Point(607,384),
-    							new Point(40,394));
-    		pitch.setBuffers(86,612,402,24);
-    	} else {
-    		pitch = new Pitch(	new Point(62,123),
-		            new Point(581,137),
-		            new Point(584,399),
-		            new Point(64,398));
-    		pitch.setBuffers(90,580,391,43);
-    	}
-    	updateShootingDirection();
+    	setRoom(0); //Assume main pitch for initialisation
     }
     
     public void addStrategyTime(long l){
@@ -190,7 +177,7 @@ public class WorldState{
     							new Point(600,98),
     							new Point(607,384),
     							new Point(40,394));
-    		pitch.setBuffers(86,612,402,24);
+    		pitch.setBuffers(115,612,431,24);
     	} else {
     		pitch = new Pitch(	new Point(62,123),
 					            new Point(581,137),
