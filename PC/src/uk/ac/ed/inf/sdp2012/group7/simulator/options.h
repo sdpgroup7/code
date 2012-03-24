@@ -23,6 +23,8 @@
 
 #define USEC_PER_ACTION 40000 // 25 fps = action every 0.04 s
 
+#define SPEED(s) (s/4)  // Work out a better formula
+
 #define IPV4
 #undef IPV6
 
