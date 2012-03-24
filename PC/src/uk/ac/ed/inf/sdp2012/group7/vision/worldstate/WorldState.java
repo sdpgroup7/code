@@ -190,7 +190,7 @@ public class WorldState{
     							new Point(600,98),
     							new Point(607,384),
     							new Point(40,394));
-    		pitch.setBuffers(86,612,402,24);
+    		pitch.setBuffers(115,612,431,24);
     	} else {
     		pitch = new Pitch(	new Point(62,123),
 					            new Point(581,137),
