@@ -104,7 +104,7 @@ void action(void* args) {
 					}
 					break;
 			case STOP: AT_STUB("STOP\n"); break; /* I don't think this really needs to do anything. */
-			case CHANGE_SPEED: speed = a->cmd->arg / 3; break;
+			case CHANGE_SPEED: speed = SPEED(a->cmd->arg); break;
 			case ROTATE_LEFT: 
 			case ROTATE_BLOCK_LEFT:
 					   a->rs->angle = a->rs->angle - degtorad(a->cmd->arg);
