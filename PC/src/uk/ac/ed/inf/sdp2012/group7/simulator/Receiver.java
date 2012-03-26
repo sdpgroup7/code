@@ -44,9 +44,8 @@ public class Receiver extends Thread {
 	}
 
 	private int simAngleToNormal(int simAngle) {
-		simAngle = simAngle - 90;
-		if (simAngle < 0)
-			return 360 + simAngle;
+		if (simAngle > 180)
+			return -(simAngle%180);
 		return simAngle;
 	}
 	

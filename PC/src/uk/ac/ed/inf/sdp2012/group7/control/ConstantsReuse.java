@@ -27,7 +27,8 @@ public interface ConstantsReuse {
 		BUMP_ON,
 		BUMP_OFF,
 		CONTINUE,
-		QUIT
+		QUIT,
+		CHANGE_ROTATE_SPEED
 	}
 
 }

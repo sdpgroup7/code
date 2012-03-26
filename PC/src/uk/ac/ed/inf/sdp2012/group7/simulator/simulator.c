@@ -87,8 +87,10 @@ int main(int argc, char **argv) {
 	memset(&yellow_status, 0, sizeof yellow_status);
 	blue_status.x = BLUE_START_X;
 	blue_status.y = BLUE_START_Y;
+	blue_status.angle = degtorad(BLUE_START_A);
 	yellow_status.x = YELLOW_START_X;
 	yellow_status.y = YELLOW_START_Y;
+	yellow_status.angle = degtorad(YELLOW_START_A);
 
 	printf("Blue port: %s\nYellow port: %s\nWorld state port: %s\n", port_dummy(blue_port), port_dummy(yellow_port), world_state_port);
 

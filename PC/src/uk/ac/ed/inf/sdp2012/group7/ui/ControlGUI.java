@@ -19,6 +19,7 @@ import javax.swing.event.ChangeListener;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import uk.ac.ed.inf.sdp2012.group7.strategy.ControlInterface;
 import uk.ac.ed.inf.sdp2012.group7.strategy.Strategy;
 import uk.ac.ed.inf.sdp2012.group7.strategy.PlanTypes;
 import uk.ac.ed.inf.sdp2012.group7.vision.ThresholdsState;
@@ -80,8 +81,6 @@ public class ControlGUI implements ChangeListener {
 	private JPanel defaultPanel;
 	private JPanel thresholdingPanel;
 	
-	private JButton milestone4Button;
-	private JButton milestone4TButton;
 	
 	/* Radio buttons */
 	JButton pitch_0;
@@ -510,35 +509,10 @@ public class ControlGUI implements ChangeListener {
 		
 		JPanel startStopPanel = new JPanel();
 		
-		milestone4Button = new JButton("Milestone 4");
-		
-		startStopPanel.add(milestone4Button);
 		
 		startButton = new JButton("Start Match");
 		
 		startStopPanel.add(startButton);
-		
-		milestone4Button.addActionListener(new ActionListener() {
-		    
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		    	WorldState.getInstance().useTurning = false;
-		        strat.startPlanningThread(PlanTypes.PlanType.MILESTONE_4.ordinal());
-		    }
-		});
-		
-		milestone4TButton = new JButton("Milestone 4 Turning");
-		
-		startStopPanel.add(milestone4TButton);
-		
-		milestone4TButton.addActionListener(new ActionListener() {
-		    
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		    	WorldState.getInstance().useTurning = true;
-		        strat.startPlanningThread(PlanTypes.PlanType.MILESTONE_4.ordinal());
-		    }
-		});
 		
 		startButton.addActionListener(new ActionListener() {
 		    

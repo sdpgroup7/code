@@ -91,22 +91,7 @@ public class TargetDecision {
 		 */
 
 
-		//This is to test ball intercept 
-		if(this.planType == PlanTypes.PlanType.MILESTONE_4.ordinal()) {
-			logger.info("ball pos:" +allMovingObjects.getBallPosition());
-			logger.info("ball angle:" +allMovingObjects.getBallAngle());
-			logger.info("ball velocity:" +allMovingObjects.getBallVelocity());
-			logger.info("width:" +allStaticObjects.getWidth());
-			logger.info("height:" +allStaticObjects.getHeight());
-			logger.info("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).x);
-			logger.info("x:" +((Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()))).y);
-
-			//logger.info("DICK" +allStaticObjects.convertToNode(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight())));
-			this.navPoint = ballIntercept();//(Node)(ballPredictionCalculation( allMovingObjects.getBallPosition(), allMovingObjects.getBallAngle(), allMovingObjects.getBallVelocity(), 3, allStaticObjects.getWidth(),allStaticObjects.getHeight()));
-
-			this.target = this.allStaticObjects.getCentreOfOurGoal();
-
-		} else if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
+		if(this.planType == PlanTypes.PlanType.FREE_PLAY.ordinal()){
 
 			//Not using prediction,FREEPLAY only...
 			this.predictedBallPosition = this.allMovingObjects.getBallPosition();
@@ -665,9 +650,9 @@ public class TargetDecision {
 	//REQUIRED
 	//Darie Picu
 	private Node ballIntercept(){
-		
+
 		//TOUCH ON PAIN OF DEATH!
-		
+
 		Node ourPosition = allMovingObjects.getOurPosition();
 		Node ballPosition = allMovingObjects.getBallPosition();
 		double x1 = ballPosition.getX();
@@ -685,17 +670,17 @@ public class TargetDecision {
 		double n = y2 - Math.tan(theta2)*x2;
 		double a;
 		double b;
-		
+
 		double tantheta1 = Math.tan(theta1);
 		double tantheta2 = Math.tan(theta2);
-		
+
 		if(tantheta2 == 0) tantheta2 = 0.000001;
-		
+
 		b = (m - n*tantheta1/tantheta2);
 		b = b / (1 - tantheta1/tantheta2);
-		
+
 		a = (b - n)/tantheta2;
-		
+
 		return new Node((int)(a + 0.5),(int)(b + 0.5));
 	}
 

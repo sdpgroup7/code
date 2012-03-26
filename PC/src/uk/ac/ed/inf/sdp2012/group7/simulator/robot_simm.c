@@ -83,20 +83,24 @@ void action(void* args) {
 			case DO_NOTHING: break;
 			case START_MATCH:
 			case FORWARDS:
-					 a->rs->x = a->rs->x - speed * cos(a->rs->angle);
-					 a->rs->y = a->rs->y - speed * sin(a->rs->angle);
-					 break;
-			case BACKWARDS:  
+					 if (a->cmd->arg)
+								speed = SPEED(a->cmd->arg);
 					 a->rs->x = a->rs->x + speed * cos(a->rs->angle);
 					 a->rs->y = a->rs->y + speed * sin(a->rs->angle);
+					 break;
+			case BACKWARDS: 
+					 if (a->cmd->arg)
+								speed = SPEED(a->cmd->arg);
+					 a->rs->x = a->rs->x - speed * cos(a->rs->angle);
+					 a->rs->y = a->rs->y - speed * sin(a->rs->angle);
 					 break;
 			case BACKWARDS_WITH_DISTANCE:
 					if (!distance)
 						distance = a->cmd->arg;
 					else {
 						distance -= speed;
-						a->rs->x = a->rs->x + speed * cos(a->rs->angle);
-						a->rs->y = a->rs->y + speed * sin(a->rs->angle);
+						a->rs->x = a->rs->x - speed * cos(a->rs->angle);
+						a->rs->y = a->rs->y - speed * sin(a->rs->angle);
 					}
 					if (distance < 0) {
 						distance == 0;
@@ -104,14 +108,14 @@ void action(void* args) {
 					}
 					break;
 			case STOP: AT_STUB("STOP\n"); break; /* I don't think this really needs to do anything. */
-			case CHANGE_SPEED: speed = a->cmd->arg / 3; break;
+			case CHANGE_SPEED: speed = SPEED(a->cmd->arg); break;
 			case ROTATE_LEFT: 
 			case ROTATE_BLOCK_LEFT:
-					   a->rs->angle = ((360 - a->rs->angle) + a->cmd->arg) % 360;
+					   a->rs->angle = a->rs->angle - degtorad(a->cmd->arg);
 					   break;
 			case ROTATE_RIGHT:
 			case ROTATE_BLOCK_RIGHT:
-					   a->rs->angle = (a->rs->angle + a->cmd->arg) % 360;
+					   a->rs->angle = a->rs->angle + degtorad(a->cmd->arg);
 					   break;
 			case ARC_LEFT: AT_STUB("ARC_LEFT\n"); break;
 			case ARC_RIGHT: AT_STUB("ARC_RIGHT\n"); break;
@@ -121,8 +125,8 @@ void action(void* args) {
 						distance = a->cmd->arg;
 					else {
 						distance -= speed;
-						a->rs->x = a->rs->x - speed * cos(a->rs->angle);
-						a->rs->y = a->rs->y - speed * sin(a->rs->angle);
+						a->rs->x = a->rs->x + speed * cos(a->rs->angle);
+						a->rs->y = a->rs->y + speed * sin(a->rs->angle);
 					}
 					if (distance < 0) {
 						distance == 0;
@@ -138,8 +142,28 @@ void action(void* args) {
 			a->cmd->kicker = 0;
 		}
 
-		send(a->socket, &a->cmd->instr, sizeof a->cmd->instr, 0);
+		send(a->socket, &a->cmd->instr, sizeof a->cmd->instr, 0);		
 
+		if (a->rs->x < PITCH_X1+ROBOT_SIZE/2) {
+			send(a->socket, BUMP_ON, sizeof a->cmd->instr, 0);
+			a->rs->x = PITCH_X1+ROBOT_SIZE/2+ROBOT_SIZE;
+			send(a->socket, BUMP_OFF, sizeof a->cmd->instr, 0);
+		}
+		if (a->rs->y < PITCH_Y1+ROBOT_SIZE/2) {
+			send(a->socket, BUMP_ON, sizeof a->cmd->instr, 0);
+			a->rs->y = PITCH_Y1+ROBOT_SIZE/2+ROBOT_SIZE;
+			send(a->socket, BUMP_OFF, sizeof a->cmd->instr, 0);
+		}
+		if (a->rs->x > PITCH_X2-ROBOT_SIZE/2) {
+			send(a->socket, BUMP_ON, sizeof a->cmd->instr, 0);
+			a->rs->x = PITCH_X2-ROBOT_SIZE/2-ROBOT_SIZE;
+			send(a->socket, BUMP_OFF, sizeof a->cmd->instr, 0);
+		}
+		if (a->rs->y > PITCH_Y2-ROBOT_SIZE/2) {
+			send(a->socket, BUMP_ON, sizeof a->cmd->instr, 0);
+			a->rs->y = PITCH_Y2-ROBOT_SIZE/2-ROBOT_SIZE;
+			send(a->socket, BUMP_OFF, sizeof a->cmd->instr, 0);
+		}
 
 	TIMED_LOOP_END
 }

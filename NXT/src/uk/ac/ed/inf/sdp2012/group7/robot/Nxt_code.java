@@ -46,6 +46,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 		initial = new Pose(0, 0, 0);
 		instance = new Nxt_code(pilot);
 		int commandCount = 0;
+		Motor.A.setAcceleration(6000);
 		// start the sensor thread
 		new Thread(instance).start();
 		kicker = instance.new KickerThread();
@@ -129,6 +130,10 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 								break;
 
 							case CHANGE_SPEED:
+								pilot.setRotateSpeed(magnitude);
+								break;
+
+							case CHANGE_ROTATE_SPEED:
 								pilot.setTravelSpeed(magnitude);
 								break;
 
@@ -293,7 +298,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 					Motor.A.rotate(-30, false);
 
 					Motor.A.setSpeed(45);
-					Motor.A.rotate(30, false);
+					Motor.A.rotate(35, false);
 
 					kicking = false;
 				}
