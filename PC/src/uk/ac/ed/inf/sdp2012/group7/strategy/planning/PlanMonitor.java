@@ -63,12 +63,23 @@ public class PlanMonitor {
 	public void outputPlan(){
 		long start = System.currentTimeMillis();
 		String[][] plan = generateASCIIPlan();
-		logger.info(plan.toString());
+		logger.trace(asciiToString(plan));
 		generateImage(plan);
 		long timed = System.currentTimeMillis() - start;
 		logger.info("Time to generate plan render: " + timed + "ms");
 	}
 	
+	private String asciiToString(String[][] plan) {
+		String output = "";
+		for(int i = 0; i < plan.length; i++){
+			for(int j = 0; j < plan[i].length; j++){
+				output += plan[i][j]+ " ";
+			}
+			output += "\n";
+		}
+		return output;
+	}
+
 	public String[][] generateASCIIPlan(){
 		//OldAreaMap map = currentPlan.getAStar().getAreaMap();
 		int height = currentPlan.getHeightInNodes();

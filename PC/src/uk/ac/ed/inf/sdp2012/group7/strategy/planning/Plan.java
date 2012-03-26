@@ -123,6 +123,10 @@ public class Plan {
 		return allMovingObjects.getOurPosition();
 	}
 	
+	public double getBallAngle(){
+		return allMovingObjects.getBallAngle();
+	}
+	
 	//For Control Interface
 	public Point getOurRobotPositionVisual() {
 		return worldState.getOurRobot().getPosition().getCentre();
