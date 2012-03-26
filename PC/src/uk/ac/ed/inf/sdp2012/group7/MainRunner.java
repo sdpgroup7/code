@@ -1,5 +1,8 @@
 package uk.ac.ed.inf.sdp2012.group7;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -18,7 +21,7 @@ public class MainRunner {
     Arbitrary class to give us a main method for testing the vision code
     */
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException, ClassNotFoundException{
         Logger.getLogger("com.intel.bluetooth").setLevel(Level.WARN);
         PropertyConfigurator.configure("log4j.properties");
         if (args.length > 0) {

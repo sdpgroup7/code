@@ -3,6 +3,14 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -10,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JSlider;
@@ -92,7 +101,7 @@ public class ControlGUI implements ChangeListener {
 	
     private boolean penaltyToGame = false;
 
-
+    
 	/**
 	 * Default constructor. 
 	 * 
@@ -100,8 +109,10 @@ public class ControlGUI implements ChangeListener {
 	 * 							values.			
 	 * @param worldState		A WorldState object to update the pitch choice, shooting
 	 * 							direction, etc.
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
-	public ControlGUI(Strategy s) {
+	public ControlGUI(Strategy s) throws IOException, ClassNotFoundException {
 		
 		/* All three state objects must not be null. */
 		assert (thresholdsState != null);
@@ -112,6 +123,7 @@ public class ControlGUI implements ChangeListener {
 	
 	public void stateChanged(ChangeEvent e) {}
 	
+
 	/**
 	 * Initialise the GUI, setting up all of the components and adding the required
 	 * listeners.
@@ -119,7 +131,33 @@ public class ControlGUI implements ChangeListener {
 	public void initGUI() {
 		
 		frame = new JFrame("Control GUI");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        frame.addWindowListener( new WindowAdapter()
+        {
+            public void windowClosing(WindowEvent e)
+            {
+                JFrame frame = (JFrame)e.getSource();
+                try {
+    				FileOutputStream saveFile = new FileOutputStream("saveFile.sav");
+    				ObjectOutputStream save =new ObjectOutputStream(saveFile);
+    				save.writeObject(thresholdsState);
+    				save.close();
+    				
+    			} catch (FileNotFoundException e1) {
+    				// TODO Auto-generated catch block
+    				e1.printStackTrace();
+    			} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+             		
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            }
+
+		
+        });
+
         
         frame.setLayout(new FlowLayout());
         
@@ -170,7 +208,7 @@ public class ControlGUI implements ChangeListener {
 		ball.add(ball_label);
 		
 		JSlider ball_R = new JSlider(JSlider.HORIZONTAL,
-                0, 255, 130);
+                0, 255, thresholdsState.getBall_r());
 		ball_R.setMajorTickSpacing(40);
 		ball_R.setMinorTickSpacing(20);
 		ball_R.setPaintTicks(true);
@@ -193,7 +231,7 @@ public class ControlGUI implements ChangeListener {
 		ball.add(ball_label1);
 		
 		JSlider ball_G = new JSlider(JSlider.HORIZONTAL,
-                0, 255, 90);
+                0, 255, thresholdsState.getBall_g());
 		ball_G.setMajorTickSpacing(40);
 		ball_G.setMinorTickSpacing(20);
 		ball_G.setPaintTicks(true);
@@ -216,7 +254,7 @@ public class ControlGUI implements ChangeListener {
 		ball.add(ball_label2);
 		
 		JSlider ball_B = new JSlider(JSlider.HORIZONTAL,
-                0, 255, 90);
+                0, 255, thresholdsState.getBall_b());
 		ball_B.setMajorTickSpacing(40);
 		ball_B.setMinorTickSpacing(20);
 		ball_B.setPaintTicks(true);
@@ -244,7 +282,7 @@ public class ControlGUI implements ChangeListener {
 		blue.add(blue_label);
 		
 		JSlider blue_R = new JSlider(JSlider.HORIZONTAL,
-                0, 255, 120);
+                0, 255, thresholdsState.getBlue_r());
 		blue_R.setMajorTickSpacing(40);
 		blue_R.setMinorTickSpacing(20);
 		blue_R.setPaintTicks(true);
@@ -269,7 +307,7 @@ public class ControlGUI implements ChangeListener {
 		blue.add(blue_label1);
 		
 		JSlider blue_G = new JSlider(JSlider.HORIZONTAL,
-                0, 255, 170);
+                0, 255, thresholdsState.getBlue_g());
 		blue_G.setMajorTickSpacing(40);
 		blue_G.setMinorTickSpacing(20);
 		blue_G.setPaintTicks(true);
@@ -294,7 +332,7 @@ public class ControlGUI implements ChangeListener {
 		blue.add(blue_label2);
 		
 		JSlider blue_B = new JSlider(JSlider.HORIZONTAL,
-                0, 255, 90);
+                0, 255, thresholdsState.getBlue_b());
 		blue_B.setMajorTickSpacing(40);
 		blue_B.setMinorTickSpacing(20);
 		blue_B.setPaintTicks(true);
@@ -324,7 +362,7 @@ public class ControlGUI implements ChangeListener {
 		
 		
 		JSlider greenPlate_G = new JSlider(JSlider.HORIZONTAL,
-                0, 255, 120);
+                0, 255, thresholdsState.getGreen_g());
 		greenPlate_G.setMajorTickSpacing(40);
 		greenPlate_G.setMinorTickSpacing(20);
 		greenPlate_G.setPaintTicks(true);
@@ -347,7 +385,7 @@ public class ControlGUI implements ChangeListener {
 		greenPlate.add(greenLabel1);
 		
 		JSlider greenPlate_RG = new JSlider(JSlider.HORIZONTAL,
-                0, 80, 50);
+                0, 80, thresholdsState.getGreen_RG());
 		greenPlate_RG.setMajorTickSpacing(20);
 		greenPlate_RG.setMinorTickSpacing(5);
 		greenPlate_RG.setPaintTicks(true);
@@ -370,7 +408,7 @@ public class ControlGUI implements ChangeListener {
 		greenPlate.add(greenLabel2);
 		
 		JSlider greenPlate_GB = new JSlider(JSlider.HORIZONTAL,
-                0, 80, 50);
+                0, 80, thresholdsState.getGreen_GB());
 		greenPlate_GB.setMajorTickSpacing(20);
 		greenPlate_GB.setMinorTickSpacing(5);
 		greenPlate_GB.setPaintTicks(true);

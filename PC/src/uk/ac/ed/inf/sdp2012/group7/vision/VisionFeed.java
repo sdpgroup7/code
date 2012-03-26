@@ -3,6 +3,7 @@ package uk.ac.ed.inf.sdp2012.group7.vision;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -56,9 +57,11 @@ public class VisionFeed extends WindowAdapter {
      * @param pitchConstants
      *
      * @throws V4L4JException   If any parameter if invalid.
+     * @throws ClassNotFoundException 
+     * @throws IOException 
      */
     public VisionFeed(String videoDevice, int width, int height, int channel, int videoStandard,
-            int compressionQuality) throws V4L4JException {
+            int compressionQuality) throws V4L4JException, IOException, ClassNotFoundException {
 
         /* Initialise the GUI that displays the video feed. */
     	initGUI(); //This line and the next line MUST be this way round. 

@@ -1,5 +1,10 @@
 package uk.ac.ed.inf.sdp2012.group7.vision;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
 /**
  * Stores the states of the various thresholds.
  * 
@@ -8,7 +13,7 @@ package uk.ac.ed.inf.sdp2012.group7.vision;
  */
  
 
-public class ThresholdsState {
+public class ThresholdsState implements java.io.Serializable{
 	
 	
 	private static ThresholdsState thresholdsState = null;
@@ -65,9 +70,13 @@ public class ThresholdsState {
 		
 	}
 	
-	public static ThresholdsState getInstance(){
+	public static ThresholdsState getInstance() throws IOException, ClassNotFoundException{
 		if(thresholdsState == null){
-			thresholdsState = new ThresholdsState();
+
+			FileInputStream saveFile = new FileInputStream("saveFile.sav");
+			ObjectInputStream restore = new ObjectInputStream(saveFile);
+			thresholdsState =  (ThresholdsState) restore.readObject();
+			//Load the saved ThresholdsState object
 		}
 		return thresholdsState;
 	}
