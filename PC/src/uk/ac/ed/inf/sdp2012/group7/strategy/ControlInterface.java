@@ -183,27 +183,6 @@ public class ControlInterface implements Observer {
 			logger.info(String.format("Command sent to robot: Drive on arc " +
 					"radius %d with turn left: %b", 
 					(int)(path.getRadius()+0.5), path.isLeft()));
-		} else if (plan.getAction() == kick) {
-			logger.info("Action is to kick");
-			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
-			logger.info(String.format("Command sent to robot: Drive on arc " +
-					"radius %d with turn left: %b", 
-					(int)(path.getRadius()+0.5), path.isLeft()));
-			c.kick();
-			logger.info("Command sent to robot: kick");
-
-		} else if (plan.getAction() == stop) {
-			logger.info("Action is to stop");
-			c.stop();
-			logger.info("Command sent to robot: stop");			
-
-		} else if (plan.getAction() == angle) {
-			logger.info("Action is to turn");
-			c.stop();
-			logger.info("Command sent to robot: stop");
-			double turnAngle = ControlInterfaceTools.angleToTurn(plan.getAngleWanted(), 
-					plan.getOurRobotAngle());
-			c.rotateBy(turnAngle);
 		}
 	}
 
@@ -326,7 +305,9 @@ public class ControlInterface implements Observer {
 				logger.info("Now kick");
 				c.kick();
 				c.stop();
-			} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
+			}
+		
+			else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
 				logger.info("Defending a penalty - will repeatedly use non-blocking forwards and backwards");
 
 				if (plan.getAction() == forwards) {
@@ -340,10 +321,19 @@ public class ControlInterface implements Observer {
 					c.stop();
 				}
 			} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
+				if (plan.getAction() == kick ){
+					c.kick();
+				} else if (plan.getAction() == stop) {
+					logger.info("Action is to stop");
+					c.stop();
+					logger.info("Command sent to robot: stop");			
 
-				//This means go for it, usual case
-				Arc arcToDrive = chooseArc(plan);
-				implimentArc(arcToDrive, plan);	
+				} else {
+					//This means go for it, usual case
+					Arc arcToDrive = chooseArc(plan);
+					implimentArc(arcToDrive, plan);	
+				}
+				
 
 			} else if (plan.getPlanType()==PlanTypes.PlanType.HALT.ordinal()) {
 

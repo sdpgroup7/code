@@ -67,6 +67,8 @@ public class RobotControl implements ConstantsReuse {
 				while (keepConnected) {
 					if (!commandList.isEmpty()) {
 						sendToRobot(commandList.remove());
+					} else {
+						sendToRobot(nothing);
 					}
 						
 				}
@@ -128,7 +130,7 @@ public class RobotControl implements ConstantsReuse {
 		command[2] = (byte) ((parameter >> 8) & 0xFF);
 		command[3] = (byte) (parameter & 0xFF);
 		if(!compare(command,previousCommand)){
-			while (commandList.size() > 2) {
+			while (commandList.size() > 1) {
 				try {
 					Thread.sleep(10);
 				} catch (Exception e) {
@@ -242,7 +244,7 @@ public class RobotControl implements ConstantsReuse {
 	 * Commands the robot to stop where it is
 	 */
 	public void stop() {
-		commandList.clear();
+		//commandList.clear();
 		addCommand((byte) 0,(byte) OpCodes.STOP.ordinal(),0);
 	}
 	
