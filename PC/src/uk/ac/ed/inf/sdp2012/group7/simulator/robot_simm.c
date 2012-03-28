@@ -117,8 +117,16 @@ void action(void* args) {
 			case ROTATE_BLOCK_RIGHT:
 					   a->rs->angle = a->rs->angle + degtorad(a->cmd->arg);
 					   break;
-			case ARC_LEFT: AT_STUB("ARC_LEFT\n"); break;
-			case ARC_RIGHT: AT_STUB("ARC_RIGHT\n"); break;
+			case ARC_LEFT:
+					   a->rs->angle -= 180 * speed / (M_PI * a->cmd->arg);
+					   a->rs->x = a->rs->x + speed * cos(a->rs->angle);
+					   a->rs->y = a->rs->y + speed * sin(a->rs->angle);
+					   break;
+			case ARC_RIGHT:
+					   a->rs->angle += 180 * speed / (M_PI * a->cmd->arg);
+					   a->rs->x = a->rs->x + speed * cos(a->rs->angle);
+					   a->rs->y = a->rs->y + speed * sin(a->rs->angle);
+					   break;
 			case BEEP: AT_SAY("bleep blop.\n"); a->cmd->instr = DO_NOTHING;  break;
 			case FORWARDS_WITH_DISTANCE:
 					if (!distance)
