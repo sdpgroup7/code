@@ -11,6 +11,7 @@ import lejos.pc.comm.NXTInfo;
 import org.apache.log4j.Logger;
 
 import uk.ac.ed.inf.sdp2012.group7.MainRunner;
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
 
 /**
  * This class holds the geometric location of our robot but is also responsible
@@ -157,20 +158,21 @@ public class RobotControl implements ConstantsReuse {
 	 * Sends a command to the robot
 	 */
 	private void sendToRobot(byte[] command) {
-
-		if(!bumped){
-
-			logger.info("Send "+OpCodes.values()[command[1]]);
-			OpCodes response = comms.sendToRobot(command);
-			logger.info("Sent "+OpCodes.values()[command[1]]);
-			logResponse(response);
-			if(response == OpCodes.BUMP_ON) bumped = true;
-
-		} else {
-			while(getResponse() != OpCodes.BUMP_OFF.ordinal()){}
-			bumped = false;
-			logger.debug("Completed bump procedure");
-			//We don't need anything in the loop as getResponse is blocking anyway
+		if((WorldState.getInstance().canMove) || (OpCodes.values()[command[1]] != OpCodes.STOP)){
+			if(!bumped){
+	
+				logger.info("Send "+OpCodes.values()[command[1]]);
+				OpCodes response = comms.sendToRobot(command);
+				logger.info("Sent "+OpCodes.values()[command[1]]);
+				logResponse(response);
+				if(response == OpCodes.BUMP_ON) bumped = true;
+	
+			} else {
+				while(getResponse() != OpCodes.BUMP_OFF.ordinal()){}
+				bumped = false;
+				logger.debug("Completed bump procedure");
+				//We don't need anything in the loop as getResponse is blocking anyway
+			}
 		}
 	}
 

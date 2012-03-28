@@ -64,8 +64,10 @@ public class ControlGUI implements ChangeListener {
 	
 	
 	/* Start/Stop Button */
-	private JButton startButton;
-	private JButton stopButton;
+	private JButton startPlanButton;
+	private JButton stopPlanButton;
+	private JButton startMovingButton;
+	private JButton stopMovingButton;
 	
 	/*Logging buttons*/
 	private JButton traceButton;
@@ -772,14 +774,14 @@ public class ControlGUI implements ChangeListener {
 		defaultPanel.add(direction_panel);
 		
 		
-		JPanel startStopPanel = new JPanel();
+		JPanel startStopPlanPanel = new JPanel();
 		
 		
-		startButton = new JButton("Start Match");
+		startPlanButton = new JButton("Start Planning");
 		
-		startStopPanel.add(startButton);
+		startStopPlanPanel.add(startPlanButton);
 		
-		startButton.addActionListener(new ActionListener() {
+		startPlanButton.addActionListener(new ActionListener() {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
@@ -789,20 +791,50 @@ public class ControlGUI implements ChangeListener {
 		    }
 		});
 		
-		stopButton = new JButton("Stop Match");
+		stopPlanButton = new JButton("Stop Planning");
 		
-		startStopPanel.add(stopButton);
+		startStopPlanPanel.add(stopPlanButton);
 		
-		stopButton.addActionListener(new ActionListener() {
+		stopPlanButton.addActionListener(new ActionListener() {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        strat.stopPlanningThread();
+		        WorldState.getInstance().canMove = false;
 		    }
 		});
 		
 		
-		defaultPanel.add(startStopPanel);
+		JPanel startStopMovingPanel = new JPanel();
+		
+		startMovingButton = new JButton("Start Moving");
+		
+		startStopMovingPanel.add(startMovingButton);
+		
+		startPlanButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        WorldState.getInstance().canMove = true;
+		    }
+		});
+		
+		stopMovingButton = new JButton("Stop Moving");
+		
+		startStopMovingPanel.add(stopMovingButton);
+		
+		stopMovingButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	WorldState.getInstance().canMove = false;
+		    }
+		});
+		
+		
+		
+		defaultPanel.add(startStopPlanPanel);
+		defaultPanel.add(startStopMovingPanel);
 		
 		
 		JPanel loggerPanel = new JPanel();
