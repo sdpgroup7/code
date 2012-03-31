@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import uk.ac.ed.inf.sdp2012.group7.vision.worldstate.WorldState;
+
 import lejos.pc.comm.NXTComm;
 import lejos.pc.comm.NXTCommException;
 import lejos.pc.comm.NXTCommFactory;
@@ -39,9 +41,12 @@ public class BluetoothCommunication implements CommunicationInterface {
 
 	public OpCodes sendToRobot(byte[] command) {
 	    try {
+	    	long start = System.currentTimeMillis();
 	    	os.write(command);
 	        os.flush();
 	        int response = recieveFromRobot();
+	        WorldState.getInstance().setCommandResponseTime(System.currentTimeMillis() - start);
+
 	        return OpCodes.values()[response];
 	    } catch (IOException ex) {
 	        RobotControl.logger.error("Error sending to robot: " + ex);

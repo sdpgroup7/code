@@ -35,7 +35,7 @@ public class WorldState{
 	
 	volatile private long lastUpdated = 0; //The timestamp of when worldstate was last updated
 	volatile private boolean clickingDone = false; //Says whether all clicking has been done (generally used by vision)
-	
+	volatile private long commandResponseTime = 0;
 	volatile private boolean barrelfix = false; //whether to do the barrell correction on whole image or not
 	
 	public volatile boolean useTurning = false;
@@ -55,7 +55,17 @@ public class WorldState{
     	setRoom(0); //Assume main pitch for initialisation
     }
     
-    public void addStrategyTime(long l){
+    public long getCommandResponseTime() {
+		return commandResponseTime;
+	}
+
+
+	public void setCommandResponseTime(long commandResponseTime) {
+		this.commandResponseTime = commandResponseTime;
+	}
+
+
+	public void addStrategyTime(long l){
     	strategyTimes.add(l);
     	if(strategyTimes.size() > 10){
     		strategyTimes.remove(0);

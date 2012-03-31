@@ -17,6 +17,10 @@ public class TimePoint extends Point{
 		this(p.x,p.y,t);
 	}
 	
+	public TimePoint(Point p){
+		this(p, System.currentTimeMillis());
+	}
+	
 	
 	public long getTimestamp(){
 		return this.timestamp;

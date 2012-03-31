@@ -231,10 +231,10 @@ public class ControlInterface implements Observer {
 	public Point2D findGoalPoint(ArrayList<Node> p, Point2D pos, int lookahead) throws Exception {
 		int templookahead = lookahead;
 		
-		if(	(plan.getAllMovingObjects().getOurPosition().x < 10) || 
-			(plan.getAllMovingObjects().getOurPosition().y < 10) || 
-			(plan.getAllMovingObjects().getOurPosition().x > plan.getMapWidth() - 10) || 
-			(plan.getAllMovingObjects().getOurPosition().y > plan.getMapHeight() - 10)){
+		if(	(plan.getAllMovingObjects().getOurPosition().x < 5) || 
+			(plan.getAllMovingObjects().getOurPosition().y < 5) || 
+			(plan.getAllMovingObjects().getOurPosition().x > plan.getMapWidth() - 5) || 
+			(plan.getAllMovingObjects().getOurPosition().y > plan.getMapHeight() - 5)){
 				templookahead = 1;
 		}
 		

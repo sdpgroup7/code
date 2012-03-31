@@ -239,6 +239,7 @@ public class FeedProcessor{
         imageGraphics.drawString("Jesus: " + String.format("%.4g%n", Tools.getAngleToFacePoint(worldState.getOurRobot().getPosition().getCentre(), worldState.getOurRobot().getAngle(), worldState.getBall().getPosition().getCentre())) + "rads", 410, 65);
         
         imageGraphics.drawString("Strategy Update Time: " + worldState.getStrategyTime() + "ms", 220, 420);
+        imageGraphics.drawString("Command Response Time: " + worldState.getCommandResponseTime() + "ms", 220, 435);
         
         
         frameGraphics.drawImage(image, 0, 0, width, height, null);

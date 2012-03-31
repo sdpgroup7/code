@@ -10,14 +10,15 @@ public class MovingObject {
     
 	volatile ObjectPosition position = new ObjectPosition();
 	volatile double velocity;
+	volatile double angularVelocity;
 	volatile double angle; 
 	volatile float height = 0.2f;
 	volatile public ArrayList<TimePoint> positions = new ArrayList<TimePoint>();
-	volatile public ArrayList<Point> angles = new ArrayList<Point>();
-	volatile public ArrayList<Point> ballAngles = new ArrayList<Point>();
-	volatile public ArrayList<Point> movedAngles = new ArrayList<Point>();
-	volatile public ArrayList<Point> centroids = new ArrayList<Point>();
-	volatile public ArrayList<Point> movedCentroids = new ArrayList<Point>();
+	volatile public ArrayList<TimePoint> angles = new ArrayList<TimePoint>();
+	volatile public ArrayList<TimePoint> ballAngles = new ArrayList<TimePoint>();
+	volatile public ArrayList<TimePoint> movedAngles = new ArrayList<TimePoint>();
+	volatile public ArrayList<TimePoint> centroids = new ArrayList<TimePoint>();
+	volatile public ArrayList<TimePoint> movedCentroids = new ArrayList<TimePoint>();
 	volatile public Point tip = new Point();
 	volatile private int kickerDistance = 16;
 	
@@ -61,6 +62,14 @@ public class MovingObject {
     	this.velocity = v*1000;
     }
 	
+    public void updateAngularVelocity(){
+    	TimePoint a = angles.get(0);
+    	TimePoint b = angles.get(4);
+    	double angle = VisionTools.convertAngle(Math.atan2(a.y - b.y, a.x - b.x));
+    	angle = angle/(b.getTimestamp()-a.getTimestamp());
+    	this.angularVelocity = angle;
+    }
+    
 	public void setAngle(double angle){
 		this.angle = angle; 
 	}
@@ -68,13 +77,13 @@ public class MovingObject {
 	public void addAngle(Point p){
 		if(angles.size() > 1){
 			if(Point.distance(p.x, p.y, angles.get(1).x, angles.get(1).y) < 20){
-				angles.add(p);
+				angles.add(new TimePoint(p));
 				movedAngles.clear();
 			} else {
-				movedAngles.add(p);
+				movedAngles.add(new TimePoint(p));
 			}
 		} else {
-			angles.add(p);
+			angles.add(new TimePoint(p));
 		}
 		if(movedAngles.size() > 3){
 			angles.clear();
@@ -83,7 +92,7 @@ public class MovingObject {
 				c = new Point(c.x + m.x , c.y + m.y);
 			}
 			c = new Point(c.x / movedAngles.size() , c.y / movedAngles.size());
-			angles.add(c);
+			angles.add(new TimePoint(c));
 			movedAngles.clear();
 		}
 		if(angles.size() > 2) angles.remove(0);
@@ -93,7 +102,7 @@ public class MovingObject {
 	public void calculateAngle(){
 		if(angles.size() > 0){
 			Point a = new Point(0,0);
-			for(Point p : angles){
+			for(TimePoint p : angles){
 				a = new Point(a.x + p.x, a.y + p.y);
 			}
 			a = new Point(a.x / angles.size(), a.y / angles.size());
@@ -109,13 +118,13 @@ public class MovingObject {
 	 * fuck this shit 
 	 */
 	
-	public void addBallsAngle(Point P) {
+	public void addBallsAngle(Point p) {
 		if (ballAngles.size() > 5) {
 			ballAngles.remove(0);
-			ballAngles.add(P);
+			ballAngles.add(new TimePoint(p));
 		}
 		else {
-			ballAngles.add(P);
+			ballAngles.add(new TimePoint(p));
 		}
 		
 	}
