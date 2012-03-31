@@ -40,6 +40,8 @@ public class WorldState{
 	
 	public volatile boolean useTurning = false;
 	
+	public volatile boolean canMove = false;
+	
 
 	public static WorldState getInstance(){
 		if(worldState == null){
