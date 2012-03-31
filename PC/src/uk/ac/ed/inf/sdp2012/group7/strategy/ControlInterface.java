@@ -57,6 +57,8 @@ public class ControlInterface implements Observer {
 
 	private boolean firstTime = true;
 	private ArrayList<Point> navPoints = new ArrayList<Point>();
+	
+	private Plan plan = null;
 
 
 	private ControlInterface(int lookahead) {
@@ -82,7 +84,7 @@ public class ControlInterface implements Observer {
 	 * @param plan
 	 * @return
 	 */
-	public static Arc chooseArc(Plan plan){
+	public Arc chooseArc(Plan plan){
 		Point2D p = new Point2D(plan.getOurRobotPosition());
 		double v = plan.getOurRobotAngle();
 		return generateArc(p,plan.getPath(),v,lookahead, plan.getNodeWidthInPixels());
@@ -93,7 +95,7 @@ public class ControlInterface implements Observer {
 	 * given using the pure pursuit algorithm
 	 */
 
-	public static Arc generateArc(Point2D p, ArrayList<Node> path, double v, int lookahead, double nodeInPixels) {
+	public Arc generateArc(Point2D p, ArrayList<Node> path, double v, int lookahead, double nodeInPixels) {
 		// The paper where this maths comes from can be found here
 		// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.135.82&rep=rep1&type=pdf
 
@@ -226,9 +228,17 @@ public class ControlInterface implements Observer {
 	 * @return The goal point
 	 */
 	@SuppressWarnings("null")
-	public static Point2D findGoalPoint(ArrayList<Node> p, Point2D pos, int lookahead) throws Exception {
-
-		Circle2D zone = new Circle2D(pos.getX(), pos.getY(), lookahead);
+	public Point2D findGoalPoint(ArrayList<Node> p, Point2D pos, int lookahead) throws Exception {
+		int templookahead = lookahead;
+		
+		if(	(plan.getAllMovingObjects().getOurPosition().x < 10) || 
+			(plan.getAllMovingObjects().getOurPosition().y < 10) || 
+			(plan.getAllMovingObjects().getOurPosition().x > plan.getMapWidth() - 10) || 
+			(plan.getAllMovingObjects().getOurPosition().y > plan.getMapHeight() - 10)){
+				templookahead = 1;
+		}
+		
+		Circle2D zone = new Circle2D(pos.getX(), pos.getY(), templookahead);
 		logger.debug(String.format("Zone centre: (%f,%f)",pos.getX(),pos.getY()));
 		int size = p.size();
 		int i = 0;
@@ -324,7 +334,7 @@ public class ControlInterface implements Observer {
 
 		if (!blocking) {
 			blocking = true;
-			Plan plan = (Plan) arg1;
+			plan = (Plan) arg1;
 			if(plan.getPlanType()==PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
 				logger.info("Taking a penalty - first turn required angle");
 				double turnAngle = ControlInterfaceTools.angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
@@ -352,11 +362,8 @@ public class ControlInterface implements Observer {
 
 				
 				if(plan.getAction()==kick){
-					c.kick();
-				} else if(Math.abs(Tools.getAngleToFacePoint(plan.getOurRobotPosition(), plan.getOurRobotAngle(), plan.getNavPoint())) > (Math.PI / 2.0)){
-					c.rotateBy(Tools.getAngleToFacePoint(plan.getOurRobotPosition(), plan.getOurRobotAngle(), plan.getNavPoint()),true);
+					c.kick(); 
 				} else {
-					
 					Arc arcToDrive = chooseArc(plan);
 					implimentArc(arcToDrive, plan);	
 				}
@@ -379,99 +386,6 @@ public class ControlInterface implements Observer {
 		}
 	}
 	
-	/*public void milestone4(Plan plan){
-		logger.info("Inside Milestone 4");
-		Point ourPosition = plan.getOurRobotPosition();
-		Point navPoint = plan.getNavPoint();
-		Point ballPosition = plan.getBallPosition();
-		double distance;
-		double myAngle = 0;;
-		
-		if(WorldState.getInstance().useTurning){
-			logger.info("Using turning");
-			double x1 = ballPosition.getX();
-			double y1 = ballPosition.getY();
-			double theta1 = plan.getBallAngle();
-			double x2 = ourPosition.getX();
-			double y2 = ourPosition.getY();
-			double theta2 = (plan.getBallAngle() + (Math.PI / 2.0)) % Math.PI;
-			double m = y1 - Math.tan(theta1)*x1;
-			double n = y2 - Math.tan(theta2)*x2;
-			double a;
-			double b;
-
-			double tantheta1 = Math.tan(theta1);
-			double tantheta2 = Math.tan(theta2);
-
-
-
-			if(tantheta2 == 0) tantheta2 = 0.000001;
-
-			b = (m - n*tantheta1/tantheta2);
-			b = b / (1 - tantheta1/tantheta2);
-
-			a = (b - n)/tantheta2;
-
-			Point interceptPoint = new Point((int)(a + 0.5),(int)(b + 0.5));
-
-			myAngle = Tools.getAngleToFacePoint(ourPosition, plan.getOurRobotAngle(), interceptPoint);
-			
-			if(Math.abs(myAngle) > (Math.PI / 3)){
-				logger.info("Need to turn");
-				distance = VisionTools.pixelsToCM(ourPosition.distance(interceptPoint)*plan.getNodeWidthInPixels());
-			} else {
-				logger.info("Don't need to turn");
-				distance = VisionTools.pixelsToCM(ourPosition.distance(navPoint)*plan.getNodeWidthInPixels());
-			}
-			
-		} else {
-			logger.info("Not using turning");
-			distance = VisionTools.pixelsToCM(ourPosition.distance(navPoint)*plan.getNodeWidthInPixels());
-			myAngle = Tools.getAngleToFacePoint(ourPosition, plan.getOurRobotAngle(), navPoint);
-		}
-		
-		if(Math.abs(myAngle) > (Math.PI/2.0)){
-			distance *= -1;
-		}
-
-		if (Math.abs(distance) < 15) {
-			logger.info("In place, Stopping");
-			c.stop();	
-		} else {
-			logger.info("Have to travel");
-			if(WorldState.getInstance().useTurning){
-				logger.info("Using turning");
-				if(Math.abs(myAngle) > (Math.PI / 3)){
-					logger.info("Need to turn");
-					if(firstTime){
-						logger.debug("Turning with angle: " + myAngle);
-						c.rotateBy(myAngle, true);
-						firstTime = false;
-					} else {
-						logger.info("Wasn't first time so not turning.");
-					}
-				} else {
-					logger.info("Facing close enough");
-					firstTime = false;
-					if(distance > 0){
-						logger.info("Moving forward");
-						c.moveForward();
-					} else {
-						logger.info("Moving backwards");
-						c.moveBackward();
-					}
-				}
-			} else {
-				logger.info("Not using turning");
-				if(distance > 0){
-					logger.info("Moving forward");
-					c.moveForward();
-				} else {
-					logger.info("Moving backwards");
-					c.moveBackward();
-				}
-			}
-		}
-	}*/
+	
 
 }
