@@ -39,8 +39,8 @@ public class WorldState{
 	volatile private boolean barrelfix = false; //whether to do the barrell correction on whole image or not
 	
 	public volatile boolean useTurning = false;
-	
 	public volatile boolean canMove = false;
+	public volatile double predictionTime = 0.2;
 	
 
 	public static WorldState getInstance(){

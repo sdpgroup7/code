@@ -10,20 +10,24 @@ import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 
 public class MovingObject {
     
-	volatile ObjectPosition position = new ObjectPosition();
-	volatile double velocity;
-	volatile double angularVelocity;
-	volatile double angle; 
-	volatile float height = 0.2f;
-	volatile public ArrayList<TimePoint> positions = new ArrayList<TimePoint>();
-	volatile public ArrayList<TimePoint> angles = new ArrayList<TimePoint>();
-	volatile public ArrayList<TimePoint> ballAngles = new ArrayList<TimePoint>();
-	volatile public ArrayList<TimePoint> movedAngles = new ArrayList<TimePoint>();
-	volatile public ArrayList<TimePoint> centroids = new ArrayList<TimePoint>();
-	volatile public ArrayList<TimePoint> movedCentroids = new ArrayList<TimePoint>();
-	volatile public Point tip = new Point();
-	volatile private int kickerDistance = 16;
+	private volatile ObjectPosition position = new ObjectPosition();
+	private volatile double velocity;
+	private volatile double angularVelocity;
+	private volatile double angle; 
+	private volatile float height = 0.2f;
+	private volatile ArrayList<TimePoint> positions = new ArrayList<TimePoint>();
+	private volatile ArrayList<TimePoint> angles = new ArrayList<TimePoint>();
+	private volatile ArrayList<TimePoint> ballAngles = new ArrayList<TimePoint>();
+	private volatile ArrayList<TimePoint> movedAngles = new ArrayList<TimePoint>();
+	private volatile ArrayList<TimePoint> centroids = new ArrayList<TimePoint>();
+	private volatile ArrayList<TimePoint> movedCentroids = new ArrayList<TimePoint>();
+	private volatile Point tip = new Point();
+	private volatile int kickerDistance = 16;
+	private volatile double predictionTime = WorldState.getInstance().predictionTime;
 	
+	public Point getTipPoint(){
+		return this.tip;
+	}
 	
 	public int getKickerDistanceInCM() {
 		return kickerDistance;
@@ -166,7 +170,7 @@ public class MovingObject {
 	    		vx = (b.x - a.x) / (b.getTimestamp() - a.getTimestamp());
 	    		vy = (b.y - a.y) / (b.getTimestamp() - a.getTimestamp());
     		}
-    		this.position.setCentre((int)Math.round(b.x + (vx* 0.2)), (int)Math.round(b.y + (vy * 0.2)));
+    		this.position.setCentre((int)Math.round(b.x + (vx * predictionTime)), (int)Math.round(b.y + (vy * predictionTime)));
     	}
     }
     

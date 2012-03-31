@@ -152,7 +152,7 @@ public class FeedProcessor{
             );
             //System.err.
             //Vision.logger.info("Blue robot: " + worldState.getBlueRobot().getAngle());
-            Point p = worldState.getBlueRobot().tip;
+            Point p = worldState.getBlueRobot().getTipPoint();
             imageGraphics.drawLine(
             		worldState.getBlueRobot().getPosition().getCentre().x,
             		worldState.getBlueRobot().getPosition().getCentre().y,
@@ -163,7 +163,7 @@ public class FeedProcessor{
             	findAngle.findOrientation(worldState.getYellowPixels(), worldState.getYellowRobot().getPosition().getCentre())
             );
             //Vision.logger.info("Yellow Robot: " + worldState.getYellowRobot().getAngle());
-            p = worldState.getYellowRobot().tip;
+            p = worldState.getYellowRobot().getTipPoint();
             imageGraphics.drawLine(
             		worldState.getYellowRobot().getPosition().getCentre().x,
             		worldState.getYellowRobot().getPosition().getCentre().y,
