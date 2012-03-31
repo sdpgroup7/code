@@ -11,9 +11,9 @@ import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 public class MovingObject {
     
 	private volatile ObjectPosition position = new ObjectPosition();
-	private volatile double velocity;
-	private volatile double angularVelocity;
-	private volatile double angle; 
+	private volatile double velocity = 0;
+	private volatile double angularVelocity = 0;
+	private volatile double angle = 0; 
 	private volatile float height = 0.2f;
 	private volatile ArrayList<TimePoint> positions = new ArrayList<TimePoint>();
 	private volatile ArrayList<TimePoint> angles = new ArrayList<TimePoint>();
@@ -106,7 +106,7 @@ public class MovingObject {
 	}
 	
 	public void calculateAngle(){
-		if(angles.size() == 5){
+		if(angles.size() > 0){
 			double angle;
 			Point a = new Point(0,0);
 			for(TimePoint p : angles){
