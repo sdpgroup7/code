@@ -23,7 +23,7 @@ public class MovingObject {
 	private volatile ArrayList<TimePoint> movedCentroids = new ArrayList<TimePoint>();
 	private volatile Point tip = new Point();
 	private volatile int kickerDistance = 16;
-	private volatile double predictionTime = WorldState.getInstance().predictionTime;
+	private volatile double predictionTime = 0.2;
 	
 	public Point getTipPoint(){
 		return this.tip;

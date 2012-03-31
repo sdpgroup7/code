@@ -40,7 +40,6 @@ public class WorldState{
 	
 	public volatile boolean useTurning = false;
 	public volatile boolean canMove = false;
-	public volatile double predictionTime = 0.2;
 	
 
 	public static WorldState getInstance(){
