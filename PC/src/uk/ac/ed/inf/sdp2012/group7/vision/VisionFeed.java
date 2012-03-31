@@ -95,6 +95,7 @@ public class VisionFeed extends WindowAdapter {
         	ts.writeAutoPoints(il.getTestPointsAuto(), il.getOrientationPoints(), il.getPitchPoints(), frameImage, filename);
         	Vision.logger.info("Vision testing complete.");
         }
+        worldState.setFeedGraphics(label.getGraphics());
     }
 
 

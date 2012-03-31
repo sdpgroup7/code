@@ -61,12 +61,14 @@ public class PlanMonitor {
 	}
 	
 	public void outputPlan(){
-		long start = System.currentTimeMillis();
-		String[][] plan = generateASCIIPlan();
-		logger.trace(asciiToString(plan));
-		generateImage(plan);
-		long timed = System.currentTimeMillis() - start;
-		logger.info("Time to generate plan render: " + timed + "ms");
+		if(worldState.getGenerateOverlay()){
+			long start = System.currentTimeMillis();
+			String[][] plan = generateASCIIPlan();
+			logger.trace(asciiToString(plan));
+			generateImage(plan);
+			long timed = System.currentTimeMillis() - start;
+			logger.info("Time to generate plan render: " + timed + "ms");
+		}
 	}
 	
 	private String asciiToString(String[][] plan) {
@@ -123,29 +125,39 @@ public class PlanMonitor {
 		}
 		return ascii;
 	}
-	
-	public void saveImage(String[][] text){
-		try {
-		    BufferedImage bi = generateImage(text);
-		    File outputfile = new File("planoutput.png");
-		    ImageIO.write(bi, "png", outputfile);
-		} catch (IOException ex) {
-			logger.error("Error saving image: " + ex.getMessage());
-		}
-	}
-	
+		
 	public BufferedImage generateImage(String[][] text){
 		int width = worldState.getPitch().getWidthInPixels();
 		int height = worldState.getPitch().getHeightInPixels();
 		BufferedImage im = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
-		im = generateOverlay(text,im);
+		generateOverlay(text,im);
 		worldState.setOverlay(im);
 		return im;
 	}
 	
+
+    public void drawOverlay(BufferedImage im){
+    	if(worldState.getOverlay() == null) return;
+    	BufferedImage overlay = worldState.getOverlay();
+    	int lb = worldState.getPitch().getLeftBuffer();
+    	int rb = worldState.getPitch().getRightBuffer();
+    	int bb = worldState.getPitch().getBottomBuffer();
+    	int tb = worldState.getPitch().getTopBuffer();
+    	
+    	
+    	for(int x = lb; x < rb; x++){
+    		for(int y = tb; y < bb; y++){
+    			int rgb = im.getRGB(x, y);
+    			rgb = rgb | overlay.getRGB(x-lb, y-tb);
+    			im.setRGB(x, y, rgb);
+    		}
+    	}
+
+    	
+    }
 		
-    public BufferedImage generateOverlay(String[][] ascii, BufferedImage image){
-    	Graphics graphics = image.getGraphics();
+    public void generateOverlay(String[][] ascii, BufferedImage image){
+    	Graphics graphics = worldState.getFeedGraphics();
         graphics.setColor(Color.white);
         graphics.setFont(new Font(Font.MONOSPACED,Font.PLAIN,12));
         for(int y = 0; y < ascii.length; y++){
@@ -172,11 +184,11 @@ public class PlanMonitor {
         			} else {
         				graphics.setColor(Color.white);
         			}
-        			graphics.fillRect(xp, yp, width, height);
+        			graphics.fillRect(xp + worldState.getPitch().getLeftBuffer(), yp + worldState.getPitch().getTopBuffer(), width, height);
         		}
         	}
         }
-        return image;
+        //return image;
     }
 	
 	
