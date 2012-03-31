@@ -86,18 +86,20 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 					// get the next command from the inputstream
 					byte[] byteBuffer = new byte[4];
 					is.read(byteBuffer);
-					commandCount++;
+					
 					if (byteBuffer[0] != 0) {
 						kicker.kick();
 					}
 
-					n = OpCodes.values()[byteBuffer[1]];
-					int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
-					LCD.clear();
-					LCD.drawString("CMD: " + n.toString(), 0, 4);
-					LCD.drawString("MAG: " + Integer.toString(magnitude), 0, 5);
-					LCD.drawString("ID:  " + Integer.toString(commandCount), 0,6);
+					
 					synchronized(mutex) {
+						n = OpCodes.values()[byteBuffer[1]];
+						int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
+						LCD.clear();
+						LCD.drawString("CMD: " + n.toString(), 0, 4);
+						LCD.drawString("MAG: " + Integer.toString(magnitude), 0, 5);
+						LCD.drawString("ID:  " + Integer.toString(commandCount), 0,6);
+						commandCount++;
 						try {
 							while(bumped) {
 								mutex.wait();
@@ -105,6 +107,8 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 						} catch (Exception ex) {
 							// the bump sensors aren't on (didn't notify us)
 						}
+
+
 						switch (n) {
 
 						case FORWARDS:
@@ -189,8 +193,8 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 
 						// respond to say command was acted on
 						os.write(n.ordinal());
-						os.flush();
 					}
+					os.flush();
 				}
 				// close streams and connection
 				is.close();
