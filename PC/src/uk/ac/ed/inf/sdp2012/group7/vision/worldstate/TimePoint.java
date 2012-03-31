@@ -13,6 +13,11 @@ public class TimePoint extends Point{
 		timestamp = t;
 	}
 	
+	public TimePoint(int x, int y){
+		super(x,y);
+		timestamp = System.currentTimeMillis();
+	}
+	
 	public TimePoint(Point p, long t){
 		this(p.x,p.y,t);
 	}

@@ -258,10 +258,10 @@ public class WorldState{
     	}
     }
     
-    public void setBlueRobot(ObjectPosition position, double velocity){
+    /*public void setBlueRobot(ObjectPosition position, double velocity){
     	//Lets you set blue robot by providing a position and a velocity
     	this.blueRobot.set(position,velocity);
-    }
+    }*/
     
     public void setBlueRobotPosition(int x, int y){
     	//Set blue robots centre point with the x and y values
@@ -289,15 +289,15 @@ public class WorldState{
     	this.blueRobot.setPosition(p);
     }
     
-    public void setBlueRobotPosition(ObjectPosition position){
+    /*public void setBlueRobotPosition(ObjectPosition position){
     	//Sets blue robot position by passing in the given ObjectPosition
     	this.blueRobot.setPosition(position);
-    }
+    }*/
     
-    public void setYellowRobot(ObjectPosition position, double velocity){
+    /*public void setYellowRobot(ObjectPosition position, double velocity){
     	//Sets the yellow robot by giving a position and a velocity
     	this.yellowRobot.set(position,velocity);
-    }
+    }*/
     
     public void setYellowRobotPosition(int x, int y){
     	//Sets the yellow robot centre using the given x and y values
@@ -309,15 +309,15 @@ public class WorldState{
     	this.yellowRobot.setPosition(p);
     }
     
-    public void setYellowRobotPosition(ObjectPosition position){
+    /*public void setYellowRobotPosition(ObjectPosition position){
     	//Set the yellow robot given an ObjectPosition
     	this.yellowRobot.setPosition(position);
-    }
+    }*/
     
-    public void setBall(ObjectPosition position, double velocity){
+    /*public void setBall(ObjectPosition position, double velocity){
     	//Sets the ball state given an ObjectPosition and a velocity
     	this.ball.set(position,velocity);
-    }
+    }*/
     
     public void setBallPosition(int x, int y){
     	//Sets the ball position given and x and y value
@@ -329,10 +329,10 @@ public class WorldState{
     	this.ball.setPosition(p);
     }
     
-    public void setBallPosition(ObjectPosition position){
+    /*public void setBallPosition(ObjectPosition position){
     	//Sets the ball position given an ObjectPosition
     	this.ball.setPosition(position);
-    }
+    }*/
     
     public void setBallVelocity(double velocity){
     	//Sets the balls velocity 

@@ -3,6 +3,8 @@ package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import net.phys2d.raw.shapes.AABox;
+
 import uk.ac.ed.inf.sdp2012.group7.vision.VisionTools;
 
 
@@ -40,7 +42,7 @@ public class MovingObject {
 	}
 	
     public void addPosition(Point p){
-    	positions.add(new TimePoint(p,System.currentTimeMillis()));
+    	positions.add(new TimePoint(p));
     	if(positions.size() > 5){
     		positions.remove(0);
     	}
@@ -129,14 +131,11 @@ public class MovingObject {
 		
 	}
 	public void calculateBallAngle() {
-		
-			if(ballAngles.size()>1){
-				angle = Math.atan2(ballAngles.get(ballAngles.size()-1).y -  ballAngles.get(0).y, ballAngles.get(ballAngles.size()-1).x -  ballAngles.get(0).x);
-			}
-		
-		
-		
+		if(ballAngles.size()>1){
+			angle = Math.atan2(ballAngles.get(ballAngles.size()-1).y -  ballAngles.get(0).y, ballAngles.get(ballAngles.size()-1).x -  ballAngles.get(0).x);
+		}
 	}
+	
 	public double getAngle(){
 		return this.angle;
 	}
@@ -149,30 +148,31 @@ public class MovingObject {
     public double getVelocity(){
         return this.velocity;
     }
-    
-    public void setPosition(ObjectPosition p){
-    	addPosition(p.getCentre());
-    	this.position = p;
-    }
-    
+
     public void setPosition(Point p){
-    	addPosition(p);
-    	this.position.setCentre(p.x,p.y);
+    	setPosition(p.x, p.y);
     }
     
     public void setPosition(int x, int y){
     	addPosition(new Point(x,y));
-    	this.position.setCentre(x,y);
+    	TimePoint a = null;
+		TimePoint b = null;
+    	double vx = 0;
+    	double vy = 0;
+    	if(positions.size() == 5){
+    		a = positions.get(0);
+    		b = positions.get(4);
+    		if(b.getTimestamp() - a.getTimestamp() != 0){
+	    		vx = (b.x - a.x) / (b.getTimestamp() - a.getTimestamp());
+	    		vy = (b.y - a.y) / (b.getTimestamp() - a.getTimestamp());
+    		}
+    		this.position.setCentre((int)Math.round(b.x + (vx* 0.2)), (int)Math.round(b.y + (vy * 0.2)));
+    	}
     }
     
     public void setVelocity(double v){
     	this.velocity = v;
     }
     
-    public void set(ObjectPosition p, double v){
-    	addPosition(p.getCentre());
-    	this.setPosition(p);
-    	this.setVelocity(v);
-    }
 
 }
