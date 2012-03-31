@@ -811,7 +811,7 @@ public class ControlGUI implements ChangeListener {
 		
 		startStopMovingPanel.add(startMovingButton);
 		
-		startPlanButton.addActionListener(new ActionListener() {
+		startMovingButton.addActionListener(new ActionListener() {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
