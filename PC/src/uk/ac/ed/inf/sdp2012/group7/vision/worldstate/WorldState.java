@@ -1,13 +1,19 @@
 package uk.ac.ed.inf.sdp2012.group7.vision.worldstate;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
+import uk.ac.ed.inf.sdp2012.group7.strategy.ControlInterface;
+
 public class WorldState{
 
 	private static WorldState worldState = null;
+	public static final Logger logger = Logger.getLogger(WorldState.class);
 	
 	volatile int shootingDirection = -1; //-1 = left, 1 = right
 	volatile Color ourColor = Color.blue;
@@ -41,6 +47,15 @@ public class WorldState{
 	public volatile boolean useTurning = false;
 	public volatile boolean canMove = false;
 	
+	public volatile Graphics feedGraphics;
+	
+	public void setFeedGraphics(Graphics feedGraphics){
+		this.feedGraphics = feedGraphics;
+	}
+	
+	public Graphics getFeedGraphics(){
+		return this.feedGraphics;
+	}
 
 	public static WorldState getInstance(){
 		if(worldState == null){
@@ -82,6 +97,7 @@ public class WorldState{
 	
     public void setGenerateOverlay(boolean set){
     	generateOverlay = set;
+    	logger.debug("Generate Overlay is: " + Boolean.toString(set));
     }
     
     public boolean getGenerateOverlay(){

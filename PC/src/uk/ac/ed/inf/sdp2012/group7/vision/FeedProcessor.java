@@ -96,37 +96,13 @@ public class FeedProcessor{
             //give strategy a timestamp of when we've finished updating worldstate
             worldState.setUpdatedTime();
             markObjects(imageGraphics);
-            if(worldState.getGenerateOverlay()) drawOverlay(image);
     		calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
             
             
         }
 
     }
-    
-    /**
-     * Draw pitch onto image
-     * @param im Current frame
-     */
-    public void drawOverlay(BufferedImage im){
-    	if(worldState.getOverlay() == null) return;
-    	BufferedImage overlay = worldState.getOverlay();
-    	int lb = worldState.getPitch().getLeftBuffer();
-    	int rb = worldState.getPitch().getRightBuffer();
-    	int bb = worldState.getPitch().getBottomBuffer();
-    	int tb = worldState.getPitch().getTopBuffer();
-    	
-    	
-    	for(int x = lb; x < rb; x++){
-    		for(int y = tb; y < bb; y++){
-    			int rgb = im.getRGB(x, y);
-    			rgb = rgb | overlay.getRGB(x-lb, y-tb);
-    			im.setRGB(x, y, rgb);
-    		}
-    	}
-
-    	
-    }
+   
     
 
     /**

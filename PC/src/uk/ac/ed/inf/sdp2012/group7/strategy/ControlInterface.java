@@ -38,6 +38,7 @@ public class ControlInterface implements Observer {
 
 	private final int START_SPEED = 10;
 
+
 	private static ControlInterface controlInterface = null;
 	private static int lookahead;
 	private RobotControl c;
