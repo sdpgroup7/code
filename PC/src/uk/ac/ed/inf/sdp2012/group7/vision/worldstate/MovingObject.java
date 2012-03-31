@@ -106,14 +106,16 @@ public class MovingObject {
 	}
 	
 	public void calculateAngle(){
-		if(angles.size() > 0){
+		if(angles.size() == 5){
+			double angle;
 			Point a = new Point(0,0);
 			for(TimePoint p : angles){
 				a = new Point(a.x + p.x, a.y + p.y);
 			}
 			a = new Point(a.x / angles.size(), a.y / angles.size());
 			tip = a;
-			this.angle = VisionTools.convertAngle(Math.atan2(a.y - getPosition().getCentre().y, a.x - getPosition().getCentre().x));
+			angle = VisionTools.convertAngle(Math.atan2(a.y - getPosition().getCentre().y, a.x - getPosition().getCentre().x));
+			angle += (predictionTime * angularVelocity);
 		} else {
 			this.angle = 0;
 		}
