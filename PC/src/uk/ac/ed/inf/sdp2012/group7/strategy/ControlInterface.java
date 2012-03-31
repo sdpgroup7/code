@@ -350,9 +350,19 @@ public class ControlInterface implements Observer {
 				}
 			} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
 
-				//This means go for it, usual case
-				Arc arcToDrive = chooseArc(plan);
-				implimentArc(arcToDrive, plan);	
+				
+				if(plan.getAction()==kick){
+					c.kick();
+				} else if(Math.abs(Tools.getAngleToFacePoint(plan.getOurRobotPosition(), plan.getOurRobotAngle(), plan.getNavPoint())) > (Math.PI / 2.0)){
+					c.rotateBy(Tools.getAngleToFacePoint(plan.getOurRobotPosition(), plan.getOurRobotAngle(), plan.getNavPoint()),true);
+				} else {
+					
+					Arc arcToDrive = chooseArc(plan);
+					implimentArc(arcToDrive, plan);	
+				}
+				
+				
+				
 
 			} else if (plan.getPlanType()==PlanTypes.PlanType.HALT.ordinal()) {
 

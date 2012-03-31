@@ -62,13 +62,16 @@ public class TargetDecision {
 		this.allMovingObjects = aMO;
 		this.allStaticObjects = aSO;
 		this.planType = this.allStaticObjects.getPlanType();
-
+		logger.trace("Setting shit");
+		
 		//Set all conditions
 		this.weHaveBall();
 		this.theyHaveBall();
 		this.ballTooCloseToWall();
 		this.ballOnPitch();
-
+		
+		logger.trace("Setting target");
+		
 		//setting nav and target
 		try {
 			this.setTargets();

@@ -94,7 +94,9 @@ public class Plan {
 		
 
 	}	
-	
+	public AllMovingObjects getAllMovingObjects(){
+		return allMovingObjects;
+	}
 	public ArrayList<Node> getPath(){
 		return this.path;
 	}
