@@ -177,6 +177,7 @@ public class AllMovingObjects {
 	}
 	
 	public double getOurAngle() {
+		System.out.println(ourAngle);
 		return ourAngle;
 	}
 	

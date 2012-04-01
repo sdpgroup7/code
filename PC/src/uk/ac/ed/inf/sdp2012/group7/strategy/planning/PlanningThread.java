@@ -58,12 +58,12 @@ public class PlanningThread extends Observable implements Runnable{
 					setChanged();
 					notifyObservers(temp_plan);
 					logger.debug("Plan type: " + this.planType);
-					/*try {
-						//Thread.sleep(500);
+					try {
+						Thread.sleep(1500);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						//e.printStackTrace();
-					}*/
+					}
 					//This is here just because I can never remember how to do this
 					//and I think it might be useful for testing...
 					//I can imagine Tom finding this, and think "wtf!" - sorry Tom!

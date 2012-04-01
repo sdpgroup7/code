@@ -23,7 +23,6 @@ public class MainRunner {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException{
         Logger.getLogger("com.intel.bluetooth").setLevel(Level.WARN);
-        PropertyConfigurator.configure("log4j.properties");
         if (args.length > 0) {
         	simulator = true;
         	new Simulator();

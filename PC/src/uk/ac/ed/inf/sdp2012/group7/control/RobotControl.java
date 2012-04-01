@@ -158,7 +158,7 @@ public class RobotControl implements ConstantsReuse {
 	 * Sends a command to the robot
 	 */
 	private void sendToRobot(byte[] command) {
-		if((WorldState.getInstance().canMove) || (OpCodes.values()[command[1]] == OpCodes.STOP) || OpCodes.values()[command[1]]== OpCodes.CHANGE_SPEED || OpCodes.values()[command[1]]== OpCodes.CHANGE_ROTATE_SPEED){
+		//if((WorldState.getInstance().canMove) || (OpCodes.values()[command[1]] == OpCodes.STOP) || OpCodes.values()[command[1]]== OpCodes.CHANGE_SPEED || OpCodes.values()[command[1]]== OpCodes.CHANGE_ROTATE_SPEED){
 			if(!bumped){
 	
 				logger.info("Send "+OpCodes.values()[command[1]]);
@@ -173,9 +173,9 @@ public class RobotControl implements ConstantsReuse {
 				logger.debug("Completed bump procedure");
 				//We don't need anything in the loop as getResponse is blocking anyway
 			}
-		} else {
-			stop();
-		}
+		//} else {
+		//	stop();
+		//}
 	}
 
 

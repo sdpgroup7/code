@@ -36,7 +36,7 @@ public class ControlInterface implements Observer {
 
 	public static final Logger logger = Logger.getLogger(ControlInterface.class);
 
-	private final int START_SPEED = 10;
+	private final int START_SPEED = 30;
 
 
 	private static ControlInterface controlInterface = null;
@@ -365,8 +365,22 @@ public class ControlInterface implements Observer {
 				if(plan.getAction()==kick){
 					c.kick(); 
 				} else {
-					Arc arcToDrive = chooseArc(plan);
-					implimentArc(arcToDrive, plan);	
+					//Arc arcToDrive = chooseArc(plan);
+					Point2D ourPosition = new Point2D(plan.getOurRobotPosition());
+					try {
+						Point2D goalPoint = findGoalPoint(plan.getPath(), ourPosition, lookahead);
+						Point convGoalPoint = new Point ((int)goalPoint.getX(), (int)goalPoint.getY());
+						double angleToTurn = Tools.getAngleToFacePoint(plan.getOurRobotPosition(), plan.getOurRobotAngle(), convGoalPoint);
+						if (angleToTurn > Math.PI/4 || angleToTurn < -Math.PI/4) {
+							c.rotateBy(angleToTurn, false);
+						} else {
+							c.moveForward();
+						}
+					} catch (Exception ex) {
+						System.out.println("Bugger");
+					}
+					//implimentArc(arcToDrive, plan);
+					
 				}
 				
 				

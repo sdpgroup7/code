@@ -81,6 +81,7 @@ public class MovingObject {
 	}
 	
 	public void addAngle(Point p){
+		//System.out.println(p.toString());
 		if(angles.size() > 1){
 			if(Point.distance(p.x, p.y, angles.get(1).x, angles.get(1).y) < 20){
 				angles.add(new TimePoint(p));
@@ -115,8 +116,10 @@ public class MovingObject {
 			a = new Point(a.x / angles.size(), a.y / angles.size());
 			tip = a;
 			angle = VisionTools.convertAngle(Math.atan2(a.y - getPosition().getCentre().y, a.x - getPosition().getCentre().x));
-			angle += (predictionTime * angularVelocity);
+			//angle += (predictionTime * angularVelocity);
+			this.angle = angle;
 		} else {
+			System.out.println("ANGLE SIZE: " + angles.size());
 			this.angle = 0;
 		}
 	}

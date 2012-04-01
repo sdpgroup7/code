@@ -195,6 +195,7 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 						os.write(n.ordinal());
 					}
 					os.flush();
+					
 				}
 				// close streams and connection
 				is.close();
