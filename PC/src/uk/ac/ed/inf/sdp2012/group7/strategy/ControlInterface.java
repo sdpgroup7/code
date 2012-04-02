@@ -168,7 +168,7 @@ public class ControlInterface implements Observer {
 		double c = Math.PI/2 - 2*alpha; // Angle at the centre of the arc
 		double distanceToTravelOnArc = 2*Math.PI*(c/Math.PI*2);
 		logger.debug("Distance to travel on the arc is " + distanceToTravelOnArc);
-
+		//System.err.println(distanceToTravelOnArc );
 		boolean dir;
 
 		// If the arc is to the left (relative to the robot) then dir is true,
