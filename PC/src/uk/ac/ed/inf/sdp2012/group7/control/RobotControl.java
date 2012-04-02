@@ -168,9 +168,11 @@ public class RobotControl implements ConstantsReuse {
 				if(response == OpCodes.BUMP_ON) bumped = true;
 	
 			} else {
+				stop();
 				while(getResponse() != OpCodes.BUMP_OFF.ordinal()){}
 				bumped = false;
 				logger.debug("Completed bump procedure");
+				
 				//We don't need anything in the loop as getResponse is blocking anyway
 			}
 		} else {

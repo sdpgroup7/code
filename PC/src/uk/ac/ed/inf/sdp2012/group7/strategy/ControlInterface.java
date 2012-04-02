@@ -136,15 +136,14 @@ public class ControlInterface implements Observer {
 		logger.debug(String.format("Converted preAngle: %f", convertedAngle));
 		double alpha = convertedAngle  - v;
 		logger.debug(String.format("Alpha: %f", alpha));
+	
 		//alpha is the angle from a line through the axis of the robot to the
 		//goal point
 
 		//Here we need to check if this point is actually in front of the 
 		//robot. If it is behind then we need to turn the robot around
 
-
-
-
+		
 
 
 		double d = h.getDistance(p);
@@ -163,6 +162,12 @@ public class ControlInterface implements Observer {
 		logger.debug(String.format("R: %f",R));
 		//THis is the radius of the circle the robot has to drive on. An arc is
 		//a circle in essance.
+		/*
+		 * Finds the  distance to travel on the arc 
+		 */
+		double c = Math.PI/2 - 2*alpha; // Angle at the centre of the arc
+		double distanceToTravelOnArc = 2*Math.PI*(c/Math.PI*2);
+		logger.debug("Distance to travel on the arc is " + distanceToTravelOnArc);
 
 		boolean dir;
 
@@ -354,7 +359,7 @@ public class ControlInterface implements Observer {
 				if(plan.getAction()==kick){
 					c.kick();
 				} else if(Math.abs(Tools.getAngleToFacePoint(plan.getOurRobotPosition(), plan.getOurRobotAngle(), plan.getNavPoint())) > (Math.PI / 2.0)){
-					c.rotateBy(Tools.getAngleToFacePoint(plan.getOurRobotPosition(), plan.getOurRobotAngle(), plan.getNavPoint()),true);
+					c.rotateBy(Tools.getAngleToFacePoint(plan.getOurRobotPosition(), plan.getOurRobotAngle(), plan.getNavPoint()),false);
 				} else {
 					
 					Arc arcToDrive = chooseArc(plan);

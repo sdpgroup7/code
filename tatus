@@ -1,0 +1,221 @@
+diff --git a/PC/saveFile.sav b/PC/saveFile.sav
+index 56f6c14..c3114fd 100644
+Binary files a/PC/saveFile.sav and b/PC/saveFile.sav differ
+diff --git a/PC/src/uk/ac/ed/inf/sdp2012/group7/strategy/planning/PlanningThread.java b/PC/src/uk/ac/ed/inf/sdp2012/group7/strategy/planning/PlanningThread.java
+index 861e26c..2d2b122 100644
+--- a/PC/src/uk/ac/ed/inf/sdp2012/group7/strategy/planning/PlanningThread.java
++++ b/PC/src/uk/ac/ed/inf/sdp2012/group7/strategy/planning/PlanningThread.java
+@@ -47,6 +47,12 @@ public class PlanningThread extends Observable implements Runnable{
+ 		while(keepPlanning || this.allStaticObjects.getRunFlag()){
+ 			if(worldStateIsPopulated){
+ 				synchronized(this){
++					try {
++						Thread.sleep(1500);
++					} catch (InterruptedException e) {
++						// TODO Auto-generated catch block
++						//e.printStackTrace();
++					}
+ 					if( this.allStaticObjects.getPlanType() == PlanTypes.PlanType.HALT.ordinal()){
+ 						keepPlanning = false;
+ 						logger.debug("Robot been asked to stop");
+@@ -58,12 +64,7 @@ public class PlanningThread extends Observable implements Runnable{
+ 					setChanged();
+ 					notifyObservers(temp_plan);
+ 					logger.debug("Plan type: " + this.planType);
+-					try {
+-						Thread.sleep(1500);
+-					} catch (InterruptedException e) {
+-						// TODO Auto-generated catch block
+-						//e.printStackTrace();
+-					}
++					
+ 					//This is here just because I can never remember how to do this
+ 					//and I think it might be useful for testing...
+ 					//I can imagine Tom finding this, and think "wtf!" - sorry Tom!
+diff --git a/PC/src/uk/ac/ed/inf/sdp2012/group7/vision/FeedProcessor.java b/PC/src/uk/ac/ed/inf/sdp2012/group7/vision/FeedProcessor.java
+index ad168ce..5ea5b8d 100644
+--- a/PC/src/uk/ac/ed/inf/sdp2012/group7/vision/FeedProcessor.java
++++ b/PC/src/uk/ac/ed/inf/sdp2012/group7/vision/FeedProcessor.java
+@@ -97,7 +97,12 @@ public class FeedProcessor{
+             worldState.setUpdatedTime();
+             markObjects(imageGraphics);
+     		calculateFPS(before,imageGraphics,frameGraphics, image, this.width, this.height);
+-            
++    		/*try {
++				Thread.sleep(80);
++			} catch (InterruptedException e) {
++				// TODO Auto-generated catch block
++				//e.printStackTrace();
++			}*/
+             
+         }
+ 
+diff --git a/PC/src/uk/ac/ed/inf/sdp2012/group7/vision/worldstate/WorldState.java b/PC/src/uk/ac/ed/inf/sdp2012/group7/vision/worldstate/WorldState.java
+index e5af0a7..86485f3 100644
+--- a/PC/src/uk/ac/ed/inf/sdp2012/group7/vision/worldstate/WorldState.java
++++ b/PC/src/uk/ac/ed/inf/sdp2012/group7/vision/worldstate/WorldState.java
+@@ -129,7 +129,7 @@ public class WorldState{
+ 		return this.shootingDirection;
+ 	}
+ 	
+-	public MovingObject getOurRobot(){
++	public synchronized MovingObject getOurRobot(){
+ 		if(ourColor.equals(Color.blue)){
+ 			return blueRobot;
+ 		} else {
+@@ -137,7 +137,7 @@ public class WorldState{
+ 		}
+ 	}
+ 	
+-	public MovingObject getOpponentsRobot(){
++	public synchronized MovingObject getOpponentsRobot(){
+ 		if(ourColor.equals(Color.blue)){
+ 			return yellowRobot;
+ 		} else {
+@@ -145,32 +145,32 @@ public class WorldState{
+ 		}
+ 	}
+ 	
+-	public Point getBlueKeyPoint(){
++	public synchronized Point getBlueKeyPoint(){
+ 		return this.blueKeyPoint;
+ 	}
+-	public Point getYellowKeyPoint(){
++	public  synchronized Point getYellowKeyPoint(){
+ 		return this.yellowKeyPoint;
+ 	} 
+-	public void setBlueKeyPoint(Point p){
++	public synchronized void setBlueKeyPoint(Point p){
+ 		blueKeyPoint = p;
+ 	}
+-	public void setYellowKeyPoint(Point p){
++	public synchronized void setYellowKeyPoint(Point p){
+ 		yellowKeyPoint = p;
+ 	}
+     
+-	public ArrayList<Point> getBluePixels() {
++	public synchronized ArrayList<Point> getBluePixels() {
+ 		return bluePixels;
+ 	}
+ 
+-	public void setBluePixels(ArrayList<Point> bluePixels) {
++	public synchronized void setBluePixels(ArrayList<Point> bluePixels) {
+ 		this.bluePixels = bluePixels;
+ 	}
+ 
+-	public ArrayList<Point> getYellowPixels() {
++	public synchronized ArrayList<Point> getYellowPixels() {
+ 		return yellowPixels;
+ 	}
+ 
+-	public void setYellowPixels(ArrayList<Point> yellowPixels) {
++	public synchronized void setYellowPixels(ArrayList<Point> yellowPixels) {
+ 		this.yellowPixels = yellowPixels;
+ 	}    
+     
+@@ -227,25 +227,25 @@ public class WorldState{
+     	return this.ourColor;
+     }
+     
+-    public MovingObject getBlueRobot(){
++    public synchronized MovingObject  getBlueRobot(){
+     	//Returns an object representing blue robot
+         return this.blueRobot;
+     }
+ 
+-    public MovingObject getYellowRobot(){
++    public synchronized MovingObject getYellowRobot(){
+     	//Returns an object representing our yellow robot
+         return this.yellowRobot;
+     }
+-    public MovingObject getYellowGrey(){
++    public synchronized MovingObject getYellowGrey(){
+     	//Returns an object representing the grey circle on our yellow robot
+         return this.yellowGrey;
+     }
+-    public MovingObject getBlueGrey(){
++    public synchronized MovingObject getBlueGrey(){
+     	//Returns an object representing the grey circle on blue robot
+         return this.blueGrey;
+     }
+ 
+-    public MovingObject getBall(){
++    public synchronized MovingObject getBall(){
+     	//Returns an object representing the ball
+         return this.ball;
+     }
+@@ -255,7 +255,7 @@ public class WorldState{
+         return this.pitch;
+     }
+ 
+-    public ObjectPosition getOurGoal(){
++    public synchronized ObjectPosition getOurGoal(){
+     	//Returns an object representing our goal
+     	if(this.shootingDirection == -1){
+     		return this.leftGoal;
+@@ -264,7 +264,7 @@ public class WorldState{
+     	}
+     }
+ 
+-    public ObjectPosition getOpponentsGoal(){
++    public synchronized ObjectPosition getOpponentsGoal(){
+     	//Returns an object representing our opponents goal
+     	if(this.shootingDirection == 1){
+     		return this.leftGoal;
+@@ -278,28 +278,28 @@ public class WorldState{
+     	this.blueRobot.set(position,velocity);
+     }*/
+     
+-    public void setBlueRobotPosition(int x, int y){
++    public synchronized void setBlueRobotPosition(int x, int y){
+     	//Set blue robots centre point with the x and y values
+     	//Vision.logger.debug(Integer.toString(x) + "," + Integer.toString(y));
+     	this.blueRobot.setPosition(x,y);
+     }
+-    public void setBlueGreyPosition(int x, int y){
++    public synchronized void setBlueGreyPosition(int x, int y){
+     	//Sets the position of blue grey circle using the x and y values
+     	this.blueGrey.setPosition(x, y);
+     }
+-    public void setBlueGreyPosition(Point p){
++    public synchronized void setBlueGreyPosition(Point p){
+     	//Sets blue grey position using a point
+     	this.blueGrey.setPosition(p);
+     }
+-    public void setYellowGreyPosition(int x, int y){
++    public synchronized void setYellowGreyPosition(int x, int y){
+     	//Sets the position of our yellow grey circle using the x and y values
+     	this.yellowGrey.setPosition(x, y);
+     }
+-    public void setYellowGreyPosition(Point p){
++    public synchronized void setYellowGreyPosition(Point p){
+     	//Sets the position of our yellow grey cirlce using a point
+     	this.yellowGrey.setPosition(p);
+     }
+-    public void setBlueRobotPosition(Point p){
++    public synchronized void setBlueRobotPosition(Point p){
+     	//Sets the centre of blue robot using a point
+     	this.blueRobot.setPosition(p);
+     }
+@@ -314,12 +314,12 @@ public class WorldState{
+     	this.yellowRobot.set(position,velocity);
+     }*/
+     
+-    public void setYellowRobotPosition(int x, int y){
++    public synchronized void setYellowRobotPosition(int x, int y){
+     	//Sets the yellow robot centre using the given x and y values
+     	this.yellowRobot.setPosition(x,y);
+     }
+     
+-    public void setYellowRobotPosition(Point p){
++    public synchronized void setYellowRobotPosition(Point p){
+     	//Sets the yellow robot centre using the given point
+     	this.yellowRobot.setPosition(p);
+     }
+@@ -334,12 +334,12 @@ public class WorldState{
+     	this.ball.set(position,velocity);
+     }*/
+     
+-    public void setBallPosition(int x, int y){
++    public synchronized void setBallPosition(int x, int y){
+  
