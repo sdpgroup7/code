@@ -165,7 +165,7 @@ public class ControlInterface implements Observer {
 		/*
 		 * Finds the  distance to travel on the arc 
 		 */
-		double c = Math.PI/2 - 2*alpha; // Angle at the centre of the arc
+		double c = Math.PI - 2*alpha; // Angle at the centre of the arc
 		double distanceToTravelOnArc = 2*Math.PI*(c/Math.PI*2);
 		logger.debug("Distance to travel on the arc is " + distanceToTravelOnArc);
 		//System.err.println(distanceToTravelOnArc );
@@ -180,13 +180,13 @@ public class ControlInterface implements Observer {
 		}
 
 		double conversion = (double) VisionTools.pixelsToCM(nodeInPixels);
-		Arc arc = new Arc(R*conversion, dir);
+		Arc arc = new Arc(R*conversion, dir, distanceToTravelOnArc);
 
 		return arc;
 
 	}
 
-	public void implimentArc(Arc path, Plan plan) {
+	public void implimentArc(Arc path, Plan plan) { // Arc distance has to be used here
 
 		if (plan.getAction() == drive) {
 

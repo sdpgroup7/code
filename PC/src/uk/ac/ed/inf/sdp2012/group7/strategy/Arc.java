@@ -12,13 +12,15 @@ public class Arc {
 	
 	private double radius;
 	private boolean left;
+	private double distance;
 	//This is the number of cm in a golf ball
 	
 
-	public Arc(double r, boolean d) {
+	public Arc(double r, boolean d, double dist) {
 		Strategy.logger.info("New arc created: (radius,left):(" + r + "," + Boolean.toString(d) + ")");
 		this.radius = r;
 		this.left = d;
+		this.distance = dist;
 	}
 	
 	public double getRadius() {
