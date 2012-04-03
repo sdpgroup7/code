@@ -107,7 +107,9 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 						} catch (Exception ex) {
 							// the bump sensors aren't on (didn't notify us)
 						}
-
+						
+						int radius;
+						int distance;
 
 						switch (n) {
 
@@ -168,6 +170,18 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 
 						case ARC_RIGHT:
 							pilot.arcForward(magnitude);
+							break;
+
+						case ARC_LEFT_DISTANCE:
+							radius = magnitude & 0xFF;
+							distance = (magnitude >> 8) & 0xFF;
+							pilot.travelArc(-radius,(double) distance);
+							break;
+
+						case ARC_RIGHT_DISTANCE:
+							radius = magnitude & 0xFF;
+							distance = (magnitude >> 8) & 0xFF;
+							pilot.travelArc(radius,(double) distance);
 							break;
 
 						case BEEP:

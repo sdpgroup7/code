@@ -318,6 +318,22 @@ public class RobotControl implements ConstantsReuse {
 		}
 
 	}
+	
+	
+	public void arcWithDistance(int distance, int radius, boolean arcLeft){
+		int c = ((radius & 0xFF) << 8) | (distance & 0xFF);
+		if (radius < 127) {
+			if (arcLeft) {
+				addCommand((byte) 0,(byte) OpCodes.ARC_LEFT_DISTANCE.ordinal(),c);
+				
+			} else {
+				addCommand((byte) 0,(byte) OpCodes.ARC_RIGHT_DISTANCE.ordinal(),c);
+				
+			}
+		} else {
+			addCommand((byte) 0,(byte) OpCodes.FORWARDS.ordinal(),0);
+		}
+	}
 
 	/**
 	 * Commands the robot to make a noise

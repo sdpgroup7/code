@@ -59,7 +59,7 @@ public class PlanningThread extends Observable implements Runnable{
 					notifyObservers(temp_plan);
 					logger.debug("Plan type: " + this.planType);
 					try {
-						Thread.sleep(2500);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

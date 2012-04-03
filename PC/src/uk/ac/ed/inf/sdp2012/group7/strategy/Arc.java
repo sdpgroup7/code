@@ -22,7 +22,12 @@ public class Arc {
 		this.left = d;
 		this.distance = dist;
 	}
-	
+	public double getDistance(){
+		return this.distance;
+	}
+	public void setDistance(double dist){
+		this.distance = dist;
+	}
 	public double getRadius() {
 		return this.radius;
 	}

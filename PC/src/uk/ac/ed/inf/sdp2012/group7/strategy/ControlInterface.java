@@ -192,11 +192,12 @@ public class ControlInterface implements Observer {
 
 			logger.info("Action is to drive");
 
-
-			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
+			this.c.arcWithDistance((int) (path.getDistance() + 0.5),(int) path.getRadius(), path.isLeft());
+			/*this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
 			logger.info(String.format("Command sent to robot: Drive on arc " +
 					"radius %d with turn left: %b", 
-					(int)(path.getRadius()+0.5), path.isLeft()));
+					(int)(path.getRadius()+0.5), path.isLeft()));*/
+			
 		} else if (plan.getAction() == kick) {
 			logger.info("Action is to kick");
 			this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
@@ -361,7 +362,7 @@ public class ControlInterface implements Observer {
 				} else if(Math.abs(Tools.getAngleToFacePoint(plan.getOurRobotPosition(), plan.getOurRobotAngle(), plan.getNavPoint())) > (Math.PI / 2.0)){
 					c.rotateBy(Tools.getAngleToFacePoint(plan.getOurRobotPosition(), plan.getOurRobotAngle(), plan.getNavPoint()),false);
 				} else {
-					
+					//c.moveForward();
 					Arc arcToDrive = chooseArc(plan);
 					implimentArc(arcToDrive, plan);	
 				}

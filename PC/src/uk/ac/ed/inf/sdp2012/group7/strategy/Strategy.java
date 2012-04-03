@@ -13,7 +13,7 @@ public class Strategy {
 
 	public static final Logger logger = Logger.getLogger(Strategy.class);
 	
-	private static final int LOOKAHEAD = 10;
+	private static final int LOOKAHEAD = 15;
 	
 	private PlanningBuffer planning_buffer;
 	private PlanningThread planningthread;
