@@ -223,6 +223,9 @@ public class TargetDecision {
 		}
 
 		// No other plan types so must be penalty defence
+		else if(this.planType == PlanTypes.PlanType.STARTSTRAT.ordinal()) {
+			//Do startup strategy 
+		}
 		else {
 			logger.info("PENALTY_DEFENCE Mode");
 			// Method - project a line from their orientation to a vertical line given by our x position

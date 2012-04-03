@@ -123,6 +123,8 @@ public class ControlGUI implements ChangeListener {
 	
     private boolean penaltyToGame = false;
 
+	private JButton startStrategyFinalDay;
+
     
 	/**
 	 * Default constructor. 
@@ -931,11 +933,13 @@ public class ControlGUI implements ChangeListener {
 		
 		penaltyAttackButton = new JButton("Penalty Shoot");
 		penaltyDefendButton = new JButton("Penalty Goalie");
+		startStrategyFinalDay = new JButton("Start Strategy");
 		returnToGame = new JCheckBox("Return to Game");
 		
 		penaltyPanel.add(returnToGame);
 		penaltyPanel.add(penaltyAttackButton);
 		penaltyPanel.add(penaltyDefendButton);
+		penaltyPanel.add(startStrategyFinalDay);
 		
 		returnToGame.addActionListener(new ActionListener() {
 		    
@@ -968,7 +972,14 @@ public class ControlGUI implements ChangeListener {
 		    	strat.startPlanningThread(PlanTypes.PlanType.PENALTY_DEFENCE.ordinal());
 		    }
 		});
-		
+		penaltyAttackButton.addActionListener(new ActionListener() {
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        //call to strategy letting them know that bot is taking a penalty
+		        strat.startPlanningThread(PlanTypes.PlanType.STARTSTRAT.ordinal());
+		    }
+		});
 		defaultPanel.add(penaltyPanel);
 		
 		/*Currently Milestone 1 stuff - WILL CHANGE */

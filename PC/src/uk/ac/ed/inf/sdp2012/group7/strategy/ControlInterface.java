@@ -193,10 +193,10 @@ public class ControlInterface implements Observer {
 			logger.info("Action is to drive");
 
 			this.c.arcWithDistance((int) (path.getDistance() + 0.5),(int) path.getRadius(), path.isLeft());
-			/*this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
+			//this.c.circleWithRadius((int)(path.getRadius()+0.5) , path.isLeft());
 			logger.info(String.format("Command sent to robot: Drive on arc " +
-					"radius %d with turn left: %b", 
-					(int)(path.getRadius()+0.5), path.isLeft()));*/
+					"radius %d with turn left: %b"+ " DISTANCE IS: %d", 
+					(int)(path.getRadius()+0.5), path.isLeft() ,(int) path.getDistance()));
 			
 		} else if (plan.getAction() == kick) {
 			logger.info("Action is to kick");
@@ -332,6 +332,7 @@ public class ControlInterface implements Observer {
 			blocking = true;
 			Plan plan = (Plan) arg1;
 			if(plan.getPlanType()==PlanTypes.PlanType.PENALTY_OFFENCE.ordinal()) {
+			
 				logger.info("Taking a penalty - first turn required angle");
 				double turnAngle = ControlInterfaceTools.angleToTurn(plan.getAngleWanted(), plan.getOurRobotAngle());
 				c.rotateBy(turnAngle);
@@ -341,7 +342,14 @@ public class ControlInterface implements Observer {
 				logger.info("Now kick");
 				c.kick();
 				c.stop();
-			} else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
+			} else if(plan.getPlanType()==PlanTypes.PlanType.STARTSTRAT.ordinal()){
+				
+				this.c.arcWithDistance(105, 100 , true);
+				this.c.arcWithDistance(105, 100 , false);
+				this.c.kick();
+				
+				
+			}else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
 				logger.info("Defending a penalty - will repeatedly use non-blocking forwards and backwards");
 
 				if (plan.getAction() == forwards) {
@@ -355,16 +363,16 @@ public class ControlInterface implements Observer {
 					c.stop();
 				}
 			} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
-
+				c.changeSpeed(START_SPEED);
 				
 				if(plan.getAction()==kick){
 					c.kick();
 				} else if(Math.abs(Tools.getAngleToFacePoint(plan.getOurRobotPosition(), plan.getOurRobotAngle(), plan.getNavPoint())) > (Math.PI / 2.0)){
 					c.rotateBy(Tools.getAngleToFacePoint(plan.getOurRobotPosition(), plan.getOurRobotAngle(), plan.getNavPoint()),false);
 				} else {
-					//c.moveForward();
-					Arc arcToDrive = chooseArc(plan);
-					implimentArc(arcToDrive, plan);	
+					c.moveForward();
+					//Arc arcToDrive = chooseArc(plan);
+					//implimentArc(arcToDrive, plan);	
 				}
 				
 				

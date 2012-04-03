@@ -175,11 +175,11 @@ public class WorldState{
     public void setRoom(int r){
         this.room = r;
         if(room == 0){
-    		pitch = new Pitch(	new Point(40,104),
-    							new Point(600,98),
-    							new Point(607,384),
-    							new Point(40,394));
-    		pitch.setBuffers(115,612,431,24);
+    		pitch = new Pitch(	new Point(35,104),
+    							new Point(590,88),
+    							new Point(597,384),
+    							new Point(35,394));
+    		pitch.setBuffers(90,600,431,19);
     	} else {
     		pitch = new Pitch(	new Point(62,123),
 					            new Point(581,137),
