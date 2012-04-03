@@ -173,15 +173,17 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 							break;
 
 						case ARC_LEFT_DISTANCE:
-							radius = magnitude & 0xFF;
+							/*radius = magnitude & 0xFF;
 							distance = (magnitude >> 8) & 0xFF;
-							pilot.travelArc(-radius,(double) distance);
+							pilot.travelArc(-radius,(double) distance);*/
+							pilot.travelArc(-byteBuffer[2],(double) byteBuffer[3]);
 							break;
 
 						case ARC_RIGHT_DISTANCE:
-							radius = magnitude & 0xFF;
+							/*radius = magnitude & 0xFF;
 							distance = (magnitude >> 8) & 0xFF;
-							pilot.travelArc(radius,(double) distance);
+							pilot.travelArc(radius,(double) distance);*/
+							pilot.travelArc(byteBuffer[2],(double) byteBuffer[3]);
 							break;
 
 						case BEEP:
