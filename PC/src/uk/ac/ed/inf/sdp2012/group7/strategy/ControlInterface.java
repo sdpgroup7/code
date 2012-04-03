@@ -343,11 +343,11 @@ public class ControlInterface implements Observer {
 				c.kick();
 				c.stop();
 			} else if(plan.getPlanType()==PlanTypes.PlanType.STARTSTRAT.ordinal()){
-				
-				this.c.arcWithDistance(105, 100 , true);
-				this.c.arcWithDistance(105, 100 , false);
+				logger.info("I am in start strategy");
+				this.c.arcWithDistance(105, 102 , true);
+				this.c.arcWithDistance(105, 102 , false);
 				this.c.kick();
-				
+				logger.info("I am in start strategy end");
 				
 			}else if (plan.getPlanType()==PlanTypes.PlanType.PENALTY_DEFENCE.ordinal()) {
 				logger.info("Defending a penalty - will repeatedly use non-blocking forwards and backwards");
@@ -363,7 +363,7 @@ public class ControlInterface implements Observer {
 					c.stop();
 				}
 			} else if (plan.getPlanType()==PlanTypes.PlanType.FREE_PLAY.ordinal()) {
-				c.changeSpeed(START_SPEED);
+				
 				
 				if(plan.getAction()==kick){
 					c.kick();

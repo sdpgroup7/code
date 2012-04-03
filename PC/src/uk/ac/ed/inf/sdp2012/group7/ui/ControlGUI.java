@@ -972,7 +972,7 @@ public class ControlGUI implements ChangeListener {
 		    	strat.startPlanningThread(PlanTypes.PlanType.PENALTY_DEFENCE.ordinal());
 		    }
 		});
-		penaltyAttackButton.addActionListener(new ActionListener() {
+		startStrategyFinalDay.addActionListener(new ActionListener() {
 		    
 		    @Override
 		    public void actionPerformed(ActionEvent e) {

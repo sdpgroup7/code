@@ -225,6 +225,8 @@ public class TargetDecision {
 		// No other plan types so must be penalty defence
 		else if(this.planType == PlanTypes.PlanType.STARTSTRAT.ordinal()) {
 			//Do startup strategy 
+			logger.info("Startup strategy Mode");
+			logger.debug("Nothing to do here");
 		}
 		else {
 			logger.info("PENALTY_DEFENCE Mode");
