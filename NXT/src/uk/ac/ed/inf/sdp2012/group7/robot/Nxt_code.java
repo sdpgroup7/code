@@ -97,7 +97,8 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 						int magnitude = bytesToInt(byteBuffer[2],byteBuffer[3]);
 						LCD.clear();
 						LCD.drawString("CMD: " + n.toString(), 0, 4);
-						LCD.drawString("MAG: " + Integer.toString(magnitude), 0, 5);
+						//LCD.drawString("MAG: " + Integer.toString(magnitude), 0, 5);
+						LCD.drawString("bb[2]="+Integer.toString(byteBuffer[2])+" bb[3]="+Integer.toString(byteBuffer[3]), 0, 5);						
 						LCD.drawString("ID:  " + Integer.toString(commandCount), 0,6);
 						commandCount++;
 						try {
@@ -173,15 +174,17 @@ public class Nxt_code implements Runnable, ConstantsReuse {
 							break;
 
 						case ARC_LEFT_DISTANCE:
-							radius = magnitude & 0xFF;
+							/*radius = magnitude & 0xFF;
 							distance = (magnitude >> 8) & 0xFF;
-							pilot.travelArc(-radius,(double) distance);
+							pilot.travelArc(-radius,(double) distance);*/
+							pilot.travelArc(-(byteBuffer[2]&0xFF),(double) (byteBuffer[3]&0xFF));
 							break;
 
 						case ARC_RIGHT_DISTANCE:
-							radius = magnitude & 0xFF;
+							/*radius = magnitude & 0xFF;
 							distance = (magnitude >> 8) & 0xFF;
-							pilot.travelArc(radius,(double) distance);
+							pilot.travelArc(radius,(double) distance);*/
+							pilot.travelArc((byteBuffer[2]&0xFF),(double) (byteBuffer[3]&0xFF));
 							break;
 
 						case BEEP:
