@@ -158,7 +158,7 @@ public class RobotControl implements ConstantsReuse {
 	 * Sends a command to the robot
 	 */
 	private void sendToRobot(byte[] command) {
-		if((WorldState.getInstance().canMove) || (OpCodes.values()[command[1]] == OpCodes.STOP)){
+		if((WorldState.getInstance().canMove) || (OpCodes.values()[command[1]] == OpCodes.CHANGE_SPEED) || (OpCodes.values()[command[1]] == OpCodes.STOP)){
 			if(!bumped){
 	
 				logger.info("Send "+OpCodes.values()[command[1]]);
